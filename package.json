@@ -22,7 +22,7 @@
     "Snippets"
   ],
   "activationEvents": [
-    "onCommand:extension.puppetLint"
+    "onLanguage:puppet"
   ],
   "main": "./out/src/extension",
   "contributes": {
