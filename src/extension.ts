@@ -62,13 +62,29 @@ class PuppetLintProvider{
   lint(textDocument: any){
     if(textDocument.languageId !== 'puppet') return;
 
-    let fileName = textDocument.fileName;
-
-    let text = '';
+    let config = vscode.workspace.getConfiguration();
+    // config['puppet']
+    // Object {enable: true, path: "foo"}
+    // config['puppet']['enable']
+    // true
+    
     let diagnostics: vscode.Diagnostic[] = [];
+    let text = '';
+    let command = '';
+    let fileName = textDocument.fileName;
     let options = vscode.workspace.rootPath ? { cwd: vscode.workspace.rootPath } : undefined;
-    let proc = cp.spawn('puppet-lint',
-              ["--log-format", "%{KIND}:%{line}:%{message}", fileName], options);
+    let commandOptions = ["--log-format", "%{KIND}:%{line}:%{message}", fileName];
+
+    if (process.platform == "win32") {
+      command = "cmd.exe";
+      commandOptions = ["/c", "puppet-lint"].concat(commandOptions);
+    }
+    else {
+      command = "puppet-lint";
+    }
+    commandOptions.concat
+
+    let proc = cp.spawn(command, commandOptions, options);
     if (proc.pid) {
       proc.stdout.on('data', (data: Buffer) => {
         text += data;
