@@ -1,17 +1,28 @@
 {
   "name": "vscode-puppet",
-  "displayName": "vscode-puppet",
+  "displayName": "Puppet",
   "description": "Puppet VSCode extension",
   "version": "0.0.1",
   "publisher": "puppet",
+  "license": "Apache 2.0",
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/jpogran/vscode-puppet"
+  },
+  "bugs":{
+    "type": "git",
+    "url": "https://github.com/jpogran/vscode-puppet/issues"
+  },
   "engines": {
     "vscode": "^1.10.0"
   },
   "categories": [
-    "Other"
+    "Linters",
+    "Languages",
+    "Snippets"
   ],
   "activationEvents": [
-    "onCommand:extension.sayHello"
+    "onCommand:extension.puppetLint"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -31,8 +42,8 @@
       "path": "./snippets/snippets.json"
     }],
     "commands": [{
-      "command": "extension.sayHello",
-      "title": "Hello World"
+      "command": "extension.puppetLint",
+      "title": "Puppet Lint"
     }]
   },
   "scripts": {
