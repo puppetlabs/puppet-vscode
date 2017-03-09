@@ -37,10 +37,16 @@
       "scopeName": "source.puppet",
       "path": "./syntaxes/puppet.tmLanguage"
     }],
-    "snippets": [{
-      "language": "puppet",
-      "path": "./snippets/snippets.json"
-    }],
+    "snippets": [
+      {
+        "language": "puppet",
+        "path": "./snippets/dsl.snippets.json"
+      },
+      {
+        "language": "puppet",
+        "path": "./snippets/module.snippets.json"
+      }
+    ],
     "commands": [{
       "command": "extension.puppetLint",
       "title": "Puppet Lint"
