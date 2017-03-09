@@ -4,7 +4,7 @@
 
 ## Syntax Highlighting
 
-\!\[feature X\]\(images/syntax-highlighting.png\)
+\!\[syntax\]\(images/syntax.png\)
 
 ## Grammar support
 
