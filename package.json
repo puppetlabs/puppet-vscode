@@ -1,5 +1,5 @@
 {
-  "name": "vscode-puppet",
+  "name": "puppet-vscode",
   "displayName": "Puppet",
   "description": "Puppet VSCode extension",
   "version": "0.0.1",
@@ -7,11 +7,11 @@
   "license": "Apache 2.0",
   "repository":{
     "type": "git",
-    "url": "https://github.com/jpogran/vscode-puppet"
+    "url": "https://github.com/jpogran/puppet-vscode"
   },
   "bugs":{
     "type": "git",
-    "url": "https://github.com/jpogran/vscode-puppet/issues"
+    "url": "https://github.com/jpogran/puppet-vscode/issues"
   },
   "engines": {
     "vscode": "^1.10.0"
