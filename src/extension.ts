@@ -5,9 +5,7 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
-import { PuppetConfig } from '../src/providers/PuppetConfig';
-import { PuppetLintProvider } from '../src/providers/PuppetLintProvider';
-import { PuppetLintController } from '../src/providers/PuppetLintController';
+import { puppetLintProvider } from '../src/providers/puppetLintProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -17,9 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "vscode-puppet" is now active!');
 
-  let lint = new PuppetLintProvider();;
-  let pcontroller = new PuppetLintController(lint);
-  context.subscriptions.push(pcontroller);
+  let linter = new puppetLintProvider();
+  linter.activate(context.subscriptions);
 }
 
 // this method is called when your extension is deactivated
