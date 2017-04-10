@@ -22,7 +22,8 @@
     "Snippets"
   ],
   "activationEvents": [
-    "onLanguage:puppet"
+    "onLanguage:puppet",
+    "onCommand:extension.puppetLint"
   ],
   "main": "./out/src/extension",
   "contributes": {

@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
+import { puppetLintCommand } from '../src/commands/puppetLintCommand';
 import { puppetLintProvider } from '../src/providers/puppetLintProvider';
 
 // this method is called when your extension is activated
@@ -17,6 +18,14 @@ export function activate(context: vscode.ExtensionContext) {
 
   let linter = new puppetLintProvider();
   linter.activate(context.subscriptions);
+
+
+  let lintCommand = new puppetLintCommand();
+  var ldisposable = vscode.commands.registerCommand('extension.puppetLint', () => {
+    lintCommand.fixDocument();
+  });
+  context.subscriptions.push(lintCommand);
+  context.subscriptions.push(ldisposable);
 }
 
 // this method is called when your extension is deactivated
