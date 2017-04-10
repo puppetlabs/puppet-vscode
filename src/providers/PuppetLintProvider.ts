@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
-import { PuppetConfig } from '../../src/puppet/PuppetConfig';
-import { PuppetLintParser } from '../../src/puppet/PuppetLintParser';
+import { PuppetConfig } from '../../src/providers/PuppetConfig';
+import { PuppetLintParser } from '../../src/providers/PuppetLintParser';
 
 export class PuppetLintProvider{
   private diagnosticCollection: vscode.DiagnosticCollection;

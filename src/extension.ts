@@ -5,9 +5,9 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
-import { PuppetConfig } from '../src/puppet/PuppetConfig';
-import { PuppetLintProvider } from '../src/puppet/PuppetLintProvider';
-import { PuppetLintController } from '../src/puppet/PuppetLintController';
+import { PuppetConfig } from '../src/providers/PuppetConfig';
+import { PuppetLintProvider } from '../src/providers/PuppetLintProvider';
+import { PuppetLintController } from '../src/providers/PuppetLintController';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed

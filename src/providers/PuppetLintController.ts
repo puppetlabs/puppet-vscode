@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
-import { PuppetLintProvider } from '../../src/puppet/PuppetLintProvider';
+import { PuppetLintProvider } from '../../src/providers/PuppetLintProvider';
 
 export class PuppetLintController {
 
