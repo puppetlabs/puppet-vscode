@@ -23,7 +23,8 @@
   ],
   "activationEvents": [
     "onLanguage:puppet",
-    "onCommand:extension.puppetLint"
+    "onCommand:extension.puppetLint",
+    "onCommand:extension.puppetResource"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -48,10 +49,15 @@
         "path": "./snippets/module.snippets.json"
       }
     ],
-    "commands": [{
-      "command": "extension.puppetLint",
-      "title": "Puppet Lint"
-    }]
+    "commands": [
+      {
+        "command": "extension.puppetLint",
+        "title": "Puppet Lint"
+      },{
+        "command": "extension.puppetResource",
+        "title": "Puppet Resource"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",

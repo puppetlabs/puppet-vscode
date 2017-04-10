@@ -6,6 +6,7 @@ import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
 import { puppetLintCommand } from '../src/commands/puppetLintCommand';
+import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import { puppetLintProvider } from '../src/providers/puppetLintProvider';
 
 // this method is called when your extension is activated
@@ -26,6 +27,14 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(lintCommand);
   context.subscriptions.push(ldisposable);
+
+  let resourceCommand = new puppetResourceCommand();
+  var rdisposable = vscode.commands.registerCommand('extension.puppetResource', () => {
+    
+    resourceCommand.run();
+  });
+  context.subscriptions.push(resourceCommand);
+  context.subscriptions.push(rdisposable);
 }
 
 // this method is called when your extension is deactivated
