@@ -7,6 +7,7 @@ import ChildProcess = cp.ChildProcess;
 
 import { puppetLintCommand } from '../src/commands/puppetLintCommand';
 import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
+import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
 import { puppetLintProvider } from '../src/providers/puppetLintProvider';
 
 // this method is called when your extension is activated
@@ -34,6 +35,14 @@ export function activate(context: vscode.ExtensionContext) {
     resourceCommand.run();
   });
   context.subscriptions.push(resourceCommand);
+  context.subscriptions.push(rdisposable);
+
+  let moduleCommand = new puppetModuleCommand();
+  var rdisposable = vscode.commands.registerCommand('extension.puppetModule', () => {
+    
+    moduleCommand.listModules();
+  });
+  context.subscriptions.push(moduleCommand);
   context.subscriptions.push(rdisposable);
 }
 

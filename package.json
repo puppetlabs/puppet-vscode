@@ -24,7 +24,8 @@
   "activationEvents": [
     "onLanguage:puppet",
     "onCommand:extension.puppetLint",
-    "onCommand:extension.puppetResource"
+    "onCommand:extension.puppetResource",
+    "onCommand:extension.puppetModule"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -52,10 +53,16 @@
     "commands": [
       {
         "command": "extension.puppetLint",
-        "title": "Puppet Lint"
+        "title": "Puppet Lint",
+        "when": "editorTextFocus && editorLangId == 'puppet'"
       },{
         "command": "extension.puppetResource",
-        "title": "Puppet Resource"
+        "title": "Puppet Resource",
+        "when": "editorTextFocus && editorLangId == 'puppet'"
+      },{
+        "command": "extension.puppetModule",
+        "title": "Puppet Module",
+        "when": "editorTextFocus && editorLangId == 'puppet'"
       }
     ]
   },
