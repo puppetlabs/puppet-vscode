@@ -5,9 +5,9 @@ import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import ChildProcess = cp.ChildProcess;
 
-import { PuppetConfig } from '../src/puppet/PuppetConfig';
-import { PuppetLintProvider } from '../src/puppet/PuppetLintProvider';
-import { PuppetLintController } from '../src/puppet/PuppetLintController';
+import { puppetLintCommand } from '../src/commands/puppetLintCommand';
+import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
+import { puppetLintProvider } from '../src/providers/puppetLintProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -17,9 +17,24 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "vscode-puppet" is now active!');
 
-  let lint = new PuppetLintProvider();;
-  let pcontroller = new PuppetLintController(lint);
-  context.subscriptions.push(pcontroller);
+  let linter = new puppetLintProvider();
+  linter.activate(context.subscriptions);
+
+
+  let lintCommand = new puppetLintCommand();
+  var ldisposable = vscode.commands.registerCommand('extension.puppetLint', () => {
+    lintCommand.fixDocument();
+  });
+  context.subscriptions.push(lintCommand);
+  context.subscriptions.push(ldisposable);
+
+  let resourceCommand = new puppetResourceCommand();
+  var rdisposable = vscode.commands.registerCommand('extension.puppetResource', () => {
+    
+    resourceCommand.run();
+  });
+  context.subscriptions.push(resourceCommand);
+  context.subscriptions.push(rdisposable);
 }
 
 // this method is called when your extension is deactivated
