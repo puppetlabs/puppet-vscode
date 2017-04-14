@@ -54,8 +54,14 @@ export class puppetResourceCommand {
         proc.stdout.on('end', ()=> {
           if (text.length <= 0) return;
 
-          this.editCurrentDocument(doc.uri, text);
+          if (editor.selection.isEmpty) {
+            const position = editor.selection.active;
+            var newPosition = position.with(position.line, 0);
+          }else{
+            var newPosition = new vscode.Position(0, 0);
+          }
 
+          this.editCurrentDocument(doc.uri, text, newPosition);
           this._statusBarItem.text = "Puppet resource finished!";
           this._statusBarItem.show();
         });
@@ -68,9 +74,8 @@ export class puppetResourceCommand {
     
   }
 
-  private editCurrentDocument(uri, text) {
+  private editCurrentDocument(uri, text, position) {
     let edit = new vscode.WorkspaceEdit();
-    let position = new vscode.Position(0, 0);
     edit.insert(uri, position, text);
     vscode.workspace.applyEdit(edit);
   }
