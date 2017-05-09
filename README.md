@@ -42,6 +42,14 @@ None yet.
 - grammar
 - linter
 
-### 0.1.0
+### 0.0.1
 
 Initial release of the puppet extension.
+
+### 0.0.2
+
+Puppet Resource and Puppet Module commands.
+
+### 0.0.3
+
+Puppet Parser validate linter added
