@@ -2,7 +2,7 @@
   "name": "puppet-vscode",
   "displayName": "Puppet",
   "description": "Puppet VSCode extension",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "puppet",
   "license": "Apache 2.0",
   "repository":{
