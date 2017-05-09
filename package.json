@@ -2,7 +2,7 @@
   "name": "puppet-vscode",
   "displayName": "Puppet",
   "description": "Puppet VSCode extension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "puppet",
   "license": "Apache 2.0",
   "repository":{
@@ -24,6 +24,7 @@
   "activationEvents": [
     "onLanguage:puppet",
     "onCommand:extension.puppetLint",
+    "onCommand:extension.puppetParserValidate",
     "onCommand:extension.puppetResource",
     "onCommand:extension.puppetModule"
   ],
@@ -54,6 +55,10 @@
       {
         "command": "extension.puppetLint",
         "title": "Puppet Lint",
+        "when": "editorTextFocus && editorLangId == 'puppet'"
+      },{
+        "command": "extension.puppetParserValidate",
+        "title": "Puppet Parser",
         "when": "editorTextFocus && editorLangId == 'puppet'"
       },{
         "command": "extension.puppetResource",

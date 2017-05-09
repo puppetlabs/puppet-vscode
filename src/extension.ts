@@ -9,6 +9,7 @@ import { puppetLintCommand } from '../src/commands/puppetLintCommand';
 import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
 import { puppetLintProvider } from '../src/providers/puppetLintProvider';
+import { puppetParserValidateProvider } from '../src/providers/puppetParserValidateProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -20,6 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   let linter = new puppetLintProvider();
   linter.activate(context.subscriptions);
+
+  let validator = new puppetParserValidateProvider();
+  validator.activate(context.subscriptions);
 
 
   let lintCommand = new puppetLintCommand();
