@@ -8,7 +8,11 @@ import ChildProcess = cp.ChildProcess;
 
 import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
-import { LanguageClient, LanguageClientOptions, SettingMonitor, ServerOptions, ErrorAction, ErrorHandler, CloseAction, TransportKind } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, SettingMonitor, ServerOptions,
+         ErrorAction, ErrorHandler, CloseAction, TransportKind, RequestType0 } from 'vscode-languageclient';
+
+var statusBarItem;
+
 
 function startLangServerTCP(host: string, addr: number, documentSelector: string | string[]): vscode.Disposable {
   let serverOptions: ServerOptions = function() {
@@ -38,7 +42,24 @@ function startLangServerTCP(host: string, addr: number, documentSelector: string
     // }
   }
 
-  return new LanguageClient(`tcp lang server (host ${host} port ${addr})`, serverOptions, clientOptions).start();
+  var languageServerClient = new LanguageClient(`tcp lang server (host ${host} port ${addr})`, serverOptions, clientOptions)
+
+  languageServerClient.onReady().then(
+    () => {
+        languageServerClient
+        .sendRequest(PuppetVersionRequest.type)
+        .then(
+          (versionDetails) => {
+
+            statusBarItem.color = "#affc74";
+            statusBarItem.text = "$(terminal) " + versionDetails.puppetVersion;
+          });
+    },
+    (reason) => {
+        this.setSessionFailure("Could not start language service: ", reason);
+    });
+
+   return languageServerClient.start();
 }
 
 // this method is called when your extension is activated
@@ -65,10 +86,41 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(moduleCommand);
   context.subscriptions.push(rdisposable);
 
+  createStatusBarItem();
+
   // TCP Language Server
   context.subscriptions.push(startLangServerTCP('127.0.0.1', 8081, ["puppet"]));
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+}
+
+// Status Bar handler
+export function createStatusBarItem() {
+  if (statusBarItem === undefined) {
+    // Create the status bar item and place it right next
+    // to the language indicator
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
+
+    //this.statusBarItem.command = this.ShowSessionMenuCommandName;
+    statusBarItem.show();
+    vscode.window.onDidChangeActiveTextEditor(textEditor => {
+      if (textEditor === undefined || textEditor.document.languageId !== "puppet") {
+        statusBarItem.hide();
+      }
+      else {
+        statusBarItem.show();
+      }
+    })
+  }
+}
+
+export namespace PuppetVersionRequest {
+  export const type = new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion');
+}
+
+export interface PuppetVersionDetails {
+  puppetVersion: string;
+  facterVersion: string;
 }

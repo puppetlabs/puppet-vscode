@@ -35,6 +35,12 @@ module PuppetLanguageServer
           PuppetLanguageServer::LogMessage('debug','Received shutdown method')
           request.reply_result(nil)
 
+        when 'puppet/getVersion'
+          request.reply_result(LanguageServer::PuppetVersion.create({
+            'puppetVersion' => Puppet::version,
+            'facterVersion' => Facter.version,
+          }))
+
         when 'textDocument/completion'
           file_uri = request.params['textDocument']['uri']
           line_num = request.params['position']['line']
@@ -76,8 +82,6 @@ module PuppetLanguageServer
       case method
         when 'initialized'
           PuppetLanguageServer::LogMessage('information','Client has received initialization')
-          # DEBUG - Send a message with the Puppet version
-          send_show_message_notification(3, "Using Puppet v#{Puppet::version}")
 
         when 'exit'
           PuppetLanguageServer::LogMessage('information','Received exit notification.  Shutting down.')
