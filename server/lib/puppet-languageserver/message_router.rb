@@ -41,6 +41,29 @@ module PuppetLanguageServer
             'facterVersion' => Facter.version,
           }))
 
+        when 'puppet/compileNodeGraph'
+          file_uri = request.params['external']
+          content = @@documents.document(file_uri)
+
+          dotContent = nil
+          errorContent = nil
+          begin
+            # The fontsize is inserted in the puppet code.  Need to remove it so the client can render appropriately.  Need to
+            # set it to blank.  The graph label is set to vscode so that we can do text replacement client side to inject the
+            # appropriate styling.
+            options = {
+              'fontsize' => '""',
+              'name' => 'vscode',
+            }
+            dotContent = PuppetLanguageServer::PuppetParserHelper.compile_to_pretty_relationship_graph(content).to_dot(options)
+          rescue => exception
+            errorContent = "Error while parsing the file. #{exception}"
+          end
+          request.reply_result(LanguageServer::PuppetCompilation.create({
+            'dotContent' => dotContent,
+            'error' => errorContent,
+          }))
+
         when 'textDocument/completion'
           file_uri = request.params['textDocument']['uri']
           line_num = request.params['position']['line']

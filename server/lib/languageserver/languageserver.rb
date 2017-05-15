@@ -1,4 +1,4 @@
-%w(constants diagnostic completion_list completion_item hover puppet_version).each do |lib|
+%w(constants diagnostic completion_list completion_item hover puppet_version puppet_compilation).each do |lib|
   begin
     require "languageserver/#{lib}"
   rescue LoadError
