@@ -53,14 +53,6 @@
     ],
     "commands": [
       {
-        "command": "extension.puppetLint",
-        "title": "Puppet Lint",
-        "when": "editorTextFocus && editorLangId == 'puppet'"
-      },{
-        "command": "extension.puppetParserValidate",
-        "title": "Puppet Parser",
-        "when": "editorTextFocus && editorLangId == 'puppet'"
-      },{
         "command": "extension.puppetResource",
         "title": "Puppet Resource",
         "when": "editorTextFocus && editorLangId == 'puppet'"
@@ -83,5 +75,8 @@
     "mocha": "^2.3.3",
     "@types/node": "^6.0.40",
     "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^3.1.0"
   }
 }
