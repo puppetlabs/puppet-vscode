@@ -1,7 +1,7 @@
 if ENV['NATIVE_EVENTMACHINE'].nil?
   require 'em/pure_ruby'
 else
-  require 'eventmachine'
+ require 'eventmachine'
 end
 require 'json'
 
@@ -66,7 +66,7 @@ module PuppetLanguageServer
         # Need to find the first instance of '\r\n\r\n'
         offset = 0
         while (offset < @buffer.length - 4) do
-          break if @buffer[offset] == 13
+          break if @buffer[offset] == 13 && @buffer[offset + 1] == 10 && @buffer[offset + 2] == 13 && @buffer[offset + 3] == 10
           offset = offset + 1
         end
         return unless (offset < @buffer.length - 4)
@@ -269,10 +269,5 @@ puts "--- INBOUND\n#{data}\n---"
         @conn.reply_error(@id, code, message)
       end
     end
-  end
-
-  def self.start_tcp_server(addr, port, handler, options=nil, &block)
-    raise Error, "EventMachine is not running" unless EM.reactor_running?
-    EM.start_server addr, port, handler, options, &block
   end
 end
