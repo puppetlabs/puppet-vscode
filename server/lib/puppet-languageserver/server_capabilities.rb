@@ -8,7 +8,7 @@ module PuppetLanguageServer
         'hoverProvider' => true,
         'completionProvider' => {
           'resolveProvider' => true,
-          'triggerCharacters' => ['>','$','[']
+          'triggerCharacters' => ['>','$','[','=']
         }
       }
     end
