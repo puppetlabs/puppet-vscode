@@ -15,10 +15,6 @@ group :development do
   gem "win32-process", "<= 0.7.5",  :require => false
   gem "win32-security", "<= 0.2.5", :require => false
   gem "win32-service", "<= 0.8.8",  :require => false
-
-  unless ENV['NATIVE_EVENTMACHINE'].nil?
-    gem "eventmachine",               :require => false
-  end
 end
 
 # Evaluate Gemfile.local if it exists

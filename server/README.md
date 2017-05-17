@@ -10,26 +10,11 @@ A ruby based JSON RPC server that provides Puppet Language support for the [Lang
 
 * Clone this repository
 
-
 ```
 > git clone https://github.com/jpogran/puppet-vscode.git
 
 > cd puppet-vscode
 > cd server
-```
-
-* Set the `EventMachine` environment variable
-
-There is a bug in the EventMachine code which prevents using a pure ruby TCP Server.  For the moment, use EventMachine with native extensions
-
-On Linux etc.
-```bash
-> export NATIVE_EVENTMACHINE=true
-```
-
-On Windows
-```powershell
-PS> $ENV:NATIVE_EVENTMACHINE = 'true'
 ```
 
 * Bundle the development gems
@@ -46,6 +31,51 @@ PS> $ENV:NATIVE_EVENTMACHINE = 'true'
 [INFORMATION] Using Facter v2.4.6
 [INFORMATION] Preloading Facter (Async)...
 ...
+```
+
+## How to run the Language Server in Production
+
+* Ensure that Puppet Agent is installed
+
+[Linux](https://docs.puppet.com/puppet/4.10/install_linux.html)
+
+[Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
+
+[MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
+
+
+* Clone this repository
+
+```
+> git clone https://github.com/jpogran/puppet-vscode.git
+
+> cd puppet-vscode
+> cd server
+```
+
+* Run the `puppet-languageserver` with ruby
+
+> On Windows you need to run ruby with the `Puppet Command Prompt` which can be found in the Start Menu.  This enables the Puppet Agent ruby environment.
+
+```
+> ruby puppet-languageserver
+[INFORMATION] Using Puppet v4.10.1
+[INFORMATION] Initializing settings...
+[INFORMATION] Creating puppet function environment...
+[INFORMATION] Using Facter v2.4.6
+[INFORMATION] Preloading Facter (Async)...
+```
+
+## Command line arguments
+
+```
+Usage: puppet-languageserver.rb [options]
+    -p, --port=PORT                  TCP Port to listen on.  Default is 8081
+    -i, --ip=ADDRESS                 IP Address to listen on (0.0.0.0 for all interfaces).  Default is 127.0.0.1
+    -c, --no-stop                    Do not stop the language server once a client disconnects.  Default is to stop
+    -t, --timeout=TIMEOUT            Stop the language server if a client does not connection within TIMEOUT seconds.  A value of zero will not timeout.  Default is 10 seconds
+    -d, --no-preload                 Do not preload Puppet information when the language server starts.  Default is to preload
+    -h, --help                       Prints this help
 ```
 
 ## Why are there vendored gems and why only native ruby
