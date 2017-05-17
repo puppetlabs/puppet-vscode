@@ -5,6 +5,40 @@ module PuppetLanguageServer
       incomplete = false
 
       item = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, true)
+
+      if item.nil?
+        # We are in the root of the document.
+
+        # Add keywords
+        ['class'].each do |keyword|
+          items << LanguageServer::CompletionItem.create({
+            'label'  => keyword,
+            'kind'   => LanguageServer::COMPLETIONITEMKIND_KEYWORD,
+            'detail' => 'Keyword',
+            'data'   => { 'type' => 'keyword',
+                          'name' => keyword,
+                        },
+          })
+        end
+
+        # Add resources
+        PuppetLanguageServer::PuppetHelper.types.each do |pup_type|
+          items << LanguageServer::CompletionItem.create({
+            'label'  => pup_type,
+            'kind'   => LanguageServer::COMPLETIONITEMKIND_MODULE,
+            'detail' => 'Resource',
+            'data'   => { 'type' => 'resource_type',
+                          'name' => pup_type,
+                        },
+          })
+        end
+
+        return LanguageServer::CompletionList.create({
+          'isIncomplete' => incomplete,
+          'items'        => items,
+        })
+      end
+
       return LanguageServer::CompletionList.create_nil_response() if item.nil?
 
       case item.class.to_s
@@ -74,6 +108,22 @@ module PuppetLanguageServer
           completion_item['documentation'] = value.to_s
           completion_item['insertText'] = "'#{data['expr']}'"
 
+        when 'keyword'
+          case data['name']
+            when 'class'
+              completion_item['documentation'] = 'Classes are named blocks of Puppet code that are stored in modules for later use and ' +
+                                                'are not applied until they are invoked by name. They can be added to a node’s catalog ' +
+                                                'by either declaring them in your manifests or assigning them from an ENC.'
+              completion_item['insertText'] = "# Class: $1\n#\n#\nclass ${1:name} {\n\t${2:# resources}\n}$0"
+              completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
+          end
+
+        when 'resource_type'
+          item_type = Puppet::Type.type(data['name'])
+          # TODO: More things?
+          completion_item['documentation'] = item_type.doc unless item_type.doc.nil?
+          completion_item['insertText'] = "#{data['name']} { '${1:title}':\n\tensure => '${2:present}'\n},"
+          completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
         when 'resource_parameter'
           item_type = Puppet::Type.type(data['resource_type'])
           param_type = item_type.attrclass(data['param'].intern)

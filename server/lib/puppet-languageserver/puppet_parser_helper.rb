@@ -39,7 +39,7 @@ module PuppetLanguageServer
         !item.offset.nil? && !item.length.nil? && abs_offset >= item.offset && abs_offset <= item.offset + item.length
       end.sort { |a, b| a.length - b.length }
 
-    # perhaps nil means I'm in the root document?
+      # nil means the root of the document
       return nil if valid_models.length == 0
       item = valid_models[0]
 

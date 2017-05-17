@@ -22,7 +22,7 @@ module PuppetLanguageServer
 
     def self.facts
       @ops_lock.synchronize do
-        load_facts if @fact_hash.nil?
+        _load_facts if @fact_hash.nil?
         @fact_hash.clone
       end
     end

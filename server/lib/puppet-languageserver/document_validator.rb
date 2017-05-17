@@ -6,7 +6,6 @@ module PuppetLanguageServer
       result = []
       problems = 0
 
-      use_puppet_parser = false
       begin
         linter = PuppetLint::Checks.new
         problems = linter.run(nil, content)
@@ -44,32 +43,35 @@ module PuppetLanguageServer
           end
         end
       rescue => exception
-        # If anything catastrophic happens resort to puppet parsing
-        use_puppet_parser = true
+        # If anything catastrophic happens we resort to puppet parsing anyway
       end
 
       # TODO: Should I wrap this thing in a big rescue block?
-      if use_puppet_parser
-        Puppet[:code] = content
-        env = Puppet.lookup(:current_environment)
-        loaders = Puppet::Pops::Loaders.new(env)
-        Puppet.override( {:loaders => loaders } , _('For puppet parser validate')) do
-          begin
-            validation_environment = nil ? env.override_with(:manifest => nil) : env
-            validation_environment.check_for_reparse
-            validation_environment.known_resource_types.clear
-          rescue => detail
-            unless detail.line.nil? || detail.pos.nil? || detail.basic_message.nil?
-              result << LanguageServer::Diagnostic.create({
-                'severity' => LanguageServer::DIAGNOSTICSEVERITY_ERROR,
-                'fromline' => detail.line - 1,  # Line numbers from puppet are base 1
-                'toline' => detail.line - 1,    # Line numbers from puppet are base 1
-                'fromchar' => detail.pos - 1,   # Pos numbers from puppet are base 1
-                'tochar' => detail.pos + 1 - 1, # Pos numbers from puppet are base 1
-                'source' => 'Puppet',
-                'message' => detail.basic_message,
-              })
-            end
+      Puppet[:code] = content
+      env = Puppet.lookup(:current_environment)
+      loaders = Puppet::Pops::Loaders.new(env)
+      Puppet.override( {:loaders => loaders } , _('For puppet parser validate')) do
+        begin
+          validation_environment = nil ? env.override_with(:manifest => nil) : env
+          validation_environment.check_for_reparse
+          validation_environment.known_resource_types.clear
+        rescue => detail
+          # Somtimes the error is in the cause not the root object itself
+          detail = detail.cause if !detail.respond_to?(:line) && detail.respond_to?(:cause) && detail.cause.respond_to?(:line)
+
+          message = detail.respond_to?(:message) ? detail.message : nil
+          message = detail.basic_message if message.nil? && detail.respond_to?(:basic_message)
+
+          unless detail.line.nil? || detail.pos.nil? || message.nil?
+            result << LanguageServer::Diagnostic.create({
+              'severity' => LanguageServer::DIAGNOSTICSEVERITY_ERROR,
+              'fromline' => detail.line - 1,  # Line numbers from puppet are base 1
+              'toline' => detail.line - 1,    # Line numbers from puppet are base 1
+              'fromchar' => detail.pos - 1,   # Pos numbers from puppet are base 1
+              'tochar' => detail.pos + 1 - 1, # Pos numbers from puppet are base 1
+              'source' => 'Puppet',
+              'message' => message,
+            })
           end
         end
       end
