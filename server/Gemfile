@@ -9,7 +9,12 @@ source ENV['GEM_SOURCE'] || "https://rubygems.org"
 # -=-=-=-=-=- WARNING -=-=-=-=-=-
 
 group :development do
+  gem 'rake', '>= 10.4',            :require => false
+  gem 'rspec', '>= 3.2',            :require => false
+  gem "rubocop",                    :require => false, :platforms => [:ruby, :x64_mingw]
+
   gem "puppet",                     :require => false
+
   gem "win32-dir", "<= 0.4.9",      :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
   gem "win32-eventlog", "<= 0.6.5", :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
   gem "win32-process", "<= 0.7.5",  :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
