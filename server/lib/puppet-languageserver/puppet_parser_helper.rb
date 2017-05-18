@@ -1,25 +1,41 @@
 module PuppetLanguageServer
   module PuppetParserHelper
-    def self.object_under_cursor(content, line_num, char_num, try_char_removal = false)
+
+    def self.remove_char_at(content, line_num, char_num)
+      # TODO: Do we care about CRLF vs LF - I don't think so.
+      line_offset = 0
+      (1..line_num).each { |_x| line_offset = content.index("\n",line_offset + 1) unless line_offset.nil? }
+      raise if line_offset.nil?
+
+      # Remove the offending character
+      new_content = content.slice(0,line_offset + char_num) + content.slice(line_offset + char_num + 1, content.length - 1)
+
+      new_content
+    end
+
+    def self.object_under_cursor(content, line_num, char_num, multiple_attempts = false)
       # Use Puppet to generate the AST
       parser = Puppet::Pops::Parser::Parser.new()
 
       result = nil
-      begin
-        result = parser.parse_string(content, '')
-      rescue Puppet::ParseErrorWithIssue => exception
-        raise unless try_char_removal
+      [:noop, :remove_char].each do |method|
+        case method
+          when :noop
+            new_content = content
+          when :remove_char
+            new_content = remove_char_at(content, line_num, char_num)
+          else
+            raise("Unknown parsing method #{method}")
+        end
 
-        # TODO: Do we care about CRLF vs LF - I don't think so.
-        line_offset = 0
-        (1..line_num).each { |_x| line_offset = content.index("\n",line_offset + 1) unless line_offset.nil? }
-        raise if line_offset.nil?
-
-        # Remove the offending character and try parsing again.
-        new_content = content.slice(0,line_offset + char_num) + content.slice(line_offset + char_num + 1, content.length - 1)
-
-        result = parser.parse_string(new_content, '')
+        begin
+          result = parser.parse_string(content, '')
+        rescue Puppet::ParseErrorWithIssue => exception
+          next if multiple_attempts
+          raise
+        end
       end
+      raise("Unable to parse content") if result.nil?
 
       # Convert line and char nums (base 0) to an absolute offset
       #   result.line_offsets contains an array of the offsets on a per line basis e.g.
