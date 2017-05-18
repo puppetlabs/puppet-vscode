@@ -85,7 +85,7 @@ module PuppetLanguageServer
 
         when 'exit'
           PuppetLanguageServer::LogMessage('information','Received exit notification.  Shutting down.')
-          EventMachine::stop_event_loop
+          close_connection
 
         when 'textDocument/didOpen'
           PuppetLanguageServer::LogMessage('information','Received textDocument/didOpen notification.')
