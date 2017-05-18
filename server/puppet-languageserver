@@ -7,4 +7,5 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'vendor','puppet-lint','lib'
 
 require 'puppet-languageserver'
 
+PuppetLanguageServer::InitPuppet(PuppetLanguageServer::CommandLineParser.parse(ARGV))
 PuppetLanguageServer::RPCServer(PuppetLanguageServer::CommandLineParser.parse(ARGV))
