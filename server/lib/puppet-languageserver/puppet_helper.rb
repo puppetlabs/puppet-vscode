@@ -26,13 +26,21 @@ module PuppetLanguageServer
       end
     end
 
-    def self.types
+    def self.get_type(name)
+      result = nil
+      @ops_lock_types.synchronize do
+        _load_types if @types_hash.nil?
+        result = @types_hash[name.intern]
+      end
+      result
+    end
+
+    def self.type_names
       result = []
       @ops_lock_types.synchronize do
         _load_types if @types_hash.nil?
         result = @types_hash.keys.map { |key| key.to_s }
       end
-
       result
     end
 
@@ -47,10 +55,26 @@ module PuppetLanguageServer
       result = []
       @ops_lock_funcs.synchronize do
         _load_functions if @function_module.nil?
+        result = @function_module.all_function_info.dup
+      end
+      result
+    end
 
+    def self.function(name)
+      result = nil
+      @ops_lock_funcs.synchronize do
+        _load_functions if @function_module.nil?
+        result = @function_module.all_function_info[name.intern]
+      end
+      result
+    end
+
+    def self.function_names
+      result = []
+      @ops_lock_funcs.synchronize do
+        _load_functions if @function_module.nil?
         result = @function_module.all_function_info.keys.map { |key| key.to_s }
       end
-
       result
     end
 
