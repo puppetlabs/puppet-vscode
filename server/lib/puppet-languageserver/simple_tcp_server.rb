@@ -35,7 +35,7 @@ module PuppetLanguageServer
     end
 
     # @api public
-    def close_connection?
+    def close_connection
       socket.close
     end
   end
