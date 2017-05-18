@@ -10,28 +10,13 @@ module PuppetLanguageServer
         # We are in the root of the document.
 
         # Add keywords
-        ['class','define','application'].each do |keyword|
-          items << LanguageServer::CompletionItem.create({
-            'label'  => keyword,
-            'kind'   => LanguageServer::COMPLETIONITEMKIND_KEYWORD,
-            'detail' => 'Keyword',
-            'data'   => { 'type' => 'keyword',
-                          'name' => keyword,
-                        },
-          })
-        end
+        keywords(['class','define','application']) { |item| items << item }
 
         # Add resources
-        PuppetLanguageServer::PuppetHelper.types.each do |pup_type|
-          items << LanguageServer::CompletionItem.create({
-            'label'  => pup_type,
-            'kind'   => LanguageServer::COMPLETIONITEMKIND_MODULE,
-            'detail' => 'Resource',
-            'data'   => { 'type' => 'resource_type',
-                          'name' => pup_type,
-                        },
-          })
-        end
+        all_resources { |item| items << item }
+
+        # Find functions which don't return values i.e. statements
+        all_statement_functions { |item| items << item }
 
         return LanguageServer::CompletionList.create({
           'isIncomplete' => incomplete,
@@ -39,53 +24,24 @@ module PuppetLanguageServer
         })
       end
 
-      return LanguageServer::CompletionList.create_nil_response() if item.nil?
-
       case item.class.to_s
         when "Puppet::Pops::Model::VariableExpression"
           expr = item.expr.value
 
           # Complete for `$facts[...`
           if expr == 'facts'
-            PuppetLanguageServer::FacterHelper.facts.each do |name,value|
-              items << LanguageServer::CompletionItem.create({
-                'label'      => "#{name}",
-                'insertText' => "'#{name}'",
-                'kind'       => LanguageServer::COMPLETIONITEMKIND_VARIABLE,
-                'detail'     => 'Fact',
-                'data'       => { 'type' => 'variable_expr_fact',
-                                  'expr' => name,
-                                },
-              })
-            end
+            all_facts  { |item| items << item }
           end
 
         when "Puppet::Pops::Model::HostClassDefinition"
           # We are in the root of a `class` statement
 
           # Add keywords
-          ['require', 'contain'].each do |keyword|
-            items << LanguageServer::CompletionItem.create({
-              'label'  => keyword,
-              'kind'   => LanguageServer::COMPLETIONITEMKIND_KEYWORD,
-              'detail' => 'Keyword',
-              'data'   => { 'type' => 'keyword',
-                            'name' => keyword,
-                          },
-            })
-          end
+          keywords(['require', 'contain']) { |item| items << item }
 
           # Add resources
-          PuppetLanguageServer::PuppetHelper.types.each do |pup_type|
-            items << LanguageServer::CompletionItem.create({
-              'label'  => pup_type,
-              'kind'   => LanguageServer::COMPLETIONITEMKIND_MODULE,
-              'detail' => 'Resource',
-              'data'   => { 'type' => 'resource_type',
-                            'name' => pup_type,
-                          },
-            })
-          end
+          all_resources { |item| items << item }
+
 
         when "Puppet::Pops::Model::ResourceExpression"
           # We are inside a resource definition.  Should display all available
@@ -128,6 +84,66 @@ module PuppetLanguageServer
       })
     end
 
+    # BEGIN CompletionItem Helpers
+    def self.keywords(keywords = [], &block)
+      keywords.each do |keyword|
+        item = LanguageServer::CompletionItem.create({
+          'label'  => keyword,
+          'kind'   => LanguageServer::COMPLETIONITEMKIND_KEYWORD,
+          'detail' => 'Keyword',
+          'data'   => { 'type' => 'keyword',
+                        'name' => keyword,
+                      },
+        })
+        block.call(item) if block
+      end
+    end
+
+    def self.all_facts(&block)
+      PuppetLanguageServer::FacterHelper.facts.each do |name,value|
+        item = LanguageServer::CompletionItem.create({
+          'label'      => "#{name}",
+          'insertText' => "'#{name}'",
+          'kind'       => LanguageServer::COMPLETIONITEMKIND_VARIABLE,
+          'detail'     => 'Fact',
+          'data'       => { 'type' => 'variable_expr_fact',
+                            'expr' => name,
+                          },
+        })
+        block.call(item) if block
+      end
+    end
+
+    def self.all_resources(&block)
+      PuppetLanguageServer::PuppetHelper.type_names.each do |pup_type|
+        item = LanguageServer::CompletionItem.create({
+          'label'  => pup_type,
+          'kind'   => LanguageServer::COMPLETIONITEMKIND_MODULE,
+          'detail' => 'Resource',
+          'data'   => { 'type' => 'resource_type',
+                        'name' => pup_type,
+                      },
+        })
+        block.call(item) if block
+      end
+    end
+
+    def self.all_statement_functions(&block)
+      # Find functions which don't return values i.e. statements
+      PuppetLanguageServer::PuppetHelper.functions.select { |key,obj| obj[:type] == :statement}.each do |key,obj|
+        item = LanguageServer::CompletionItem.create({
+          'label'  => key.to_s,
+          'kind'   => LanguageServer::COMPLETIONITEMKIND_FUNCTION,
+          'detail' => 'Function',
+          'data'   => { 'type' => 'function',
+                        'name' => key.to_s,
+                      },
+        })
+        block.call(item) if block
+      end
+    end
+    # END Helpers
+
     def self.resolve(completion_item)
       data = completion_item['data'].clone
       case data['type']
@@ -166,6 +182,16 @@ module PuppetLanguageServer
               completion_item['insertText'] = "site ${1:name} () {\n\t${2:# applications}\n}$0"
               completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
           end
+
+        when 'function'
+          item_type = PuppetLanguageServer::PuppetHelper.function(data['name'])
+          completion_item['documentation'] = item_type[:doc] unless item_type[:doc].nil?
+          completion_item['insertText'] = "#{data['name']}(${1:value}"
+          (2..item_type[:arity]).each do |index|
+            completion_item['insertText'] += ", ${#{index}:value}"
+          end
+          completion_item['insertText'] += ')'
+          completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
 
         when 'resource_type'
           item_type = Puppet::Type.type(data['name'])
