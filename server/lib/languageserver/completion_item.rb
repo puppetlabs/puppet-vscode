@@ -101,7 +101,7 @@ module LanguageServer
       result['kind']                = options['kind'] 
       result['data']                = options['data']
       result['detail']              = options['detail'] unless options['detail'].nil?
-      result['documentation']       = options['documentation'] unless options['documentation'].nil?
+      result['documentation']       = options['documentation'].strip unless options['documentation'].nil?
       result['sortText']            = options['sortText'] unless options['sortText'].nil?
       result['filterText']          = options['filterText'] unless options['filterText'].nil?
       result['insertText']          = options['insertText'] unless options['insertText'].nil?
