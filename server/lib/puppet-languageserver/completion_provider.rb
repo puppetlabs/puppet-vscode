@@ -10,7 +10,7 @@ module PuppetLanguageServer
         # We are in the root of the document.
 
         # Add keywords
-        ['class'].each do |keyword|
+        ['class','define','application'].each do |keyword|
           items << LanguageServer::CompletionItem.create({
             'label'  => keyword,
             'kind'   => LanguageServer::COMPLETIONITEMKIND_KEYWORD,
@@ -45,17 +45,46 @@ module PuppetLanguageServer
         when "Puppet::Pops::Model::VariableExpression"
           expr = item.expr.value
 
+          # Complete for `$facts[...`
           if expr == 'facts'
             PuppetLanguageServer::FacterHelper.facts.each do |name,value|
               items << LanguageServer::CompletionItem.create({
-                'label' => "'#{name}'",
-                'kind'  => LanguageServer::COMPLETIONITEMKIND_VARIABLE,
-                'detail' => 'Fact',
-                'data'  => { 'type' => 'variable_expr_fact',
-                             'expr' => name,
-                          },
+                'label'      => "#{name}",
+                'insertText' => "'#{name}'",
+                'kind'       => LanguageServer::COMPLETIONITEMKIND_VARIABLE,
+                'detail'     => 'Fact',
+                'data'       => { 'type' => 'variable_expr_fact',
+                                  'expr' => name,
+                                },
               })
             end
+          end
+
+        when "Puppet::Pops::Model::HostClassDefinition"
+          # We are in the root of a `class` statement
+
+          # Add keywords
+          ['require', 'contain'].each do |keyword|
+            items << LanguageServer::CompletionItem.create({
+              'label'  => keyword,
+              'kind'   => LanguageServer::COMPLETIONITEMKIND_KEYWORD,
+              'detail' => 'Keyword',
+              'data'   => { 'type' => 'keyword',
+                            'name' => keyword,
+                          },
+            })
+          end
+
+          # Add resources
+          PuppetLanguageServer::PuppetHelper.types.each do |pup_type|
+            items << LanguageServer::CompletionItem.create({
+              'label'  => pup_type,
+              'kind'   => LanguageServer::COMPLETIONITEMKIND_MODULE,
+              'detail' => 'Resource',
+              'data'   => { 'type' => 'resource_type',
+                            'name' => pup_type,
+                          },
+            })
           end
 
         when "Puppet::Pops::Model::ResourceExpression"
@@ -70,25 +99,25 @@ module PuppetLanguageServer
           # Add Parameters
           item_type.parameters.each do |param|
             items << LanguageServer::CompletionItem.create({
-              'label' => param.to_s,
-              'kind'  => LanguageServer::COMPLETIONITEMKIND_PROPERTY,
+              'label'  => param.to_s,
+              'kind'   => LanguageServer::COMPLETIONITEMKIND_PROPERTY,
               'detail' => 'Parameter',
-              'data'  => { 'type' => 'resource_parameter',
-                           'param' => param.to_s,
-                           'resource_type' => item.type_name.value,
-                         },
+              'data'   => { 'type' => 'resource_parameter',
+                            'param' => param.to_s,
+                            'resource_type' => item.type_name.value,
+                          },
             })
           end
           # Add Properties
           item_type.properties.each do |prop|
             items << LanguageServer::CompletionItem.create({
-              'label' => prop.name.to_s,
-              'kind'  => LanguageServer::COMPLETIONITEMKIND_PROPERTY,
+              'label'  => prop.name.to_s,
+              'kind'   => LanguageServer::COMPLETIONITEMKIND_PROPERTY,
               'detail' => 'Property',
-              'data'  => { 'type' => 'resource_property',
+              'data'   => { 'type' => 'resource_property',
                            'prop' => prop.name.to_s,
                            'resource_type' => item.type_name.value,
-                         },
+                          },
             })
           end
       end
@@ -106,15 +135,35 @@ module PuppetLanguageServer
           value = PuppetLanguageServer::FacterHelper.facts[data['expr']]
           # TODO: More things?
           completion_item['documentation'] = value.to_s
-          completion_item['insertText'] = "'#{data['expr']}'"
 
         when 'keyword'
           case data['name']
             when 'class'
               completion_item['documentation'] = 'Classes are named blocks of Puppet code that are stored in modules for later use and ' +
-                                                'are not applied until they are invoked by name. They can be added to a node’s catalog ' +
-                                                'by either declaring them in your manifests or assigning them from an ENC.'
+                                                 'are not applied until they are invoked by name. They can be added to a node’s catalog ' +
+                                                 'by either declaring them in your manifests or assigning them from an ENC.'
               completion_item['insertText'] = "# Class: $1\n#\n#\nclass ${1:name} {\n\t${2:# resources}\n}$0"
+              completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
+            when 'define'
+              completion_item['documentation'] = 'Defined resource types (also called defined types or defines) are blocks of Puppet code ' +
+                                                 'that can be evaluated multiple times with different parameters. Once defined, they act ' +
+                                                 'like a new resource type: you can cause the block to be evaluated by declaring a resource ' +
+                                                 'of that new resource type.'
+              completion_item['insertText'] = "define ${1:name} () {\n\t${2:# resources}\n}$0"
+              completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
+            when 'application'
+              completion_item['detail'] = 'Orchestrator'
+              completion_item['documentation'] = 'Application definitions are a lot like a defined resource type except that instead of defining ' +
+                                                 'a chunk of reusable configuration that applies to a single node, the application definition ' +
+                                                 'operates at a higher level. The components you declare inside an application can be individually '+
+                                                 'assigned to separate nodes you manage with Puppet.'
+              completion_item['insertText'] = "application ${1:name} () {\n\t${2:# resources}\n}$0"
+              completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
+            when 'site'
+              completion_item['detail'] = 'Orchestrator'
+              completion_item['documentation'] = 'Within the site block, applications are declared like defined types. They can be declared any ' +
+                                                 'number of times, but their type and title combination must be unique within an environment.'
+              completion_item['insertText'] = "site ${1:name} () {\n\t${2:# applications}\n}$0"
               completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
           end
 

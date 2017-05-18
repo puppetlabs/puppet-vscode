@@ -1,0 +1,36 @@
+{
+  "if": {
+    "prefix": "if",
+    "body": [
+      "if ${1:condition} {",
+      "\t${2:# when true}",
+      "}",
+      "else {",
+      "\t${2:# when false}",
+      "}"
+    ],
+    "description": "Conditional statement"
+  },
+  "unless": {
+    "prefix": "unless",
+    "body": [
+      "unless ${1:condition} {",
+      "\t${2:# when false}",
+      "}",
+      "else {",
+      "\t${2:# when true}",
+      "}"
+    ],
+    "description": "Conditional statement"
+  },
+  "case": {
+    "prefix": "case",
+    "body": [
+      "case ${1:condition} {",
+      "\t'${2:value}': { } ",
+      "\tdefault: { }",
+      "}"
+    ],
+    "description": "Conditional case statement"
+  }
+}
