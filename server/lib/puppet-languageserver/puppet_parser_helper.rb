@@ -18,12 +18,14 @@ module PuppetLanguageServer
       parser = Puppet::Pops::Parser::Parser.new()
 
       result = nil
+      move_offset = 0
       [:noop, :remove_char].each do |method|
         case method
           when :noop
             new_content = content
           when :remove_char
             new_content = remove_char_at(content, line_num, char_num)
+            move_offset = -1
           else
             raise("Unknown parsing method #{method}")
         end
@@ -41,7 +43,8 @@ module PuppetLanguageServer
       #   result.line_offsets contains an array of the offsets on a per line basis e.g.
       #     [0, 14, 34, 36]  means line number 2 starts at absolute offset 34
       #   Once we know the line offset, we can simply add on the char_num to get the absolute offset
-      abs_offset = result.line_offsets[line_num] + char_num
+      #   If during paring we modified the source we may need to change the cursor location
+      abs_offset = result.line_offsets[line_num] + char_num + move_offset
       # Typically we're completing after something was typed, so go back one char
       abs_offset = abs_offset - 1 if abs_offset > 0
 
