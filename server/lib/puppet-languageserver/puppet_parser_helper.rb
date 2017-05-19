@@ -13,25 +13,82 @@ module PuppetLanguageServer
       new_content
     end
 
+    def self.insert_text_at(content, line_num, char_num, text)
+      # Insert text after where the cursor is
+      # This helps due to syntax errors like `$facts[]` or `ensure =>`
+      line_offset = 0
+      (1..line_num).each { |_x| line_offset = content.index("\n",line_offset + 1) unless line_offset.nil? }
+      raise if line_offset.nil?
+      # Insert the text
+      new_content = content.slice(0,line_offset + char_num + 1) + text + content.slice(line_offset + char_num + 1, content.length - 1)
+
+      new_content
+    end
+
+    def self.line_offsets(content)
+      # Calculate all of the offsets of \n in the file
+      line_offsets = [0]
+      line_offset = 0
+      begin
+        line_offset = content.index("\n",line_offset + 1)
+        line_offsets << line_offset + 1 unless line_offset.nil?
+      end until line_offset.nil?
+      line_offsets
+    end
+
+    def self.get_line_at(content, line_offsets, line_num)
+      # Get the text of the designated line
+      start_index = line_offsets[line_num]
+      if line_offsets[line_num + 1].nil?
+        content.slice(start_index, content.length - start_index)
+      else
+        content.slice(start_index, line_offsets[line_num + 1] - start_index - 1)
+      end
+    end
+
+
     def self.object_under_cursor(content, line_num, char_num, multiple_attempts = false)
       # Use Puppet to generate the AST
       parser = Puppet::Pops::Parser::Parser.new()
 
+      # Calculating the line offsets can be expensive and is only required
+      # if we're doing mulitple passes of parsing
+      line_offsets = line_offsets(content) if multiple_attempts
+
       result = nil
       move_offset = 0
-      [:noop, :remove_char].each do |method|
+      [:noop, :remove_char, :try_quotes, :try_quotes_and_comma].each do |method|
+        new_content = nil
         case method
           when :noop
             new_content = content
           when :remove_char
             new_content = remove_char_at(content, line_num, char_num)
             move_offset = -1
+          when :try_quotes
+            # Perhaps try inserting double quotes.  Useful in empty arrays or during variable assignment
+            # Grab the line up to the cursor character + 1
+            line = get_line_at(content, line_offsets, line_num).slice!(0,char_num + 1)
+            if line.strip.end_with?('=') ||
+               line.end_with?('[]')
+              new_content = insert_text_at(content, line_num, char_num, "''")
+            end
+          when :try_quotes_and_comma
+            # Perhaps try inserting double quotes with a comma.  Useful resource properties and parameter assignments
+            # Grab the line up to the cursor character + 1
+            line = get_line_at(content, line_offsets, line_num).slice!(0,char_num + 1)
+            if line.strip.end_with?('=>')
+              new_content = insert_text_at(content, line_num, char_num, "'',")
+            end
           else
             raise("Unknown parsing method #{method}")
         end
+        # if we have no content to parse, try the next method.
+        next if new_content.nil?
 
         begin
-          result = parser.parse_string(content, '')
+          result = parser.parse_string(new_content, '')
+          break
         rescue Puppet::ParseErrorWithIssue => exception
           next if multiple_attempts
           raise
