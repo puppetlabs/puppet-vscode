@@ -95,5 +95,3 @@ module PuppetLanguageServer
     LogMessage('information','Language Server exited.')
   end
 end
-
-PuppetLanguageServer::InitPuppet(PuppetLanguageServer::CommandLineParser.parse(ARGV))
