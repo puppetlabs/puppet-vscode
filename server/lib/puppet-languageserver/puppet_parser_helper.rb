@@ -45,5 +45,50 @@ module PuppetLanguageServer
 
       item
     end
+
+    # Reference - https://github.com/puppetlabs/puppet/blob/master/spec/lib/puppet_spec/compiler.rb
+    def self.compile_to_catalog(string, node = Puppet::Node.new('test'))
+      Puppet[:code] = string
+      # see lib/puppet/indirector/catalog/compiler.rb#filter
+      Puppet::Parser::Compiler.compile(node).filter { |r| r.virtual? }
+    end
+
+    def self.compile_to_ral(manifest, node = Puppet::Node.new('test'))
+      # Add the node facts if they don't already exist
+      # TODO Still missing the $facts['..'] in the catalog.  Don't know why :-(
+      node.merge(PuppetLanguageServer::FacterHelper.facts) if node.facts == nil
+
+      catalog = compile_to_catalog(manifest, node)
+      ral = catalog.to_ral
+      ral.finalize
+      ral
+    end
+
+    def self.compile_to_relationship_graph(manifest, prioritizer = Puppet::Graph::SequentialPrioritizer.new)
+      ral = compile_to_ral(manifest)
+      graph = Puppet::Graph::RelationshipGraph.new(prioritizer)
+      graph.populate_from(ral)
+      graph
+    end
+
+    def self.compile_to_pretty_relationship_graph(manifest, prioritizer = Puppet::Graph::SequentialPrioritizer.new)
+      graph = compile_to_relationship_graph(manifest, prioritizer)
+
+      # Remove vertexes which just clutter the graph
+
+      # Remove all of the Puppet::Type::Whit nodes.  This is an internal only class
+      list = graph.vertices.select { |node| node.is_a?(Puppet::Type::Whit) }
+      list.each { |node| graph.remove_vertex!(node) }
+
+      # Remove all of the Puppet::Type::Schedule nodes
+      list = graph.vertices.select { |node| node.is_a?(Puppet::Type::Schedule) }
+      list.each { |node| graph.remove_vertex!(node) }
+
+      # Remove all of the Puppet::Type::Filebucket nodes
+      list = graph.vertices.select { |node| node.is_a?(Puppet::Type::Filebucket) }
+      list.each { |node| graph.remove_vertex!(node) }
+
+      graph
+    end
   end
 end

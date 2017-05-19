@@ -79,6 +79,7 @@ module PuppetLanguageServer
     else
       LogMessage('information', "Skipping preloading Puppet")
     end
+
     true
   end
 

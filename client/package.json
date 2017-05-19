@@ -25,6 +25,7 @@
     "onLanguage:puppet",
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
+    "onCommand:extension.puppetShowNodeGraphToSide",
     "onCommand:extension.puppetResource",
     "onCommand:extension.puppetModule"
   ],
@@ -51,6 +52,15 @@
         "command": "extension.puppetModule",
         "title": "Puppet Module",
         "when": "editorTextFocus && editorLangId == 'puppet'"
+      },
+      {
+        "command": "extension.puppetShowNodeGraphToSide",
+        "title": "Open Node Graph to the Side",
+        "category": "Puppet",
+        "icon": {
+          "light": "./media/PreviewOnRightPane_16x.svg",
+          "dark": "./media/PreviewOnRightPane_16x_dark.svg"
+        }
       }
     ]
   },
