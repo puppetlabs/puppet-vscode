@@ -22,10 +22,9 @@ module PuppetLanguageServer
             factname = expr.slice(2,expr.length - 2)
             content = get_fact_content(factname)
           else
-            # Could be a flatout fact name.  May not *shrugs.  That method of access is deprecated
+            # Could be a flatout fact name.  May not *shrugs*.  That method of access is deprecated
             content = get_fact_content(expr)
           end
-          puts ""
 
         when "Puppet::Pops::Model::QualifiedName"
           if !item.eContainer.nil? && item.eContainer.class.to_s == "Puppet::Pops::Model::ResourceExpression"
@@ -42,8 +41,9 @@ module PuppetLanguageServer
           end
           raise "Unable to find suitable parent object for object of type #{item.class.to_s}" if parent_klass.nil?
 
-          # Instaniate an instance of the type
-          item_type = Puppet::Type.type(parent_klass.eContainer.type_name.value)
+          # Get an instance of the type
+          item_type = PuppetLanguageServer::PuppetHelper.get_type(parent_klass.eContainer.type_name.value)
+          raise "#{parent_klass.eContainer.type_name.value} is not a valid puppet type" if item_type.nil?
           # Check if it's a property
           attribute = item_type.validproperty?(item.attribute_name)
           if attribute != false
@@ -97,11 +97,9 @@ module PuppetLanguageServer
 
     def self.get_call_named_function_expression_content(item)
       func_name = item.functor_expr.value
-      raise "Function #{func_name} does not exist" if Puppet::Parser::Functions.function(func_name) == false
 
-      function_module = Puppet::Parser::Functions.environment_module(Puppet.lookup(:current_environment))
-      func_info = function_module.get_function_info(func_name.intern)
-      raise "Function #{func_name} does not have information" if func_info.nil?
+      func_info = PuppetLanguageServer::PuppetHelper.function(func_name)
+      raise "Function #{func_name} does not exist" if func_info.nil?
 
       # TODO: what about rvalue?
       content = "**#{func_name}**\n\n" # TODO: Do I add in the params from the arity number?
@@ -111,8 +109,9 @@ module PuppetLanguageServer
     end
 
     def self.get_resource_expression_content(item)
-      # Instantiate an instance of the type
-      item_type = Puppet::Type.type(item.type_name.value)
+      # Get an instance of the type
+      item_type = PuppetLanguageServer::PuppetHelper.get_type(item.type_name.value)
+      raise "#{item.type_name.value} is not a valid puppet type" if item_type.nil?
       content = "**#{item.type_name.value}** Resource\n\n"
       content = content + "\n\n#{item_type.doc}" unless item_type.doc.nil?
       content = content + "\n\n---\n"
