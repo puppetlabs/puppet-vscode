@@ -1,0 +1,6 @@
+out/
+node_modules/
+vendor/
+
+// Ignore generated module output
+*.vsix
