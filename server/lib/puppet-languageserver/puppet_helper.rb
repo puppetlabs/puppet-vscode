@@ -51,6 +51,12 @@ module PuppetLanguageServer
       end
     end
 
+    def self.load_functions_async
+      Thread.new do
+        load_functions
+      end
+    end
+
     def self.functions
       result = []
       @ops_lock_funcs.synchronize do

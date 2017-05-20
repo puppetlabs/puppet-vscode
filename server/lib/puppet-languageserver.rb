@@ -76,6 +76,12 @@ module PuppetLanguageServer
     if options[:preload_puppet]
       LogMessage('information', "Preloading Facter (Async)...")
       PuppetLanguageServer::FacterHelper.load_facts_async
+
+      LogMessage('information', "Preloading Puppet Types (Async)...")
+      PuppetLanguageServer::PuppetHelper.load_types_async
+
+      LogMessage('information', "Preloading Functions (Async)...")
+      PuppetLanguageServer::PuppetHelper.load_functions_async
     else
       LogMessage('information', "Skipping preloading Puppet")
     end
