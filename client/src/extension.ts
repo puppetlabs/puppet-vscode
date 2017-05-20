@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(startLangServerTCP(host, port, [langID]));
 
-  let resourceCommand = new puppetResourceCommand();
+  let resourceCommand = new puppetResourceCommand(languageServerClient);
   context.subscriptions.push(resourceCommand);
   context.subscriptions.push(vscode.commands.registerCommand('extension.puppetResource', () => {
     resourceCommand.run();

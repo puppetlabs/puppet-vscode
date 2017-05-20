@@ -1,3 +1,5 @@
+require 'puppet/indirector/face'
+
 module PuppetLanguageServer
   module PuppetHelper
     # Reference - https://github.com/puppetlabs/puppet/blob/master/lib/puppet/reference/type.rb
@@ -11,6 +13,15 @@ module PuppetLanguageServer
       @ops_lock.synchronize do
         _reset
       end
+    end
+
+    # Resource Face
+    def self.resource_face_get_by_typename(typename)
+      Puppet::Face[:resource, '0.0.1'].search(typename)
+    end
+
+    def self.resource_face_get_by_typename_and_title(typename, title)
+      Puppet::Face[:resource, '0.0.1'].find("#{typename}/#{title}")
     end
 
     # Types

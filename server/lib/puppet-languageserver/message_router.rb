@@ -41,6 +41,25 @@ module PuppetLanguageServer
             'facterVersion' => Facter.version,
           }))
 
+        when 'puppet/getResource'
+          type_name = request.params['typename']
+          title = request.params['title']
+          request.reply_result(LanguageServer::PuppetCompilation.create({ 'error' => 'Missing Typename'})) if type_name.nil?
+          resources = nil
+
+          if title.nil?
+            resources = PuppetLanguageServer::PuppetHelper.resource_face_get_by_typename(type_name)
+          else
+            resources = PuppetLanguageServer::PuppetHelper.resource_face_get_by_typename_and_title(type_name, title)
+            resources = [resources] unless resources.nil?
+          end
+          request.reply_result(LanguageServer::PuppetCompilation.create({ 'data' => ''})) if resources.nil? || resources.length.zero?
+
+          # TODO Should probably move this to a helper?
+          content = ''
+          resources.each { |res| content += res.to_manifest + "\n"}
+          request.reply_result(LanguageServer::PuppetCompilation.create({ 'data' => content}))
+
         when 'puppet/compileNodeGraph'
           file_uri = request.params['external']
           content = @@documents.document(file_uri)
