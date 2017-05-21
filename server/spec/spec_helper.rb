@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','lib'))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','vendor','puppet-lint','lib'))
 
 require 'puppet-languageserver'
-PuppetLanguageServer::InitPuppet(PuppetLanguageServer::CommandLineParser.parse([]))
+PuppetLanguageServer::init_puppet(PuppetLanguageServer::CommandLineParser.parse([]))
 
 # Custom RSpec Matchers
 

@@ -58,39 +58,39 @@ module PuppetLanguageServer
     end
   end
 
-  def self.LogMessage(severity, message)
+  def self.log_message(severity, message)
     puts "[#{severity.upcase}] #{message}"
   end
 
-  def self.InitPuppet(options)
-    LogMessage('information', "Using Puppet v#{Puppet::version}")
+  def self.init_puppet(options)
+    log_message('information', "Using Puppet v#{Puppet::version}")
 
-    LogMessage('information', "Initializing settings...")
+    log_message('information', "Initializing settings...")
     Puppet.initialize_settings
 
-    LogMessage('information', "Creating puppet function environment...")
+    log_message('information', "Creating puppet function environment...")
     autoloader = Puppet::Parser::Functions.autoloader
     autoloader.loadall
 
-    LogMessage('information', "Using Facter v#{Facter.version}")
+    log_message('information', "Using Facter v#{Facter.version}")
     if options[:preload_puppet]
-      LogMessage('information', "Preloading Facter (Async)...")
+      log_message('information', "Preloading Facter (Async)...")
       PuppetLanguageServer::FacterHelper.load_facts_async
 
-      LogMessage('information', "Preloading Puppet Types (Async)...")
+      log_message('information', "Preloading Puppet Types (Async)...")
       PuppetLanguageServer::PuppetHelper.load_types_async
 
-      LogMessage('information', "Preloading Functions (Async)...")
+      log_message('information', "Preloading Functions (Async)...")
       PuppetLanguageServer::PuppetHelper.load_functions_async
     else
-      LogMessage('information', "Skipping preloading Puppet")
+      log_message('information', "Skipping preloading Puppet")
     end
 
     true
   end
 
-  def self.RPCServer(options)
-    LogMessage('information', "Starting RPC Server...")
+  def self.rpc_server(options)
+    log_message('information', "Starting RPC Server...")
 
     server = PuppetLanguageServer::SimpleTCPServer.new()
 
@@ -98,6 +98,6 @@ module PuppetLanguageServer
     trap('INT'){ server.stop }
     server.start(PuppetLanguageServer::MessageRouter, options, 2)
 
-    LogMessage('information','Language Server exited.')
+    log_message('information','Language Server exited.')
   end
 end
