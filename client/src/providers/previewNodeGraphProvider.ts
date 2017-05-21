@@ -2,7 +2,8 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { LanguageClient, RequestType } from 'vscode-languageclient';
+import { LanguageClient } from 'vscode-languageclient';
+import { CompileNodeGraphRequest } from '../messages';
 
 export function isNodeGraphFile(document: vscode.TextDocument) {
   return document.languageId === 'puppet'
@@ -19,17 +20,6 @@ export function getNodeGraphUri(uri: vscode.Uri) {
     path: uri.fsPath + '.rendered',
     query: uri.toString()
   });
-}
-
-
-export namespace CompileNodeGraphRequest {
-  export const type = new RequestType<any, any, void, void>('puppet/compileNodeGraph');
-}
-
-export interface CompileNodeGraphResponse {
-  dotContent: string;
-  error: string;
-  data: string;
 }
 
 export class PuppetNodeGraphContentProvider implements vscode.TextDocumentContentProvider {

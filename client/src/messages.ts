@@ -22,3 +22,13 @@ export interface PuppetResourceResponse {
   data: string;
   error: string;
 }
+
+export namespace CompileNodeGraphRequest {
+  export const type = new RequestType<any, any, void, void>('puppet/compileNodeGraph');
+}
+
+export interface CompileNodeGraphResponse {
+  dotContent: string;
+  error: string;
+  data: string;
+}
