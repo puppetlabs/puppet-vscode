@@ -41,6 +41,14 @@ EOT
     end
 
     context "Given a resource in the manifest" do
+      let(:content) { <<-EOT
+user { 'Bob':
+  ensure => 'present',
+  name   => 'name',
+}
+EOT
+      }
+
       describe 'when cursor is on the resource type name' do
         let(:line_num) { 0 }
         let(:char_num) { 3 }
@@ -121,5 +129,77 @@ EOT
       end
     end
 
+    context "Given a facts variable in the manifest" do
+      let(:content) { <<-EOT
+$test1 = $::operatingsystem
+$test2 = $operatingsystem
+$test3 = $facts['operatingsystem']
+EOT
+      }
+
+      describe 'when cursor is on $::FACTNAME' do
+        let(:line_num) { 0 }
+        let(:char_num) { 16 }
+
+        it 'should return fact information' do
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**operatingsystem** Fact\n")
+        end
+      end
+
+      describe 'when cursor is on $FACTNAME' do
+        let(:line_num) { 1 }
+        let(:char_num) { 16 }
+
+        it 'should return fact information' do
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**operatingsystem** Fact\n")
+        end
+      end
+
+      describe 'when cursor is on $facts[FACTNAME]' do
+        let(:line_num) { 2 }
+        let(:char_num) { 12 }
+
+        it 'should return fact information' do
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**operatingsystem** Fact\n")
+        end
+      end
+
+      describe 'when cursor is inside $facts[FACTNAME]' do
+        let(:line_num) { 2 }
+        let(:char_num) { 22 }
+
+        it 'should return fact information' do
+          pending('Not implemented')
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**operatingsystem** Fact\n")
+        end
+      end
+    end
+
+    context "Given a function in the manifest" do
+      let(:content) { <<-EOT
+$string     = 'v1.v2:v3.v4'
+$array_var1 = split($string, ':')
+EOT
+      }
+
+      describe 'when cursor is on function name' do
+        let(:line_num) { 1 }
+        let(:char_num) { 17 }
+
+        it 'should return function information' do
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**split** Function\n")
+        end
+      end
+    end
   end
 end

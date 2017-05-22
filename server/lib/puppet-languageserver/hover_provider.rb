@@ -102,7 +102,7 @@ module PuppetLanguageServer
       raise "Function #{func_name} does not exist" if func_info.nil?
 
       # TODO: what about rvalue?
-      content = "**#{func_name}**\n\n" # TODO: Do I add in the params from the arity number?
+      content = "**#{func_name}** Function\n\n" # TODO: Do I add in the params from the arity number?
       content = content + func_info[:doc]
 
       content
