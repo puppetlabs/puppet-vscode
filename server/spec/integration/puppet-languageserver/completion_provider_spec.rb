@@ -90,41 +90,63 @@ EOT
       end
     end
 
+    context '$facts variable' do
+      describe "With newlines at the beginning of the document and inside the brackets of $facts" do
+        let(:content) { <<-EOT
 
-    describe "When inside the brackets of $facts" do
-      let(:content) { <<-EOT
+# Newlines are need above to test if parsing is ok.
 $test1 = $::operatingsystem
 $test2 = $operatingsystem
 $test3 = $facts[]
 EOT
-      }
-      let(:line_num) { 2 }
-      let(:char_num) { 16 }
+        }
+        let(:line_num) { 4 }
+        let(:char_num) { 16 }
 
-      it 'should return a list of facts' do
-        result = subject.complete(content, line_num, char_num)
+        it 'should return a list of facts' do
+          result = subject.complete(content, line_num, char_num)
 
-        result['items'].each do |item|
-          expect(item).to be_completion_item_with_type('variable_expr_fact')
+          result['items'].each do |item|
+            expect(item).to be_completion_item_with_type('variable_expr_fact')
+          end
         end
       end
-    end
 
-    describe "When inside the start brackets of $facts" do
-      let(:content) { <<-EOT
+      describe "When inside the brackets of $facts" do
+        let(:content) { <<-EOT
+$test1 = $::operatingsystem
+$test2 = $operatingsystem
+$test3 = $facts[]
+EOT
+        }
+        let(:line_num) { 2 }
+        let(:char_num) { 16 }
+
+        it 'should return a list of facts' do
+          result = subject.complete(content, line_num, char_num)
+
+          result['items'].each do |item|
+            expect(item).to be_completion_item_with_type('variable_expr_fact')
+          end
+        end
+      end
+
+      describe "When inside the start brackets of $facts" do
+        let(:content) { <<-EOT
 $test1 = $::operatingsystem
 $test2 = $operatingsystem
 $test3 = $facts[
 EOT
-      }
-      let(:line_num) { 2 }
-      let(:char_num) { 16 }
+        }
+        let(:line_num) { 2 }
+        let(:char_num) { 16 }
 
-      it 'should return a list of facts' do
-        result = subject.complete(content, line_num, char_num)
+        it 'should return a list of facts' do
+          result = subject.complete(content, line_num, char_num)
 
-        result['items'].each do |item|
-          expect(item).to be_completion_item_with_type('variable_expr_fact')
+          result['items'].each do |item|
+            expect(item).to be_completion_item_with_type('variable_expr_fact')
+          end
         end
       end
     end
