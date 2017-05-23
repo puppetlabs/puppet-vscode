@@ -197,7 +197,7 @@ module PuppetLanguageServer
           item_type = Puppet::Type.type(data['name'])
           # TODO: More things?
           completion_item['documentation'] = item_type.doc unless item_type.doc.nil?
-          completion_item['insertText'] = "#{data['name']} { '${1:title}':\n\tensure => '${2:present}'\n},"
+          completion_item['insertText'] = "#{data['name']} { '${1:title}':\n\tensure => '${2:present}'\n}"
           completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
         when 'resource_parameter'
           item_type = Puppet::Type.type(data['resource_type'])
