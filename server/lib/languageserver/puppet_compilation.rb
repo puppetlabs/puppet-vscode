@@ -1,6 +1,5 @@
 module LanguageServer
   module PuppetCompilation
-
     # export interface CompileNodeGraphResponse {
     #   dotContent: string;
     #   data: string;
