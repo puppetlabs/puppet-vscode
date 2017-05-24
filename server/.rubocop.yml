@@ -14,10 +14,24 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
-# Line length is not useful
+# Length is not useful indicator
 Metrics/LineLength:
   Enabled: false
-
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+  
 # Empty method definitions over more than one line is ok
 Style/EmptyMethod:
   Enabled: false
