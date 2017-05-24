@@ -68,7 +68,44 @@
           "dark": "./media/PreviewOnRightPane_16x_dark.svg"
         }
       }
-    ]
+    ],
+    "configurationDefaults": {
+      "[puppet]":{
+        "editor.tabSize": 2,
+        "editor.insertSpaces":true
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "title": "puppet",
+      "properties": {
+        "puppet.languageserver.address": {
+          "type": "string",
+          "default": "127.0.0.1",
+          "description": "The address of the VSCode languge sever to connect to"
+        },
+        "puppet.languageserver.port": {
+          "type": "integer",
+          "default": 8081,
+          "description": "The port of the VSCode languge sever to connect to"
+        },
+        "puppet.languageserver.stopOnClientExit": {
+          "type":"boolean",
+          "default": true,
+          "description": "Stop the VSCode languge sever when the client disconnects"
+        },
+        "puppet.languageserver.timeout": {
+          "type": "integer",
+          "default": 10,
+          "description": "The timeout to connect to the VSCode languge sever"
+        },
+        "puppet.languageserver.preLoadPuppet": {
+          "type":"boolean",
+          "default": true,
+          "description": "Initalize puppet on VSCode languge start"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
