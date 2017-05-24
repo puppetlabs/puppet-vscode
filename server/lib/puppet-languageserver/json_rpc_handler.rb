@@ -55,7 +55,7 @@ module PuppetLanguageServer
     end
 
     def unbind
-      PuppetLanguageServer::LogMessage('information','Client has disconnected to the language server')
+      PuppetLanguageServer::LogMessage('information','Client has disconnected from the language server')
     end
 
     def extract_headers(raw_header)
