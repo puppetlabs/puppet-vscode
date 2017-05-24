@@ -32,3 +32,9 @@ export interface CompileNodeGraphResponse {
   error: string;
   data: string;
 }
+
+export class PuppetCommandStrings{
+  static PuppetResourceCommandId:string = 'extension.puppetResource';
+  static PuppetModuleCommandId:string = 'extension.puppetModule';
+  static PuppetNodeGraphToTheSideCommandId = 'extension.puppetShowNodeGraphToSide';
+}

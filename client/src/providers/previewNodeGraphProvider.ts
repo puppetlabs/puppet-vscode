@@ -113,3 +113,41 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
     }
   }
 }
+
+export function showNodeGraph(uri?: vscode.Uri, sideBySide: boolean = false) {
+  let resource = uri;
+  if (!(resource instanceof vscode.Uri)) {
+    if (vscode.window.activeTextEditor) {
+      // we are relaxed and don't check for puppet files
+      // TODO: Should we? Probably
+      resource = vscode.window.activeTextEditor.document.uri;
+    }
+  }
+
+  const thenable = vscode.commands.executeCommand('vscode.previewHtml',
+    getNodeGraphUri(resource),
+    getViewColumn(sideBySide),
+    `Node Graph '${path.basename(resource.fsPath)}'`);
+
+  return thenable;
+}
+
+export function getViewColumn(sideBySide: boolean): vscode.ViewColumn | undefined {
+  const active = vscode.window.activeTextEditor;
+  if (!active) {
+    return vscode.ViewColumn.One;
+  }
+
+  if (!sideBySide) {
+    return active.viewColumn;
+  }
+
+  switch (active.viewColumn) {
+    case vscode.ViewColumn.One:
+      return vscode.ViewColumn.Two;
+    case vscode.ViewColumn.Two:
+      return vscode.ViewColumn.Three;
+  }
+
+  return active.viewColumn;
+}
