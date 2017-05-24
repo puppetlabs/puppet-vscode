@@ -1,10 +1,14 @@
-import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient'
+import {
+  LanguageClient, LanguageClientOptions, ServerOptions
+} from 'vscode-languageclient'
 import * as vscode from 'vscode';
 import * as net from 'net';
+import * as cp from 'child_process';
+import ChildProcess = cp.ChildProcess;
 
 import * as messages from '../src/messages';
 
-export function startLangServerTCP(host: string, port: number, langID: string, documentSelector: string | string[], statusBarItem): LanguageClient {
+export function startLangServerTCP(host: string, port: number, langID: string, statusBarItem): LanguageClient {
   let serverOptions: ServerOptions = function () {
     return new Promise((resolve, reject) => {
       var client = new net.Socket();
