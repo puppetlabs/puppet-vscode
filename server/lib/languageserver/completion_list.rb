@@ -27,10 +27,10 @@ module LanguageServer
       result
     end
 
-    def self.create_nil_response()
+    def self.create_nil_response
       {
         'isIncomplete' => false,
-        'items'        => [],
+        'items'        => []
       }
     end
   end
