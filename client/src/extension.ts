@@ -12,7 +12,7 @@ import {
 
 import {
   PuppetNodeGraphContentProvider, isNodeGraphFile, getNodeGraphUri,
-  showNodeGraph, getViewColumn 
+  showNodeGraph, getViewColumn
 } from '../src/providers/previewNodeGraphProvider';
 import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
@@ -103,11 +103,8 @@ function startLangServerTCP(host: string, port: number, langID: string, document
 // Status Bar handler
 export function createStatusBarItem() {
   if (statusBarItem === undefined) {
-    // Create the status bar item and place it right next
-    // to the language indicator
+    // Create the status bar item and place it right next to the language indicator
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
-
-    //this.statusBarItem.command = this.ShowSessionMenuCommandName;
     statusBarItem.show();
     vscode.window.onDidChangeActiveTextEditor(textEditor => {
       if (textEditor === undefined || textEditor.document.languageId !== "puppet") {
