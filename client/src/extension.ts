@@ -17,10 +17,10 @@ import {
 import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
 import * as messages from '../src/messages';
+import { startLangServerTCP } from '../src/languageserver';
 
 const langID = 'puppet';
 var statusBarItem;
-var languageServerClient: LanguageClient = undefined;
 
 export function activate(context: vscode.ExtensionContext) {
   let config = vscode.workspace.getConfiguration('puppet');
@@ -33,7 +33,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   createStatusBarItem();
 
-  context.subscriptions.push(startLangServerTCP(host, port, langID, [langID]));
+  var languageServerClient = startLangServerTCP(host, port, langID, [langID], statusBarItem);
+  context.subscriptions.push(languageServerClient.start());
 
   let resourceCommand = new puppetResourceCommand(languageServerClient);
   context.subscriptions.push(resourceCommand);
@@ -67,37 +68,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-}
-
-function startLangServerTCP(host: string, port: number, langID: string, documentSelector: string | string[]): vscode.Disposable {
-  let serverOptions: ServerOptions = function () {
-    return new Promise((resolve, reject) => {
-      var client = new net.Socket();
-      client.connect(port, host, function () {
-        resolve({ reader: client, writer: client });
-      });
-      client.on('error', function (err) {
-        console.log(`[Puppet Lang Server Client] ` + err);
-      })
-    });
-  }
-
-  let clientOptions: LanguageClientOptions = {
-    documentSelector: [langID],
-  }
-
-  var title = `tcp lang server (host ${host} port ${port})`;
-  languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
-  languageServerClient.onReady().then(() => {
-    languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-      statusBarItem.color = "#affc74";
-      statusBarItem.text = "$(terminal) " + versionDetails.puppetVersion;
-    });
-  }, (reason) => {
-    this.setSessionFailure("Could not start language service: ", reason);
-  });
-
-  return languageServerClient.start();
 }
 
 // Status Bar handler
