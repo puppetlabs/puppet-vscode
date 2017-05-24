@@ -14,7 +14,7 @@
       "command": "npm",
       "isShellCommand":true,
       "showOutput": "silent",
-      "args": ["run", "compile", "--loglevel", "silent"],
+      "args": ["run", "compile"],
       "isBackground": true,
       "problemMatcher": "$tsc-watch"
     },
