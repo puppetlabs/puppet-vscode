@@ -15,50 +15,22 @@ import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
 import * as messages from '../src/messages';
 
+const langID = 'puppet';
 var statusBarItem;
 var languageServerClient: LanguageClient = undefined;
 
-var host = '127.0.0.1';
-var port = 8081;
-var title = `tcp lang server (host ${host} port ${port})`;
-var langID = 'puppet';
-
-function startLangServerTCP(host: string, addr: number, documentSelector: string | string[]): vscode.Disposable {
-  let serverOptions: ServerOptions = function () {
-    return new Promise((resolve, reject) => {
-      var client = new net.Socket();
-      client.connect(addr, host, function () {
-        resolve({ reader: client, writer: client });
-      });
-      client.on('error', function (err) {
-        console.log(`[Puppet Lang Server Client] #{err}`);
-      })
-    });
-  }
-
-  let clientOptions: LanguageClientOptions = {
-    documentSelector: [langID],
-  }
-
-  languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
-  languageServerClient.onReady().then(() => {
-    languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-      statusBarItem.color = "#affc74";
-      statusBarItem.text = "$(terminal) " + versionDetails.puppetVersion;
-    });
-  }, (reason) => {
-    this.setSessionFailure("Could not start language service: ", reason);
-  });
-
-  return languageServerClient.start();
-}
-
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "vscode-puppet" is now active!');
+  let config = vscode.workspace.getConfiguration('puppet');
+
+  var host             = config['languageserver']['address']; // '127.0.0.1';
+  var port             = config['languageserver']['port']; // 8081;
+  var stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
+  var timeout          = config['languageserver']['timeout']; // 8081;
+  var preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
 
   createStatusBarItem();
 
-  context.subscriptions.push(startLangServerTCP(host, port, [langID]));
+  context.subscriptions.push(startLangServerTCP(host, port, langID, [langID]));
 
   let resourceCommand = new puppetResourceCommand(languageServerClient);
   context.subscriptions.push(resourceCommand);
@@ -86,10 +58,43 @@ export function activate(context: vscode.ExtensionContext) {
       contentProvider.update(uri);
     }
   }));
+
+  console.log('Congratulations, your extension "vscode-puppet" is now active!');
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+}
+
+function startLangServerTCP(host: string, port: number, langID: string, documentSelector: string | string[]): vscode.Disposable {
+  let serverOptions: ServerOptions = function () {
+    return new Promise((resolve, reject) => {
+      var client = new net.Socket();
+      client.connect(port, host, function () {
+        resolve({ reader: client, writer: client });
+      });
+      client.on('error', function (err) {
+        console.log(`[Puppet Lang Server Client] ` + err);
+      })
+    });
+  }
+
+  let clientOptions: LanguageClientOptions = {
+    documentSelector: [langID],
+  }
+
+  var title = `tcp lang server (host ${host} port ${port})`;
+  languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
+  languageServerClient.onReady().then(() => {
+    languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
+      statusBarItem.color = "#affc74";
+      statusBarItem.text = "$(terminal) " + versionDetails.puppetVersion;
+    });
+  }, (reason) => {
+    this.setSessionFailure("Could not start language service: ", reason);
+  });
+
+  return languageServerClient.start();
 }
 
 // Status Bar handler
