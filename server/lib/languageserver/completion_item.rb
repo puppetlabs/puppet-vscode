@@ -37,7 +37,7 @@ module LanguageServer
   #   insertText?: string;
   #   /**
   #    * v3.0 with Snippet Support
-  #    * Requires client capability 
+  #    * Requires client capability
   #    * The format of the insert text. The format applies to both the `insertText` property
   #    * and the `newText` property of a provided `textEdit`.
   #    */
@@ -74,31 +74,31 @@ module LanguageServer
       result = {}
       raise('label is a required field for CompletionItem') if options['label'].nil?
       raise('kind is a required field for CompletionItem') if options['kind'].nil?
-      raise('Invalid value for kind') unless (options['kind'] == COMPLETIONITEMKIND_TEXT ||
-                                              options['kind'] == COMPLETIONITEMKIND_METHOD ||
-                                              options['kind'] == COMPLETIONITEMKIND_FUNCTION ||
-                                              options['kind'] == COMPLETIONITEMKIND_CONSTRUCTOR ||
-                                              options['kind'] == COMPLETIONITEMKIND_FIELD ||
-                                              options['kind'] == COMPLETIONITEMKIND_VARIABLE ||
-                                              options['kind'] == COMPLETIONITEMKIND_CLASS ||
-                                              options['kind'] == COMPLETIONITEMKIND_INTERFACE ||
-                                              options['kind'] == COMPLETIONITEMKIND_MODULE ||
-                                              options['kind'] == COMPLETIONITEMKIND_PROPERTY ||
-                                              options['kind'] == COMPLETIONITEMKIND_UNIT ||
-                                              options['kind'] == COMPLETIONITEMKIND_VALUE ||
-                                              options['kind'] == COMPLETIONITEMKIND_ENUM ||
-                                              options['kind'] == COMPLETIONITEMKIND_KEYWORD ||
-                                              options['kind'] == COMPLETIONITEMKIND_SNIPPET ||
-                                              options['kind'] == COMPLETIONITEMKIND_COLOR ||
-                                              options['kind'] == COMPLETIONITEMKIND_FILE ||
-                                              options['kind'] == COMPLETIONITEMKIND_REFERENCE)
+      raise('Invalid value for kind') unless options['kind'] == COMPLETIONITEMKIND_TEXT ||
+                                             options['kind'] == COMPLETIONITEMKIND_METHOD ||
+                                             options['kind'] == COMPLETIONITEMKIND_FUNCTION ||
+                                             options['kind'] == COMPLETIONITEMKIND_CONSTRUCTOR ||
+                                             options['kind'] == COMPLETIONITEMKIND_FIELD ||
+                                             options['kind'] == COMPLETIONITEMKIND_VARIABLE ||
+                                             options['kind'] == COMPLETIONITEMKIND_CLASS ||
+                                             options['kind'] == COMPLETIONITEMKIND_INTERFACE ||
+                                             options['kind'] == COMPLETIONITEMKIND_MODULE ||
+                                             options['kind'] == COMPLETIONITEMKIND_PROPERTY ||
+                                             options['kind'] == COMPLETIONITEMKIND_UNIT ||
+                                             options['kind'] == COMPLETIONITEMKIND_VALUE ||
+                                             options['kind'] == COMPLETIONITEMKIND_ENUM ||
+                                             options['kind'] == COMPLETIONITEMKIND_KEYWORD ||
+                                             options['kind'] == COMPLETIONITEMKIND_SNIPPET ||
+                                             options['kind'] == COMPLETIONITEMKIND_COLOR ||
+                                             options['kind'] == COMPLETIONITEMKIND_FILE ||
+                                             options['kind'] == COMPLETIONITEMKIND_REFERENCE
       raise('data is a required field for CompletionItem') if options['data'].nil?
-      raise('Invalid value for insertTextFormat') unless (options['insertTextFormat'].nil? ||
-                                                          options['insertTextFormat'] == INSERTTEXTFORMAT_PLAINTEXT ||
-                                                          options['insertTextFormat'] == INSERTTEXTFORMAT_SNIPPET)
+      raise('Invalid value for insertTextFormat') unless options['insertTextFormat'].nil? ||
+                                                         options['insertTextFormat'] == INSERTTEXTFORMAT_PLAINTEXT ||
+                                                         options['insertTextFormat'] == INSERTTEXTFORMAT_SNIPPET
 
-      result['label']               = options['label'] 
-      result['kind']                = options['kind'] 
+      result['label']               = options['label']
+      result['kind']                = options['kind']
       result['data']                = options['data']
       result['detail']              = options['detail'] unless options['detail'].nil?
       result['documentation']       = options['documentation'].strip unless options['documentation'].nil?
