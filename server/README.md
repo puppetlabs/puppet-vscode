@@ -76,6 +76,7 @@ Usage: puppet-languageserver.rb [options]
     -t, --timeout=TIMEOUT            Stop the language server if a client does not connection within TIMEOUT seconds.  A value of zero will not timeout.  Default is 10 seconds
     -d, --no-preload                 Do not preload Puppet information when the language server starts.  Default is to preload
         --debug=DEBUG                Output debug information.  Either specify a filename or 'STDOUT'.  Default is no debug output
+    -s, --slow-start                 Delay starting the TCP Server until Puppet initialisation has completed.  Default is to start fast
     -h, --help                       Prints this help
 ```
 
