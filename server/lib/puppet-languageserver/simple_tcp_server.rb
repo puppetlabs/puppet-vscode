@@ -6,6 +6,8 @@ require 'socket'
 module PuppetLanguageServer
   class SimpleTCPServerConnection
     attr_accessor :socket
+    attr_accessor :simple_tcp_server
+
     # Methods to override
     def post_init
       # Override this to recieve events after a client is connected
@@ -29,14 +31,19 @@ module PuppetLanguageServer
 
     # @api public
     def send_data(data)
-      @socket.write(data)
-
+      socket.write(data)
       true
     end
 
     # @api public
+    def close_connection_after_writing
+      socket.flush
+      simple_tcp_server.remove_connection_async(socket)
+    end
+
+    # @api public
     def close_connection
-      socket.close
+      simple_tcp_server.remove_connection_async(socket)
     end
   end
 
@@ -100,6 +107,7 @@ module PuppetLanguageServer
       kill_timer = connection_options[:connection_timeout]
       kill_timer = -1 if kill_timer.nil? || kill_timer < 1
       log("Will stop the server in #{connection_options[:connection_timeout]} seconds if no connection is made.") if kill_timer > 0
+      log('Will stop the server when client disconnects') if !@server_options[:stop_on_client_exit].nil? && @server_options[:stop_on_client_exit]
 
       (begin
         sleep(1)
@@ -241,6 +249,11 @@ module PuppetLanguageServer
       S_LOCKER.synchronize {SERVICES.each {|s, p| (s.close rescue true); log("Stopped listening on #{p[:hostname]}:#{p[:port]}") }; SERVICES.clear }
     end
 
+    # @api public
+    def remove_connection_async(io)
+      callback(self, :remove_connection, io)
+    end
+
     #####################
     # IO - Active connections handling
 
@@ -252,7 +265,7 @@ module PuppetLanguageServer
     def add_connection(io, service_object)
       handler = @handler_klass.new(@handler_start_options)
       handler.socket = io
-
+      handler.simple_tcp_server = self
       C_LOCKER.synchronize {IO_CONNECTION_DIC[io] = { :handler => handler, :service => service_object} } if io
       callback(handler, :post_init)
     end

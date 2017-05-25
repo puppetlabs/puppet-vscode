@@ -126,7 +126,7 @@ module PuppetLanguageServer
           PuppetLanguageServer::LogMessage('information','Client has received initialization')
 
         when 'exit'
-          PuppetLanguageServer::LogMessage('information','Received exit notification.  Shutting down.')
+          PuppetLanguageServer::LogMessage('information','Received exit notification.  Closing connection to client...')
           close_connection
 
         when 'textDocument/didOpen'
