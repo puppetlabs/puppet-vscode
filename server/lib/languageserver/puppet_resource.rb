@@ -1,6 +1,5 @@
 module LanguageServer
   module PuppetCompilation
-
     # export interface GetPuppetResourceResponse {
     #   data: string;
     #   error: string;

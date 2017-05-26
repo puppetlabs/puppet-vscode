@@ -1,6 +1,5 @@
 module LanguageServer
   module PuppetVersion
-
     # export interface PuppetVersionDetails {
     #     puppetVersion: string;
     #     facterVersion: string;

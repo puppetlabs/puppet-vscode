@@ -39,22 +39,22 @@ module LanguageServer
       raise('toline is a required field for Diagnostic') if options['toline'].nil?
 
       unless options['severity'].nil?
-        raise('Invalid value for severity') unless (options['severity'] == DIAGNOSTICSEVERITY_ERROR ||
-                                                    options['severity'] == DIAGNOSTICSEVERITY_WARNING ||
-                                                    options['severity'] == DIAGNOSTICSEVERITY_INFORMATION ||
-                                                    options['severity'] == DIAGNOSTICSEVERITY_HINT)
+        raise('Invalid value for severity') unless options['severity'] == DIAGNOSTICSEVERITY_ERROR ||
+                                                   options['severity'] == DIAGNOSTICSEVERITY_WARNING ||
+                                                   options['severity'] == DIAGNOSTICSEVERITY_INFORMATION ||
+                                                   options['severity'] == DIAGNOSTICSEVERITY_HINT
       end
 
-      result['source']   = options['source'] 
-      result['message']  = options['message'] 
+      result['source']   = options['source']
+      result['message']  = options['message']
       result['range'] = { 'start' => {
-                            'line'      => options['fromline'],
-                            'character' => options['fromchar'],
-                          },
+        'line' => options['fromline'],
+        'character' => options['fromchar']
+      },
                           'end' => {
                             'line'      => options['toline'],
-                            'character' => options['tochar'],
-                          }}
+                            'character' => options['tochar']
+                          } }
       result['code']     = options['code'] unless options['code'].nil?
       result['severity'] = options['severity'] unless options['severity'].nil?
 

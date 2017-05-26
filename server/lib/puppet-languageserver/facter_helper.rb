@@ -27,18 +27,19 @@ module PuppetLanguageServer
       end
     end
 
-    private
     # DO NOT ops_lock on any of these methods
     # deadlocks will ensue!
     def self._reset
       Facter.reset
       @fact_hash = nil
     end
+    private_class_method :_reset
 
     def self._load_facts
       _reset
       Facter.loadfacts
       @fact_hash = Facter.to_hash
     end
+    private_class_method :_load_facts
   end
 end

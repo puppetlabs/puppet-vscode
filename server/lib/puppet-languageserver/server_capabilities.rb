@@ -1,6 +1,6 @@
 module PuppetLanguageServer
   module ServerCapabilites
-    def self.capabilities()
+    def self.capabilities
       # https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#initialize-request
 
       {
@@ -8,7 +8,7 @@ module PuppetLanguageServer
         'hoverProvider' => true,
         'completionProvider' => {
           'resolveProvider' => true,
-          'triggerCharacters' => ['>','$','[','=']
+          'triggerCharacters' => ['>', '$', '[', '=']
         }
       }
     end
