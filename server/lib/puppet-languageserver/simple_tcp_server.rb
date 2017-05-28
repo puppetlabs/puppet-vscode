@@ -11,17 +11,17 @@ module PuppetLanguageServer
     # Methods to override
     def post_init
       # Override this to recieve events after a client is connected
-      puts('Client has connected')
+      PuppetLanguageServer.log_message(:debug, 'TCPSRV: Client has connected')
     end
 
     def unbind
       # Override this to recieve events after a client is disconnected
-      puts('Client has disconnected')
+      PuppetLanguageServer.log_message(:debug, 'TCPSRV: Client has disconnected')
     end
 
     def receive_data(data)
       # Override this to recieve data
-      puts("Received #{data.length} characters")
+      PuppetLanguageServer.log_message(:debug, "TCPSRV: Received #{data.length} characters")
     end
 
     # @api public
@@ -58,7 +58,7 @@ module PuppetLanguageServer
 
     def log(message)
       # Override this to recieve log messages
-      puts "[TCPSRV] #{message}"
+      PuppetLanguageServer.log_message(:debug, "TCPSRV: #{message}")
     end
 
     ####
@@ -108,6 +108,14 @@ module PuppetLanguageServer
       kill_timer = -1 if kill_timer.nil? || kill_timer < 1
       log("Will stop the server in #{connection_options[:connection_timeout]} seconds if no connection is made.") if kill_timer > 0
       log('Will stop the server when client disconnects') if !@server_options[:stop_on_client_exit].nil? && @server_options[:stop_on_client_exit]
+
+      # Output to STDOUT.  This is required by Langugage Client so it knows the server is now running
+      S_LOCKER.synchronize do
+        SERVICES.each do |service,options|
+          $stdout.write("LANGUAGE SERVER RUNNING #{options[:hostname]}:#{options[:port]}\n")
+        end
+      end
+      $stdout.flush
 
       (begin
         sleep(1)
