@@ -28,11 +28,11 @@ module PuppetLanguageServer
     def receive_request(request)
       case request.rpc_method
       when 'initialize'
-        PuppetLanguageServer.log_message('debug', 'Received initialize method')
+        PuppetLanguageServer.log_message(:debug, 'Received initialize method')
         request.reply_result('capabilities' => PuppetLanguageServer::ServerCapabilites.capabilities)
 
       when 'shutdown'
-        PuppetLanguageServer.log_message('debug', 'Received shutdown method')
+        PuppetLanguageServer.log_message(:debug, 'Received shutdown method')
         request.reply_result(nil)
 
       when 'puppet/getVersion'
@@ -87,7 +87,7 @@ module PuppetLanguageServer
         begin
           request.reply_result(PuppetLanguageServer::CompletionProvider.complete(content, line_num, char_num))
         rescue => exception
-          PuppetLanguageServer.log_message('error', "(textDocument/completion) #{exception}")
+          PuppetLanguageServer.log_message(:error, "(textDocument/completion) #{exception}")
           request.reply_result(LanguageServer::CompletionList.create_nil_response)
         end
 
@@ -95,7 +95,7 @@ module PuppetLanguageServer
         begin
           request.reply_result(PuppetLanguageServer::CompletionProvider.resolve(request.params.clone))
         rescue => exception
-          PuppetLanguageServer.log_message('error', "(completionItem/resolve) #{exception}")
+          PuppetLanguageServer.log_message(:error, "(completionItem/resolve) #{exception}")
           # Spit back the same params if an error happens
           request.reply_result(request.params)
         end
@@ -108,42 +108,42 @@ module PuppetLanguageServer
         begin
           request.reply_result(PuppetLanguageServer::HoverProvider.resolve(content, line_num, char_num))
         rescue => exception
-          PuppetLanguageServer.log_message('error', "(textDocument/hover) #{exception}")
+          PuppetLanguageServer.log_message(:error, "(textDocument/hover) #{exception}")
           request.reply_result(LanguageServer::Hover.create_nil_response)
         end
       else
-        PuppetLanguageServer.log_message('error', "Unknown RPC method #{request.rpc_method}")
+        PuppetLanguageServer.log_message(:error, "Unknown RPC method #{request.rpc_method}")
       end
     end
 
     def receive_notification(method, params)
       case method
       when 'initialized'
-        PuppetLanguageServer.log_message('information', 'Client has received initialization')
+        PuppetLanguageServer.log_message(:info, 'Client has received initialization')
 
       when 'exit'
-        PuppetLanguageServer.log_message('information', 'Received exit notification.  Closing connection to client...')
+        PuppetLanguageServer.log_message(:info, 'Received exit notification.  Closing connection to client...')
         close_connection
 
       when 'textDocument/didOpen'
-        PuppetLanguageServer.log_message('information', 'Received textDocument/didOpen notification.')
+        PuppetLanguageServer.log_message(:info, 'Received textDocument/didOpen notification.')
         file_uri = params['textDocument']['uri']
         content = params['textDocument']['text']
         documents.set_document(file_uri, content)
         reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content))
 
       when 'textDocument/didChange'
-        PuppetLanguageServer.log_message('information', 'Received textDocument/didChange notification.')
+        PuppetLanguageServer.log_message(:info, 'Received textDocument/didChange notification.')
         file_uri = params['textDocument']['uri']
         content = params['contentChanges'][0]['text'] # TODO: Bad hardcoding zero
         documents.set_document(file_uri, content)
         reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content))
 
       when 'textDocument/didSave'
-        PuppetLanguageServer.log_message('information', 'Received textDocument/didSave notification.')
+        PuppetLanguageServer.log_message(:info, 'Received textDocument/didSave notification.')
 
       else
-        PuppetLanguageServer.log_message('error', "Unknown RPC notification #{method}")
+        PuppetLanguageServer.log_message(:error, "Unknown RPC notification #{method}")
       end
     end
   end

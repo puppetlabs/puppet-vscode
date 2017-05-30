@@ -11,6 +11,10 @@ end
 
 require 'puppet'
 require 'optparse'
+require 'logger'
+
+# Global variable holding the logger class
+$logger = nil
 
 module PuppetLanguageServer
   class CommandLineParser
@@ -21,7 +25,8 @@ module PuppetLanguageServer
         :ipaddress => '127.0.0.1',
         :stop_on_client_exit => true,
         :connection_timeout => 10,
-        :preload_puppet => true
+        :preload_puppet => true,
+        :debug => nil
       }
 
       opt_parser = OptionParser.new do |opts|
@@ -47,6 +52,10 @@ module PuppetLanguageServer
           args[:preload_puppet] = false
         end
 
+        opts.on('--debug=DEBUG', "Output debug information.  Either specify a filename or 'STDOUT'.  Default is no debug output") do |debug|
+          args[:debug] = debug
+        end
+
         opts.on('-h', '--help', 'Prints this help') do
           puts opts
           exit
@@ -59,38 +68,61 @@ module PuppetLanguageServer
   end
 
   def self.log_message(severity, message)
-    puts "[#{severity.upcase}] #{message}"
+    return if $logger.nil?
+    
+    case severity
+    when :debug
+      $logger.debug(message)
+    when :info
+      $logger.info(message)
+    when :warn
+      $logger.info(message)
+    when :error
+      $logger.error(message)
+    when :fatal
+      $logger.fatal(message)
+    else
+      $logger.unknown(message)
+    end
   end
 
   def self.init_puppet(options)
-    log_message('information', "Using Puppet v#{Puppet.version}")
+    if options[:debug].nil?
+      $logger = nil
+    elsif options[:debug].downcase == 'stdout'
+      $logger = Logger.new($stdout)
+    elsif !options[:debug].to_s.empty?
+      # Log to file
+      $logger = Logger.new(options[:debug])
+    end
+    log_message(:info, "Using Puppet v#{Puppet.version}")
 
-    log_message('information', 'Initializing settings...')
+    log_message(:info, 'Initializing settings...')
     Puppet.initialize_settings
 
-    log_message('information', 'Creating puppet function environment...')
+    log_message(:info, 'Creating puppet function environment...')
     autoloader = Puppet::Parser::Functions.autoloader
     autoloader.loadall
 
-    log_message('information', "Using Facter v#{Facter.version}")
+    log_message(:info, "Using Facter v#{Facter.version}")
     if options[:preload_puppet]
-      log_message('information', 'Preloading Facter (Async)...')
+      log_message(:info, 'Preloading Facter (Async)...')
       PuppetLanguageServer::FacterHelper.load_facts_async
 
-      log_message('information', 'Preloading Puppet Types (Async)...')
+      log_message(:info, 'Preloading Puppet Types (Async)...')
       PuppetLanguageServer::PuppetHelper.load_types_async
 
-      log_message('information', 'Preloading Functions (Async)...')
+      log_message(:info, 'Preloading Functions (Async)...')
       PuppetLanguageServer::PuppetHelper.load_functions_async
     else
-      log_message('information', 'Skipping preloading Puppet')
+      log_message(:info, 'Skipping preloading Puppet')
     end
 
     true
   end
 
   def self.rpc_server(options)
-    log_message('information', 'Starting RPC Server...')
+    log_message(:info, 'Starting RPC Server...')
 
     server = PuppetLanguageServer::SimpleTCPServer.new
 
@@ -98,6 +130,6 @@ module PuppetLanguageServer
     trap('INT') { server.stop }
     server.start(PuppetLanguageServer::MessageRouter, options, 2)
 
-    log_message('information', 'Language Server exited.')
+    log_message(:info, 'Language Server exited.')
   end
 end

@@ -49,11 +49,11 @@ module PuppetLanguageServer
     end
 
     def post_init
-      PuppetLanguageServer::LogMessage('information', 'Client has connected to the language server')
+      PuppetLanguageServer.log_message(:info, 'Client has connected to the language server')
     end
 
     def unbind
-      PuppetLanguageServer::LogMessage('information', 'Client has disconnected from the language server')
+      PuppetLanguageServer.log_message(:info, 'Client has disconnected from the language server')
     end
 
     def extract_headers(raw_header)
@@ -112,13 +112,13 @@ module PuppetLanguageServer
     def send_response(response)
       size = response.bytesize if response.respond_to?(:bytesize)
 # DEBUG ONLY
-puts "--- OUTBOUND\n#{response}\n---"
+PuppetLanguageServer.log_message(:debug, "--- OUTBOUND\n#{response}\n---")
       send_data "Content-Length: #{size}\r\n\r\n" + response
     end
 
     def parse_data(data)
 # DEBUG ONLY
-puts "--- INBOUND\n#{data}\n---"
+PuppetLanguageServer.log_message(:debug, "--- INBOUND\n#{data}\n---")
       result = JSON.parse(data)
       received_parsed_object(result)
     end
@@ -179,12 +179,12 @@ puts "--- INBOUND\n#{data}\n---"
 
     # This method must be overriden in the user's inherited class.
     def receive_request(request)
-      puts "request received:\n#{request.inspect}"
+      PuppetLanguageServer.log_message(:debug, "request received:\n#{request.inspect}")
     end
 
     # This method must be overriden in the user's inherited class.
     def receive_notification(method, params)
-      puts "notification received (method: #{method.inspect}, params: #{params.inspect})"
+      PuppetLanguageServer.log_message(:debug, "notification received (method: #{method.inspect}, params: #{params.inspect})")
     end
 
     def encode_json(data)
@@ -226,17 +226,17 @@ puts "--- INBOUND\n#{data}\n---"
 
     # This method could be overriden in the user's inherited class.
     def parsing_error(_data, exception)
-      $stderr.puts "parsing error:\n#{exception.message}"
+      PuppetLanguageServer.log_message(:error, "parsing error:\n#{exception.message}")
     end
 
     # This method could be overriden in the user's inherited class.
     def batch_not_supported_error(_obj)
-      $stderr.puts 'batch request received but not implemented'
+      PuppetLanguageServer.log_message(:error, 'batch request received but not implemented')
     end
 
     # This method could be overriden in the user's inherited class.
     def invalid_request(_obj, code, message = nil)
-      $stderr.puts "error #{code}: #{message}"
+      PuppetLanguageServer.log_message(:error, "error #{code}: #{message}")
     end
 
     class Request
