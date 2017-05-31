@@ -54,8 +54,7 @@ module PuppetLanguageServer
         request.reply_result(LanguageServer::PuppetCompilation.create('data' => '')) if resources.nil? || resources.length.zero?
 
         # TODO: Should probably move this to a helper?
-        content = ''
-        resources.each { |res| content += res.to_manifest + "\n" }
+        content = resources.map { |res| res.to_manifest }.join("\n\n") + "\n"
         request.reply_result(LanguageServer::PuppetCompilation.create('data' => content))
 
       when 'puppet/compileNodeGraph'
