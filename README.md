@@ -8,89 +8,51 @@ TODO: Need correct marketplace ID
 
 This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/)
 
-## Platform support
-
-- Microsoft Windows
-- MacOSX
-
-## Features
-
-- [Syntax highlighting](#Syntax_Highlighting)
-- [Code snippets](#Code_snippets)
-- IntelliSense for resources, parameters and more
-- Import from `puppet resource` directly into manifests
-- Node graph preview
-
-![Example of features](docs/assets/language_server.gif)
-
-## Requirements
-
-- Puppet Agent
-
-[Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
-
-[MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
-
-[Linux](https://docs.puppet.com/puppet/4.10/install_linux.html)
-
-## Feature information
-
-### Syntax Highlighting
-
-Syntax highlighting uses [puppet-lint](https://github.com/rodjek/puppet-lint) and displays the results as you type, within VSCode.
-
-- Puppet DSL
-- Puppet Grammar
-
-### Code Snippets
-
-As part of IntelliSense and Snippets, you can quickly create blocks of code
-
-### Puppet Resource
-
-You can import existing resources directly using `puppet resource`
-
-1. Open the command palette (`Ctrl+Shift+P`)
-
-2. Type `puppet resource` and press enter
-
-3. Enter the resource type you want to import, for example `user`
-
-### Node Graph preview
-
-You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastructure-models) of a manifest while you edit your Puppet Code.
-
-1. Open the command palette (`Ctrl+Shift+P`)
-
-2. Type `puppet open node`.. and press enter
-
-The node graph will appear next to the manifest
+The extension is composed of the VS Code Extension in the [`client/`](client) directory and the Puppet Language Server in the [`server/`](server) directory
 
 
-## Extension Settings
+## How to run the client and server for development
 
-Coming!
+### Run the language server
 
-<!-- TODO -->
+Follow the instructions in the server documentation - [How to run the Language Server for Develoment](server/READMEmd#How_to_run_the_Language_Server_for_Development). Ensure you use the `--timeout=0` and `--no-stop` arguments so the server does not stop.
 
-## Known Issues
+### Run the client
 
-None yet.
+* Ensure nodejs is installed
 
-## Release Notes
+* Clone this repository
 
-**Note** Not released yet. Work in Progress
+```
+> git clone https://github.com/jpogran/puppet-vscode.git
 
-### 0.0.3
+> cd puppet-vscode
+> cd client
+```
 
-Puppet Parser validate linter added
+* Install the node modules and start VS Code
 
-### 0.0.2
+```
+> npm install
+...
 
-Puppet Resource and Puppet Module commands.
+> puppet-vscode@0.0.3 postinstall C:\Source\puppet-vscode\client
+> node ./node_modules/vscode/bin/install
 
-### 0.0.1
+Detected VS Code engine version: ^1.10.0
+Found minimal version that qualifies engine range: 1.10.0
+Fetching vscode.d.ts from: https://raw.githubusercontent.com/Microsoft/vscode/1.10.0/src/vs/vscode.d.ts
+vscode.d.ts successfully installed!
 
-Initial release of the puppet extension.
+> code .
+```
 
+* Once VS Code is running, press `F5` to start a build and a new VS Code development instance should start
 
+* Open a Puppet file (.pp) and the client will start and connect to the Puppet Server
+
+> Other Puppet VS Code extensions may cause issues with the development instance.  Ensure that you either uninstall or disable the other Puppet extensions prior.
+
+## Issues
+
+Please raise issues for the Language Server or Extension using the GitHub issue tracker.
