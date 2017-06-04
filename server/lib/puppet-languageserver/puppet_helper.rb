@@ -17,11 +17,13 @@ module PuppetLanguageServer
 
     # Resource Face
     def self.resource_face_get_by_typename(typename)
-      Puppet::Face[:resource, '0.0.1'].search(typename)
+      resources = Puppet::Face[:resource, '0.0.1'].search(typename)
+      prune_resource_parameters(resources)
     end
 
     def self.resource_face_get_by_typename_and_title(typename, title)
-      Puppet::Face[:resource, '0.0.1'].find("#{typename}/#{title}")
+      resources = Puppet::Face[:resource, '0.0.1'].find("#{typename}/#{title}")
+      prune_resource_parameters(resources)
     end
 
     # Types
@@ -102,6 +104,18 @@ module PuppetLanguageServer
       @function_module = nil
     end
     private_class_method :_reset
+
+    def self.prune_resource_parameters(resources)
+      # From https://github.com/puppetlabs/puppet/blob/488661d84e54904124514ab9e4500e81b10f84d1/lib/puppet/application/resource.rb#L146-L148
+      if resources.is_a?(Array)
+        resources.map do |resource|
+          resource.prune_parameters
+        end
+      else
+        resources.prune_parameters
+      end
+    end
+    private_class_method :prune_resource_parameters
 
     def self._load_types
       @types_hash = {}
