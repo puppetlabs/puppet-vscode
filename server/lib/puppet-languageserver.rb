@@ -26,7 +26,8 @@ module PuppetLanguageServer
         :stop_on_client_exit => true,
         :connection_timeout => 10,
         :preload_puppet => true,
-        :debug => nil
+        :debug => nil,
+        :fast_start_tcpserver => true
       }
 
       opt_parser = OptionParser.new do |opts|
@@ -54,6 +55,10 @@ module PuppetLanguageServer
 
         opts.on('--debug=DEBUG', "Output debug information.  Either specify a filename or 'STDOUT'.  Default is no debug output") do |debug|
           args[:debug] = debug
+        end
+
+        opts.on('-s', '--slow-start', 'Delay starting the TCP Server until Puppet initialisation has completed.  Default is to start fast') do |_misc|
+          args[:fast_start_tcpserver] = false
         end
 
         opts.on('-h', '--help', 'Prints this help') do
@@ -98,6 +103,19 @@ module PuppetLanguageServer
     log_message(:info, "Using Puppet v#{Puppet.version}")
 
     log_message(:info, 'Initializing settings...')
+    if options[:fast_start_tcpserver]
+      Thread.new do
+        init_puppet_worker(options)
+      end
+    else
+      init_puppet_worker(options)
+    end
+
+    true
+  end
+
+  def self.init_puppet_worker(options)
+    log_message('information', 'Initializing settings...')
     Puppet.initialize_settings
 
     log_message(:info, 'Creating puppet function environment...')
@@ -117,8 +135,6 @@ module PuppetLanguageServer
     else
       log_message(:info, 'Skipping preloading Puppet')
     end
-
-    true
   end
 
   def self.rpc_server(options)
