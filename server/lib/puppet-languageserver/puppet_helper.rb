@@ -119,11 +119,15 @@ module PuppetLanguageServer
 
     def self._load_types
       @types_hash = {}
-      Puppet::Type.loadall
+      # This is an expensive call
+      # From https://github.com/puppetlabs/puppet/blob/ebd96213cab43bb2a8071b7ac0206c3ed0be8e58/lib/puppet/metatype/manager.rb#L182-L189
+      typeloader = Puppet::Util::Autoload.new(self, "puppet/type")
+      typeloader.loadall
 
       Puppet::Type.eachtype do |type|
         next if type.name == :component
         next if type.name == :whit
+
         @types_hash[type.name] = type
       end
 
