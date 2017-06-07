@@ -1,13 +1,26 @@
 module PuppetLanguageServer
   module PuppetParserHelper
-    def self.remove_char_at(content, line_offsets, line_num, char_num)
+    def self.remove_chars_starting_at(content, line_offsets, line_num, char_num, num_chars_to_remove)
       line_offset = line_offsets[line_num]
       raise if line_offset.nil?
 
       # Remove the offending character
-      new_content = content.slice(0, line_offset + char_num - 1) + content.slice(line_offset + char_num, content.length - 1)
+      new_content = content.slice(0, line_offset + char_num - num_chars_to_remove) + content.slice(line_offset + char_num, content.length - num_chars_to_remove)
 
       new_content
+    end
+
+    def self.remove_char_at(content, line_offsets, line_num, char_num)
+      remove_chars_starting_at(content, line_offsets, line_num, char_num, 1)
+    end
+
+    def self.get_char_at(content, line_offsets, line_num, char_num)
+      line_offset = line_offsets[line_num]
+      raise if line_offset.nil?
+
+      absolute_offset = line_offset + (char_num - 1)
+
+      content[absolute_offset]
     end
 
     def self.insert_text_at(content, line_offsets, line_num, char_num, text)
@@ -43,7 +56,7 @@ module PuppetLanguageServer
       end
     end
 
-    def self.object_under_cursor(content, line_num, char_num, multiple_attempts = false)
+    def self.object_under_cursor(content, line_num, char_num, multiple_attempts = false, disallowed_classes = [])
       # Use Puppet to generate the AST
       parser = Puppet::Pops::Parser::Parser.new
 
@@ -53,7 +66,7 @@ module PuppetLanguageServer
 
       result = nil
       move_offset = 0
-      %i[noop remove_char try_quotes try_quotes_and_comma].each do |method|
+      %i[noop remove_word try_quotes try_quotes_and_comma remove_char].each do |method|
         new_content = nil
         case method
         when :noop
@@ -61,6 +74,17 @@ module PuppetLanguageServer
         when :remove_char
           new_content = remove_char_at(content, line_offsets, line_num, char_num)
           move_offset = -1
+        when :remove_word
+          next_char = get_char_at(content, line_offsets, line_num, char_num)
+
+          while /[[:word:]]/.match(next_char)
+            move_offset -= 1
+            next_char = get_char_at(content, line_offsets, line_num, char_num + move_offset)
+
+            break if char_num + move_offset < 0
+          end
+
+          new_content = remove_chars_starting_at(content, line_offsets, line_num, char_num, -move_offset)
         when :try_quotes
           # Perhaps try inserting double quotes.  Useful in empty arrays or during variable assignment
           # Grab the line up to the cursor character + 1
@@ -98,7 +122,7 @@ module PuppetLanguageServer
       #   If during paring we modified the source we may need to change the cursor location
       abs_offset = result.line_offsets[line_num] + char_num + move_offset
       # Typically we're completing after something was typed, so go back one char
-      abs_offset -= 1 if abs_offset > 0
+      abs_offset -= 1
 
       # Enumerate the AST looking for items that span the line/char we want.
       # Once we have all valid items, sort them by the smallest span.  Typically the smallest span
@@ -107,7 +131,7 @@ module PuppetLanguageServer
       # TODO: Should probably walk the AST and only look for the deepest child, but integer sorting
       #       is so much easier and faster.
       valid_models = result.model.eAllContents.select do |item|
-        !item.offset.nil? && !item.length.nil? && abs_offset >= item.offset && abs_offset <= item.offset + item.length
+        !item.offset.nil? && !item.length.nil? && abs_offset >= item.offset && abs_offset <= item.offset + item.length && !disallowed_classes.include?(item.class)
       end
       valid_models.sort! { |a, b| a.length - b.length }
 
