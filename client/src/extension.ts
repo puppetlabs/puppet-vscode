@@ -14,14 +14,14 @@ export function activate(context: vscode.ExtensionContext) {
   myOutputChannel.show()
 
   try {
-    var contextPath = context.asAbsolutePath(path.join('out', 'src', 'vendor', 'puppet-languageserver'));
+    var contextPath = context.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
 
     let config = vscode.workspace.getConfiguration('puppet');
 
     var host             = config['languageserver']['address']; // '127.0.0.1';
     var port             = config['languageserver']['port']; // 8081;
     var stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
-    var timeout          = config['languageserver']['timeout']; // 8081;
+    var timeout          = config['languageserver']['timeout']; // 10;
     var preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
 
     createStatusBarItem();
