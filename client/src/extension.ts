@@ -1,30 +1,61 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import * as path from 'path';
 
-import { startLangServerTCP } from '../src/languageserver';
+import { startLangServerTCP, createLanguageServerProcess } from '../src/languageserver';
 import { setupPuppetCommands } from '../src/puppetcommands';
 
 const langID = 'puppet'; // don't change this
 var statusBarItem;
 
 export function activate(context: vscode.ExtensionContext) {
-  let config = vscode.workspace.getConfiguration('puppet');
+  var myOutputChannel = vscode.window.createOutputChannel('Puppet');
+  myOutputChannel.show()
 
-  var host             = config['languageserver']['address']; // '127.0.0.1';
-  var port             = config['languageserver']['port']; // 8081;
-  var stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
-  var timeout          = config['languageserver']['timeout']; // 8081;
-  var preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
+  try {
+    var contextPath = context.asAbsolutePath(path.join('out', 'src', 'vendor', 'puppet-languageserver'));
 
-  createStatusBarItem();
+    let config = vscode.workspace.getConfiguration('puppet');
 
-  var languageServerClient = startLangServerTCP(host, port, langID, statusBarItem);
-  context.subscriptions.push(languageServerClient.start());
+    var host             = config['languageserver']['address']; // '127.0.0.1';
+    var port             = config['languageserver']['port']; // 8081;
+    var stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
+    var timeout          = config['languageserver']['timeout']; // 8081;
+    var preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
 
-  setupPuppetCommands(langID, languageServerClient, context);
+    createStatusBarItem();
 
-  console.log('Congratulations, your extension "vscode-puppet" is now active!');
+    var languageServerClient = null
+    if (host == '127.0.0.1' || host == 'localhost' || host == '') {
+      var serverProc = createLanguageServerProcess(contextPath, myOutputChannel);
+
+      serverProc.stdout.on('data', (data) => {
+        console.log("OUTPUT: " + data.toString());
+        myOutputChannel.appendLine("OUTPUT: " + data.toString());
+
+        languageServerClient = startLangServerTCP(host, port, langID, statusBarItem, myOutputChannel);
+        context.subscriptions.push(languageServerClient.start());
+      });
+
+      serverProc.on('close', (exitCode) => {
+        console.log("SERVER terminated with exit code: " + exitCode);
+        myOutputChannel.appendLine("SERVER terminated with exit code: " + exitCode);
+      });
+    }
+    else {
+      languageServerClient = startLangServerTCP(host, port, langID, statusBarItem, myOutputChannel);
+      context.subscriptions.push(languageServerClient.start());
+    }
+
+    setupPuppetCommands(langID, languageServerClient, context);
+
+    console.log('Congratulations, your extension "vscode-puppet" is now active!');
+    myOutputChannel.appendLine('Congratulations, your extension "vscode-puppet" is now active!');
+  } catch (e) {
+    console.log((<Error>e).message);//conversion to Error type
+    myOutputChannel.appendLine((<Error>e).message);
+  }
 }
 
 // this method is called when your extension is deactivated
@@ -47,4 +78,3 @@ export function createStatusBarItem() {
     })
   }
 }
-

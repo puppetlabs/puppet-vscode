@@ -122,6 +122,7 @@
   "devDependencies": {
     "typescript": "^2.0.3",
     "vscode": "^1.0.0",
+    "vscode-languageclient": "^3.1.0",
     "vsce": "^1.18.0",
     "mocha": "^2.3.3",
     "gulp": "^3.9.1",
@@ -131,6 +132,8 @@
     "@types/mocha": "^2.2.32"
   },
   "dependencies": {
-    "vscode-languageclient": "^3.1.0"
+    "vscode": "^1.0.0",
+    "vscode-languageclient": "^3.1.0",
+    "vscode-languageserver": "^3.1.0"
   }
 }
