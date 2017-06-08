@@ -1,8 +1,9 @@
 module LanguageServer
   module PuppetVersion
     # export interface PuppetVersionDetails {
-    #     puppetVersion: string;
-    #     facterVersion: string;
+    #     puppetVersion:         string;
+    #     facterVersion:         string;
+    #     languageServerVersion: string;
     # }
 
     def self.create(options)
@@ -12,6 +13,7 @@ module LanguageServer
 
       result['puppetVersion'] = options['puppetVersion']
       result['facterVersion'] = options['facterVersion']
+      result['languageServerVersion'] = PuppetLanguageServer.version
 
       result
     end

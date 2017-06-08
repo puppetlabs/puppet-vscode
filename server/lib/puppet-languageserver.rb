@@ -1,6 +1,6 @@
 require 'languageserver/languageserver'
 
-%w[simple_tcp_server json_rpc_handler message_router server_capabilities document_validator
+%w[version simple_tcp_server json_rpc_handler message_router server_capabilities document_validator
    puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
   begin
     require "puppet-languageserver/#{lib}"
@@ -65,6 +65,11 @@ module PuppetLanguageServer
           puts opts
           exit
         end
+
+        opts.on('-v', '--version', 'Prints the Langauge Server version') do
+          puts PuppetLanguageServer.version
+          exit
+        end
       end
 
       opt_parser.parse!(options.dup)
@@ -100,6 +105,7 @@ module PuppetLanguageServer
       # Log to file
       $logger = Logger.new(options[:debug])
     end
+    log_message(:info, "Language Server is v#{PuppetLanguageServer.version}")
     log_message(:info, "Using Puppet v#{Puppet.version}")
 
     log_message(:info, 'Initializing settings...')
@@ -115,7 +121,6 @@ module PuppetLanguageServer
   end
 
   def self.init_puppet_worker(options)
-    log_message('information', 'Initializing settings...')
     Puppet.initialize_settings
 
     log_message(:info, 'Creating puppet function environment...')
