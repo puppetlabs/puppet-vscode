@@ -45,7 +45,7 @@ module PuppetLanguageServer
       Puppet[:code] = content
       env = Puppet.lookup(:current_environment)
       loaders = Puppet::Pops::Loaders.new(env)
-      Puppet.override({ :loaders => loaders }, _('For puppet parser validate')) do
+      Puppet.override({ :loaders => loaders }, 'For puppet parser validate') do
         begin
           validation_environment = env
           validation_environment.check_for_reparse
