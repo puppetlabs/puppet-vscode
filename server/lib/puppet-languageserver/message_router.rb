@@ -131,6 +131,11 @@ module PuppetLanguageServer
         documents.set_document(file_uri, content)
         reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content))
 
+      when 'textDocument/didClose'
+        PuppetLanguageServer.log_message(:info, 'Received textDocument/didClose notification.')
+        file_uri = params['textDocument']['uri']
+        documents.remove_document(file_uri)
+
       when 'textDocument/didChange'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didChange notification.')
         file_uri = params['textDocument']['uri']
