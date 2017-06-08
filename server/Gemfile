@@ -13,7 +13,11 @@ group :development do
   gem 'rspec', '>= 3.2',            :require => false
   gem "rubocop",                    :require => false, :platforms => [:ruby, :x64_mingw]
 
-  gem "puppet",                     :require => false
+  if ENV['PUPPET_GEM_VERSION']
+    gem 'puppet', ENV['PUPPET_GEM_VERSION'], :require => false
+  else
+    gem 'puppet',                            :require => false
+  end
 
   gem "win32-dir", "<= 0.4.9",      :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
   gem "win32-eventlog", "<= 0.6.5", :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
