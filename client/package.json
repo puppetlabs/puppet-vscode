@@ -115,7 +115,8 @@
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
+    "compile-watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
@@ -124,7 +125,6 @@
     "vscode": "^1.0.0",
     "vscode-languageclient": "^3.1.0",
     "vsce": "^1.18.0",
-    "mocha": "^2.3.3",
     "gulp": "^3.9.1",
     "gulp-bump": "^2.7.0",
     "yargs":"^8.0.1",
@@ -134,8 +134,6 @@
     "@types/mocha": "^2.2.32"
   },
   "dependencies": {
-    "vscode": "^1.0.0",
-    "vscode-languageclient": "^3.1.0",
     "vscode-languageserver": "^3.1.0"
   }
 }
