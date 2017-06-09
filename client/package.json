@@ -27,8 +27,7 @@
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
     "onCommand:extension.puppetShowNodeGraphToSide",
-    "onCommand:extension.puppetResource",
-    "onCommand:extension.puppetModule"
+    "onCommand:extension.puppetResource"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -54,10 +53,6 @@
         "command": "extension.puppetResource",
         "category": "Puppet",
         "title": "Resource",
-        "when": "editorTextFocus && editorLangId == 'puppet'"
-      },{
-        "command": "extension.puppetModule",
-        "title": "Puppet Module",
         "when": "editorTextFocus && editorLangId == 'puppet'"
       },
       {
