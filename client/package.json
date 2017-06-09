@@ -4,7 +4,7 @@
   "description": "Puppet VSCode extension",
   "version": "0.0.4",
   "publisher": "puppet",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "icon":"images/Puppet-Logo-Amber-sm.png",
   "repository":{
     "type": "git",
