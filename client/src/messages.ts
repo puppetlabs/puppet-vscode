@@ -7,6 +7,7 @@ export namespace PuppetVersionRequest {
 export interface PuppetVersionDetails {
   puppetVersion: string;
   facterVersion: string;
+  languageServerVersion: string;
 }
 
 export interface PuppetResourceRequestParams {
