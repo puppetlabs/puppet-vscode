@@ -4,7 +4,6 @@ import {
 } from 'vscode-languageclient'
 
 import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
-import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
 import * as messages from '../src/messages';
 import {
   PuppetNodeGraphContentProvider, isNodeGraphFile, getNodeGraphUri,
@@ -17,12 +16,6 @@ export function setupPuppetCommands(langID:string, languageServerClient:Language
   ctx.subscriptions.push(resourceCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetResourceCommandId, () => {
     resourceCommand.run();
-  }));
-
-  let moduleCommand = new puppetModuleCommand();
-  ctx.subscriptions.push(moduleCommand);
-  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetModuleCommandId, () => {
-    moduleCommand.listModules();
   }));
 
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId,
