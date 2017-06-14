@@ -6,25 +6,21 @@ module PuppetLanguageServer
 
       content = nil
       case item.class.to_s
+      when 'Puppet::Pops::Model::ResourceExpression'
+        content = get_resource_expression_content(item)
+      when 'Puppet::Pops::Model::LiteralString'
+        if item.eContainer.class == Puppet::Pops::Model::AccessExpression
+          expr = item.eContainer.left_expr.expr.value
+
+          content = get_hover_content_for_access_expression(item, expr)
+        elsif item.eContainer.class == Puppet::Pops::Model::ResourceBody
+          # We are hovering over the resource name
+          content = get_resource_expression_content(item.eContainer.eContainer)
+        end
       when 'Puppet::Pops::Model::VariableExpression'
         expr = item.expr.value
 
-        if expr == 'facts'
-          # We are dealing with the facts variable
-          # Just get the first part of the array and display that
-          if item.eContainer.eContents.length > 1
-            factname = item.eContainer.eContents[1].value
-            content = get_fact_content(factname)
-          end
-        elsif expr.start_with?('::') && expr.rindex(':') == 1
-          # We are dealing with a top local scope variable - Possible fact name
-          factname = expr.slice(2, expr.length - 2)
-          content = get_fact_content(factname)
-        else
-          # Could be a flatout fact name.  May not *shrugs*.  That method of access is deprecated
-          content = get_fact_content(expr)
-        end
-
+        content = get_hover_content_for_access_expression(item, expr)
       when 'Puppet::Pops::Model::QualifiedName'
         if !item.eContainer.nil? && item.eContainer.class.to_s == 'Puppet::Pops::Model::ResourceExpression'
           content = get_resource_expression_content(item.eContainer)
@@ -61,6 +57,27 @@ module PuppetLanguageServer
         LanguageServer::Hover.create('contents' => content)
       end
     end
+
+    def self.get_hover_content_for_access_expression(item, expr)
+      if expr == 'facts'
+        # We are dealing with the facts variable
+        # Just get the first part of the array and display that
+        if item.eContainer.eContents.length > 1
+          factname = item.eContainer.eContents[1].value
+          content = get_fact_content(factname)
+        end
+      elsif expr.start_with?('::') && expr.rindex(':') == 1
+        # We are dealing with a top local scope variable - Possible fact name
+        factname = expr.slice(2, expr.length - 2)
+        content = get_fact_content(factname)
+      else
+        # Could be a flatout fact name.  May not *shrugs*.  That method of access is deprecated
+        content = get_fact_content(expr)
+      end
+
+      content
+    end
+
 
     # Content generation functions
     def self.get_fact_content(factname)
