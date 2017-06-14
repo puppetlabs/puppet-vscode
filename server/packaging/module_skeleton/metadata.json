@@ -1,0 +1,12 @@
+{
+  "name": "jpogran-puppet_language_server",
+  "version": "0.0.4",
+  "author": "jpogran",
+  "summary": "Puppet Face to start the Puppet Language server",
+  "license": "Apache-2.0",
+  "source": "https://github.com/jpogran/puppet-vscode",
+  "project_page": "https://github.com/jpogran/puppet-vscode",
+  "issues_url": "https://github.com/jpogran/puppet-vscode/issues",
+  "dependencies": []
+}
+
