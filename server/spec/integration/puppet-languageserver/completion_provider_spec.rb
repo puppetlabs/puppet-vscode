@@ -36,19 +36,20 @@ EOT
       }
 
       describe "When inside the root of the manifest" do
-        let(:line_num) { 8 }
         let(:char_num) { 0 }
         let(:expected_types) { ['keyword','resource_type','function'] }
 
-        it 'should return a list of keyword, resource_type, function' do
-          result = subject.complete(content, line_num, char_num)
+        [0, 8].each do |line_num|
+          it "should return a list of keyword, resource_type, function regardless of cursor location (Testing line #{line_num})" do
+            result = subject.complete(content, line_num, char_num)
 
-          result['items'].each do |item|
-            expect(item).to be_completion_item_with_type(expected_types)
-          end
+            result['items'].each do |item|
+              expect(item).to be_completion_item_with_type(expected_types)
+            end
 
-          expected_types.each do |typename|
-            expect(number_of_completion_item_with_type(result,typename)).to be > 0
+            expected_types.each do |typename|
+              expect(number_of_completion_item_with_type(result,typename)).to be > 0
+            end
           end
         end
       end
@@ -78,6 +79,60 @@ EOT
 
         it 'should return a list of resource_parameter, resource_property' do
           result = subject.complete(content, line_num, char_num)
+
+          result['items'].each do |item|
+            expect(item).to be_completion_item_with_type(expected_types)
+          end
+
+          expected_types.each do |typename|
+            expect(number_of_completion_item_with_type(result,typename)).to be > 0
+          end
+        end
+      end
+    end
+
+    context "Given a simple manifest mid-typing" do
+      let(:content_empty) { <<-EOT
+c
+EOT
+      }
+
+      let(:content_simple) { <<-EOT
+user { 'Charlie':
+
+  ensure => 'present',
+  name   => 'name',
+}
+
+r
+EOT
+      }
+
+      describe "When typing inside the root of an empty manifest" do
+        let(:line_num) { 0 }
+        let(:char_num) { 1 }
+        let(:expected_types) { ['keyword','resource_type','function'] }
+
+        it "should return a list of keyword, resource_type, function" do
+          result = subject.complete(content_empty, line_num, char_num)
+
+          result['items'].each do |item|
+            expect(item).to be_completion_item_with_type(expected_types)
+          end
+
+          expected_types.each do |typename|
+            expect(number_of_completion_item_with_type(result,typename)).to be > 0
+          end
+        end
+      end
+
+      describe "When typing inside the root of a non-empty manifest" do
+        let(:line_num) { 6 }
+        let(:char_num) { 1 }
+        let(:expected_types) { ['keyword','resource_type','function'] }
+
+        it "should return a list of keyword, resource_type, function" do
+          result = subject.complete(content_simple, line_num, char_num)
 
           result['items'].each do |item|
             expect(item).to be_completion_item_with_type(expected_types)
