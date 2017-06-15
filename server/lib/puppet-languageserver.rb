@@ -21,13 +21,13 @@ module PuppetLanguageServer
     def self.parse(options)
       # Set defaults here
       args = {
-        :port => 8081,
-        :ipaddress => '127.0.0.1',
-        :stop_on_client_exit => true,
-        :connection_timeout => 10,
-        :preload_puppet => true,
-        :debug => nil,
-        :fast_start_tcpserver => true
+        port: 8081,
+        ipaddress: '127.0.0.1',
+        stop_on_client_exit: true,
+        connection_timeout: 10,
+        preload_puppet: true,
+        debug: nil,
+        fast_start_tcpserver: true
       }
 
       opt_parser = OptionParser.new do |opts|
@@ -79,7 +79,7 @@ module PuppetLanguageServer
 
   def self.log_message(severity, message)
     return if $logger.nil?
-    
+
     case severity
     when :debug
       $logger.debug(message)
@@ -99,7 +99,7 @@ module PuppetLanguageServer
   def self.init_puppet(options)
     if options[:debug].nil?
       $logger = nil
-    elsif options[:debug].downcase == 'stdout'
+    elsif options[:debug].casecmp 'stdout'
       $logger = Logger.new($stdout)
     elsif !options[:debug].to_s.empty?
       # Log to file

@@ -77,7 +77,7 @@ module PuppetLanguageServer
         when :remove_word
           next_char = get_char_at(content, line_offsets, line_num, char_num)
 
-          while /[[:word:]]/.match(next_char)
+          while /[[:word:]]/ =~ next_char
             move_offset -= 1
             next_char = get_char_at(content, line_offsets, line_num, char_num + move_offset)
 
