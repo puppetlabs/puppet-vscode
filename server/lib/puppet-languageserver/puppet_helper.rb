@@ -108,9 +108,7 @@ module PuppetLanguageServer
     def self.prune_resource_parameters(resources)
       # From https://github.com/puppetlabs/puppet/blob/488661d84e54904124514ab9e4500e81b10f84d1/lib/puppet/application/resource.rb#L146-L148
       if resources.is_a?(Array)
-        resources.map do |resource|
-          resource.prune_parameters
-        end
+        resources.map(&:prune_parameters)
       else
         resources.prune_parameters
       end
@@ -121,7 +119,7 @@ module PuppetLanguageServer
       @types_hash = {}
       # This is an expensive call
       # From https://github.com/puppetlabs/puppet/blob/ebd96213cab43bb2a8071b7ac0206c3ed0be8e58/lib/puppet/metatype/manager.rb#L182-L189
-      typeloader = Puppet::Util::Autoload.new(self, "puppet/type")
+      typeloader = Puppet::Util::Autoload.new(self, 'puppet/type')
       typeloader.loadall
 
       Puppet::Type.eachtype do |type|
