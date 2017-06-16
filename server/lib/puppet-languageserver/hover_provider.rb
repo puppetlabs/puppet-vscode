@@ -78,7 +78,6 @@ module PuppetLanguageServer
       content
     end
 
-
     # Content generation functions
     def self.get_fact_content(factname)
       return nil unless PuppetLanguageServer::FacterHelper.facts.key?(factname)

@@ -110,15 +110,15 @@ module PuppetLanguageServer
     end
 
     def send_response(response)
+      PuppetLanguageServer.log_message(:debug, "--- OUTBOUND\n#{response}\n---")
+
       size = response.bytesize if response.respond_to?(:bytesize)
-# DEBUG ONLY
-PuppetLanguageServer.log_message(:debug, "--- OUTBOUND\n#{response}\n---")
       send_data "Content-Length: #{size}\r\n\r\n" + response
     end
 
     def parse_data(data)
-# DEBUG ONLY
-PuppetLanguageServer.log_message(:debug, "--- INBOUND\n#{data}\n---")
+      PuppetLanguageServer.log_message(:debug, "--- INBOUND\n#{data}\n---")
+
       result = JSON.parse(data)
       received_parsed_object(result)
     end
