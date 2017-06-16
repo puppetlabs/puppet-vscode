@@ -65,7 +65,6 @@ EOT
         let(:char_num) { 10 }
 
         it 'should return resource description' do
-          pending('Not implemented')
           result = subject.resolve(content, line_num, char_num)
 
           expect(result['contents']).to start_with("**user** Resource\n")
@@ -77,7 +76,6 @@ EOT
         let(:char_num) { 1 }
 
         it 'should return resource description' do
-          pending('Not implemented')
           result = subject.resolve(content, line_num, char_num)
 
           expect(result['contents']).to start_with("**user** Resource\n")
@@ -175,7 +173,6 @@ EOT
         let(:char_num) { 22 }
 
         it 'should return fact information' do
-          pending('Not implemented')
           result = subject.resolve(content, line_num, char_num)
 
           expect(result['contents']).to start_with("**operatingsystem** Fact\n")
@@ -198,6 +195,41 @@ EOT
           result = subject.resolve(content, line_num, char_num)
 
           expect(result['contents']).to start_with("**split** Function\n")
+        end
+      end
+    end
+
+    context "Given a resource in an else block" do
+      let(:content) { <<-EOF
+class firewall {
+  if(true) {
+  } else {
+    service { 'service':
+      ensure    => running
+    }
+  }
+}
+    EOF
+      }
+
+      describe 'when cursor is hovering on else branch' do
+        let(:line_num) { 2 }
+        let(:char_num) { 6 }
+        it 'should not complete to service resource' do
+          pending("(PUP-7668) parser is assigning an incorrect offset")
+
+          result = subject.resolve(content, line_num, char_num)
+          expect(result['contents']).not_to start_with("**service** Resource\n")
+        end
+      end
+
+      describe 'when cursor is hovering on service resource' do
+        let(:line_num) { 3 }
+        let(:char_num) { 6 }
+        it 'should complete to service resource documentation' do
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**service** Resource\n")
         end
       end
     end

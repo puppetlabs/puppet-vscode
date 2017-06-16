@@ -112,8 +112,13 @@ Usage: puppet-languageserver.rb [options]
         --debug=DEBUG                Output debug information.  Either specify a filename or 'STDOUT'.  Default is no debug output
     -s, --slow-start                 Delay starting the TCP Server until Puppet initialisation has completed.  Default is to start fast
     -h, --help                       Prints this help
-    -v, --version                    Prints the Langauge Server version```
+    -v, --version                    Prints the Langauge Server version
+```
 
 ## Why are there vendored gems and why only native ruby
 
 When used by VSCode this language server will be running using the Ruby runtime provided by Puppet Agent.  That means no native extensions and no bundler.  Also, only the gems provided by Puppet Agent would be available by default.  To work around this limitation all runtime dependencies should be re-vendored and then the load path modified appropriately.
+
+## Known Issues
+
+* [PUP-7668](https://tickets.puppetlabs.com/browse/PUP-7668) Due to incorrect offsets, hover documentation can be displayed when the user is not actually hovering over the resource that the documentation is for.
