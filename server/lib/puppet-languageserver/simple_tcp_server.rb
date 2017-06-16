@@ -48,13 +48,23 @@ module PuppetLanguageServer
   end
 
   class SimpleTCPServer
-    IO_LOCKER = Mutex.new
-    EVENTS = []
-    E_LOCKER = Mutex.new
-    SERVICES = {}
-    S_LOCKER = Mutex.new
-    IO_CONNECTION_DIC = {}
-    C_LOCKER = Mutex.new
+    class << self
+      attr_reader :io_locker
+      attr_reader :events
+      attr_reader :e_locker
+      attr_reader :services
+      attr_reader :s_locker
+      attr_reader :io_connection_dic
+      attr_reader :c_locker
+    end
+
+    @io_locker = Mutex.new
+    @events = []
+    @e_locker = Mutex.new
+    @services = {}
+    @s_locker = Mutex.new
+    @io_connection_dic = {}
+    @c_locker = Mutex.new
 
     def log(message)
       # Override this to recieve log messages
@@ -107,8 +117,8 @@ module PuppetLanguageServer
       log('Will stop the server when client disconnects') if !@server_options[:stop_on_client_exit].nil? && @server_options[:stop_on_client_exit]
 
       # Output to STDOUT.  This is required by Langugage Client so it knows the server is now running
-      S_LOCKER.synchronize do
-        SERVICES.each do |_service, options|
+      self.class.s_locker.synchronize do
+        self.class.services.each do |_service, options|
           $stdout.write("LANGUAGE SERVER RUNNING #{options[:hostname]}:#{options[:port]}\n")
         end
       end
@@ -123,16 +133,17 @@ module PuppetLanguageServer
             kill_timer -= 1
             if kill_timer.zero?
               connection_count = 0
-              C_LOCKER.synchronize { connection_count = IO_CONNECTION_DIC.count }
+              self.class.c_locker.synchronize { connection_count = self.class.io_connection_dic.count }
               if connection_count.zero?
                 log("No connection has been received in #{connection_options[:connection_timeout]} seconds.  Shutting down server.")
                 stop_services
               end
             end
           end
+        rescue true
         end
-        break if SERVICES.empty?
-      end rescue true
+        break if self.class.services.empty?
+      end
 
       # start shutdown.
       exit_flag = true
@@ -154,7 +165,7 @@ module PuppetLanguageServer
     # returns true if there are any unhandled events
     # @api private
     def events?
-      E_LOCKER.synchronize { !EVENTS.empty? }
+      self.class.e_locker.synchronize { !self.class.events.empty? }
     end
 
     # pushes an event to the event's stack
@@ -162,9 +173,9 @@ module PuppetLanguageServer
     # @api private
     def push_event(handler, *args, &block)
       if block
-        E_LOCKER.synchronize { EVENTS << [(proc { |a| push_event block, handler.call(*a) }), args] }
+        self.class.e_locker.synchronize { self.class.events << [(proc { |a| push_event block, handler.call(*a) }), args] }
       else
-        E_LOCKER.synchronize { EVENTS << [handler, args] }
+        self.class.e_locker.synchronize { self.class.events << [handler, args] }
       end
     end
 
@@ -172,7 +183,7 @@ module PuppetLanguageServer
     #
     # @api private
     def run_async(*args, &block)
-      E_LOCKER.synchronize { EVENTS << [block, args] } if block
+      self.class.e_locker.synchronize { self.class.events << [block, args] } if block
       !block.nil?
     end
 
@@ -185,7 +196,7 @@ module PuppetLanguageServer
     # event handling FIFO
     # @api private
     def fire_event
-      event = E_LOCKER.synchronize { EVENTS.shift }
+      event = self.class.e_locker.synchronize { self.class.events.shift }
       return false unless event
       begin
         event[0].call(*event[1])
@@ -208,31 +219,29 @@ module PuppetLanguageServer
     # it will accept new connections and react to socket input
     # @api private
     def io_review
-      IO_LOCKER.synchronize do
-        return false unless EVENTS.empty?
-        united = SERVICES.keys + IO_CONNECTION_DIC.keys
+      self.class.io_locker.synchronize do
+        return false unless self.class.events.empty?
+        united = self.class.services.keys + self.class.io_connection_dic.keys
         return false if united.empty?
         io_r = IO.select(united, nil, united, 0.1)
         if io_r
           io_r[0].each do |io|
-            if SERVICES[io]
+            if self.class.services[io]
               begin
-                callback(self, :add_connection, io.accept_nonblock, SERVICES[io])
-              # rubocop:disable HandleExceptions
+                callback(self, :add_connection, io.accept_nonblock, self.class.services[io])
               rescue Errno::EWOULDBLOCK => _
-              # rubocop:enable HandleExceptions
               rescue => e
                 log(e.message)
               end
-            elsif IO_CONNECTION_DIC[io]
-              callback(self, :get_data, io, IO_CONNECTION_DIC[io])
+            elsif self.class.io_connection_dic[io]
+              callback(self, :get_data, io, self.class.io_connection_dic[io])
             else
               log("what?!")
               remove_connection(io)
-              SERVICES.delete(io)
+              self.class.services.delete(io)
             end
           end
-          io_r[2].each { |io| (remove_connection(io) || SERVICES.delete(io)).close rescue true }
+          io_r[2].each { |io| (remove_connection(io) || self.class.services.delete(io)).close rescue true }
         end
       end
       callback self, :clear_connections
@@ -248,7 +257,7 @@ module PuppetLanguageServer
       parameters[:hostname] = hostname
       parameters.update port if port.is_a?(Hash)
       service = TCPServer.new(parameters[:hostname], parameters[:port])
-      S_LOCKER.synchronize { SERVICES[service] = parameters }
+      self.class.s_locker.synchronize { self.class.services[service] = parameters }
       callback(self, :log, "Started listening on #{hostname}:#{port}.")
       true
     end
@@ -256,12 +265,12 @@ module PuppetLanguageServer
     # @api public
     def stop_services
       log('Stopping services')
-      S_LOCKER.synchronize do
-        SERVICES.each do |s, p|
+      self.class.s_locker.synchronize do
+        self.class.services.each do |s, p|
           s.close rescue true
           log("Stopped listening on #{p[:hostname]}:#{p[:port]}")
         end
-        SERVICES.clear
+        self.class.services.clear
       end
     end
 
@@ -275,11 +284,11 @@ module PuppetLanguageServer
 
     # @api private
     def stop_connections
-      C_LOCKER.synchronize do
-        IO_CONNECTION_DIC.each do |io, _params|
+      self.class.c_locker.synchronize do
+        self.class.io_connection_dic.each do |io, _params|
           io.close rescue true
         end
-        IO_CONNECTION_DIC.clear
+        self.class.io_connection_dic.clear
       end
     end
 
@@ -289,8 +298,8 @@ module PuppetLanguageServer
       handler.socket = io
       handler.simple_tcp_server = self
       if io
-        C_LOCKER.synchronize do
-          IO_CONNECTION_DIC[io] = { handler: handler, service: service_object }
+        self.class.c_locker.synchronize do
+          self.class.io_connection_dic[io] = { handler: handler, service: service_object }
         end
       end
       callback(handler, :post_init)
@@ -299,11 +308,11 @@ module PuppetLanguageServer
     # @api private
     def remove_connection(io)
       # This needs to be synchronous
-      IO_CONNECTION_DIC[io][:handler].unbind
+      self.class.io_connection_dic[io][:handler].unbind
       connection_count = 0
-      C_LOCKER.synchronize do
-        IO_CONNECTION_DIC.delete io
-        connection_count = IO_CONNECTION_DIC.count
+      self.class.c_locker.synchronize do
+        self.class.io_connection_dic.delete io
+        connection_count = self.class.io_connection_dic.count
         io.close rescue true
       end
 
@@ -315,7 +324,10 @@ module PuppetLanguageServer
     # clears closed connections from the stack
     # @api private
     def clear_connections
-      C_LOCKER.synchronize { IO_CONNECTION_DIC.delete_if(&:closed?) }
+      # Using a SymbolProc here does not work
+      # rubocop:disable Style/SymbolProc
+      self.class.c_locker.synchronize { self.class.io_connection_dic.delete_if { |c| c.closed? } }
+      # rubocop:enable Style/SymbolProc
     end
   end
 end
