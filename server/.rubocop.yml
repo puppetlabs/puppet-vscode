@@ -13,6 +13,8 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+Style/NumericLiterals:
+  Enabled: false
 
 # Length is not useful indicator
 Metrics/LineLength:
@@ -47,5 +49,5 @@ Next:
   Enabled: false
 
 # Enforce LF line endings, even when on Windows
-Style/EndOfLine:
+Layout/EndOfLine:
   EnforcedStyle: lf
