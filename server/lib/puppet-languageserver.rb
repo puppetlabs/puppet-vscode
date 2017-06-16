@@ -13,9 +13,6 @@ require 'puppet'
 require 'optparse'
 require 'logger'
 
-# Global variable holding the logger class
-$logger = nil
-
 module PuppetLanguageServer
   class CommandLineParser
     def self.parse(options)
@@ -78,32 +75,32 @@ module PuppetLanguageServer
   end
 
   def self.log_message(severity, message)
-    return if $logger.nil?
+    return if @logger.nil?
 
     case severity
     when :debug
-      $logger.debug(message)
+      @logger.debug(message)
     when :info
-      $logger.info(message)
+      @logger.info(message)
     when :warn
-      $logger.info(message)
+      @logger.info(message)
     when :error
-      $logger.error(message)
+      @logger.error(message)
     when :fatal
-      $logger.fatal(message)
+      @logger.fatal(message)
     else
-      $logger.unknown(message)
+      @logger.unknown(message)
     end
   end
 
   def self.init_puppet(options)
     if options[:debug].nil?
-      $logger = nil
+      @logger = nil
     elsif options[:debug].casecmp 'stdout'
-      $logger = Logger.new($stdout)
+      @logger = Logger.new($stdout)
     elsif !options[:debug].to_s.empty?
       # Log to file
-      $logger = Logger.new(options[:debug])
+      @logger = Logger.new(options[:debug])
     end
     log_message(:info, "Language Server is v#{PuppetLanguageServer.version}")
     log_message(:info, "Using Puppet v#{Puppet.version}")
