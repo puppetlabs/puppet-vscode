@@ -5,6 +5,7 @@ import cp = require('child_process');
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { setupPuppetCommands } from '../src/puppetcommands';
 import * as messages from '../src/messages';
+import fs = require('fs');
 
 const langID = 'puppet'; // don't change this
 
@@ -26,9 +27,9 @@ export interface IConnectionConfiguration {
   type: ConnectionType;
   host: string;
   port: number;
-  stopOnClientExit: string;
-  timeout: string;
-  preLoadPuppet: string;
+  timeout: number;
+  preLoadPuppet: boolean;
+  debugFilePath: string;
 }
 
 export interface IConnectionManager {
@@ -89,7 +90,13 @@ export class ConnectionManager implements IConnectionManager {
 
     if (this.connectionConfiguration.type == ConnectionType.Local) {
       this.languageServerProcess = this.createLanguageServerProcess(contextPath, this.puppetOutputChannel);
-      if (this.languageServerProcess == undefined) { throw new Error('Unable to start the server process'); }
+      if (this.languageServerProcess == undefined) {
+        if (this.connectionStatus == ConnectionStatus.Failed) {
+          // We've already handled this state.  Just return
+          return
+        }
+        throw new Error('Unable to start the Language Server Process');
+      }
 
       this.languageServerProcess.stdout.on('data', (data) => {
         console.log("OUTPUT: " + data.toString());
@@ -162,7 +169,7 @@ export class ConnectionManager implements IConnectionManager {
   private createLanguageServerProcess(serverExe: string, myOutputChannel: vscode.OutputChannel) {
     myOutputChannel.appendLine('Language server found at: ' + serverExe)
 
-    let cmd = '';
+    let cmd: string = undefined;
     let args = [serverExe];
     let options = {};
 
@@ -176,8 +183,29 @@ export class ConnectionManager implements IConnectionManager {
     //               | 'win32';
     switch (process.platform) {
       case 'win32':
-        myOutputChannel.appendLine('Windows spawn process does not work at the moment')
-        vscode.window.showErrorMessage('Windows spawn process does not work at the moment. Functionality will be limited to syntax highlighting');
+        let comspec: string = process.env["COMSPEC"];
+        let programFiles = process.env["ProgramFiles"];
+        if (process.env["PROCESSOR_ARCHITEW6432"] == "AMD64") {
+          // VSCode is running as 32bit process on a 64bit Operating System.  Need to break out
+          // of the 32bit using the sysnative redirection and environment variables
+          comspec = path.join(process.env["WINDIR"],"sysnative","cmd.exe");
+          programFiles = process.env["ProgramW6432"];
+        }
+        let puppetDir : string = path.join(programFiles,"Puppet Labs","Puppet")
+        let environmentBat : string = path.join(puppetDir,"bin","environment.bat")
+
+        if (!fs.existsSync(puppetDir)) {
+          this.setSessionFailure("Could not find Puppet Agent at " + puppetDir);
+          vscode.window.showWarningMessage('Could not find Puppet Agent installed at "' + puppetDir + '". Functionality will be limited to syntax highlighting');
+          return;
+        }
+
+        cmd = comspec;
+        args = ['/K','CALL',environmentBat,'&&','ruby.exe',serverExe]
+        options = {
+          env: process.env,
+          stdio: 'pipe',
+        };
         break;
       default:
         myOutputChannel.appendLine('Starting language server')
@@ -189,7 +217,26 @@ export class ConnectionManager implements IConnectionManager {
         };
     }
 
+    if (cmd == undefined) {
+      this.setSessionFailure("Unable to start the Language Server on this platform");
+      vscode.window.showWarningMessage('The Puppet Language Server is not supported on this platform (' + process.platform + '). Functionality will be limited to syntax highlighting');
+      return;
+    }
+
+    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
+      args.push('--ip=127.0.0.1');
+    } else {
+      args.push('--ip=' + this.connectionConfiguration.host);
+    }
+    args.push('--port=' + this.connectionConfiguration.port);
+    args.push('--timeout=' + this.connectionConfiguration.timeout);
+    if (this.connectionConfiguration.preLoadPuppet == false) { args.push('--no-preload'); }
+    if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
+      args.push('--debug=' + this.connectionConfiguration.debugFilePath);
+    }
+
     console.log("Starting the language server with " + cmd + " " + args.join(" "));
+    myOutputChannel.appendLine("Starting the language server with " + cmd + " " + args.join(" "));
     var proc = cp.spawn(cmd, args, options)
     console.log("ProcID = " + proc.pid);
     myOutputChannel.appendLine('Language server PID:' + proc.pid)
