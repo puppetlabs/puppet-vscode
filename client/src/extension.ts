@@ -3,78 +3,45 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { startLangServerTCP, createLanguageServerProcess } from '../src/languageserver';
-import { setupPuppetCommands } from '../src/puppetcommands';
+import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
 
 const langID = 'puppet'; // don't change this
 var statusBarItem;
+var serverProc;
 
-export function activate(context: vscode.ExtensionContext) {
-  var myOutputChannel = vscode.window.createOutputChannel('Puppet');
-  myOutputChannel.show()
+var connManager: ConnectionManager = undefined;
 
-  try {
-    var contextPath = context.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
+export class ConnectionConfiguration implements IConnectionConfiguration {
+  public type: ConnectionType = ConnectionType.Unknown; 
+  public host: string = undefined;
+  public port: number = undefined;
+  public stopOnClientExit: string = undefined;
+  public timeout: string = undefined;
+  public preLoadPuppet: string = undefined;
 
+  constructor(context: vscode.ExtensionContext) {
     let config = vscode.workspace.getConfiguration('puppet');
 
-    var host             = config['languageserver']['address']; // '127.0.0.1';
-    var port             = config['languageserver']['port']; // 8081;
-    var stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
-    var timeout          = config['languageserver']['timeout']; // 10;
-    var preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
-
-    createStatusBarItem();
-
-    var languageServerClient = null
-    if (host == '127.0.0.1' || host == 'localhost' || host == '') {
-      var serverProc = createLanguageServerProcess(contextPath, myOutputChannel);
-
-      serverProc.stdout.on('data', (data) => {
-        console.log("OUTPUT: " + data.toString());
-        myOutputChannel.appendLine("OUTPUT: " + data.toString());
-
-        languageServerClient = startLangServerTCP(host, port, langID, statusBarItem, myOutputChannel);
-        context.subscriptions.push(languageServerClient.start());
-      });
-
-      serverProc.on('close', (exitCode) => {
-        console.log("SERVER terminated with exit code: " + exitCode);
-        myOutputChannel.appendLine("SERVER terminated with exit code: " + exitCode);
-      });
-    }
-    else {
-      languageServerClient = startLangServerTCP(host, port, langID, statusBarItem, myOutputChannel);
-      context.subscriptions.push(languageServerClient.start());
-    }
-
-    setupPuppetCommands(langID, languageServerClient, context);
-
-    console.log('Congratulations, your extension "vscode-puppet" is now active!');
-    myOutputChannel.appendLine('Congratulations, your extension "vscode-puppet" is now active!');
-  } catch (e) {
-    console.log((<Error>e).message);//conversion to Error type
-    myOutputChannel.appendLine((<Error>e).message);
+    this.host             = config['languageserver']['address']; // '127.0.0.1';
+    this.port             = config['languageserver']['port']; // 8081;
+    this.stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
+    this.timeout          = config['languageserver']['timeout']; // 10;
+    this.preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
   }
+}
+
+export function activate(context: vscode.ExtensionContext) {
+  connManager = new ConnectionManager(context);
+
+  var configSettings = new ConnectionConfiguration(context);
+
+  connManager.start(configSettings);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-}
-
-// Status Bar handler
-export function createStatusBarItem() {
-  if (statusBarItem === undefined) {
-    // Create the status bar item and place it right next to the language indicator
-    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
-    statusBarItem.show();
-    vscode.window.onDidChangeActiveTextEditor(textEditor => {
-      if (textEditor === undefined || textEditor.document.languageId !== "puppet") {
-        statusBarItem.hide();
-      }
-      else {
-        statusBarItem.show();
-      }
-    })
+  if (connManager != undefined) {
+    connManager.stop();
+    connManager.dispose();
   }
 }

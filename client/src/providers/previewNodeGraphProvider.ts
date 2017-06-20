@@ -2,8 +2,8 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { LanguageClient } from 'vscode-languageclient';
 import { CompileNodeGraphRequest } from '../messages';
+import { IConnectionManager, ConnectionStatus } from '../connection';
 
 export function isNodeGraphFile(document: vscode.TextDocument) {
   return document.languageId === 'puppet'
@@ -25,17 +25,19 @@ export function getNodeGraphUri(uri: vscode.Uri) {
 export class PuppetNodeGraphContentProvider implements vscode.TextDocumentContentProvider {
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
   private _waiting: boolean = false;
-  private _langServer: LanguageClient = undefined;
+  private _connectionManager: IConnectionManager = undefined;
+  private _shownLanguageServerNotAvailable = false;
   
   constructor(
     private context: vscode.ExtensionContext,
-    private langServer: LanguageClient
+    private connMgr: IConnectionManager
   ) {
-    this._langServer = langServer;
+    this._connectionManager = connMgr;
   }
 
   public provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
     const sourceUri = vscode.Uri.parse(uri.query);
+    var thisProvider = this
 
     return vscode.workspace.openTextDocument(sourceUri).then(document => {
       const initialData = {
@@ -43,10 +45,18 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
         source: sourceUri.toString(),
       };
 
+      if (thisProvider._connectionManager.status != ConnectionStatus.Running ) {
+        if (!thisProvider._shownLanguageServerNotAvailable) {
+          vscode.window.showInformationMessage("Puppet Node Graph Preview is not available as the Language Server is not ready");
+          thisProvider._shownLanguageServerNotAvailable = true;
+        }
+        return "Puppet Node Graph Preview is not available as the Language Server is not ready";
+      }
+
       // Content Security Policy
       const nonce = new Date().getTime() + '' + new Date().getMilliseconds();
       // Use the language server to render the document
-      return this._langServer
+      return thisProvider._connectionManager.languageClient
         .sendRequest(CompileNodeGraphRequest.type, sourceUri)
         .then(
           (compileResult) => {

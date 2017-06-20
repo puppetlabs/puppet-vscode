@@ -1,8 +1,8 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { LanguageClient, RequestType } from 'vscode-languageclient';
 import { PuppetResourceRequestParams, PuppetResourceRequest } from '../messages';
+import { IConnectionManager, ConnectionStatus } from '../connection';
 
 class RequestParams implements PuppetResourceRequestParams {
   typename: string;
@@ -10,12 +10,10 @@ class RequestParams implements PuppetResourceRequestParams {
 }
 
 export class puppetResourceCommand {
-  private _langServer: LanguageClient = undefined;
+  private _connectionManager: IConnectionManager = undefined;
 
-  constructor(
-    private langServer: LanguageClient
-  ) {
-    this._langServer = langServer;
+  constructor(connMgr: IConnectionManager) {
+    this._connectionManager = connMgr;
   }
 
   private pickPuppetResource(): Thenable<string> {
@@ -28,6 +26,13 @@ export class puppetResourceCommand {
   }
 
   public run() {
+    var thisCommand = this
+
+    if (thisCommand._connectionManager.status != ConnectionStatus.Running ) {
+      vscode.window.showInformationMessage("Puppet Resource is not available as the Language Server is not ready");
+      return
+    }
+
     this.pickPuppetResource().then((moduleName) => {
       if (moduleName) {
 
@@ -38,7 +43,7 @@ export class puppetResourceCommand {
         let requestParams = new RequestParams;
         requestParams.typename = moduleName;
 
-        this._langServer
+        thisCommand._connectionManager.languageClient
           .sendRequest(PuppetResourceRequest.type, requestParams)
           .then( (resourceResult) => {
             if (resourceResult.error != undefined && resourceResult.error.length > 0) {
