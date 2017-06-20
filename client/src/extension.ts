@@ -15,18 +15,18 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public type: ConnectionType = ConnectionType.Unknown; 
   public host: string = undefined;
   public port: number = undefined;
-  public stopOnClientExit: string = undefined;
-  public timeout: string = undefined;
-  public preLoadPuppet: string = undefined;
+  public timeout: number = undefined;
+  public preLoadPuppet: boolean = undefined;
+  public debugFilePath: string = undefined;
 
   constructor(context: vscode.ExtensionContext) {
     let config = vscode.workspace.getConfiguration('puppet');
 
-    this.host             = config['languageserver']['address']; // '127.0.0.1';
-    this.port             = config['languageserver']['port']; // 8081;
-    this.stopOnClientExit = config['languageserver']['stopOnClientExit']; // true;
-    this.timeout          = config['languageserver']['timeout']; // 10;
-    this.preLoadPuppet    = config['languageserver']['preLoadPuppet']; // true;
+    this.host          = config['languageserver']['address'];
+    this.port          = config['languageserver']['port'];
+    this.timeout       = config['languageserver']['timeout'];
+    this.preLoadPuppet = config['languageserver']['preLoadPuppet'];
+    this.debugFilePath = config['languageserver']['debugFilePath'];
   }
 }
 

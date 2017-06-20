@@ -27,9 +27,9 @@ export interface IConnectionConfiguration {
   type: ConnectionType;
   host: string;
   port: number;
-  stopOnClientExit: string;
-  timeout: string;
-  preLoadPuppet: string;
+  timeout: number;
+  preLoadPuppet: boolean;
+  debugFilePath: string;
 }
 
 export interface IConnectionManager {
@@ -221,6 +221,18 @@ export class ConnectionManager implements IConnectionManager {
       this.setSessionFailure("Unable to start the Language Server on this platform");
       vscode.window.showWarningMessage('The Puppet Language Server is not supported on this platform (' + process.platform + '). Functionality will be limited to syntax highlighting');
       return;
+    }
+
+    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
+      args.push('--ip=127.0.0.1');
+    } else {
+      args.push('--ip=' + this.connectionConfiguration.host);
+    }
+    args.push('--port=' + this.connectionConfiguration.port);
+    args.push('--timeout=' + this.connectionConfiguration.timeout);
+    if (this.connectionConfiguration.preLoadPuppet == false) { args.push('--no-preload'); }
+    if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
+      args.push('--debug=' + this.connectionConfiguration.debugFilePath);
     }
 
     console.log("Starting the language server with " + cmd + " " + args.join(" "));
