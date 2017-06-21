@@ -1,0 +1,10 @@
+Gemfile.lock
+Gemfile.local
+log/
+junit/
+.vagrant/
+.bundle/
+coverage/
+log/
+.DS_Store
+tmp/

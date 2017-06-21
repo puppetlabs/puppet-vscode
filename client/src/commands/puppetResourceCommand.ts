@@ -1,11 +1,20 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as cp from 'child_process';
-import ChildProcess = cp.ChildProcess;
+import { PuppetResourceRequestParams, PuppetResourceRequest } from '../messages';
+import { IConnectionManager, ConnectionStatus } from '../connection';
+
+class RequestParams implements PuppetResourceRequestParams {
+  typename: string;
+  title: string;
+}
 
 export class puppetResourceCommand {
-  private _statusBarItem: vscode.StatusBarItem;
+  private _connectionManager: IConnectionManager = undefined;
+
+  constructor(connMgr: IConnectionManager) {
+    this._connectionManager = connMgr;
+  }
 
   private pickPuppetResource(): Thenable<string> {
     let options: vscode.QuickPickOptions = {
@@ -17,61 +26,44 @@ export class puppetResourceCommand {
   }
 
   public run() {
+    var thisCommand = this
 
-    if (!this._statusBarItem) {
-      this._statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    if (thisCommand._connectionManager.status != ConnectionStatus.Running ) {
+      vscode.window.showInformationMessage("Puppet Resource is not available as the Language Server is not ready");
+      return
     }
 
     this.pickPuppetResource().then((moduleName) => {
       if (moduleName) {
 
         let editor = vscode.window.activeTextEditor;
-        if (!editor) {
-          this._statusBarItem.hide();
-          return;
-        }
+        if (!editor) { return; }
 
         let doc = editor.document;
-        let command = "puppet";
-        let args = ["resource", moduleName];
+        let requestParams = new RequestParams;
+        requestParams.typename = moduleName;
 
-        let cwd = vscode.workspace.rootPath
-          ? vscode.workspace.rootPath
-          : undefined;
-        let options = {
-          cwd: cwd,
-          shell: true,
-        };
-        args.concat
+        thisCommand._connectionManager.languageClient
+          .sendRequest(PuppetResourceRequest.type, requestParams)
+          .then( (resourceResult) => {
+            if (resourceResult.error != undefined && resourceResult.error.length > 0) {
+            // TODO Log any errors
+              console.error(resourceResult.error);
+              return;
+            }
+            if (resourceResult.data == undefined || resourceResult.data.length == 0) return;
 
-        let text = '';
-        let proc = cp.spawn(command, args, options);
-        if (!proc.pid) return;
+            if (editor.selection.isEmpty) {
+              const position = editor.selection.active;
+              var newPosition = position.with(position.line, 0);
+            }else{
+              var newPosition = new vscode.Position(0, 0);
+            }
 
-        proc.stdout.on('data', (data: Buffer) => {
-          text += data;
-        })
-        proc.stdout.on('end', ()=> {
-          if (text.length <= 0) return;
-
-          if (editor.selection.isEmpty) {
-            const position = editor.selection.active;
-            var newPosition = position.with(position.line, 0);
-          }else{
-            var newPosition = new vscode.Position(0, 0);
-          }
-
-          this.editCurrentDocument(doc.uri, text, newPosition);
-          this._statusBarItem.text = "Puppet resource finished!";
-          this._statusBarItem.show();
-        });
+            this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
+          });
       }
     });
-
-  }
-
-  private runCommand(command, args, listener: (text) => string) {
-    
   }
 
   private editCurrentDocument(uri, text, position) {
@@ -80,7 +72,6 @@ export class puppetResourceCommand {
     vscode.workspace.applyEdit(edit);
   }
 
-  dispose() {
-    this._statusBarItem.dispose();
+  public dispose(): any {
   }
 }

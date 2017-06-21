@@ -1,0 +1,53 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Include:
+    - 'lib/**/*.rb'
+    - 'puppet-languageserver'
+  Exclude:
+    - 'tmp/**/*'
+    - 'spec/**/*'
+    - 'vendor/**/*'
+    - Gemfile
+    - Rakefile
+
+Style/Documentation:
+  Enabled: false
+Style/NumericLiterals:
+  Enabled: false
+
+# Length is not useful indicator
+Metrics/LineLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+  
+# Empty method definitions over more than one line is ok
+Style/EmptyMethod:
+  Enabled: false
+
+# Either sytnax for regex is ok
+Style/RegexpLiteral:
+  Enabled: false
+
+# In some cases readability is better without these cops enabled
+Style/ConditionalAssignment:
+  Enabled: false
+Next:
+  Enabled: false
+
+# Enforce LF line endings, even when on Windows
+Layout/EndOfLine:
+  EnforcedStyle: lf

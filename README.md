@@ -1,55 +1,58 @@
-# puppet-vscode
+<!--
+TODO: Need correct marketplace ID
+[![Version](https://vsmarketplacebadge.apphb.com/version/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
+-->
 
-## Features
+# Puppet Language Support for Visual Studio Code
 
-## Syntax Highlighting
+This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/)
 
-- Puppet DSL
-- Puppet grammar
+The extension is composed of the VS Code Extension in the [`client/`](client) directory and the Puppet Language Server in the [`server/`](server) directory
 
-\!\[syntax\]\(images/syntax.png\)
 
-## Snippet support
+## How to run the client and server for development
 
-\!\[feature X\]\(images/snippets.png\)
+### Run the language server
 
-## Puppet Linting support
+Follow the instructions in the server documentation - [How to run the Language Server for Develoment](server/READMEmd#How_to_run_the_Language_Server_for_Development). Ensure you use the `--timeout=0` and `--no-stop` arguments so the server does not stop.
 
-On document save, puppet-lint will be run on the open file.
+### Run the client
 
-\!\[feature X\]\(images/puppet-lint.png\)
+* Ensure nodejs is installed
 
-## Requirements
+* Clone this repository
 
-- puppet-lint installed and available on the PATH or path to binary set in extension settings.
+```
+> git clone https://github.com/jpogran/puppet-vscode.git
 
-## Extension Settings
+> cd puppet-vscode
+> cd client
+```
 
-This extension contributes the following settings:
+* Install the node modules and start VS Code
 
-* `puppetLint.enable`: enable/disable this extension
-* `puppetLint.path`: set to the path to puppet-lint
+```
+> npm install
+...
 
-## Known Issues
+> puppet-vscode@0.0.3 postinstall C:\Source\puppet-vscode\client
+> node ./node_modules/vscode/bin/install
 
-None yet.
+Detected VS Code engine version: ^1.10.0
+Found minimal version that qualifies engine range: 1.10.0
+Fetching vscode.d.ts from: https://raw.githubusercontent.com/Microsoft/vscode/1.10.0/src/vs/vscode.d.ts
+vscode.d.ts successfully installed!
 
-## Release Notes
+> code .
+```
 
-**Note** Not released yet. WIP
+* Once VS Code is running, press `F5` to start a build and a new VS Code development instance should start
 
-- syntax
-- grammar
-- linter
+* Open a Puppet file (.pp) and the client will start and connect to the Puppet Server
 
-### 0.0.1
+> Other Puppet VS Code extensions may cause issues with the development instance.  Ensure that you either uninstall or disable the other Puppet extensions prior.
 
-Initial release of the puppet extension.
+## Issues
 
-### 0.0.2
-
-Puppet Resource and Puppet Module commands.
-
-### 0.0.3
-
-Puppet Parser validate linter added
+Please raise issues for the Language Server or Extension using the GitHub issue tracker.

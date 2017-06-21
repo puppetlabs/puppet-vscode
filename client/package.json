@@ -2,9 +2,10 @@
   "name": "puppet-vscode",
   "displayName": "Puppet",
   "description": "Puppet VSCode extension",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "puppet",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
+  "icon":"images/Puppet-Logo-Amber-sm.png",
   "repository":{
     "type": "git",
     "url": "https://github.com/jpogran/puppet-vscode"
@@ -25,8 +26,8 @@
     "onLanguage:puppet",
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
-    "onCommand:extension.puppetResource",
-    "onCommand:extension.puppetModule"
+    "onCommand:extension.puppetShowNodeGraphToSide",
+    "onCommand:extension.puppetResource"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -34,7 +35,7 @@
       "id": "puppet",
       "aliases": ["Puppet", "puppet"],
       "extensions": [".pp", ".epp"],
-      "configuration": "./puppet.configuration.json"
+      "configuration": "./languages/puppet.configuration.json"
     }],
     "grammars": [{
       "language": "puppet",
@@ -44,44 +45,90 @@
     "snippets": [
       {
         "language": "puppet",
-        "path": "./snippets/dsl.snippets.json"
-      },
-      {
-        "language": "puppet",
-        "path": "./snippets/module.snippets.json"
+        "path": "./snippets/keywords.snippets.json"
       }
     ],
     "commands": [
       {
-        "command": "extension.puppetLint",
-        "title": "Puppet Lint",
-        "when": "editorTextFocus && editorLangId == 'puppet'"
-      },{
-        "command": "extension.puppetParserValidate",
-        "title": "Puppet Parser",
-        "when": "editorTextFocus && editorLangId == 'puppet'"
-      },{
         "command": "extension.puppetResource",
-        "title": "Puppet Resource",
+        "category": "Puppet",
+        "title": "Resource",
         "when": "editorTextFocus && editorLangId == 'puppet'"
-      },{
-        "command": "extension.puppetModule",
-        "title": "Puppet Module",
-        "when": "editorTextFocus && editorLangId == 'puppet'"
+      },
+      {
+        "command": "extension.puppetShowNodeGraphToSide",
+        "title": "Open Node Graph to the Side",
+        "category": "Puppet",
+        "icon": {
+          "light": "./media/PreviewOnRightPane_16x.svg",
+          "dark": "./media/PreviewOnRightPane_16x_dark.svg"
+        }
       }
-    ]
+    ],
+    "configurationDefaults": {
+      "files.encoding": "utf8",
+      "files.associations":[
+        ".pp", ".epp"
+      ],
+      "[puppet]":{
+        "editor.tabSize": 2,
+        "editor.insertSpaces":true,
+        "files.insertFinalNewline": true
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "title": "puppet",
+      "properties": {
+        "puppet.languageserver.address": {
+          "type": "string",
+          "default": "127.0.0.1",
+          "description": "The IP address or hostname of the Puppet Language Server to connect to"
+        },
+        "puppet.languageserver.port": {
+          "type": "integer",
+          "default": 8081,
+          "description": "The TCP Port of the Puppet Language Server to connect to"
+        },
+        "puppet.languageserver.timeout": {
+          "type": "integer",
+          "default": 10,
+          "description": "The timeout to connect to the local Puppet Language Server"
+        },
+        "puppet.languageserver.preLoadPuppet": {
+          "type":"boolean",
+          "default": true,
+          "description": "Initalize Puppet and Facter when local Puppet Language Server starts"
+        },
+        "puppet.languageserver.debugFilePath": {
+          "type":"string",
+          "default": "",
+          "description": "Set the local Puppet Language Server to send debug information to a file"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "tsc -p ./",
-    "compile": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
+    "compile-watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
     "typescript": "^2.0.3",
     "vscode": "^1.0.0",
-    "mocha": "^2.3.3",
+    "vscode-languageclient": "^3.1.0",
+    "vsce": "^1.18.0",
+    "gulp": "^3.9.1",
+    "gulp-bump": "^2.7.0",
+    "yargs":"^8.0.1",
+    "del": "^2.2.2",
+    "run-sequence":"^1.2.2",
     "@types/node": "^6.0.40",
     "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^3.1.0"
   }
 }

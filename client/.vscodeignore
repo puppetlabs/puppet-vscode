@@ -6,4 +6,7 @@ src/**
 **/*.map
 .gitignore
 tsconfig.json
-vsc-extension-quickstart.md
+tmp/**
+logs/**
+sessions/**
+gulpfile.js

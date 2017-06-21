@@ -1,55 +1,47 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+
 import * as vscode from 'vscode';
-import * as cp from 'child_process';
-import ChildProcess = cp.ChildProcess;
+import * as path from 'path';
 
-import { puppetLintCommand } from '../src/commands/puppetLintCommand';
-import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
-import { puppetModuleCommand } from '../src/commands/puppetModuleCommand';
-import { puppetLintProvider } from '../src/providers/puppetLintProvider';
-import { puppetParserValidateProvider } from '../src/providers/puppetParserValidateProvider';
+import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+const langID = 'puppet'; // don't change this
+var statusBarItem;
+var serverProc;
+
+var connManager: ConnectionManager = undefined;
+
+export class ConnectionConfiguration implements IConnectionConfiguration {
+  public type: ConnectionType = ConnectionType.Unknown; 
+  public host: string = undefined;
+  public port: number = undefined;
+  public timeout: number = undefined;
+  public preLoadPuppet: boolean = undefined;
+  public debugFilePath: string = undefined;
+
+  constructor(context: vscode.ExtensionContext) {
+    let config = vscode.workspace.getConfiguration('puppet');
+
+    this.host          = config['languageserver']['address'];
+    this.port          = config['languageserver']['port'];
+    this.timeout       = config['languageserver']['timeout'];
+    this.preLoadPuppet = config['languageserver']['preLoadPuppet'];
+    this.debugFilePath = config['languageserver']['debugFilePath'];
+  }
+}
+
 export function activate(context: vscode.ExtensionContext) {
+  connManager = new ConnectionManager(context);
 
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "vscode-puppet" is now active!');
+  var configSettings = new ConnectionConfiguration(context);
 
-  let linter = new puppetLintProvider();
-  linter.activate(context.subscriptions);
-
-  let validator = new puppetParserValidateProvider();
-  validator.activate(context.subscriptions);
-
-
-  let lintCommand = new puppetLintCommand();
-  var ldisposable = vscode.commands.registerCommand('extension.puppetLint', () => {
-    lintCommand.fixDocument();
-  });
-  context.subscriptions.push(lintCommand);
-  context.subscriptions.push(ldisposable);
-
-  let resourceCommand = new puppetResourceCommand();
-  var rdisposable = vscode.commands.registerCommand('extension.puppetResource', () => {
-    
-    resourceCommand.run();
-  });
-  context.subscriptions.push(resourceCommand);
-  context.subscriptions.push(rdisposable);
-
-  let moduleCommand = new puppetModuleCommand();
-  var rdisposable = vscode.commands.registerCommand('extension.puppetModule', () => {
-    
-    moduleCommand.listModules();
-  });
-  context.subscriptions.push(moduleCommand);
-  context.subscriptions.push(rdisposable);
+  connManager.start(configSettings);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+  if (connManager != undefined) {
+    connManager.stop();
+    connManager.dispose();
+  }
 }
