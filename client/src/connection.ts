@@ -209,7 +209,13 @@ export class ConnectionManager implements IConnectionManager {
         break;
       default:
         myOutputChannel.appendLine('Starting language server')
-        cmd = 'ruby'
+
+        // Try and find the puppet-agent ruby
+        let rubyPath: string = '/opt/puppetlabs/puppet/bin/ruby';
+        if (fs.existsSync(rubyPath)) { cmd = rubyPath }
+
+        // Default to ruby on the path
+        if (cmd == undefined) { cmd = 'ruby' }
         options = {
           shell: true,
           env: process.env,
