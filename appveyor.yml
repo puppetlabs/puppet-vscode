@@ -1,8 +1,4 @@
 version: 0.0.4-appv.{build}
-branches:
-  only:
-  - add-travis-appveyor
-  - language-server-feature
 clone_depth: 10
 init:
 - SET
