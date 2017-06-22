@@ -23,28 +23,41 @@ Follow the instructions in the server documentation - [How to run the Language S
 
 * Clone this repository
 
-```
+```bash
 > git clone https://github.com/jpogran/puppet-vscode.git
 
 > cd puppet-vscode
 > cd client
 ```
 
-* Install the node modules and start VS Code
+* Install the node modules
 
-```
-> npm install
+```bash
+client > npm install
 ...
 
 > puppet-vscode@0.0.3 postinstall C:\Source\puppet-vscode\client
 > node ./node_modules/vscode/bin/install
-
+...
 Detected VS Code engine version: ^1.10.0
 Found minimal version that qualifies engine range: 1.10.0
 Fetching vscode.d.ts from: https://raw.githubusercontent.com/Microsoft/vscode/1.10.0/src/vs/vscode.d.ts
 vscode.d.ts successfully installed!
+```
 
-> code .
+* Copy the Language Server for vendoring into the extensions
+
+```bash
+client > node node_modules/gulp/bin/gulp.js copy_language_server
+[15:13:02] Using gulpfile client/gulpfile.js
+[15:13:02] Starting 'copy_language_server'...
+[15:13:02] Finished 'copy_language_server' after 193 ms
+```
+
+* Start VS Code
+
+```bash
+client > code .
 ```
 
 * Once VS Code is running, press `F5` to start a build and a new VS Code development instance should start
