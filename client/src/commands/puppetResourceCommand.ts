@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import { PuppetResourceRequestParams, PuppetResourceRequest } from '../messages';
 import { IConnectionManager, ConnectionStatus } from '../connection';
+import { Logger } from '../logging';
 
 class RequestParams implements PuppetResourceRequestParams {
   typename: string;
@@ -11,9 +12,11 @@ class RequestParams implements PuppetResourceRequestParams {
 
 export class puppetResourceCommand {
   private _connectionManager: IConnectionManager = undefined;
+  private logger: Logger = undefined;
 
-  constructor(connMgr: IConnectionManager) {
+  constructor(connMgr: IConnectionManager, logger: Logger) {
     this._connectionManager = connMgr;
+    this.logger = logger;
   }
 
   private pickPuppetResource(): Thenable<string> {
@@ -47,8 +50,7 @@ export class puppetResourceCommand {
           .sendRequest(PuppetResourceRequest.type, requestParams)
           .then( (resourceResult) => {
             if (resourceResult.error != undefined && resourceResult.error.length > 0) {
-            // TODO Log any errors
-              console.error(resourceResult.error);
+              this.logger.error(resourceResult.error);
               return;
             }
             if (resourceResult.data == undefined || resourceResult.data.length == 0) return;

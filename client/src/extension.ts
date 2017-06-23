@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
+import { Logger } from './logging';
 
 const langID = 'puppet'; // don't change this
 var statusBarItem;
@@ -31,10 +32,10 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  connManager = new ConnectionManager(context);
+  var logger = new Logger();
+  connManager = new ConnectionManager(context, logger);
 
   var configSettings = new ConnectionConfiguration(context);
-
   connManager.start(configSettings);
 }
 

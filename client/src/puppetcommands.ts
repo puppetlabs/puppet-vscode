@@ -3,10 +3,11 @@ import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
 import * as messages from '../src/messages';
 import { PuppetNodeGraphContentProvider, isNodeGraphFile, getNodeGraphUri, showNodeGraph } from '../src/providers/previewNodeGraphProvider';
 import { IConnectionManager } from './connection';
+import { Logger } from './logging';
 
-export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext){
+export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: Logger){
 
-  let resourceCommand = new puppetResourceCommand(connManager);
+  let resourceCommand = new puppetResourceCommand(connManager, logger);
   ctx.subscriptions.push(resourceCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetResourceCommandId, () => {
     resourceCommand.run();
