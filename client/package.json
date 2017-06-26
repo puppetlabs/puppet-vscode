@@ -3,7 +3,7 @@
   "displayName": "Puppet",
   "description": "Puppet VSCode extension",
   "version": "0.0.4",
-  "publisher": "puppet",
+  "publisher": "jpogran",
   "license": "SEE LICENSE IN LICENSE.txt",
   "icon": "images/Puppet-Logo-Amber-sm.png",
   "galleryBanner": {
