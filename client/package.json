@@ -104,6 +104,11 @@
           "type":"string",
           "default": "",
           "description": "Set the local Puppet Language Server to send debug information to a file"
+        },
+        "puppet.languageclient.minimumUserLogLevel": {
+          "type": "string",
+          "default": "normal",
+          "description": "Set the minimum log level that the user will see on the Puppet OutputChannel (Allowed values: verbose, debug, normal, warning, error)"
         }
       }
     }
