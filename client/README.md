@@ -1,14 +1,14 @@
-<!--
-TODO: Need correct marketplace ID
+
 [![Version](https://vsmarketplacebadge.apphb.com/version/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs-short/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
--->
 
-![Puppet Logo](images/Puppet-Logo-Amber-sm.png)
+[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
 
 # Puppet Language Support for Visual Studio Code
 
-This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/)
+This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/).
+
+**It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
 ## Platform support
 
@@ -23,17 +23,16 @@ This extension provides Puppet Language support for [Visual Studio Code](https:/
 - Import from `puppet resource` directly into manifests
 - Node graph preview
 
+
 ![Example of features](docs/assets/language_server.gif)
 
 ## Requirements
 
-- Puppet Agent
+You will need to have Puppet Agent installed in order to fully use this extension. You can find installation links here:
 
-[Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
-
-[MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
-
-[Linux](https://docs.puppet.com/puppet/4.10/install_linux.html)
+* [Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
+* [MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
+* [Linux](https://docs.puppet.com/puppet/4.10/install_linux.html)
 
 ## Feature information
 
@@ -47,6 +46,10 @@ Syntax highlighting uses [puppet-lint](https://github.com/rodjek/puppet-lint) an
 ### Code Snippets
 
 As part of IntelliSense and Snippets, you can quickly create blocks of code
+
+### Linting
+
+Our validation uses [puppet-lint](https://github.com/rodjek/puppet-lint) to validate the Pupept syntax in all open puppet files. Linting is automatically applied to the document as you edit, without having to save the file first.
 
 ### Puppet Resource
 
@@ -68,31 +71,40 @@ You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastr
 
 The node graph will appear next to the manifest
 
+## Installing the Extension
 
-## Extension Settings
+You can install the official release of the Puppet extension by following the steps
+in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery).
+In the Extensions pane, search for "jpogran-puppet" extension and install it there.  You will
+get notified automatically about any future extension updates!
 
-Coming!
+## Reporting Problems
 
-<!-- TODO -->
+If you're having trouble with the PowerShell extension, please follow these instructions
+to file an issue on our GitHub repository:
 
-## Known Issues
+### 1. File an issue on our [Issues Page](https://github.com/PowerShell/vscode-powershell/issues)
 
-None yet.
+Make sure to fill in the information that is requested in the issue template as it
+will help us investigate the problem more quickly.
 
-## Release Notes
+### 2. Capture verbose logs and send them to us
 
-**Note** Not released yet. Work in Progress
+If you're having an issue with crashing or other erratic behavior, add the following
+line to your User Settings in Visual Studio Code:
 
-### 0.0.3
+```json
+    "puppet.languageserver.debugFilePath": "C:\\Some\\file\\path.txt"
+```
 
-Puppet Parser validate linter added
+Restart Visual Studio Code and try to reproduce the problem, then examine the log. If the issue persists please open an issue.
 
-### 0.0.2
+## Maintainers
 
-Puppet Resource and Puppet Module commands.
+- [James Pogran](https://github.com/jpogran) - [@ender2025](http://twitter.com/ender2025)
+- [Glenn Sarti](https://github.com/glennsarti) - [@glennsarti](http://twitter.com/glennsarti)
+- [Austin Blatt](https://github.com/austb)
 
-### 0.0.1
+## License
 
-Initial release of the puppet extension.
-
-
+This extension is [licensed under the Apache-2.0 License](LICENSE.txt).

@@ -2,15 +2,20 @@
   "name": "puppet-vscode",
   "displayName": "Puppet",
   "description": "Puppet VSCode extension",
-  "version": "0.0.4",
-  "publisher": "puppet",
-  "license": "Apache-2.0",
-  "icon":"images/Puppet-Logo-Amber-sm.png",
-  "repository":{
+  "version": "0.4.0",
+  "publisher": "jpogran",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "icon": "images/Puppet-Logo-Amber-sm.png",
+  "galleryBanner": {
+    "color": "#000000",
+    "theme": "dark"
+  },
+  "homepage": "https://github.com/jpogran/puppet-vscode",
+  "repository": {
     "type": "git",
     "url": "https://github.com/jpogran/puppet-vscode"
   },
-  "bugs":{
+  "bugs": {
     "type": "git",
     "url": "https://github.com/jpogran/puppet-vscode/issues"
   },
@@ -31,17 +36,27 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "languages": [{
-      "id": "puppet",
-      "aliases": ["Puppet", "puppet"],
-      "extensions": [".pp", ".epp"],
-      "configuration": "./languages/puppet.configuration.json"
-    }],
-    "grammars": [{
-      "language": "puppet",
-      "scopeName": "source.puppet",
-      "path": "./syntaxes/puppet.tmLanguage"
-    }],
+    "languages": [
+      {
+        "id": "puppet",
+        "aliases": [
+          "Puppet",
+          "puppet"
+        ],
+        "extensions": [
+          ".pp",
+          ".epp"
+        ],
+        "configuration": "./languages/puppet.configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "puppet",
+        "scopeName": "source.puppet",
+        "path": "./syntaxes/puppet.tmLanguage"
+      }
+    ],
     "snippets": [
       {
         "language": "puppet",
@@ -67,12 +82,13 @@
     ],
     "configurationDefaults": {
       "files.encoding": "utf8",
-      "files.associations":[
-        ".pp", ".epp"
+      "files.associations": [
+        ".pp",
+        ".epp"
       ],
-      "[puppet]":{
+      "[puppet]": {
         "editor.tabSize": 2,
-        "editor.insertSpaces":true,
+        "editor.insertSpaces": true,
         "files.insertFinalNewline": true
       }
     },
@@ -96,12 +112,12 @@
           "description": "The timeout to connect to the local Puppet Language Server"
         },
         "puppet.languageserver.preLoadPuppet": {
-          "type":"boolean",
+          "type": "boolean",
           "default": true,
           "description": "Initalize Puppet and Facter when local Puppet Language Server starts"
         },
         "puppet.languageserver.debugFilePath": {
-          "type":"string",
+          "type": "string",
           "default": "",
           "description": "Set the local Puppet Language Server to send debug information to a file"
         },
@@ -126,9 +142,9 @@
     "vsce": "^1.18.0",
     "gulp": "^3.9.1",
     "gulp-bump": "^2.7.0",
-    "yargs":"^8.0.1",
+    "yargs": "^8.0.1",
     "del": "^2.2.2",
-    "run-sequence":"^1.2.2",
+    "run-sequence": "^1.2.2",
     "@types/node": "^6.0.40",
     "@types/mocha": "^2.2.32"
   },

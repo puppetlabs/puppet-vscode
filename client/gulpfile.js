@@ -6,7 +6,7 @@ var exec = require('child_process').exec;
 var bump = require('gulp-bump');
 var args = require('yargs').argv;
 
-// The default task (called when you run `gulp` from cli) 
+// The default task (called when you run `gulp` from cli)
 gulp.task('default', ['build']);
 
 gulp.task('clean', function () {
@@ -22,7 +22,7 @@ gulp.task('copy_language_server', function () {
 })
 
 gulp.task('build_extension', function (callback) {
-  exec('node ./node_modules/vsce/out/vsce package',
+  exec('node ./node_modules/vsce/out/vsce package --baseContentUrl https://github.com/jpogran/puppet-vscode/client --baseImagesUrl https://github.com/jpogran/puppet-vscode/client',
     function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
@@ -41,9 +41,9 @@ gulp.task('bump', function () {
     /// Usage:
     /// 1. gulp bump : bumps the package.json and bower.json to the next minor revision.
     ///   i.e. from 0.1.1 to 0.1.2
-    /// 2. gulp bump --version 1.1.1 : bumps/sets the package.json and bower.json to the 
+    /// 2. gulp bump --version 1.1.1 : bumps/sets the package.json and bower.json to the
     ///    specified revision.
-    /// 3. gulp bump --type major       : bumps 1.0.0 
+    /// 3. gulp bump --type major       : bumps 1.0.0
     ///    gulp bump --type minor       : bumps 0.1.0
     ///    gulp bump --type patch       : bumps 0.0.2
     ///    gulp bump --type prerelease  : bumps 0.0.1-2
