@@ -6,7 +6,9 @@
 
 # Puppet Language Support for Visual Studio Code
 
-This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/)
+This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/).
+
+**It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
 ## Platform support
 
