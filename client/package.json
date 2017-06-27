@@ -2,7 +2,7 @@
     "name": "puppet-vscode",
     "displayName": "Puppet",
     "description": "Puppet VSCode extension",
-    "version": "0.4.2",
+    "version": "0.4.5",
     "publisher": "jpogran",
     "license": "SEE LICENSE IN LICENSE.txt",
     "icon": "images/Puppet-Logo-Amber-sm.png",
