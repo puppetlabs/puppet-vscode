@@ -1,8 +1,9 @@
 
-[![Version](https://vsmarketplacebadge.apphb.com/version/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
+[![Version](https://vsmarketplacebadge.apphb.com/version/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
+[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c?svg=true)]
+(https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
 
 # Puppet Language Support for Visual Studio Code
 
