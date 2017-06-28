@@ -25,8 +25,14 @@
     "categories": [
         "Linters",
         "Languages",
-        "Snippets",
-        "Other"
+        "Snippets"
+    ],
+    "keywords": [
+        "puppet",
+        "puppet-lint",
+        "linters",
+        "snippet",
+        "language"
     ],
     "activationEvents": [
         "onLanguage:puppet",
