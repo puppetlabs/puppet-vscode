@@ -1,15 +1,15 @@
-<!--
-TODO: Need correct marketplace ID
-[![Version](https://vsmarketplacebadge.apphb.com/version/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/jpogran.Puppet.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.Puppet)
--->
+
+[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Rating](https://vsmarketplacebadge.apphb.com/rating-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
+
+[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
+
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/jpogran/puppet-vscode.svg)](http://isitmaintained.com/project/jpogran/puppet-vscode "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/jpogran/puppet-vscode.svg)](http://isitmaintained.com/project/jpogran/puppet-vscode "Percentage of issues still open")
 
 # Puppet Language Support for Visual Studio Code
 
 This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/)
 
 The extension is composed of the VS Code Extension in the [`client/`](client) directory and the Puppet Language Server in the [`server/`](server) directory
-
 
 ## How to run the client and server for development
 
@@ -68,4 +68,4 @@ client > code .
 
 ## Issues
 
-Please raise issues for the Language Server or Extension using the GitHub issue tracker.
+Please raise issues for the Language Server or Extension using the GitHub [issue tracker](https://github.com/jpogran/puppet-vscode/issues/new).
