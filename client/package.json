@@ -1,7 +1,7 @@
 {
     "name": "puppet-vscode",
     "displayName": "Puppet",
-    "description": "Puppet VSCode extension",
+    "description": "Official Puppet VSCode extension. Provides full Puppet DSL intellisense, syntax highlighting, Puppet command support, Puppet node graphs, and much more",
     "version": "0.4.5",
     "publisher": "jpogran",
     "license": "SEE LICENSE IN LICENSE.txt",
@@ -25,7 +25,8 @@
     "categories": [
         "Linters",
         "Languages",
-        "Snippets"
+        "Snippets",
+        "Other"
     ],
     "activationEvents": [
         "onLanguage:puppet",

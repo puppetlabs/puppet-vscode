@@ -13,6 +13,7 @@ This extension provides Puppet Language support for [Visual Studio Code](https:/
 
 - Microsoft Windows
 - MacOSX
+- Linux
 
 ## Features
 
