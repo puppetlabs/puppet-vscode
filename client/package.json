@@ -74,7 +74,7 @@
             {
                 "command": "extension.puppetResource",
                 "category": "Puppet",
-                "title": "Resource",
+                "title": "Puppet Resource",
                 "when": "editorTextFocus && editorLangId == 'puppet'"
             },
             {
@@ -87,6 +87,28 @@
                 }
             }
         ],
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.puppetShowNodeGraphToSide",
+                    "alt": "extension.puppetShowNodeGraphToSide"
+                }
+            ],
+            "editor/context": [
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.puppetShowNodeGraphToSide",
+                    "alt": "extension.puppetShowNodeGraphToSide"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.puppetResource",
+                    "alt": "extension.puppetResource",
+                    "group": ""
+                }
+            ]
+        },
         "configurationDefaults": {
             "files.encoding": "utf8",
             "files.associations": [
