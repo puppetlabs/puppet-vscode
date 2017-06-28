@@ -1,11 +1,11 @@
 
-[![Version](https://vsmarketplacebadge.apphb.com/version/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
+[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
+[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
 
 # Puppet Language Support for Visual Studio Code
 
-This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/).
+This extension provides full Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/).
 
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
@@ -28,7 +28,7 @@ This extension provides Puppet Language support for [Visual Studio Code](https:/
 
 ## Requirements
 
-You will need to have Puppet Agent installed in order to fully use this extension. You can find installation links here:
+You will need to have Puppet Agent installed in order to fully use this extension. You can find instructions and installation links here:
 
 * [Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
 * [MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
@@ -80,10 +80,10 @@ get notified automatically about any future extension updates!
 
 ## Reporting Problems
 
-If you're having trouble with the PowerShell extension, please follow these instructions
+If you're having trouble with the Puppet extension, please follow these instructions
 to file an issue on our GitHub repository:
 
-### 1. File an issue on our [Issues Page](https://github.com/PowerShell/vscode-powershell/issues)
+### 1. File an issue on our [Issues Page](https://github.com/jpogran/puppet-vscode/issues)
 
 Make sure to fill in the information that is requested in the issue template as it
 will help us investigate the problem more quickly.
