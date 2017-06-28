@@ -15,11 +15,11 @@ environment:
     RUBY_VER: 21-x64
     RAKE_TASK: test
   # Latest Puppet
-  - PUPPET_GEM_VERSION: "> 4.0.0"
-    RUBY_VER: 23-x64
+  - PUPPET_GEM_VERSION: "~> 5.0"
+    RUBY_VER: 24-x64
     RAKE_TASK: test
   # Ruby style
-  - PUPPET_GEM_VERSION: "> 4.0.0"
+  - PUPPET_GEM_VERSION: "~> 4.0"
     RUBY_VER: 23-x64
     RAKE_TASK: rubocop
 
@@ -33,9 +33,13 @@ matrix:
   fast_finish: true
   allow_failures:
     # Ruby style
-    - PUPPET_GEM_VERSION: "> 4.0.0"
+    - PUPPET_GEM_VERSION: "~> 4.0"
       RUBY_VER: 23-x64
       RAKE_TASK: rubocop
+    # Latest Puppet
+    - PUPPET_GEM_VERSION: "~> 5.0"
+      RUBY_VER: 24-x64
+      RAKE_TASK: test
 
 install:
 - ps: |
