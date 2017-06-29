@@ -4,9 +4,9 @@ module PuppetLanguageServer
       items = []
       incomplete = false
 
-      item = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, true, [Puppet::Pops::Model::QualifiedName])
+      result = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, true, [Puppet::Pops::Model::QualifiedName])
 
-      if item.nil?
+      if result.nil?
         # We are in the root of the document.
 
         # Add keywords
@@ -21,6 +21,8 @@ module PuppetLanguageServer
         return LanguageServer::CompletionList.create('isIncomplete' => incomplete,
                                                      'items' => items)
       end
+
+      item = result[:model]
 
       case item.class.to_s
       when 'Puppet::Pops::Model::VariableExpression'

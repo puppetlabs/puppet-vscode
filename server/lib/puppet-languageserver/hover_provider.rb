@@ -1,44 +1,44 @@
 module PuppetLanguageServer
   module HoverProvider
     def self.resolve(content, line_num, char_num)
-      item = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, false)
-      return LanguageServer::Hover.create_nil_response if item.nil?
+      result = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, false, [Puppet::Pops::Model::QualifiedName])
+      return LanguageServer::Hover.create_nil_response if result.nil?
+
+      path = result[:path]
+      item = result[:model]
 
       content = nil
       case item.class.to_s
       when 'Puppet::Pops::Model::ResourceExpression'
         content = get_resource_expression_content(item)
       when 'Puppet::Pops::Model::LiteralString'
-        if item.eContainer.class == Puppet::Pops::Model::AccessExpression
-          expr = item.eContainer.left_expr.expr.value
+        if path[-1].class == Puppet::Pops::Model::AccessExpression
+          expr = path[-1].left_expr.expr.value
 
-          content = get_hover_content_for_access_expression(item, expr)
-        elsif item.eContainer.class == Puppet::Pops::Model::ResourceBody
+          content = get_hover_content_for_access_expression(path, expr)
+        elsif path[-1].class == Puppet::Pops::Model::ResourceBody
           # We are hovering over the resource name
-          content = get_resource_expression_content(item.eContainer.eContainer)
+          content = get_resource_expression_content(path[-2])
         end
       when 'Puppet::Pops::Model::VariableExpression'
         expr = item.expr.value
 
-        content = get_hover_content_for_access_expression(item, expr)
-      when 'Puppet::Pops::Model::QualifiedName'
-        if !item.eContainer.nil? && item.eContainer.class.to_s == 'Puppet::Pops::Model::ResourceExpression'
-          content = get_resource_expression_content(item.eContainer)
-        elsif !item.eContainer.nil? && item.eContainer.class.to_s == 'Puppet::Pops::Model::CallNamedFunctionExpression'
-          content = get_call_named_function_expression_content(item.eContainer)
-        end
-
+        content = get_hover_content_for_access_expression(path, expr)
+      when 'Puppet::Pops::Model::CallNamedFunctionExpression'
+        content = get_call_named_function_expression_content(item)
       when 'Puppet::Pops::Model::AttributeOperation'
         # Get the parent resource class
-        parent_klass = item.eContainer
+        distance_up_ast = -1
+        parent_klass = path[distance_up_ast]
         while !parent_klass.nil? && parent_klass.class.to_s != 'Puppet::Pops::Model::ResourceBody'
-          parent_klass = parent_klass.eContainer
+          distance_up_ast -= 1
+          parent_klass = path[distance_up_ast]
         end
         raise "Unable to find suitable parent object for object of type #{item.class}" if parent_klass.nil?
 
         # Get an instance of the type
-        item_type = PuppetLanguageServer::PuppetHelper.get_type(parent_klass.eContainer.type_name.value)
-        raise "#{parent_klass.eContainer.type_name.value} is not a valid puppet type" if item_type.nil?
+        item_type = PuppetLanguageServer::PuppetHelper.get_type(path[distance_up_ast - 1].type_name.value)
+        raise "#{path[distance_up_ast - 1].type_name.value} is not a valid puppet type" if item_type.nil?
         # Check if it's a property
         attribute = item_type.validproperty?(item.attribute_name)
         if attribute != false
@@ -58,12 +58,20 @@ module PuppetLanguageServer
       end
     end
 
-    def self.get_hover_content_for_access_expression(item, expr)
+    def self.get_hover_content_for_access_expression(path, expr)
       if expr == 'facts'
         # We are dealing with the facts variable
         # Just get the first part of the array and display that
-        if item.eContainer.eContents.length > 1
-          factname = item.eContainer.eContents[1].value
+        fact_array = path[-1]
+        if fact_array.respond_to? :eContents
+          fact_array_content = fact_array.eContents
+        else
+          fact_array_content = []
+          fact_array._pcore_contents { |item| fact_array_content.push item }
+        end
+
+        if fact_array_content.length > 1
+          factname = fact_array_content[1].value
           content = get_fact_content(factname)
         end
       elsif expr.start_with?('::') && expr.rindex(':') == 1
