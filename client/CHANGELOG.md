@@ -10,6 +10,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 Add unreleased changes here
 -->
 
+## 0.4.6 - 2017-06-29
+
+### Changed
+
+- Updated links in README
+- Added more information to package manifest
+- Minor updates to README
+
 ## 0.4.5 - 2017-06-27
 
 ### Changed
