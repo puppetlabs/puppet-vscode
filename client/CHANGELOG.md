@@ -4,11 +4,9 @@ All notable changes to the "vscode-puppet" extension will be documented in this 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-<!--
 ## Unreleased
 
-Add unreleased changes here
--->
+- Added context menus for Puppet Resource and Nodegraph preview
 
 ## 0.4.6 - 2017-06-29
 
