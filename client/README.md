@@ -55,7 +55,7 @@ Our validation uses [puppet-lint](https://github.com/rodjek/puppet-lint) to vali
 
 You can import existing resources directly using `puppet resource`
 
-1. Open the command palette (`Ctrl+Shift+P`)
+1. Open the command palette (`Ctrl+Shift+P`) or right click on a puppet file and select the menu entry
 
 2. Type `puppet resource` and press enter
 
@@ -65,7 +65,7 @@ You can import existing resources directly using `puppet resource`
 
 You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastructure-models) of a manifest while you edit your Puppet Code.
 
-1. Open the command palette (`Ctrl+Shift+P`)
+1. Open the command palette (`Ctrl+Shift+P`) or right click on a puppet file and select the menu entry
 
 2. Type `puppet open node`.. and press enter
 
