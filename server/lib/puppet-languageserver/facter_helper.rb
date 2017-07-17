@@ -39,6 +39,7 @@ module PuppetLanguageServer
       _reset
       Facter.loadfacts
       @fact_hash = Facter.to_hash
+      PuppetLanguageServer.log_message(:debug, "[FacterHelper::_load_facts] Finished loading #{@fact_hash.keys.count} facts")
     end
     private_class_method :_load_facts
   end

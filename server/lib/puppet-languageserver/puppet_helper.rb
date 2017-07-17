@@ -10,8 +10,10 @@ module PuppetLanguageServer
     @function_module = nil
 
     def self.reset
-      @ops_lock.synchronize do
-        _reset
+      @ops_lock_types.synchronize do
+        @ops_lock_funcs.synchronize do
+          _reset
+        end
       end
     end
 
@@ -60,7 +62,7 @@ module PuppetLanguageServer
     # Functions
     def self.load_functions
       @ops_lock_funcs.synchronize do
-        _load_functions
+        _load_functions if @function_module.nil?
       end
     end
 
@@ -119,8 +121,17 @@ module PuppetLanguageServer
       @types_hash = {}
       # This is an expensive call
       # From https://github.com/puppetlabs/puppet/blob/ebd96213cab43bb2a8071b7ac0206c3ed0be8e58/lib/puppet/metatype/manager.rb#L182-L189
-      typeloader = Puppet::Util::Autoload.new(self, 'puppet/type')
-      typeloader.loadall
+
+      autoloader = Puppet::Util::Autoload.new(self, 'puppet/type')
+      autoloader.files_to_load.each do |file|
+        name = file.gsub(autoloader.path + '/','')
+        begin
+          result = autoloader.load(name)
+          PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_types] type #{file} did not load") unless result
+        rescue StandardError => err
+          PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_types] Error loading type #{file}: #{err}")
+        end unless autoloader.loaded?(name)
+      end
 
       Puppet::Type.eachtype do |type|
         next if type.name == :component
@@ -129,16 +140,31 @@ module PuppetLanguageServer
         @types_hash[type.name] = type
       end
 
+      type_count = @types_hash.count
+      PuppetLanguageServer.log_message(:debug, "[PuppetHelper::_load_types] Finished loading #{type_count} types")
+
       nil
     end
     private_class_method :_load_types
 
     def self._load_functions
       autoloader = Puppet::Parser::Functions.autoloader
-      autoloader.loadall
+
+      # This is an expensive call
+      autoloader.files_to_load.each do |file|
+        name = file.gsub(autoloader.path + '/','')
+        begin
+          result = autoloader.load(name)
+          PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_functions] function #{file} did not load") unless result
+        rescue StandardError => err
+          PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_functions] Error loading function #{file}: #{err}")
+        end unless autoloader.loaded?(name)
+      end
 
       @function_module = Puppet::Parser::Functions.environment_module(Puppet.lookup(:current_environment))
 
+      function_count = @function_module.all_function_info.keys.map(&:to_s).count
+      PuppetLanguageServer.log_message(:debug, "[PuppetHelper::_load_functions] Finished loading #{function_count} functions")
       nil
     end
     private_class_method :_load_functions

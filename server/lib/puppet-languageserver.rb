@@ -118,11 +118,7 @@ module PuppetLanguageServer
   end
 
   def self.init_puppet_worker(options)
-    Puppet.initialize_settings
-
-    log_message(:info, 'Creating puppet function environment...')
-    autoloader = Puppet::Parser::Functions.autoloader
-    autoloader.loadall
+    options[:puppet_settings].nil? ? Puppet.initialize_settings : Puppet.initialize_settings(options[:puppet_settings])
 
     log_message(:info, "Using Facter v#{Facter.version}")
     if options[:preload_puppet]
