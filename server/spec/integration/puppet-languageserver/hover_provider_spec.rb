@@ -40,6 +40,85 @@ EOT
       end
     end
 
+    context "Given a class definition in the manifest" do
+      let(:content) { <<-EOT
+class Test::NoParams {
+  user { 'Alice':
+    ensure => 'present',
+    name   => 'name',
+  }
+}
+
+class Test::WithParams (String $version = 'Bob') {
+  user { $version:
+    ensure => 'present',
+    name   => 'name',
+  }
+}
+EOT
+      }
+
+      describe 'when cursor is on the class keyword' do
+        let(:line_num) { 0 }
+        let(:char_num) { 3 }
+
+        it 'should return class description' do
+          pending('Not implemented')
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**class** keyword\n")
+        end
+      end
+
+      describe 'when cursor is on the class name' do
+        let(:line_num) { 0 }
+        let(:char_num) { 14 }
+
+        it 'should return class description' do
+          pending('Not implemented')
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**class** keyword\n")
+        end
+      end
+
+      describe 'when cursor is on the property type in a class definition' do
+        let(:line_num) { 7 }
+        let(:char_num) { 27 }
+
+        it 'should return type information' do
+          pending('Not implemented')
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to start_with("**String** keyword\n")
+        end
+      end
+
+      describe 'when cursor is on the property name in a class definition' do
+        let(:line_num) { 7 }
+        let(:char_num) { 36 }
+
+        it 'should not return any information' do
+          pending('Not implemented')
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to eq('')
+        end
+      end
+
+      describe 'when cursor is on the property default value in a class definition' do
+        let(:line_num) { 7 }
+        let(:char_num) { 44 }
+
+        it 'should not return any information' do
+          pending('Not implemented')
+          result = subject.resolve(content, line_num, char_num)
+
+          expect(result['contents']).to eq('')
+        end
+      end
+    end
+
     context "Given a resource in the manifest" do
       let(:content) { <<-EOT
 user { 'Bob':

@@ -11,7 +11,12 @@ module PuppetLanguageServer
       @documents[uri] = nil
     end
 
+    def self.clear
+      @documents.clear
+    end
+
     def self.document(uri)
+      return nil if @documents[uri].nil?
       @documents[uri].clone
     end
   end
@@ -42,7 +47,10 @@ module PuppetLanguageServer
       when 'puppet/getResource'
         type_name = request.params['typename']
         title = request.params['title']
-        request.reply_result(LanguageServer::PuppetCompilation.create('error' => 'Missing Typename')) if type_name.nil?
+        if type_name.nil?
+          request.reply_result(LanguageServer::PuppetCompilation.create('error' => 'Missing Typename'))
+          return
+        end
         resources = nil
 
         if title.nil?
@@ -51,8 +59,10 @@ module PuppetLanguageServer
           resources = PuppetLanguageServer::PuppetHelper.resource_face_get_by_typename_and_title(type_name, title)
           resources = [resources] unless resources.nil?
         end
-        request.reply_result(LanguageServer::PuppetCompilation.create('data' => '')) if resources.nil? || resources.length.zero?
-
+        if resources.nil? || resources.length.zero?
+          request.reply_result(LanguageServer::PuppetCompilation.create('data' => '')) 
+          return
+        end
         # TODO: Should probably move this to a helper?
         content = resources.map(&:to_manifest).join("\n\n") + "\n"
         request.reply_result(LanguageServer::PuppetCompilation.create('data' => content))
