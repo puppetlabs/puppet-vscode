@@ -25,7 +25,8 @@
     "categories": [
         "Linters",
         "Languages",
-        "Snippets"
+        "Snippets",
+        "Formatters"
     ],
     "keywords": [
         "puppet",
@@ -57,6 +58,10 @@
                 "configuration": "./languages/puppet.configuration.json"
             }
         ],
+        "jsonValidation": [{
+            "fileMatch": "metadata.json",
+            "url": "./src/metadata-json-schema.json"
+        }],
         "grammars": [
             {
                 "language": "puppet",
@@ -68,6 +73,10 @@
             {
                 "language": "puppet",
                 "path": "./snippets/keywords.snippets.json"
+            },
+            {
+                "language": "json",
+                "path": "./snippets/metadata.snippets.json"
             }
         ],
         "commands": [

@@ -20,6 +20,7 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 - [Syntax highlighting](#Syntax_Highlighting)
 - [Code snippets](#Code_snippets)
 - IntelliSense for resources, parameters and more
+- Validation of `metadata.json` files
 - Import from `puppet resource` directly into manifests
 - Node graph preview
 
@@ -42,6 +43,7 @@ Syntax highlighting uses [puppet-lint](https://github.com/rodjek/puppet-lint) an
 
 - Puppet DSL
 - Puppet Grammar
+- Module metadata files
 
 ### Code Snippets
 
