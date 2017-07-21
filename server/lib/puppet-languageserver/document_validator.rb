@@ -7,6 +7,8 @@ module PuppetLanguageServer
       problems = 0
 
       begin
+        # TODO: load .puppet-lint.rc from the module root as well
+        PuppetLint::OptParser.build
         linter = PuppetLint::Checks.new
         problems = linter.run(nil, content)
         unless problems.nil?
