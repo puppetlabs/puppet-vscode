@@ -9,6 +9,20 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
+## Requirements
+
+You will need to have Puppet Agent installed in order to fully use this extension. You can find instructions and installation links here:
+
+* [Windows](https://docs.puppet.com/puppet/latest/install_windows.html)
+* [MacOSX](https://docs.puppet.com/puppet/latest/install_osx.html)
+* [Linux](https://docs.puppet.com/puppet/latest/install_linux.html)
+
+## Quick start
+
+Open any Puppet manifest with the extension '.pp' or 'epp' and the extension will load automatically. Once loaded the extension will be available for the duration of the session.
+
+![Example of features](docs/assets/language_server.gif)
+
 ## Platform support
 
 - Microsoft Windows
@@ -17,22 +31,12 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 ## Features
 
-- [Syntax highlighting](#Syntax_Highlighting)
-- [Code snippets](#Code_snippets)
+- Syntax highlighting
+- Code snippets
+- Linting
 - IntelliSense for resources, parameters and more
 - Import from `puppet resource` directly into manifests
 - Node graph preview
-
-
-![Example of features](docs/assets/language_server.gif)
-
-## Requirements
-
-You will need to have Puppet Agent installed in order to fully use this extension. You can find instructions and installation links here:
-
-* [Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
-* [MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
-* [Linux](https://docs.puppet.com/puppet/4.10/install_linux.html)
 
 ## Feature information
 
