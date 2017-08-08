@@ -22,7 +22,7 @@ gulp.task('copy_language_server', function () {
 })
 
 gulp.task('build_extension', function (callback) {
-  exec('node ./node_modules/vsce/out/vsce package --baseContentUrl https://github.com/jpogran/puppet-vscode/client --baseImagesUrl https://github.com/jpogran/puppet-vscode/client',
+  exec('node ./node_modules/vsce/out/vsce package',
     function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
