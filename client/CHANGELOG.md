@@ -6,7 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-- Added context menus for Puppet Resource and Nodegraph preview
+
+
+## 0.5.3 - 2017-08-08
+
+- (GH-92) Added context menus for Puppet Resource and Nodegraph preview
+- (GH-98) Improve language server function and type loading
+- (GH-52) JSON validation and schema for metadata.json
+- (GH-47) Fixes pending language server tests
+- (GH-45) Fix runocop violations for language tcp server
+- (GH-89) Document support for linux in readme
+- (GH-64) Additional language server tests
+- (GH-103) Extension now supports puppet-lint rc files
+- (GH-99) Improved client README and Gallery page
 
 ## 0.4.6 - 2017-06-29
 

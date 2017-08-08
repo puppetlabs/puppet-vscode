@@ -21,7 +21,7 @@ You will need to have Puppet Agent installed in order to fully use this extensio
 
 Open any Puppet manifest with the extension '.pp' or 'epp' and the extension will load automatically. Once loaded the extension will be available for the duration of the session.
 
-![Example of features](docs/assets/language_server.gif)
+![Example of features](https://raw.githubusercontent.com/jpogran/puppet-vscode/master/client/docs/assets/language_server.gif)
 
 ## Platform support
 
