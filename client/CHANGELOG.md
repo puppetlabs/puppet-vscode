@@ -8,6 +8,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 
 
+## 0.6.0 - 2017-08-08
+
+- Fix packaging error where language server was not included
+
 ## 0.5.3 - 2017-08-08
 
 - (GH-92) Added context menus for Puppet Resource and Nodegraph preview
