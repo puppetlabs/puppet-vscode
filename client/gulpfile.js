@@ -16,6 +16,7 @@ gulp.task('clean', function () {
 gulp.task('copy_language_server', function () {
   return gulp.src(['../server/lib/**/*',
                    '../server/vendor/**/*',
+                   '../server/puppet-debugserver',
                    '../server/puppet-languageserver'
                   ], { base: '../server'})
              .pipe(gulp.dest('./vendor/languageserver'));
