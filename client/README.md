@@ -111,6 +111,9 @@ Restart Visual Studio Code and try to reproduce the problem, then examine the lo
 - [Glenn Sarti](https://github.com/glennsarti) - [@glennsarti](http://twitter.com/glennsarti)
 - [Austin Blatt](https://github.com/austb)
 
+## Telemetry
+This extension collects telemetry data to help us build a better experience for writing manifest and modules with Puppet and VS Code. We only collect data on which commands are executed. We do not collect any information about files, paths, etc. The extension respects the `telemetry.enableTelemetry` setting which you can learn more about in our [FAQ](https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting).
+
 ## License
 
 This extension is [licensed under the Apache-2.0 License](LICENSE.txt).

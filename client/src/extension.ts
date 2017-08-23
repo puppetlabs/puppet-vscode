@@ -5,6 +5,7 @@ import * as path from 'path';
 
 import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
 import { Logger } from './logging';
+import { Reporter } from './telemetry/telemetry';
 
 const langID = 'puppet'; // don't change this
 var statusBarItem;
@@ -32,6 +33,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(new Reporter(context));
   var logger = new Logger();
   connManager = new ConnectionManager(context, logger);
 

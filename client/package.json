@@ -6,6 +6,7 @@
     "publisher": "jpogran",
     "license": "SEE LICENSE IN LICENSE.txt",
     "icon": "images/Puppet-Logo-Amber-sm.png",
+    "aiKey": "ceeced67-dfaf-4693-a31f-640fd740bb15",
     "galleryBanner": {
         "color": "#000000",
         "theme": "dark"
@@ -189,6 +190,7 @@
         "@types/mocha": "^2.2.32"
     },
     "dependencies": {
-        "vscode-languageclient": "^3.1.0"
+        "vscode-languageclient": "^3.1.0",
+        "vscode-extension-telemetry": "^0.0.6"
     }
 }
