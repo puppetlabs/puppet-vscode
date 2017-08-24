@@ -224,6 +224,7 @@ export class ConnectionManager implements IConnectionManager {
 
     if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
       args.push('--ip=127.0.0.1');
+      args.push('--local-workspace=' + vscode.workspace.textDocuments[0]);
     } else {
       args.push('--ip=' + this.connectionConfiguration.host);
     }

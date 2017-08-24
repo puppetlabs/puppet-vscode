@@ -8,7 +8,7 @@ describe 'document_validator' do
       let(:manifest) { 'user { "Bob"' }
 
       it "should return at least one error" do
-        result = subject.validate(manifest)
+        result = subject.validate(manifest, nil)
         expect(result.length).to be > 0
       end
     end
@@ -17,7 +17,7 @@ describe 'document_validator' do
       let(:manifest) { "user { 'Bob': ensure => 'present' }" }
 
       it "should return an empty array" do
-        expect(subject.validate(manifest)).to eq([])
+        expect(subject.validate(manifest, nil)).to eq([])
       end
     end
 

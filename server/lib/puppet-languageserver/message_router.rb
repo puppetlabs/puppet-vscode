@@ -24,6 +24,8 @@ module PuppetLanguageServer
   class MessageRouter < JSONRPCHandler
     def initialize(*options)
       super(*options)
+
+      @workspace = options.first[:workspace] unless options.compact.empty?
     end
 
     def documents
@@ -139,7 +141,7 @@ module PuppetLanguageServer
         file_uri = params['textDocument']['uri']
         content = params['textDocument']['text']
         documents.set_document(file_uri, content)
-        reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content))
+        reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
 
       when 'textDocument/didClose'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didClose notification.')
@@ -151,7 +153,7 @@ module PuppetLanguageServer
         file_uri = params['textDocument']['uri']
         content = params['contentChanges'][0]['text'] # TODO: Bad hardcoding zero
         documents.set_document(file_uri, content)
-        reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content))
+        reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
 
       when 'textDocument/didSave'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didSave notification.')

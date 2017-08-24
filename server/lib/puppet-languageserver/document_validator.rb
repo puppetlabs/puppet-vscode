@@ -1,14 +1,43 @@
 require 'puppet-lint'
 module PuppetLanguageServer
   module DocumentValidator
-    def self.validate(content, _max_problems = 100)
+    def self.find_module_root_from_path(path)
+      return nil if path.nil?
+
+      filepath = Pathname.new(path).expand_path
+      return nil unless filepath.exist?
+
+      if filepath.directory?
+        directory = filepath
+      else
+        directory = filepath.dirname
+      end
+
+      module_root = nil
+      directory.ascend do |p|
+        if p.join('metadata.json').exist?
+          module_root = p
+          break
+        end
+      end
+
+      module_root
+    end
+
+    def self.validate(content, workspace, _max_problems = 100)
       result = []
       # TODO: Need to implement max_problems
       problems = 0
 
-      begin
-        # TODO: load .puppet-lint.rc from the module root as well
+      # Find module root and attempt to build PuppetLint options
+      module_root = find_module_root_from_path(workspace)
+      if module_root.nil?
         PuppetLint::OptParser.build
+      else
+        Dir.chdir(module_root.to_s) { PuppetLint::OptParser.build }
+      end
+
+      begin
         linter = PuppetLint::Checks.new
         problems = linter.run(nil, content)
         unless problems.nil?

@@ -24,7 +24,8 @@ module PuppetLanguageServer
         connection_timeout: 10,
         preload_puppet: true,
         debug: nil,
-        fast_start_tcpserver: true
+        fast_start_tcpserver: true,
+        workspace: nil,
       }
 
       opt_parser = OptionParser.new do |opts|
@@ -56,6 +57,10 @@ module PuppetLanguageServer
 
         opts.on('-s', '--slow-start', 'Delay starting the TCP Server until Puppet initialisation has completed.  Default is to start fast') do |_misc|
           args[:fast_start_tcpserver] = false
+        end
+
+        opts.on('--local-workspace=PATH', 'The workspace or file path that will be used to provide module-specific functionality. Default is no workspace path.') do |path|
+          args[:workspace] = path
         end
 
         opts.on('-h', '--help', 'Prints this help') do
