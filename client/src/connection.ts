@@ -88,35 +88,13 @@ export class ConnectionManager implements IConnectionManager {
     this.setConnectionStatus("Starting Puppet...", ConnectionStatus.Starting);
 
     if (this.connectionConfiguration.type == ConnectionType.Local) {
-      this.languageServerProcess = this.createLanguageServerProcess(contextPath);
-      if (this.languageServerProcess == undefined) {
-        if (this.connectionStatus == ConnectionStatus.Failed) {
-          // We've already handled this state.  Just return
-          return
-        }
-        throw new Error('Unable to start the Language Server Process');
-      }
-
-      this.languageServerProcess.stdout.on('data', (data) => {
-        this.logger.debug("OUTPUT: " + data.toString());
-
-        // If the language client isn't already running and it's sent the trigger text, start up a client
-        if ( (this.languageServerClient == undefined) && (data.toString().match("LANGUAGE SERVER RUNNING") != null) ) {
-          this.languageServerClient = this.startLangClientTCP();
-          this.extensionContext.subscriptions.push(this.languageServerClient.start());
-        }
-      });
-
-      this.languageServerProcess.on('close', (exitCode) => {
-        this.logger.debug("SERVER terminated with exit code: " + exitCode);
-      });
+      this.createLanguageServerProcess(contextPath, this.onLanguageServerStart.bind(this));
     }
     else {
       this.languageServerClient = this.startLangClientTCP();
       this.extensionContext.subscriptions.push(this.languageServerClient.start());
+      this.logStart();
     }
-
-    this.logger.debug('Congratulations, your extension "vscode-puppet" is now active!');
   }
 
   public stop() {
@@ -159,12 +137,64 @@ export class ConnectionManager implements IConnectionManager {
     this.extensionContext.subscriptions.clear();
   }
 
-  private createLanguageServerProcess(serverExe: string) {
+  private logStart() {
+    this.logger.debug('Congratulations, your extension "vscode-puppet" is now active!');
+  }
+
+  private onLanguageServerStart(proc : cp.ChildProcess) {
+    this.logger.debug('LanguageServer Process Started: ' + proc)
+    this.languageServerProcess = proc
+    if (this.languageServerProcess == undefined) {
+        if (this.connectionStatus == ConnectionStatus.Failed) {
+          // We've already handled this state.  Just return
+          return
+        }
+        throw new Error('Unable to start the Language Server Process');
+      }
+
+      this.languageServerProcess.stdout.on('data', (data) => {
+        this.logger.debug("OUTPUT: " + data.toString());
+
+        // If the language client isn't already running and it's sent the trigger text, start up a client
+        if ( (this.languageServerClient == undefined) && (data.toString().match("LANGUAGE SERVER RUNNING") != null) ) {
+          this.languageServerClient = this.startLangClientTCP();
+          this.extensionContext.subscriptions.push(this.languageServerClient.start());
+        }
+      });
+
+      this.languageServerProcess.on('close', (exitCode) => {
+        this.logger.debug("SERVER terminated with exit code: " + exitCode);
+      });
+
+      this.logStart();
+  }
+
+  public startLanguageServerProcess(cmd : string, args : Array<string>, options : cp.SpawnOptions, callback : Function) {
+    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
+      args.push('--ip=127.0.0.1');
+    } else {
+      args.push('--ip=' + this.connectionConfiguration.host);
+    }
+    args.push('--port=' + this.connectionConfiguration.port);
+    args.push('--timeout=' + this.connectionConfiguration.timeout);
+    if (this.connectionConfiguration.preLoadPuppet == false) { args.push('--no-preload'); }
+    if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
+      args.push('--debug=' + this.connectionConfiguration.debugFilePath);
+    }
+
+    this.logger.debug("Starting the language server with " + cmd + " " + args.join(" "));
+    var proc = cp.spawn(cmd, args, options)
+    this.logger.debug('Language server PID:' + proc.pid)
+
+    callback(proc);
+  }
+
+  private createLanguageServerProcess(serverExe: string, callback : Function) {
     this.logger.debug('Language server found at: ' + serverExe)
 
     let cmd: string = undefined;
     let args = [serverExe];
-    let options = {};
+    let options : cp.SpawnOptions = {};
 
     // type Platform = 'aix'
     //               | 'android'
@@ -204,7 +234,7 @@ export class ConnectionManager implements IConnectionManager {
         this.logger.debug('Starting language server')
 
         // Try and find the puppet-agent ruby
-        let rubyPath: string = '/opt/puppetlabs/puppet/bin/ruby';
+        let rubyPath : string = '/opt/puppetlabs/puppet/bin/ruby';
         if (fs.existsSync(rubyPath)) { cmd = rubyPath }
 
         // Default to ruby on the path
@@ -222,30 +252,30 @@ export class ConnectionManager implements IConnectionManager {
       return;
     }
 
-    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
-      args.push('--ip=127.0.0.1');
-      args.push('--local-workspace=' + vscode.workspace.textDocuments[0]);
-    } else {
-      args.push('--ip=' + this.connectionConfiguration.host);
-    }
-    args.push('--port=' + this.connectionConfiguration.port);
-    args.push('--timeout=' + this.connectionConfiguration.timeout);
-    if (this.connectionConfiguration.preLoadPuppet == false) { args.push('--no-preload'); }
-    if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
-      args.push('--debug=' + this.connectionConfiguration.debugFilePath);
-    }
+    let connMgr : ConnectionManager = this;
+    let logger = this.logger;
+    // Start a server to get a random port
+    this.logger.debug('Creating server process to identify random port')
+    const server = net.createServer()
+      .on('close', () => {
+        logger.debug('Server process to identify random port disconnected');
+        connMgr.startLanguageServerProcess(cmd, args, options, callback);
+      })
+      .on('error', (err) => {
+        throw err;
+      });
 
-    this.logger.debug("Starting the language server with " + cmd + " " + args.join(" "));
-    var proc = cp.spawn(cmd, args, options)
-    this.logger.debug('Language server PID:' + proc.pid)
-
-    return proc;
+    // Listen on random port
+    server.listen(0);
+    this.logger.debug('Selected port for local language server: ' + server.address().port);
+    connMgr.connectionConfiguration.port = server.address().port;
+    server.close();
   }
 
   private startLangClientTCP(): LanguageClient {
     this.logger.debug('Configuring language server options')
 
-    var connMgr:ConnectionManager = this;
+    let connMgr:ConnectionManager = this;
     let serverOptions: ServerOptions = function () {
       return new Promise((resolve, reject) => {
         var client = new net.Socket();
