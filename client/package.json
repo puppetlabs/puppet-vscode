@@ -41,7 +41,11 @@
         "onCommand:extension.puppetLint",
         "onCommand:extension.puppetParserValidate",
         "onCommand:extension.puppetShowNodeGraphToSide",
-        "onCommand:extension.puppetResource"
+        "onCommand:extension.puppetResource",
+        "onCommand:extension.pdkNewModule",
+        "onCommand:extension.pdkNewClass",
+        "onCommand:extension.pdkTestUnit",
+        "onCommand:extension.pdkValidate"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -84,10 +88,33 @@
         ],
         "commands": [
             {
+                "command": "extension.pdkNewModule",
+                "category": "Puppet",
+                "title": "PDK New Module",
+                "icon": {
+                    "dark": "images/puppet_logo_sm.svg",
+                    "light": "images/puppet_logo_sm.svg"
+                }
+            },
+            {
+                "command": "extension.pdkTestUnit",
+                "category": "Puppet",
+                "title": "PDK Test Unit"
+            },
+            {
+                "command": "extension.pdkValidate",
+                "category": "Puppet",
+                "title": "PDK Validate"
+            },
+            {
+                "command": "extension.pdkNewClass",
+                "category": "Puppet",
+                "title": "PDK New Class"
+            },
+            {
                 "command": "extension.puppetResource",
                 "category": "Puppet",
-                "title": "Puppet Resource",
-                "when": "editorTextFocus && editorLangId == 'puppet'"
+                "title": "Puppet Resource"
             },
             {
                 "command": "extension.puppetShowNodeGraphToSide",
@@ -100,24 +127,87 @@
             }
         ],
         "menus": {
+            "commandPalette": [
+                {
+                    "command": "extension.pdkNewModule"
+                },
+                {
+                    "command": "extension.pdkTestUnit",
+                    "when": "resourceLangId == 'puppet'"
+                },
+                {
+                    "command": "extension.pdkValidate",
+                    "when": "resourceLangId == 'puppet'"
+                },
+                {
+                    "command": "extension.pdkNewClass",
+                    "when": "resourceLangId == 'puppet'"
+                },
+                {
+                    "command": "extension.puppetResource",
+                    "when": "editorTextFocus && editorLangId == 'puppet'"
+                },
+                {
+                    "command": "extension.puppetShowNodeGraphToSide",
+                    "when": "resourceLangId == 'puppet'"
+                }
+            ],
             "editor/title": [
+                {
+                    "command": "extension.pdkNewModule",
+                    "group": "navigation@100"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.pdkNewClass",
+                    "group": "pdk@2"
+                },
+                {
+                    "when": "resourceLangId == 'puppet' ",
+                    "command": "extension.pdkValidate",
+                    "group": "pdk@3"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.pdkTestUnit",
+                    "group": "pdk@4"
+                },
                 {
                     "when": "resourceLangId == 'puppet'",
                     "command": "extension.puppetShowNodeGraphToSide",
-                    "alt": "extension.puppetShowNodeGraphToSide"
+                    "group": "puppet"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.puppetResource",
+                    "group": "puppet"
                 }
             ],
             "editor/context": [
                 {
                     "when": "resourceLangId == 'puppet'",
+                    "command": "extension.pdkNewClass",
+                    "group": "pdk@1"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.pdkValidate",
+                    "group": "pdk@2"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
+                    "command": "extension.pdkTestUnit",
+                    "group": "pdk@3"
+                },
+                {
+                    "when": "resourceLangId == 'puppet'",
                     "command": "extension.puppetShowNodeGraphToSide",
-                    "alt": "extension.puppetShowNodeGraphToSide"
+                    "group": "puppet"
                 },
                 {
                     "when": "resourceLangId == 'puppet'",
                     "command": "extension.puppetResource",
-                    "alt": "extension.puppetResource",
-                    "group": ""
+                    "group": "puppet"
                 }
             ]
         },
@@ -168,9 +258,9 @@
                     "description": "Set the minimum log level that the user will see on the Puppet OutputChannel (Allowed values: verbose, debug, normal, warning, error)"
                 },
                 "puppet.puppetAgentDir": {
-                  "type": "string",
-                  "default": "normal",
-                  "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
+                    "type": "string",
+                    "default": "normal",
+                    "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
                 }
             }
         }
@@ -183,16 +273,16 @@
         "test": "node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "vsce": "^1.18.0",
+        "@types/mocha": "^2.2.32",
+        "@types/node": "^6.0.40",
+        "del": "^2.2.2",
         "gulp": "^3.9.1",
         "gulp-bump": "^2.7.0",
-        "yargs": "^8.0.1",
-        "del": "^2.2.2",
         "run-sequence": "^1.2.2",
-        "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
+        "typescript": "^2.0.3",
+        "vsce": "^1.18.0",
+        "vscode": "^1.0.0",
+        "yargs": "^8.0.1"
     },
     "dependencies": {
         "vscode-languageclient": "~3.3.0",

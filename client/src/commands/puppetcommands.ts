@@ -1,9 +1,12 @@
 import * as vscode from 'vscode';
-import { puppetResourceCommand } from '../src/commands/puppetResourceCommand';
-import * as messages from '../src/messages';
-import { PuppetNodeGraphContentProvider, isNodeGraphFile, getNodeGraphUri, showNodeGraph } from '../src/providers/previewNodeGraphProvider';
-import { IConnectionManager } from './connection';
-import { Logger } from './logging';
+import * as messages from '../../src/messages';
+import { IConnectionManager } from '../../src/connection';
+import { Logger } from '../../src/logging';
+import {
+  PuppetNodeGraphContentProvider, isNodeGraphFile,
+  getNodeGraphUri, showNodeGraph
+} from '../../src/providers/previewNodeGraphProvider';
+import { puppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
 
 export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: Logger){
 
