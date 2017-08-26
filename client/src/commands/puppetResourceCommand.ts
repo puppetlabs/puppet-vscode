@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 import { PuppetResourceRequestParams, PuppetResourceRequest } from '../messages';
 import { IConnectionManager, ConnectionStatus } from '../connection';
 import { Logger } from '../logging';
+import { reporter } from '../telemetry/telemetry';
+import * as messages from '../messages';
 
 class RequestParams implements PuppetResourceRequestParams {
   typename: string;
@@ -63,6 +65,11 @@ export class puppetResourceCommand {
             }
 
             this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
+            if (reporter) {
+              reporter.sendTelemetryEvent('command', {
+                command: messages.PuppetCommandStrings.PuppetResourceCommandId
+              });
+            }
           });
       }
     });

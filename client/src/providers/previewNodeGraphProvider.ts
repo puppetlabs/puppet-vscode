@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { CompileNodeGraphRequest } from '../messages';
 import { IConnectionManager, ConnectionStatus } from '../connection';
+import { reporter } from '../telemetry/telemetry';
+import * as messages from '../messages';
 
 export function isNodeGraphFile(document: vscode.TextDocument) {
   return document.languageId === 'puppet'
@@ -79,6 +81,11 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
 
           var errorContent = `<div>${compileResult.error}</div>`
           if (compileResult.error == null) { errorContent = ''; }
+          if (reporter) {
+            reporter.sendTelemetryEvent('command', {
+              command: messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId
+            });
+          }
 
           // WARNING - THIS IS A MAJOR HACK!!!
           return `
