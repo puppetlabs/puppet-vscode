@@ -38,6 +38,7 @@ Open any Puppet manifest with the extension '.pp' or 'epp' and the extension wil
 - Validation of `metadata.json` files
 - Import from `puppet resource` directly into manifests
 - Node graph preview
+- Puppet Development Kit integration
 
 ## Feature information
 
@@ -76,6 +77,21 @@ You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastr
 2. Type `puppet open node`.. and press enter
 
 The node graph will appear next to the manifest
+
+### Puppet Development Kit
+
+You can use the [Puppet Development Kit](https://puppet.com/blog/develop-modules-faster-new-puppet-development-kit) inside VS Code from the command palette.
+
+** Note: The PDK must be installed prior to using these commands
+
+The following commands are supported:
+
+- pdk new module
+- pdk new class
+- pdk validate
+- pdk test unit
+
+To use any of the above commands, open the command palette and start typing a command.
 
 ## Installing the Extension
 
@@ -117,3 +133,4 @@ This extension collects telemetry data to help us build a better experience for 
 ## License
 
 This extension is [licensed under the Apache-2.0 License](LICENSE.txt).
+

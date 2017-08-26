@@ -6,11 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-## 0.6.1
-
+* Added support for the PDK(https://puppet.com/blog/develop-modules-faster-new-puppet-development-kit)
 * Added telemetry to understand which parts Puppet users find useful. This will help us refine which commands we add in the future. We track whether the following commands are executed:
-  * `foo`
-  * `bar`
+  * `puppet resource`
+  * `pdk new module`
+  * `pdk new class`
+  * `pdk validate`
+  * `pdk test unit`
 
 > Please` note, you can turn off telemetry reporting for VS Code and all extensions through the ["telemetry.enableTelemetry": false setting](https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting).
 

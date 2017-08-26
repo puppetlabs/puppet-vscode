@@ -41,7 +41,11 @@
         "onCommand:extension.puppetLint",
         "onCommand:extension.puppetParserValidate",
         "onCommand:extension.puppetShowNodeGraphToSide",
-        "onCommand:extension.puppetResource"
+        "onCommand:extension.puppetResource",
+        "onCommand:extension.pdkNewModule",
+        "onCommand:extension.pdkNewClass",
+        "onCommand:extension.pdkTestUnit",
+        "onCommand:extension.pdkValidate"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -83,6 +87,26 @@
             }
         ],
         "commands": [
+            {
+                "command": "extension.pdkTestUnit",
+                "category": "Puppet",
+                "title": "PDK Test Unit"
+            },
+            {
+                "command": "extension.pdkValidate",
+                "category": "Puppet",
+                "title": "PDK Validate"
+            },
+            {
+                "command": "extension.pdkNewModule",
+                "category": "Puppet",
+                "title": "PDK New Module"
+            },
+            {
+                "command": "extension.pdkNewClass",
+                "category": "Puppet",
+                "title": "PDK New Class"
+            },
             {
                 "command": "extension.puppetResource",
                 "category": "Puppet",
