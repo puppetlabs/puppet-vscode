@@ -90,32 +90,32 @@
             {
                 "command": "extension.pdkTestUnit",
                 "category": "Puppet",
-                "title": "PDK Test Unit"
+                "title": "pdk test unit: run a Puppet module's unit tests"
             },
             {
                 "command": "extension.pdkValidate",
                 "category": "Puppet",
-                "title": "PDK Validate"
+                "title": "pdk validate: validate syntax and style of a Puppet module"
             },
             {
                 "command": "extension.pdkNewModule",
                 "category": "Puppet",
-                "title": "PDK New Module"
+                "title": "pdk new module: create a new Puppet module"
             },
             {
                 "command": "extension.pdkNewClass",
                 "category": "Puppet",
-                "title": "PDK New Class"
+                "title": "pdk new class: add a new class to an existing Puppet module"
             },
             {
                 "command": "extension.puppetResource",
                 "category": "Puppet",
-                "title": "Puppet Resource",
+                "title": "puppet resource: explore the state of resources and types that Puppet can manage",
                 "when": "editorTextFocus && editorLangId == 'puppet'"
             },
             {
                 "command": "extension.puppetShowNodeGraphToSide",
-                "title": "Open Node Graph to the Side",
+                "title": "Open Puppet Node Graph to the side",
                 "category": "Puppet",
                 "icon": {
                     "light": "./media/PreviewOnRightPane_16x.svg",
