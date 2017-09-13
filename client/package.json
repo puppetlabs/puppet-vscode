@@ -166,6 +166,11 @@
                     "type": "string",
                     "default": "normal",
                     "description": "Set the minimum log level that the user will see on the Puppet OutputChannel (Allowed values: verbose, debug, normal, warning, error)"
+                },
+                "puppet.puppetAgentDir": {
+                  "type": "string",
+                  "default": "normal",
+                  "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
                 }
             }
         }

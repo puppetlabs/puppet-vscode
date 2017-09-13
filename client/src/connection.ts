@@ -31,6 +31,7 @@ export interface IConnectionConfiguration {
   timeout: number;
   preLoadPuppet: boolean;
   debugFilePath: string;
+  puppetAgentDir: string;
 }
 
 export interface IConnectionManager {
@@ -214,7 +215,12 @@ export class ConnectionManager implements IConnectionManager {
           comspec = path.join(process.env["WINDIR"],"sysnative","cmd.exe");
           programFiles = process.env["ProgramW6432"];
         }
-        let puppetDir : string = path.join(programFiles,"Puppet Labs","Puppet")
+        let puppetDir: string = undefined;
+        if (this.connectionConfiguration.puppetAgentDir == undefined) {
+          puppetDir = path.join(programFiles, "Puppet Labs", "Puppet");
+        } else {
+          puppetDir = this.connectionConfiguration.puppetAgentDir;
+        }
         let environmentBat : string = path.join(puppetDir,"bin","environment.bat")
 
         if (!fs.existsSync(puppetDir)) {
@@ -233,8 +239,12 @@ export class ConnectionManager implements IConnectionManager {
       default:
         this.logger.debug('Starting language server')
 
-        // Try and find the puppet-agent ruby
-        let rubyPath : string = '/opt/puppetlabs/puppet/bin/ruby';
+        let rubyPath: string = undefined;
+        if (this.connectionConfiguration.puppetAgentDir == undefined) {
+          rubyPath = '/opt/puppetlabs/puppet/bin/ruby';
+        } else {
+          rubyPath = path.join(this.connectionConfiguration.puppetAgentDir, "bin", "ruby");
+        }
         if (fs.existsSync(rubyPath)) { cmd = rubyPath }
 
         // Default to ruby on the path
