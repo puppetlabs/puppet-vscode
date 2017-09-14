@@ -1,15 +1,11 @@
-language: node_js
-node_js:
-  - "node"
-
-environment:
-  ELECTRON_RUN_AS_NODE: 1
-  VSCODE_BUILD_VERBOSE: true
-
 sudo: false
+language: cpp
 
 os:
   - linux
+
+environment:
+  VSCODE_BUILD_VERBOSE: true
 
 addons:
   apt:
@@ -24,8 +20,14 @@ addons:
       - libgtk2.0-0
       - libx11-dev
       - libxkbfile-dev
+      - libsecret-1-dev
 
 before_install:
+  - git clone --depth 1 https://github.com/creationix/nvm.git ./.nvm
+  - source ./.nvm/nvm.sh
+  - nvm install 7.4.0
+  - nvm use 7.4.0
+  - npm install -g gulp
   - if [ $TRAVIS_OS_NAME == "linux" ]; then
       export CXX="g++-4.9" CC="gcc-4.9" DISPLAY=:99.0;
       sh -e /etc/init.d/xvfb start;
@@ -35,7 +37,6 @@ before_install:
 install:
   - cd client
   - npm install
-  - npm install gulp
   - npm run vscode:prepublish
 
 script:
