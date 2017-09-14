@@ -38,3 +38,10 @@ export class PuppetCommandStrings{
   static PuppetResourceCommandId:string = 'extension.puppetResource';
   static PuppetNodeGraphToTheSideCommandId = 'extension.puppetShowNodeGraphToSide';
 }
+
+export class PDKCommandStrings {
+  static PdkNewModuleCommandId: string = 'extension.pdkNewModule';
+  static PdkNewClassCommandId: string = 'extension.pdkNewClass';
+  static PdkValidateCommandId: string = 'extension.pdkValidate';
+  static PdkTestUnitCommandId: string = 'extension.pdkTestUnit';
+}

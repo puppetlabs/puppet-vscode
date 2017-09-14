@@ -5,3 +5,4 @@ tmp/
 
 // Ignore generated module output
 *.vsix
+.vscode-test
