@@ -18,6 +18,10 @@ environment:
   - PUPPET_GEM_VERSION: "~> 5.0"
     RUBY_VER: 24-x64
     RAKE_TASK: test
+  # Specific Puppet version testing
+  - PUPPET_GEM_VERSION: "5.1.0"
+    RUBY_VER: 24-x64
+    RAKE_TASK: test
 
   # Ruby style
   - PUPPET_GEM_VERSION: "~> 4.0"
