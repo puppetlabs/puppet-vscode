@@ -4,7 +4,7 @@ module PuppetLanguageServer
       items = []
       incomplete = false
 
-      result = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, true, [Puppet::Pops::Model::QualifiedName])
+      result = PuppetLanguageServer::PuppetParserHelper.object_under_cursor(content, line_num, char_num, true, [Puppet::Pops::Model::QualifiedName, Puppet::Pops::Model::BlockExpression])
 
       if result.nil?
         # We are in the root of the document.
