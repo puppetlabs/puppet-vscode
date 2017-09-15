@@ -31,20 +31,26 @@ module PuppetLanguageServer
 
       # Find module root and attempt to build PuppetLint options
       module_root = find_module_root_from_path(workspace)
+      linter_options = nil
       if module_root.nil?
-        PuppetLint::OptParser.build
+        linter_options = PuppetLint::OptParser.build
       else
-        Dir.chdir(module_root.to_s) { PuppetLint::OptParser.build }
+        Dir.chdir(module_root.to_s) { linter_options = PuppetLint::OptParser.build }
       end
+      linter_options.parse!([])
 
       begin
         linter = PuppetLint::Checks.new
+        linter.load_data(nil, content)
+
         problems = linter.run(nil, content)
         unless problems.nil?
           problems.each do |problem|
             # Syntax errors are better handled by the puppet parser, not puppet lint
             next if problem[:kind] == :error && problem[:check] == :syntax
-
+            # Ignore linting errors what were ignored by puppet-lint
+            next if problem[:kind] == :ignored
+            
             severity = case problem[:kind]
                        when :error
                          LanguageServer::DIAGNOSTICSEVERITY_ERROR
