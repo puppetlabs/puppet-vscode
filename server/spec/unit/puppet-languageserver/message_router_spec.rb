@@ -59,6 +59,21 @@ describe 'message_router' do
 
         subject.receive_request(request)
       end
+      it 'should reply with whether the facts are loaded' do
+        expect(request).to receive(:reply_result).with(hash_including('factsLoaded'))
+
+        subject.receive_request(request)
+      end
+      it 'should reply with whether the functions are loaded' do
+        expect(request).to receive(:reply_result).with(hash_including('functionsLoaded'))
+
+        subject.receive_request(request)
+      end
+      it 'should reply with whether the types are loaded' do
+        expect(request).to receive(:reply_result).with(hash_including('typesLoaded'))
+
+        subject.receive_request(request)
+      end
     end
 
     context 'given a puppet/getResource request' do

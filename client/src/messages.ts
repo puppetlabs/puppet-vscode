@@ -8,6 +8,9 @@ export interface PuppetVersionDetails {
   puppetVersion: string;
   facterVersion: string;
   languageServerVersion: string;
+  factsLoaded: boolean;
+  functionsLoaded: boolean;
+  typesLoaded: boolean;
 }
 
 export interface PuppetResourceRequestParams {
