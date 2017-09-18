@@ -255,7 +255,8 @@
         "puppet.languageclient.minimumUserLogLevel": {
           "type": "string",
           "default": "normal",
-          "description": "Set the minimum log level that the user will see on the Puppet OutputChannel (Allowed values: verbose, debug, normal, warning, error)"
+          "description": "Set the minimum log level that the user will see on the Puppet connection logs",
+          "enum": ["verbose", "debug", "normal", "warning", "error" ]
         },
         "puppet.puppetAgentDir": {
           "type": "string",

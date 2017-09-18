@@ -57,7 +57,7 @@ export class Logger {
   }
 
   private logWithLevel(level: LogLevel, message) {
-    let logMessage = this.logLevelPrefixAsString(level) + message
+    let logMessage = this.logLevelPrefixAsString(level) + (new Date().toISOString()) + ' ' + message
 
     console.log(logMessage);
     if (level >= this.minimumUserLogLevel) {
