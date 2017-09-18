@@ -24,6 +24,14 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
     () => { connManager.showConnectionMenu(); }
   ));
 
+  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
+    () => { connManager.showLogger(); }
+  ));
+
+  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId,
+    () => { connManager.restartConnection(); }
+  ));
+
   const contentProvider = new PuppetNodeGraphContentProvider(ctx, connManager);
   const contentProviderRegistration = vscode.workspace.registerTextDocumentContentProvider(langID, contentProvider);
 

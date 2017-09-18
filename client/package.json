@@ -38,6 +38,7 @@
   ],
   "activationEvents": [
     "onLanguage:puppet",
+    "onCommand:extension.puppetShowConnectionMenu",
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
     "onCommand:extension.puppetShowNodeGraphToSide",
@@ -87,6 +88,16 @@
       }
     ],
     "commands": [
+      {
+        "command": "extension.puppetRestartSession",
+        "category": "Puppet",
+        "title": "Restart Current Session"
+      },
+      {
+        "command": "extension.puppetShowConnectionLogs",
+        "category": "Puppet",
+        "title": "Show Connection Logs"
+      },
       {
         "command": "extension.pdkNewModule",
         "category": "Puppet",

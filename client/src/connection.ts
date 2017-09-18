@@ -41,6 +41,8 @@ export interface IConnectionManager {
   status: ConnectionStatus;
   languageClient: LanguageClient;
   showConnectionMenu();
+  showLogger();
+  restartConnection(connectionConfig?: IConnectionConfiguration);
 }
 
 export class ConnectionManager implements IConnectionManager {
@@ -59,6 +61,9 @@ export class ConnectionManager implements IConnectionManager {
   }
   public get languageClient() : LanguageClient {
     return this.languageServerClient;
+  }
+  public showLogger() {
+    this.logger.show()
   }
 
   constructor(context: vscode.ExtensionContext, logger: Logger) {
@@ -387,10 +392,12 @@ export class ConnectionManager implements IConnectionManager {
     });
   }
 
-
-  private restartConnection(connectionConfig?: IConnectionConfiguration) {
-      this.stop();
-      this.start(connectionConfig);
+  public restartConnection(connectionConfig?: IConnectionConfiguration) {
+    if (connectionConfig == undefined) {
+      connectionConfig = new ConnectionConfiguration(this.extensionContext);
+    }
+    this.stop();
+    this.start(connectionConfig);
   }
 
   private createStatusBarItem() {
@@ -413,21 +420,16 @@ export class ConnectionManager implements IConnectionManager {
   public showConnectionMenu() {
     var menuItems: ConnectionMenuItem[] = [];
 
-    let currentConnectionConfig = this.connectionConfiguration;
-
     menuItems.push(
       new ConnectionMenuItem(
         "Restart Current Puppet Session",
-        () => {
-          let configuration = new ConnectionConfiguration(this.extensionContext);
-          this.restartConnection(configuration);
-        }),
+        () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId); }),
     )
 
     menuItems.push(
       new ConnectionMenuItem(
         "Show Puppet Session Logs",
-        () => { this.logger.show(); }),
+        () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
     )
 
     vscode
