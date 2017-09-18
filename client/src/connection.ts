@@ -325,9 +325,11 @@ export class ConnectionManager implements IConnectionManager {
     var languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
     languageServerClient.onReady().then(() => {
       langClient.logger.debug('Language server client started, setting puppet version')
-      languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-        this.setConnectionStatus(versionDetails.puppetVersion, ConnectionStatus.Running);
-        if (reporter) {
+      this.setConnectionStatus("Loading Puppet", ConnectionStatus.Starting);
+      this.queryLanguageServerStatus();
+      // Send telemetry
+      if (reporter) {
+        languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
           reporter.sendTelemetryEvent('puppetVersion' +versionDetails.puppetVersion);
           reporter.sendTelemetryEvent('facterVersion' + versionDetails.facterVersion);
           reporter.sendTelemetryEvent('languageServerVersion' + versionDetails.languageServerVersion);
@@ -336,14 +338,53 @@ export class ConnectionManager implements IConnectionManager {
             facterVersion: versionDetails.facterVersion,
             languageServerVersion: versionDetails.languageServerVersion,
           });
-        }
-      });
+        });
+      }
     }, (reason) => {
       this.setSessionFailure("Could not start language service: ", reason);
     });
 
     return languageServerClient;
   }
+
+  private queryLanguageServerStatus() {
+    let connectionManager = this;
+
+    return new Promise((resolve, reject) => {
+      let count = 0;
+      let lastVersionResponse = null;
+      let handle = setInterval(() => {
+        count++;
+
+        // After 30 seonds timeout the progress
+        if (count >= 30 || connectionManager.languageClient == undefined) {
+          clearInterval(handle);
+          connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+          resolve();
+        }
+
+        connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
+          lastVersionResponse = versionDetails
+          if (versionDetails.factsLoaded && versionDetails.functionsLoaded && versionDetails.typesLoaded) {
+            clearInterval(handle);
+            connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+            resolve();
+          } else {
+            let progress = 0;
+
+            if (versionDetails.factsLoaded) { progress++; }
+            if (versionDetails.functionsLoaded) { progress++; }
+            if (versionDetails.typesLoaded) { progress++; }
+            progress = Math.round(progress / 3.0 * 100);
+
+            this.setConnectionStatus("Loading Puppet (" + progress.toString() + "%)", ConnectionStatus.Starting);
+          }
+        });
+
+      }, 1000);
+    });
+  }
+
 
   private restartConnection(connectionConfig?: IConnectionConfiguration) {
       this.stop();
