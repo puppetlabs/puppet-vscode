@@ -65,9 +65,7 @@ export class puppetResourceCommand {
 
             this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
             if (reporter) {
-              reporter.sendTelemetryEvent('command', {
-                command: messages.PuppetCommandStrings.PuppetResourceCommandId
-              });
+              reporter.sendTelemetryEvent(messages.PuppetCommandStrings.PuppetResourceCommandId);
             }
           });
       }

@@ -36,9 +36,7 @@ export class pdkNewModuleCommand {
         this.terminal.sendText(`code ${dir}`)
         this.terminal.show();
         if (reporter) {
-          reporter.sendTelemetryEvent('command', {
-            command: messages.PDKCommandStrings.PdkNewModuleCommandId
-          });
+          reporter.sendTelemetryEvent(messages.PDKCommandStrings.PdkNewModuleCommandId);
         }
       })
     })

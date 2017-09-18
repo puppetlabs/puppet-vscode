@@ -20,9 +20,7 @@ export class pdkValidateCommand {
     this.terminal.sendText(`pdk validate`);
     this.terminal.show();
     if (reporter) {
-      reporter.sendTelemetryEvent('command', {
-        command: messages.PDKCommandStrings.PdkValidateCommandId
-      });
+      reporter.sendTelemetryEvent(messages.PDKCommandStrings.PdkValidateCommandId);
     }
   }
 

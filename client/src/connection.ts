@@ -6,6 +6,7 @@ import { Logger } from '../src/logging';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { setupPuppetCommands } from '../src/commands/puppetcommands';
 import { setupPDKCommands } from '../src/commands/pdkcommands';
+import { reporter } from './telemetry/telemetry';
 import * as messages from '../src/messages';
 import fs = require('fs');
 
@@ -326,6 +327,16 @@ export class ConnectionManager implements IConnectionManager {
       langClient.logger.debug('Language server client started, setting puppet version')
       languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
         this.setConnectionStatus(versionDetails.puppetVersion, ConnectionStatus.Running);
+        if (reporter) {
+          reporter.sendTelemetryEvent('puppetVersion' +versionDetails.puppetVersion);
+          reporter.sendTelemetryEvent('facterVersion' + versionDetails.facterVersion);
+          reporter.sendTelemetryEvent('languageServerVersion' + versionDetails.languageServerVersion);
+          reporter.sendTelemetryEvent('version', {
+            puppetVersion: versionDetails.puppetVersion,
+            facterVersion: versionDetails.facterVersion,
+            languageServerVersion: versionDetails.languageServerVersion,
+          });
+        }
       });
     }, (reason) => {
       this.setSessionFailure("Could not start language service: ", reason);

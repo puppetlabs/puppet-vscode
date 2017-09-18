@@ -82,9 +82,7 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
           var errorContent = `<div>${compileResult.error}</div>`
           if (compileResult.error == null) { errorContent = ''; }
           if (reporter) {
-            reporter.sendTelemetryEvent('command', {
-              command: messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId
-            });
+            reporter.sendTelemetryEvent(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId);
           }
 
           // WARNING - THIS IS A MAJOR HACK!!!
