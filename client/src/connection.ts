@@ -295,6 +295,7 @@ export class ConnectionManager implements IConnectionManager {
 
   private startLangClientTCP(): LanguageClient {
     this.logger.debug('Configuring language server options')
+    let langClient = this;
 
     let connMgr:ConnectionManager = this;
     let serverOptions: ServerOptions = function () {
@@ -304,7 +305,7 @@ export class ConnectionManager implements IConnectionManager {
           resolve({ reader: client, writer: client });
         });
         client.on('error', function (err) {
-          this.logger.error(`[Puppet Lang Server Client] ` + err);
+          langClient.logger.error(`[Puppet Lang Server Client] ` + err);
           connMgr.setSessionFailure("Could not start language client: ", err.message);
 
           return null;
@@ -322,7 +323,7 @@ export class ConnectionManager implements IConnectionManager {
     var title = `tcp lang server (host ${this.connectionConfiguration.host} port ${this.connectionConfiguration.port})`;
     var languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
     languageServerClient.onReady().then(() => {
-      this.logger.debug('Language server client started, setting puppet version')
+      langClient.logger.debug('Language server client started, setting puppet version')
       languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
         this.setConnectionStatus(versionDetails.puppetVersion, ConnectionStatus.Running);
       });
