@@ -4,6 +4,7 @@ import vscode = require('vscode');
 import cp = require('child_process');
 import { Logger } from '../src/logging';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
+import { ConnectionConfiguration } from './configuration';
 import { setupPuppetCommands } from '../src/commands/puppetcommands';
 import { setupPDKCommands } from '../src/commands/pdkcommands';
 import { reporter } from './telemetry/telemetry';
@@ -39,6 +40,7 @@ export interface IConnectionConfiguration {
 export interface IConnectionManager {
   status: ConnectionStatus;
   languageClient: LanguageClient;
+  showConnectionMenu();
 }
 
 export class ConnectionManager implements IConnectionManager {
@@ -78,7 +80,7 @@ export class ConnectionManager implements IConnectionManager {
       this.terminal = vscode.window.createTerminal('Puppet PDK');
       this.terminal.processId.then(
         pid => {
-          console.log("pdk shell started, pid: " + pid);
+          this.logger.debug("pdk shell started, pid: " + pid);
         });
       setupPDKCommands(langID, this, this.extensionContext, this.logger, this.terminal);
       this.extensionContext.subscriptions.push(this.terminal);
@@ -395,8 +397,7 @@ export class ConnectionManager implements IConnectionManager {
     if (this.statusBarItem === undefined) {
       this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
 
-      // TODO: Add a command here to show the connection menu
-      // this.statusBarItem.command = this.ShowConnectionMenuCommandName;
+      this.statusBarItem.command = messages.PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
       this.statusBarItem.show();
       vscode.window.onDidChangeActiveTextEditor(textEditor => {
         if (textEditor === undefined || textEditor.document.languageId !== "puppet") {
@@ -407,6 +408,32 @@ export class ConnectionManager implements IConnectionManager {
         }
       })
     }
+  }
+
+  public showConnectionMenu() {
+    var menuItems: ConnectionMenuItem[] = [];
+
+    let currentConnectionConfig = this.connectionConfiguration;
+
+    menuItems.push(
+      new ConnectionMenuItem(
+        "Restart Current Puppet Session",
+        () => {
+          let configuration = new ConnectionConfiguration(this.extensionContext);
+          this.restartConnection(configuration);
+        }),
+    )
+
+    menuItems.push(
+      new ConnectionMenuItem(
+        "Show Puppet Session Logs",
+        () => { this.logger.show(); }),
+    )
+
+    vscode
+      .window
+      .showQuickPick<ConnectionMenuItem>(menuItems)
+      .then((selectedItem) => { selectedItem.callback(); });
   }
 
   private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
@@ -430,5 +457,13 @@ export class ConnectionManager implements IConnectionManager {
 
   private setSessionFailure(message: string, ...additionalMessages: string[]) {
     this.setConnectionStatus("Starting Error", ConnectionStatus.Failed);
+  }
+}
+
+class ConnectionMenuItem implements vscode.QuickPickItem {
+  public description: string;
+
+  constructor(public readonly label: string, public readonly callback: () => void = () => { })
+  {
   }
 }
