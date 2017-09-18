@@ -20,9 +20,7 @@ export class pdkTestUnitCommand {
     this.terminal.sendText(`pdk test unit`);
     this.terminal.show();
     if (reporter) {
-      reporter.sendTelemetryEvent('command', {
-        command: messages.PDKCommandStrings.PdkTestUnitCommandId
-      });
+      reporter.sendTelemetryEvent(messages.PDKCommandStrings.PdkTestUnitCommandId);
     }
   }
 

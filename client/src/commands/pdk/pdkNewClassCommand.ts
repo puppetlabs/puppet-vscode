@@ -26,9 +26,7 @@ export class pdkNewClassCommand {
       this.terminal.sendText(`pdk new class ${moduleName}`);
       this.terminal.show();
       if (reporter) {
-        reporter.sendTelemetryEvent('command', {
-          command: messages.PDKCommandStrings.PdkNewClassCommandId
-        });
+        reporter.sendTelemetryEvent(messages.PDKCommandStrings.PdkNewClassCommandId);
       }
     })
   }
