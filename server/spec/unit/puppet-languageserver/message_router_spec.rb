@@ -212,22 +212,47 @@ describe 'message_router' do
       end
 
       context 'and successfully generate the node graph' do
-        let(:relationship_graph) { double('graph') }
+        let(:relationship_graph) { MockRelationshipGraph.new() }
         before(:each) do
-          expect(relationship_graph).to receive(:to_dot).with(Hash).and_return(dot_content)
           expect(PuppetLanguageServer::PuppetParserHelper).to receive(:compile_to_pretty_relationship_graph).with(file_content).and_return(relationship_graph)
         end
 
-        it 'should reply with dotContent' do
-          expect(request).to receive(:reply_result).with(hash_including('dotContent' => dot_content))
+        context 'with one or more resources' do
+          before(:each) do
+            relationship_graph.vertices = [double('node1'),double('node2')]
+            expect(relationship_graph).to receive(:to_dot).with(Hash).and_return(dot_content)
+          end
 
-          subject.receive_request(request)
+          it 'should reply with dotContent' do
+            expect(request).to receive(:reply_result).with(hash_including('dotContent' => dot_content))
+
+            subject.receive_request(request)
+          end
+
+          it 'should not reply with error' do
+            expect(request).to_not receive(:reply_result).with(hash_including('error'))
+
+            subject.receive_request(request)
+          end
         end
 
-        it 'should not reply with error' do
-          expect(request).to_not receive(:reply_result).with(hash_including('error'))
+        context 'with zero resources' do
+          before(:each) do
+            relationship_graph.vertices = []
+            expect(relationship_graph).to receive(:to_dot).with(Hash).never
+          end
 
-          subject.receive_request(request)
+          it 'should reply with the error text' do
+            expect(request).to receive(:reply_result).with(hash_including('error' => /no resources/))
+  
+            subject.receive_request(request)
+          end
+  
+          it 'should not reply with dotContent' do
+            expect(request).to_not receive(:reply_result).with(hash_including('dotContent'))
+  
+            subject.receive_request(request)
+          end
         end
       end
     end
