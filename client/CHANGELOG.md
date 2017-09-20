@@ -6,15 +6,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-* Added support for the PDK(https://puppet.com/blog/develop-modules-faster-new-puppet-development-kit)
-* Added telemetry to understand which parts Puppet users find useful. This will help us refine which commands we add in the future. We track whether the following commands are executed:
-  * `puppet resource`
-  * `pdk new module`
-  * `pdk new class`
-  * `pdk validate`
-  * `pdk test unit`
+## 0.7.0 - 2017-09-22
 
-> Please` note, you can turn off telemetry reporting for VS Code and all extensions through the ["telemetry.enableTelemetry": false setting](https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting).
+- (GH-115) Add Puppet Development Kit (PDK) integration
+- (GH-136) Create a better UI experience while Puppet loads
+- (GH-61)  Create a better experience when language client fails
+- (GH-135) Fix incorrect logger when a client error occurs
+- (GH-129) Honor inline puppet lint directives
+- (GH-133) Fix issue with puppet 5.1.0
+- (GH-122) Show upgrade message with changelog
+- (GH-120) Allow custom Puppet agent installation directory
+- (GH-126) Fix completion provider with Puppet 5.2.0
+- (GH-110) Add extension analytics
+- (GH-138) Set extension analytics to prod
+- (GH-109) Randomize languageserver port
+- (GH-111) Parse puppet-lint.rc in module directory
 
 ## 0.6.0 - 2017-08-08
 
