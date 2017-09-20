@@ -79,7 +79,7 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
             graphContent = `<textarea id="graphviz_data" style="display:none">\n` + graphContent + `\n</textarea>`;
           }
 
-          var errorContent = `<div>${compileResult.error}</div>`
+          var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`
           if (compileResult.error == null) { errorContent = ''; }
           if (reporter) {
             reporter.sendTelemetryEvent(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId);
