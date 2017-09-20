@@ -55,6 +55,12 @@ class MockJSONRPCHandler < PuppetLanguageServer::JSONRPCHandler
   end
 end
 
+class MockRelationshipGraph
+  attr_accessor :vertices
+  def initialize()
+  end
+end
+
 class MockResource
   attr_accessor :title
 
