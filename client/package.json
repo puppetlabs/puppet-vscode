@@ -38,6 +38,8 @@
   ],
   "activationEvents": [
     "onLanguage:puppet",
+    "onCommand:extension.puppetRestartSession",
+    "onCommand:extension.puppetShowConnectionLogs",
     "onCommand:extension.puppetShowConnectionMenu",
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
@@ -139,6 +141,12 @@
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "extension.puppetRestartSession"
+        },
+        {
+          "command": "extension.puppetShowConnectionLogs"
+        },
         {
           "command": "extension.pdkNewModule"
         },
