@@ -151,16 +151,13 @@
           "command": "extension.pdkNewModule"
         },
         {
-          "command": "extension.pdkTestUnit",
-          "when": "resourceLangId == 'puppet'"
+          "command": "extension.pdkTestUnit"
         },
         {
-          "command": "extension.pdkValidate",
-          "when": "resourceLangId == 'puppet'"
+          "command": "extension.pdkValidate"
         },
         {
-          "command": "extension.pdkNewClass",
-          "when": "resourceLangId == 'puppet'"
+          "command": "extension.pdkNewClass"
         },
         {
           "command": "extension.puppetResource",
