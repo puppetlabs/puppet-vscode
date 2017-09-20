@@ -38,6 +38,9 @@
   ],
   "activationEvents": [
     "onLanguage:puppet",
+    "onCommand:extension.puppetRestartSession",
+    "onCommand:extension.puppetShowConnectionLogs",
+    "onCommand:extension.puppetShowConnectionMenu",
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
     "onCommand:extension.puppetShowNodeGraphToSide",
@@ -88,6 +91,16 @@
     ],
     "commands": [
       {
+        "command": "extension.puppetRestartSession",
+        "category": "Puppet",
+        "title": "Restart Current Session"
+      },
+      {
+        "command": "extension.puppetShowConnectionLogs",
+        "category": "Puppet",
+        "title": "Show Connection Logs"
+      },
+      {
         "command": "extension.pdkNewModule",
         "category": "Puppet",
         "title": "PDK New Module",
@@ -128,6 +141,12 @@
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "extension.puppetRestartSession"
+        },
+        {
+          "command": "extension.puppetShowConnectionLogs"
+        },
         {
           "command": "extension.pdkNewModule"
         },
@@ -255,7 +274,8 @@
         "puppet.languageclient.minimumUserLogLevel": {
           "type": "string",
           "default": "normal",
-          "description": "Set the minimum log level that the user will see on the Puppet OutputChannel (Allowed values: verbose, debug, normal, warning, error)"
+          "description": "Set the minimum log level that the user will see on the Puppet connection logs",
+          "enum": ["verbose", "debug", "normal", "warning", "error" ]
         },
         "puppet.puppetAgentDir": {
           "type": "string",

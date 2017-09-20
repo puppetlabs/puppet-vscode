@@ -8,6 +8,9 @@ export interface PuppetVersionDetails {
   puppetVersion: string;
   facterVersion: string;
   languageServerVersion: string;
+  factsLoaded: boolean;
+  functionsLoaded: boolean;
+  typesLoaded: boolean;
 }
 
 export interface PuppetResourceRequestParams {
@@ -37,6 +40,9 @@ export interface CompileNodeGraphResponse {
 export class PuppetCommandStrings{
   static PuppetResourceCommandId:string = 'extension.puppetResource';
   static PuppetNodeGraphToTheSideCommandId = 'extension.puppetShowNodeGraphToSide';
+  static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
+  static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
+  static PuppetRestartSessionCommandId = 'extension.puppetRestartSession';
 }
 
 export class PDKCommandStrings {

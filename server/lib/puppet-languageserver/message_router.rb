@@ -43,8 +43,12 @@ module PuppetLanguageServer
         request.reply_result(nil)
 
       when 'puppet/getVersion'
-        request.reply_result(LanguageServer::PuppetVersion.create('puppetVersion' => Puppet.version,
-                                                                  'facterVersion' => Facter.version))
+        request.reply_result(LanguageServer::PuppetVersion.create('puppetVersion'   => Puppet.version,
+                                                                  'facterVersion'   => Facter.version,
+                                                                  'factsLoaded'     => PuppetLanguageServer::FacterHelper.facts_loaded?,
+                                                                  'functionsLoaded' => PuppetLanguageServer::PuppetHelper.functions_loaded?,
+                                                                  'typesLoaded'     => PuppetLanguageServer::PuppetHelper.types_loaded?
+                                                                  ))
 
       when 'puppet/getResource'
         type_name = request.params['typename']

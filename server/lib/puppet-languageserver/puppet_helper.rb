@@ -8,7 +8,9 @@ module PuppetLanguageServer
     @ops_lock_funcs = Mutex.new
     @types_hash = nil
     @function_module = nil
-
+    @types_loaded = nil
+    @functions_loaded = nil
+    
     def self.reset
       @ops_lock_types.synchronize do
         @ops_lock_funcs.synchronize do
@@ -35,6 +37,10 @@ module PuppetLanguageServer
       end
     end
 
+    def self.types_loaded?
+      @types_loaded.nil? ? false : @types_loaded
+    end
+
     def self.load_types
       @ops_lock_types.synchronize do
         _load_types
@@ -43,6 +49,7 @@ module PuppetLanguageServer
 
     def self.get_type(name)
       result = nil
+      return result if @types_loaded == false
       @ops_lock_types.synchronize do
         _load_types if @types_hash.nil?
         result = @types_hash[name.intern]
@@ -52,6 +59,7 @@ module PuppetLanguageServer
 
     def self.type_names
       result = []
+      return result if @types_loaded == false
       @ops_lock_types.synchronize do
         _load_types if @types_hash.nil?
         result = @types_hash.keys.map(&:to_s)
@@ -60,6 +68,10 @@ module PuppetLanguageServer
     end
 
     # Functions
+    def self.functions_loaded?
+      @functions_loaded.nil? ? false : @functions_loaded
+    end
+
     def self.load_functions
       @ops_lock_funcs.synchronize do
         _load_functions if @function_module.nil?
@@ -74,6 +86,7 @@ module PuppetLanguageServer
 
     def self.functions
       result = []
+      return result if @functions_loaded == false
       @ops_lock_funcs.synchronize do
         _load_functions if @function_module.nil?
         result = @function_module.all_function_info.dup
@@ -83,6 +96,7 @@ module PuppetLanguageServer
 
     def self.function(name)
       result = nil
+      return result if @functions_loaded == false
       @ops_lock_funcs.synchronize do
         _load_functions if @function_module.nil?
         result = @function_module.all_function_info[name.intern]
@@ -92,6 +106,7 @@ module PuppetLanguageServer
 
     def self.function_names
       result = []
+      return result if @functions_loaded == false
       @ops_lock_funcs.synchronize do
         _load_functions if @function_module.nil?
         result = @function_module.all_function_info.keys.map(&:to_s)
@@ -104,6 +119,8 @@ module PuppetLanguageServer
     def self._reset
       @types_hash = nil
       @function_module = nil
+      @types_loaded = nil
+      @functions_loaded = nil
     end
     private_class_method :_reset
 
@@ -118,6 +135,7 @@ module PuppetLanguageServer
     private_class_method :prune_resource_parameters
 
     def self._load_types
+      @types_loaded = false
       @types_hash = {}
       # This is an expensive call
       # From https://github.com/puppetlabs/puppet/blob/ebd96213cab43bb2a8071b7ac0206c3ed0be8e58/lib/puppet/metatype/manager.rb#L182-L189
@@ -143,11 +161,13 @@ module PuppetLanguageServer
       type_count = @types_hash.count
       PuppetLanguageServer.log_message(:debug, "[PuppetHelper::_load_types] Finished loading #{type_count} types")
 
+      @types_loaded = true
       nil
     end
     private_class_method :_load_types
 
     def self._load_functions
+      @functions_loaded = false
       autoloader = Puppet::Parser::Functions.autoloader
 
       # This is an expensive call
@@ -165,6 +185,7 @@ module PuppetLanguageServer
 
       function_count = @function_module.all_function_info.keys.map(&:to_s).count
       PuppetLanguageServer.log_message(:debug, "[PuppetHelper::_load_functions] Finished loading #{function_count} functions")
+      @functions_loaded = true
       nil
     end
     private_class_method :_load_functions

@@ -4,6 +4,7 @@ import vscode = require('vscode');
 import cp = require('child_process');
 import { Logger } from '../src/logging';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
+import { ConnectionConfiguration } from './configuration';
 import { setupPuppetCommands } from '../src/commands/puppetcommands';
 import { setupPDKCommands } from '../src/commands/pdkcommands';
 import { reporter } from './telemetry/telemetry';
@@ -39,6 +40,9 @@ export interface IConnectionConfiguration {
 export interface IConnectionManager {
   status: ConnectionStatus;
   languageClient: LanguageClient;
+  showConnectionMenu();
+  showLogger();
+  restartConnection(connectionConfig?: IConnectionConfiguration);
 }
 
 export class ConnectionManager implements IConnectionManager {
@@ -57,6 +61,9 @@ export class ConnectionManager implements IConnectionManager {
   }
   public get languageClient() : LanguageClient {
     return this.languageServerClient;
+  }
+  public showLogger() {
+    this.logger.show()
   }
 
   constructor(context: vscode.ExtensionContext, logger: Logger) {
@@ -78,7 +85,7 @@ export class ConnectionManager implements IConnectionManager {
       this.terminal = vscode.window.createTerminal('Puppet PDK');
       this.terminal.processId.then(
         pid => {
-          console.log("pdk shell started, pid: " + pid);
+          this.logger.debug("pdk shell started, pid: " + pid);
         });
       setupPDKCommands(langID, this, this.extensionContext, this.logger, this.terminal);
       this.extensionContext.subscriptions.push(this.terminal);
@@ -325,9 +332,11 @@ export class ConnectionManager implements IConnectionManager {
     var languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
     languageServerClient.onReady().then(() => {
       langClient.logger.debug('Language server client started, setting puppet version')
-      languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-        this.setConnectionStatus(versionDetails.puppetVersion, ConnectionStatus.Running);
-        if (reporter) {
+      this.setConnectionStatus("Loading Puppet", ConnectionStatus.Starting);
+      this.queryLanguageServerStatus();
+      // Send telemetry
+      if (reporter) {
+        languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
           reporter.sendTelemetryEvent('puppetVersion' +versionDetails.puppetVersion);
           reporter.sendTelemetryEvent('facterVersion' + versionDetails.facterVersion);
           reporter.sendTelemetryEvent('languageServerVersion' + versionDetails.languageServerVersion);
@@ -336,8 +345,8 @@ export class ConnectionManager implements IConnectionManager {
             facterVersion: versionDetails.facterVersion,
             languageServerVersion: versionDetails.languageServerVersion,
           });
-        }
-      });
+        });
+      }
     }, (reason) => {
       this.setSessionFailure("Could not start language service: ", reason);
     });
@@ -345,17 +354,57 @@ export class ConnectionManager implements IConnectionManager {
     return languageServerClient;
   }
 
-  private restartConnection(connectionConfig?: IConnectionConfiguration) {
-      this.stop();
-      this.start(connectionConfig);
+  private queryLanguageServerStatus() {
+    let connectionManager = this;
+
+    return new Promise((resolve, reject) => {
+      let count = 0;
+      let lastVersionResponse = null;
+      let handle = setInterval(() => {
+        count++;
+
+        // After 30 seonds timeout the progress
+        if (count >= 30 || connectionManager.languageClient == undefined) {
+          clearInterval(handle);
+          connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+          resolve();
+        }
+
+        connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
+          lastVersionResponse = versionDetails
+          if (versionDetails.factsLoaded && versionDetails.functionsLoaded && versionDetails.typesLoaded) {
+            clearInterval(handle);
+            connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+            resolve();
+          } else {
+            let progress = 0;
+
+            if (versionDetails.factsLoaded) { progress++; }
+            if (versionDetails.functionsLoaded) { progress++; }
+            if (versionDetails.typesLoaded) { progress++; }
+            progress = Math.round(progress / 3.0 * 100);
+
+            this.setConnectionStatus("Loading Puppet (" + progress.toString() + "%)", ConnectionStatus.Starting);
+          }
+        });
+
+      }, 1000);
+    });
+  }
+
+  public restartConnection(connectionConfig?: IConnectionConfiguration) {
+    if (connectionConfig == undefined) {
+      connectionConfig = new ConnectionConfiguration(this.extensionContext);
+    }
+    this.stop();
+    this.start(connectionConfig);
   }
 
   private createStatusBarItem() {
     if (this.statusBarItem === undefined) {
       this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
 
-      // TODO: Add a command here to show the connection menu
-      // this.statusBarItem.command = this.ShowConnectionMenuCommandName;
+      this.statusBarItem.command = messages.PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
       this.statusBarItem.show();
       vscode.window.onDidChangeActiveTextEditor(textEditor => {
         if (textEditor === undefined || textEditor.document.languageId !== "puppet") {
@@ -366,6 +415,27 @@ export class ConnectionManager implements IConnectionManager {
         }
       })
     }
+  }
+
+  public showConnectionMenu() {
+    var menuItems: ConnectionMenuItem[] = [];
+
+    menuItems.push(
+      new ConnectionMenuItem(
+        "Restart Current Puppet Session",
+        () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId); }),
+    )
+
+    menuItems.push(
+      new ConnectionMenuItem(
+        "Show Puppet Session Logs",
+        () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
+    )
+
+    vscode
+      .window
+      .showQuickPick<ConnectionMenuItem>(menuItems)
+      .then((selectedItem) => { selectedItem.callback(); });
   }
 
   private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
@@ -389,5 +459,13 @@ export class ConnectionManager implements IConnectionManager {
 
   private setSessionFailure(message: string, ...additionalMessages: string[]) {
     this.setConnectionStatus("Starting Error", ConnectionStatus.Failed);
+  }
+}
+
+class ConnectionMenuItem implements vscode.QuickPickItem {
+  public description: string;
+
+  constructor(public readonly label: string, public readonly callback: () => void = () => { })
+  {
   }
 }

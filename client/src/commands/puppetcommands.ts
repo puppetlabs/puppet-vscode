@@ -19,7 +19,19 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId,
     uri => showNodeGraph(uri, true))
   );
-  
+
+  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
+    () => { connManager.showConnectionMenu(); }
+  ));
+
+  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
+    () => { connManager.showLogger(); }
+  ));
+
+  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId,
+    () => { connManager.restartConnection(); }
+  ));
+
   const contentProvider = new PuppetNodeGraphContentProvider(ctx, connManager);
   const contentProviderRegistration = vscode.workspace.registerTextDocumentContentProvider(langID, contentProvider);
 

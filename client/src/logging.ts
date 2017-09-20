@@ -19,7 +19,6 @@ export class Logger {
 
   constructor() {
     this.logChannel = vscode.window.createOutputChannel("Puppet");
-    this.logChannel.show();
 
     let config = vscode.workspace.getConfiguration('puppet');
     let logLevelName = config['languageclient']['minimumUserLogLevel'];
@@ -31,6 +30,10 @@ export class Logger {
     } else {
       this.minimumUserLogLevel = logLevel;
     }
+  }
+
+  public show(){
+    this.logChannel.show();
   }
 
   public verbose(message: string) {
@@ -54,7 +57,7 @@ export class Logger {
   }
 
   private logWithLevel(level: LogLevel, message) {
-    let logMessage = this.logLevelPrefixAsString(level) + message
+    let logMessage = this.logLevelPrefixAsString(level) + (new Date().toISOString()) + ' ' + message
 
     console.log(logMessage);
     if (level >= this.minimumUserLogLevel) {
