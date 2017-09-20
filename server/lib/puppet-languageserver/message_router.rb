@@ -83,7 +83,12 @@ module PuppetLanguageServer
             'fontsize' => '""',
             'name' => 'vscode'
           }
-          dot_content = PuppetLanguageServer::PuppetParserHelper.compile_to_pretty_relationship_graph(content).to_dot(options)
+          node_graph = PuppetLanguageServer::PuppetParserHelper.compile_to_pretty_relationship_graph(content)
+          if node_graph.vertices.count.zero?
+            error_content = "There were no resources created in the node graph. Is there an include statement missing?"
+          else
+            dot_content = node_graph.to_dot(options)
+          end
         rescue => exception
           error_content = "Error while parsing the file. #{exception}"
         end
