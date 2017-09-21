@@ -120,11 +120,6 @@ export class ConnectionManager implements IConnectionManager {
   public stop() {
     this.logger.debug('Stopping...')
 
-    if (this.connectionStatus === ConnectionStatus.Failed) {
-      this.languageServerClient = undefined;
-      this.languageServerProcess = undefined;
-    }
-
     this.connectionStatus = ConnectionStatus.Stopping;
 
     // Close the language server client
@@ -133,14 +128,11 @@ export class ConnectionManager implements IConnectionManager {
         this.languageServerClient = undefined;
     }
 
-    // Kill the language server process we spawned
-    if (this.languageServerProcess !== undefined) {
-      // Terminate Language Server process
-      // TODO: May not be functional on Windows.
-      //       Perhaps send the exit command and wait for process to exit?
-      this.languageServerProcess.kill();
-      this.languageServerProcess = undefined;
-    }
+    // The language server process we spawn will close once the 
+    // client disconnects.  No need to forcibly kill the process here. Also the language
+    // client will try and send a shutdown event, which will throw errors if the language
+    // client can no longer transmit the message.
+    this.languageServerProcess = undefined;
 
     this.connectionStatus = ConnectionStatus.NotStarted;
 
