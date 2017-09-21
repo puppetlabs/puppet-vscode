@@ -69,7 +69,7 @@
     "jsonValidation": [
       {
         "fileMatch": "metadata.json",
-        "url": "./src/metadata-json-schema.json"
+        "url": "./schemas/metadata-json-schema.json"
       }
     ],
     "grammars": [
