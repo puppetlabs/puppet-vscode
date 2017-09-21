@@ -1,7 +1,5 @@
 
-[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
-
-[![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
+[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
 
 # Puppet Language Support for Visual Studio Code
 
@@ -19,7 +17,7 @@ You will need to have Puppet Agent installed in order to fully use this extensio
 
 ## Quick start
 
-Open any Puppet manifest with the extension '.pp' or 'epp' and the extension will load automatically. Once loaded the extension will be available for the duration of the session.
+Create or open any Puppet manifest with the extension `.pp` or `.epp` and the extension will load automatically. Once loaded the extension will be available for the duration of the session.
 
 ![Example of features](https://raw.githubusercontent.com/jpogran/puppet-vscode/master/client/docs/assets/language_server.gif)
 
@@ -42,9 +40,13 @@ Open any Puppet manifest with the extension '.pp' or 'epp' and the extension wil
 
 ## Feature information
 
+## Hover Support
+
+Hovering over any resource, class declaration or other Puppet symbol provides instant contextual information. For example, hovering over the resource declaration lists the type name and parameter list, with all relevant help text.
+
 ### Syntax Highlighting
 
-Syntax highlighting uses [puppet-lint](https://github.com/rodjek/puppet-lint) and displays the results as you type, within VSCode.
+Syntax highlighting recognizes all versions of Puppet and displays as you type.
 
 - Puppet DSL
 - Puppet Grammar
@@ -52,11 +54,11 @@ Syntax highlighting uses [puppet-lint](https://github.com/rodjek/puppet-lint) an
 
 ### Code Snippets
 
-As part of IntelliSense and Snippets, you can quickly create blocks of code
+As part of IntelliSense and Snippets, you can quickly create templates to automate repetitive series of code.
 
 ### Linting
 
-Our validation uses [puppet-lint](https://github.com/rodjek/puppet-lint) to validate the Pupept syntax in all open puppet files. Linting is automatically applied to the document as you edit, without having to save the file first.
+Linting is automatically applied to the document as you edit, without having to save the file first. The validation uses [puppet-lint](https://github.com/rodjek/puppet-lint) to validate the Puppet syntax in all open puppet files. Errors and warnings appear in the Problems window in VSCode.
 
 ### Puppet Resource
 
@@ -67,6 +69,8 @@ You can import existing resources directly using `puppet resource`
 2. Type `puppet resource` and press enter
 
 3. Enter the resource type you want to import, for example `user`
+
+The information returned will be pasted into the open editor window where your cursor is resting, or at the begining of an empty file.
 
 ### Node Graph preview
 
@@ -92,6 +96,8 @@ The following commands are supported:
 - pdk test unit
 
 To use any of the above commands, open the command palette and start typing a command. You can also use the right-click context menu or the editor menu to reach these commands.
+
+`PDK New Module` is available even if the extension isn't loaded, the rest of the commands are only available when the extension is loaded.
 
 ## Installing the Extension
 
