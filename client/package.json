@@ -289,7 +289,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "tsc -p ./",
+    "vscode:prepublish": "node node_modules/gulp/bin/gulp.js build",
     "compile": "tsc -p ./",
     "compile-watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
