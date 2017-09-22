@@ -1,4 +1,4 @@
-version: 0.0.4-appv.{build}
+version: 0.7.0-appv.{build}
 clone_depth: 10
 init:
 - SET
@@ -32,7 +32,7 @@ environment:
   # Package it up to a VSIX
   - nodejs_version: "7.4.0"
     nodejs_arch: "x64"
-    GULP_BUILD_TASK: build
+    VSCE_TASK: package
 
 matrix:
   fast_finish: true
@@ -75,6 +75,9 @@ install:
        Write-Host "npm Version..."
        & npm --version
 
+       Write-Host "Installing VSCE globally..."
+       & npm install -g vsce --silent
+
        Write-Host "Installing modules..."
        & npm install --silent
 
@@ -84,6 +87,7 @@ install:
 
 build_script:
 - cmd: IF NOT [%GULP_BUILD_TASK%] == [] node node_modules\gulp\bin\gulp.js %GULP_BUILD_TASK%
+- cmd: IF NOT [%VSCE_TASK%] == [] vsce %VSCE_TASK%
 
 test_script:
 - cmd: IF NOT [%RAKE_TASK%] == [] bundle exec rake %RAKE_TASK%

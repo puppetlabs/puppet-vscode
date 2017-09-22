@@ -21,8 +21,8 @@ gulp.task('copy_language_server', function () {
              .pipe(gulp.dest('./vendor/languageserver'));
 })
 
-gulp.task('build_extension', function (callback) {
-  exec('node ./node_modules/vsce/out/vsce package',
+gulp.task('compile_typescript', function (callback) {
+  exec('tsc -p ./',
     function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
@@ -32,7 +32,7 @@ gulp.task('build_extension', function (callback) {
 
 
 gulp.task('build', function (callback) {
-  runSequence('clean','copy_language_server','build_extension',callback);
+  runSequence('clean','copy_language_server','compile_typescript',callback);
 })
 
 gulp.task('bump', function () {
