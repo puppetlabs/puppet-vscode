@@ -2,7 +2,8 @@
 
 import * as vscode from 'vscode';
 
-import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
+import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { ConnectionManager } from './connection';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
   public type: ConnectionType = ConnectionType.Unknown; 

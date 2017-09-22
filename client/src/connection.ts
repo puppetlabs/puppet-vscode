@@ -3,6 +3,7 @@ import path = require('path');
 import vscode = require('vscode');
 import cp = require('child_process');
 import { ILogger } from '../src/logging';
+import { IConnectionConfiguration, ConnectionStatus, ConnectionType } from './interfaces'
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { ConnectionConfiguration } from './configuration';
 import { setupPuppetCommands } from '../src/commands/puppetcommands';
@@ -12,30 +13,6 @@ import * as messages from '../src/messages';
 import fs = require('fs');
 
 const langID = 'puppet'; // don't change this
-
-export enum ConnectionStatus {
-  NotStarted,
-  Starting,
-  Running,
-  Stopping,
-  Failed
-}
-
-export enum ConnectionType {
-  Unknown,
-  Local,
-  Remote
-}
-
-export interface IConnectionConfiguration {
-  type: ConnectionType;
-  host: string;
-  port: number;
-  timeout: number;
-  preLoadPuppet: boolean;
-  debugFilePath: string;
-  puppetAgentDir: string;
-}
 
 export interface IConnectionManager {
   status: ConnectionStatus;

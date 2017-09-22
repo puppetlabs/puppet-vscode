@@ -1,7 +1,8 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { IConnectionManager, ConnectionStatus } from '../../connection';
+import { ConnectionStatus } from '../../interfaces';
+import { IConnectionManager } from '../../connection';
 import { ILogger } from '../../logging';
 import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';

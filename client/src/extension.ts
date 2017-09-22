@@ -3,7 +3,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
+import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
