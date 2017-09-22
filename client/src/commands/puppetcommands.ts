@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import * as messages from '../../src/messages';
 import { IConnectionManager } from '../../src/connection';
-import { Logger } from '../../src/logging';
+import { ILogger } from '../../src/logging';
 import {
   PuppetNodeGraphContentProvider, isNodeGraphFile,
   getNodeGraphUri, showNodeGraph
 } from '../../src/providers/previewNodeGraphProvider';
 import { puppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
 
-export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: Logger){
+export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: ILogger){
 
   let resourceCommand = new puppetResourceCommand(connManager, logger);
   ctx.subscriptions.push(resourceCommand);

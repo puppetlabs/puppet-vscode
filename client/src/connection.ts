@@ -2,7 +2,7 @@ import net = require('net');
 import path = require('path');
 import vscode = require('vscode');
 import cp = require('child_process');
-import { Logger } from '../src/logging';
+import { ILogger } from '../src/logging';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { ConnectionConfiguration } from './configuration';
 import { setupPuppetCommands } from '../src/commands/puppetcommands';
@@ -53,7 +53,7 @@ export class ConnectionManager implements IConnectionManager {
   private languageServerProcess = undefined;
   private extensionContext = undefined;
   private commandsRegistered = false;
-  private logger: Logger = undefined;
+  private logger: ILogger = undefined;
   private terminal: vscode.Terminal = undefined
 
   public get status() : ConnectionStatus {
@@ -66,7 +66,7 @@ export class ConnectionManager implements IConnectionManager {
     this.logger.show()
   }
 
-  constructor(context: vscode.ExtensionContext, logger: Logger) {
+  constructor(context: vscode.ExtensionContext, logger: ILogger) {
     this.logger = logger;
     this.extensionContext = context;
   }

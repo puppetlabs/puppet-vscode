@@ -1,15 +1,15 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { Logger } from '../../logging';
+import { ILogger } from '../../logging';
 import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';
 
 export class pdkNewModuleCommand {
-  private logger: Logger = undefined;
+  private logger: ILogger = undefined;
   private terminal: vscode.Terminal = undefined;
 
-  constructor(logger: Logger, terminal: vscode.Terminal) {
+  constructor(logger: ILogger, terminal: vscode.Terminal) {
     this.logger = logger;
     this.terminal = terminal;
   }
