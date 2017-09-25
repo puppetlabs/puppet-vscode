@@ -1,6 +1,7 @@
 require 'languageserver/languageserver'
+require 'puppet-vscode'
 
-%w[version simple_tcp_server json_rpc_handler message_router server_capabilities document_validator
+%w[json_rpc_handler message_router server_capabilities document_validator
    puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
   begin
     require "puppet-languageserver/#{lib}"
@@ -80,34 +81,12 @@ module PuppetLanguageServer
   end
 
   def self.log_message(severity, message)
-    return if @logger.nil?
-
-    case severity
-    when :debug
-      @logger.debug(message)
-    when :info
-      @logger.info(message)
-    when :warn
-      @logger.info(message)
-    when :error
-      @logger.error(message)
-    when :fatal
-      @logger.fatal(message)
-    else
-      @logger.unknown(message)
-    end
+    PuppetVSCode::log_message(severity, message)
   end
 
   def self.init_puppet(options)
-    if options[:debug].nil?
-      @logger = nil
-    elsif options[:debug].casecmp 'stdout'
-      @logger = Logger.new($stdout)
-    elsif !options[:debug].to_s.empty?
-      # Log to file
-      @logger = Logger.new(options[:debug])
-    end
-    log_message(:info, "Language Server is v#{PuppetLanguageServer.version}")
+    PuppetVSCode::init_logging(options)
+    log_message(:info, "Language Server is v#{PuppetVSCode.version}")
     log_message(:info, "Using Puppet v#{Puppet.version}")
 
     log_message(:info, 'Initializing settings...')
@@ -143,7 +122,9 @@ module PuppetLanguageServer
   def self.rpc_server(options)
     log_message(:info, 'Starting RPC Server...')
 
-    server = PuppetLanguageServer::SimpleTCPServer.new
+    server = PuppetVSCode::SimpleTCPServer.new
+
+    options[:servicename] = 'LANGUAGE SERVER'
 
     server.add_service(options[:ipaddress], options[:port])
     trap('INT') { server.stop }
