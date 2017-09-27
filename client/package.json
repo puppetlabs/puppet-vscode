@@ -68,8 +68,12 @@
     ],
     "jsonValidation": [
       {
-        "fileMatch": "metadata.json",
-        "url": "./schemas/metadata-json-schema.json"
+        "fileMatch": "/metadata.json",
+        "url": "https://forgeapi.puppet.com/schemas/module.json"
+      },
+      {
+        "fileMatch": "tasks/*.json",
+        "url": "https://forgeapi.puppet.com/schemas/task.json"
       }
     ],
     "grammars": [
