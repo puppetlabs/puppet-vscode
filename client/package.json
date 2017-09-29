@@ -161,7 +161,7 @@
         },
         {
           "command": "extension.puppetResource",
-          "when": "editorTextFocus && editorLangId == 'puppet'"
+          "when": "resourceLangId == 'puppet'"
         },
         {
           "command": "extension.puppetShowNodeGraphToSide",
