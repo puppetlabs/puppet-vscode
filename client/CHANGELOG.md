@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## 0.7.1 - 2017-09-29
+
+- (GH-157) Puppet Resource command hidden
+
 ## 0.7.0 - 2017-09-22
 
 - (GH-115) Add Puppet Development Kit (PDK) integration
