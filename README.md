@@ -15,7 +15,7 @@ The extension is composed of the VS Code Extension in the [`client/`](client) di
 
 ### Run the language server
 
-Follow the instructions in the server documentation - [How to run the Language Server for Develoment](server/READMEmd#How_to_run_the_Language_Server_for_Development). Ensure you use the `--timeout=0` and `--no-stop` arguments so the server does not stop.
+Follow the instructions in the server documentation - [How to run the Language Server for Develoment](server/README.md#How_to_run_the_Language_Server_for_Development). Ensure you use the `--timeout=0` and `--no-stop` arguments so the server does not stop.
 
 ### Run the client
 
