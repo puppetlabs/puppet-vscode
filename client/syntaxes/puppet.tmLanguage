@@ -69,6 +69,10 @@
           <string>#numbers</string>
         </dict>
         <dict>
+          <key>include</key>
+          <string>#line_comment</string>
+        </dict>
+        <dict>
           <key>begin</key>
           <string>\b(inherits)\b\s+</string>
           <key>captures</key>
