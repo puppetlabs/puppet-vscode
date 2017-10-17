@@ -6,6 +6,7 @@ import { CompileNodeGraphRequest } from '../messages';
 import { IConnectionManager, ConnectionStatus } from '../connection';
 import { reporter } from '../telemetry/telemetry';
 import * as messages from '../messages';
+import * as viz from 'viz.js';
 
 export function isNodeGraphFile(document: vscode.TextDocument) {
   return document.languageId === 'puppet'
@@ -63,7 +64,7 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
         .then(
           (compileResult) => {
 
-          var graphContent = ''
+          var svgContent = '';
           if (compileResult.dotContent != null) {
             var styling = `
             bgcolor = "transparent"
@@ -74,9 +75,10 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
 
             label = ""`
 
-            graphContent = compileResult.dotContent;
+            var graphContent = compileResult.dotContent;
             graphContent = graphContent.replace(`label = "vscode"`,styling);
-            graphContent = `<textarea id="graphviz_data" style="display:none">\n` + graphContent + `\n</textarea>`;
+
+            svgContent = viz(graphContent,"svg");
           }
 
           var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`
@@ -85,31 +87,11 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
             reporter.sendTelemetryEvent(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId);
           }
 
-          // WARNING - THIS IS A MAJOR HACK!!!
           return `
             ${errorContent}
-            ${graphContent}
             <div id="graphviz_svg_div">
-              <!-- Target for dynamic svg generation -->
-            </div>
-
-            <!-- Defer loading of javascript by placing these tags at the tail end of the document -->
-            <script language="javascript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"> </script>
-            <script language="javascript" type="text/javascript" src="http://www.webgraphviz.com/viz.js"></script>
-
-            <script language="javascript" type="text/javascript">
-              var svg_div = jQuery('#graphviz_svg_div');
-              var graphviz_data_textarea = jQuery('#graphviz_data');
-              
-              // Startup function: call UpdateGraphviz
-              jQuery(function() {
-                svg_div.html("");
-                  var data = graphviz_data_textarea.val();
-                  // Generate the Visualization of the Graph into "svg".
-                  var svg = Viz(data, "svg");
-                  svg_div.html(svg);
-              });
-            </script>`;
+              ${svgContent}
+            </div>`;
       })
     });
   }
