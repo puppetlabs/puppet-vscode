@@ -40,7 +40,7 @@ Create or open any Puppet manifest with the extension `.pp` or `.epp` and the ex
 
 ## Feature information
 
-## Hover Support
+### Hover Support
 
 Hovering over any resource, class declaration or other Puppet symbol provides instant contextual information. For example, hovering over the resource declaration lists the type name and parameter list, with all relevant help text.
 
@@ -105,6 +105,14 @@ You can install the official release of the Puppet extension by following the st
 in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery).
 In the Extensions pane, search for "jpogran-puppet" extension and install it there.  You will
 get notified automatically about any future extension updates!
+
+## Experience a Problem?
+
+If you haven't see the Problems Pane update in awhile, or hover and intellisense doesn't seem to showing up, and you might not know what to do. Sometimes the Puppet extension can experience problems which cause the language server to crash or not respond. The extension has a way of logging the crash, but there is something you can do to get right back to working: reload the Puppet Language Server.
+
+You can reload the Puppet Lanuguage Server by opening the command palette and starting to type `Puppet`. A list of Puppet commands will appear, select `Puppet: Restart Current Session`. This will restart the Puppet Language Server without reloading VSCode or losing any work currently open in the editor.
+
+(https://raw.githubusercontent.com/jpogran/puppet-vscode/master/client/docs/assets/reload_language_server.gif)
 
 ## Reporting Problems
 
