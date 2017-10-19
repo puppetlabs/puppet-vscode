@@ -47,6 +47,7 @@
     "onCommand:extension.puppetResource",
     "onCommand:extension.pdkNewModule",
     "onCommand:extension.pdkNewClass",
+    "onCommand:extension.pdkNewTask",
     "onCommand:extension.pdkTestUnit",
     "onCommand:extension.pdkValidate"
   ],
@@ -129,6 +130,11 @@
         "title": "PDK New Class"
       },
       {
+        "command": "extension.pdkNewTask",
+        "category": "Puppet",
+        "title": "PDK New Task"
+      },
+      {
         "command": "extension.puppetResource",
         "category": "Puppet",
         "title": "Puppet Resource"
@@ -164,6 +170,9 @@
           "command": "extension.pdkNewClass"
         },
         {
+          "command": "extension.pdkNewTask"
+        },
+        {
           "command": "extension.puppetResource",
           "when": "resourceLangId == 'puppet'"
         },
@@ -183,14 +192,19 @@
           "group": "pdk@2"
         },
         {
+          "when": "resourceLangId == 'puppet'",
+          "command": "extension.pdkNewTask",
+          "group": "pdk@3"
+        },
+        {
           "when": "resourceLangId == 'puppet' ",
           "command": "extension.pdkValidate",
-          "group": "pdk@3"
+          "group": "pdk@4"
         },
         {
           "when": "resourceLangId == 'puppet'",
           "command": "extension.pdkTestUnit",
-          "group": "pdk@4"
+          "group": "pdk@5"
         },
         {
           "when": "resourceLangId == 'puppet'",
@@ -211,13 +225,18 @@
         },
         {
           "when": "resourceLangId == 'puppet'",
-          "command": "extension.pdkValidate",
+          "command": "extension.pdkNewClass",
           "group": "pdk@2"
         },
         {
           "when": "resourceLangId == 'puppet'",
-          "command": "extension.pdkTestUnit",
+          "command": "extension.pdkValidate",
           "group": "pdk@3"
+        },
+        {
+          "when": "resourceLangId == 'puppet'",
+          "command": "extension.pdkTestUnit",
+          "group": "pdk@4"
         },
         {
           "when": "resourceLangId == 'puppet'",

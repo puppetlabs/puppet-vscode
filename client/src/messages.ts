@@ -48,6 +48,7 @@ export class PuppetCommandStrings{
 export class PDKCommandStrings {
   static PdkNewModuleCommandId: string = 'extension.pdkNewModule';
   static PdkNewClassCommandId: string = 'extension.pdkNewClass';
+  static PdkNewTaskCommandId: string = 'extension.pdkNewTask';
   static PdkValidateCommandId: string = 'extension.pdkValidate';
   static PdkTestUnitCommandId: string = 'extension.pdkTestUnit';
 }

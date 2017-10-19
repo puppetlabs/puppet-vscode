@@ -4,6 +4,7 @@ import { IConnectionManager } from '../../src/connection';
 import { Logger } from '../../src/logging';
 import { pdkNewModuleCommand } from './pdk/pdkNewModuleCommand';
 import { pdkNewClassCommand } from './pdk/pdkNewClassCommand';
+import { pdkNewTaskCommand } from './pdk/pdkNewTaskCommand';
 import { pdkValidateCommand } from './pdk/pdkValidateCommand';
 import { pdkTestUnitCommand } from './pdk/pdkTestCommand';
 
@@ -18,6 +19,12 @@ export function setupPDKCommands(langID: string, connManager: IConnectionManager
   ctx.subscriptions.push(newClassCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PDKCommandStrings.PdkNewClassCommandId, () => {
     newClassCommand.run();
+  }));
+  
+  let newTaskCommand = new pdkNewTaskCommand(logger, terminal);
+  ctx.subscriptions.push(newClassCommand);
+  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PDKCommandStrings.PdkNewTaskCommandId, () => {
+    newTaskCommand.run();
   }));
 
   let validateCommand = new pdkValidateCommand(logger, terminal);
