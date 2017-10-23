@@ -22,6 +22,23 @@ describe 'message_router' do
       allow(PuppetLanguageServer).to receive(:log_message)
     end
 
+    context 'given a request that raises an error' do
+      let(:request_rpc_method) { 'puppet/getVersion' }
+      before(:each) do
+        expect(Puppet).to receive(:version).and_raise('MockError')
+        allow(PuppetLanguageServer::CrashDump).to receive(:write_crash_file)
+      end
+
+      it 'should raise an error' do
+        expect{ subject.receive_request(request) }.to raise_error(/MockError/)
+      end
+
+      it 'should call PuppetLanguageServer::CrashDump.write_crash_file' do
+        expect(PuppetLanguageServer::CrashDump).to receive(:write_crash_file)
+        expect{ subject.receive_request(request) }.to raise_error(/MockError/)
+      end
+    end
+
     # initialize - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#initialize
     context 'given an initialize request' do
       let(:request_rpc_method) { 'initialize' } 
@@ -385,6 +402,23 @@ describe 'message_router' do
   describe '#receive_notification' do
     let(:notification_method) { nil }
     let(:notification_params) { {} }
+
+    context 'given a notification that raises an error' do
+      let(:notification_method) { 'exit' }
+      before(:each) do
+        expect(subject).to receive(:close_connection).and_raise('MockError')
+        allow(PuppetLanguageServer::CrashDump).to receive(:write_crash_file)
+      end
+
+      it 'should raise an error' do
+        expect{ subject.receive_notification(notification_method, notification_params) }.to raise_error(/MockError/)
+      end
+
+      it 'should call PuppetLanguageServer::CrashDump.write_crash_file' do
+        expect(PuppetLanguageServer::CrashDump).to receive(:write_crash_file)
+        expect{ subject.receive_notification(notification_method, notification_params) }.to raise_error(/MockError/)
+      end
+    end
 
     # initialized - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#initialized
     context 'given an initialized notification' do
