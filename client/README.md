@@ -11,9 +11,9 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 You will need to have Puppet Agent installed in order to fully use this extension. You can find instructions and installation links here:
 
-* [Windows](https://docs.puppet.com/puppet/latest/install_windows.html)
-* [MacOSX](https://docs.puppet.com/puppet/latest/install_osx.html)
-* [Linux](https://docs.puppet.com/puppet/latest/install_linux.html)
+* [Windows](https://puppet.com/docs/puppet/latest/install_windows.html)
+* [MacOSX](https://puppet.com/docs/puppet/latest/install_osx.html)
+* [Linux](https://puppet.com/docs/puppet/latest/install_linux.html)
 
 ## Quick start
 
