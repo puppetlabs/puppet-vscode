@@ -21,11 +21,11 @@ class PuppetLint::CheckPlugin
     check
 
     @problems.each do |problem|
-      if problem[:check] != :syntax && PuppetLint::Data.ignore_overrides[problem[:check]].has_key?(problem[:line])
-        problem[:kind] = :ignored
-        problem[:reason] = PuppetLint::Data.ignore_overrides[problem[:check]][problem[:line]]
-        next
-      end
+      next if problem[:check] == :syntax
+      next unless PuppetLint::Data.ignore_overrides[problem[:check]].key?(problem[:line])
+
+      problem[:kind] = :ignored
+      problem[:reason] = PuppetLint::Data.ignore_overrides[problem[:check]][problem[:line]]
     end
 
     @problems
@@ -36,14 +36,13 @@ class PuppetLint::CheckPlugin
   # Returns an Array of problem Hashes.
   def fix_problems
     @problems.reject { |problem| problem[:kind] == :ignored || problem[:check] == :syntax }.each do |problem|
-      if self.respond_to?(:fix)
-        begin
-          fix(problem)
-        rescue PuppetLint::NoFix
-          # noop
-        else
-          problem[:kind] = :fixed
-        end
+      next unless respond_to?(:fix)
+
+      begin
+        fix(problem)
+        problem[:kind] = :fixed
+      rescue PuppetLint::NoFix # rubocop:disable Lint/HandleExceptions
+        # noop
       end
     end
 
@@ -57,6 +56,14 @@ class PuppetLint::CheckPlugin
   # Returns an Array of PuppetLint::Lexer::Token objects.
   def tokens
     PuppetLint::Data.tokens
+  end
+
+  def add_token(index, token)
+    PuppetLint::Data.insert(index, token)
+  end
+
+  def remove_token(token)
+    PuppetLint::Data.delete(token)
   end
 
   # Public: Provides the resource titles to the check plugins.
@@ -159,14 +166,14 @@ class PuppetLint::CheckPlugin
   # Returns nothing.
   def notify(kind, problem)
     problem[:kind] = kind
-    problem.merge!(default_info) { |key, v1, v2| v1 }
+    problem.merge!(default_info) { |_key, v1, _v2| v1 }
 
-    unless [:warning, :error, :fixed].include? kind
-      raise ArgumentError, "unknown value passed for kind"
+    unless [:warning, :error, :fixed].include?(kind)
+      raise ArgumentError, 'unknown value passed for kind'
     end
 
     [:message, :line, :column, :check].each do |attr|
-      unless problem.has_key? attr
+      unless problem.key?(attr)
         raise ArgumentError, "problem hash must contain #{attr.inspect}"
       end
     end

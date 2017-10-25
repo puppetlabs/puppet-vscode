@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'set'
 require 'json'
 require 'puppet-lint/version'
@@ -47,7 +49,7 @@ class PuppetLint
   # Public: Initialise a new PuppetLint object.
   def initialize
     @code = nil
-    @statistics = {:error => 0, :warning => 0, :fixed => 0, :ignored => 0}
+    @statistics = { :error => 0, :warning => 0, :fixed => 0, :ignored => 0 }
     @manifest = ''
   end
 
@@ -70,10 +72,16 @@ class PuppetLint
   #
   # Returns nothing.
   def file=(path)
-    if File.exist? path
-      @path = path
-      @code = File.read(path)
+    return unless File.exist?(path)
+
+    @path = path
+    File.open(path, 'r:UTF-8') do |f|
+      @code = f.read
     end
+
+    # Check if the input is an SE Linux policy package file (which also use
+    # the .pp extension), which all have the first 4 bytes 0xf97cff8f.
+    @code = '' if @code[0..3].unpack('V').first == 0xf97cff8f
   end
 
   # Internal: Retrieve the format string to be used when writing problems to
@@ -82,15 +90,14 @@ class PuppetLint
   #
   # Returns a format String to be used with String#%.
   def log_format
-    if configuration.log_format == ''
+    if configuration.log_format.nil? || configuration.log_format.empty?
       ## recreate previous old log format as far as thats possible.
       format = '%{KIND}: %{message} on line %{line}'
-      if configuration.with_filename
-        format.prepend '%{path} - '
-      end
+      format.prepend('%{path} - ') if configuration.with_filename
       configuration.log_format = format
     end
-    return configuration.log_format
+
+    configuration.log_format
   end
 
   # Internal: Format a problem message and print it to STDOUT.
@@ -101,9 +108,8 @@ class PuppetLint
   def format_message(message)
     format = log_format
     puts format % message
-    if message[:kind] == :ignored && !message[:reason].nil?
-      puts "  #{message[:reason]}"
-    end
+
+    puts "  #{message[:reason]}" if message[:kind] == :ignored && !message[:reason].nil?
   end
 
   # Internal: Get the line of the manifest on which the problem was found
@@ -112,8 +118,7 @@ class PuppetLint
   #
   # Returns the problematic line as a string.
   def get_context(message)
-    line = PuppetLint::Data.manifest_lines[message[:line] - 1]
-    return line.strip
+    PuppetLint::Data.manifest_lines[message[:line] - 1].strip
   end
 
   # Internal: Print out the line of the manifest on which the problem was found
@@ -126,9 +131,9 @@ class PuppetLint
     return if message[:check] == 'documentation'
     return if message[:kind] == :fixed
     line = get_context(message)
-    offset = line.index(/\S/) || 1
+    offset = line.index(%r{\S}) || 1
     puts "\n  #{line.strip}"
-    printf "%#{message[:column] + 2 - offset}s\n\n", '^'
+    printf("%#{message[:column] + 2 - offset}s\n\n", '^')
   end
 
   # Internal: Print the reported problems with a manifest to stdout.
@@ -149,12 +154,14 @@ class PuppetLint
           message['context'] = get_context(message) if configuration.with_context
           json << message
         else
-          format_message message
+          format_message(message)
           print_context(message) if configuration.with_context
         end
       end
     end
     puts JSON.pretty_generate(json) if configuration.json
+
+    $stderr.puts 'Try running `puppet parser validate <file>`' if problems.any? { |p| p[:check] == :syntax }
   end
 
   # Public: Determine if PuppetLint found any errors in the manifest.
@@ -177,9 +184,7 @@ class PuppetLint
   # Returns nothing.
   # Raises PuppetLint::NoCodeError if no manifest code has been loaded.
   def run
-    if @code.nil?
-      raise PuppetLint::NoCodeError
-    end
+    raise PuppetLint::NoCodeError if @code.nil?
 
     if @code.empty?
       @problems = []
@@ -198,7 +203,7 @@ class PuppetLint
   #
   # Returns nothing.
   def print_problems
-    report @problems
+    report(@problems)
   end
 
   # Public: Define a new check.

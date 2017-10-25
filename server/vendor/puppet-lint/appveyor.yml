@@ -12,6 +12,7 @@ environment:
     - RUBY_VERSION: 21
     - RUBY_VERSION: 22
     - RUBY_VERSION: 23-x64
+    - RUBY_VERSION: 24-x64
 
 install:
   - SET PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
@@ -25,8 +26,4 @@ before_test:
   - bundle -v
 
 test_script:
-  - bundle exec rake test
-
-notifications:
-  email:
-    - tim@bombasticmonkey.com
+  - bundle exec rake ci
