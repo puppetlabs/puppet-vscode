@@ -25,10 +25,16 @@ class PuppetLint::Checks
       PuppetLint::Data.tokens = lexer.tokenise(content)
       PuppetLint::Data.parse_control_comments
     rescue PuppetLint::LexerError => e
+      message = if e.reason.nil?
+                  'Syntax error'
+                else
+                  "Syntax error (#{e.reason})"
+                end
+
       problems << {
         :kind     => :error,
         :check    => :syntax,
-        :message  => 'Syntax error (try running `puppet parser validate <file>`)',
+        :message  => message,
         :line     => e.line_no,
         :column   => e.column,
         :fullpath => PuppetLint::Data.fullpath,
@@ -41,20 +47,16 @@ class PuppetLint::Checks
 
   # Internal: Run the lint checks over the manifest code.
   #
-  # fileinfo - A Hash containing the following:
-  #   :fullpath - The expanded path to the file as a String.
-  #   :filename - The name of the file as a String.
-  #   :path     - The original path to the file as passed to puppet-lint as
-  #               a String.
+  # fileinfo - The path to the file as passed to puppet-lint as a String.
   # data     - The String manifest code to be checked.
   #
   # Returns an Array of problem Hashes.
   def run(fileinfo, data)
     load_data(fileinfo, data)
 
-    checks_run = []
     enabled_checks.each do |check|
       klass = PuppetLint.configuration.check_object[check].new
+      # FIXME: shadowing #problems
       problems = klass.run
 
       if PuppetLint.configuration.fix
@@ -66,25 +68,34 @@ class PuppetLint::Checks
 
     @problems
   rescue => e
-    puts <<-END
-Whoops! It looks like puppet-lint has encountered an error that it doesn't
-know how to handle. Please open an issue at https://github.com/rodjek/puppet-lint
-and paste the following output into the issue description.
----
-puppet-lint version: #{PuppetLint::VERSION}
-ruby version: #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}
-platform: #{RUBY_PLATFORM}
-file path: #{fileinfo}
-file contents:
-```
-#{File.read(fileinfo) if File.readable?(fileinfo)}
-```
-error:
-```
-#{e.class}: #{e.message}
-#{e.backtrace.join("\n")}
-```
-END
+    $stdout.puts <<-END.gsub(%r{^ {6}}, '')
+      Whoops! It looks like puppet-lint has encountered an error that it doesn't
+      know how to handle. Please open an issue at https://github.com/rodjek/puppet-lint
+      and paste the following output into the issue description.
+      ---
+      puppet-lint version: #{PuppetLint::VERSION}
+      ruby version: #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}
+      platform: #{RUBY_PLATFORM}
+      file path: #{fileinfo}
+    END
+
+    if File.readable?(fileinfo)
+      $stdout.puts [
+        'file contents:',
+        '```',
+        File.read(fileinfo),
+        '```',
+      ].join("\n")
+    end
+
+    $stdout.puts [
+      'error:',
+      '```',
+      "#{e.class}: #{e.message}",
+      e.backtrace.join("\n"),
+      '```',
+    ].join("\n")
+
     exit 1
   end
 
@@ -92,17 +103,17 @@ END
   #
   # Returns an Array of String check names.
   def enabled_checks
-    @enabled_checks ||= Proc.new do
-      PuppetLint.configuration.checks.select { |check|
+    @enabled_checks ||= begin
+      PuppetLint.configuration.checks.select do |check|
         PuppetLint.configuration.send("#{check}_enabled?")
-      }
-    end.call
+      end
+    end
   end
 
   # Internal: Render the fixed manifest.
   #
   # Returns the manifest as a String.
   def manifest
-    PuppetLint::Data.tokens.map { |t| t.to_manifest }.join('')
+    PuppetLint::Data.tokens.map(&:to_manifest).join('')
   end
 end

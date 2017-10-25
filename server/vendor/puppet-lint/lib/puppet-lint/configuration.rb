@@ -49,14 +49,16 @@ class PuppetLint
     # Signature
     #
     #   <option>=(value)
-    def method_missing(method, *args, &block)
-      if method.to_s =~ /^(\w+)=$/
-        option = $1
-        add_option(option.to_s) if settings[option].nil?
-        settings[option] = args[0]
-      else
-        nil
-      end
+    def method_missing(method, *args, &_block)
+      super unless method.to_s =~ %r{^(\w+)=?$}
+
+      option = Regexp.last_match(1)
+      add_option(option.to_s) if settings[option].nil?
+      settings[option] = args[0] unless args.empty?
+    end
+
+    def respond_to_missing?(method, *)
+      method.to_s =~ %r{^\w+=?$} || super
     end
 
     # Internal: Add options to the PuppetLint::Configuration object from inside
@@ -149,6 +151,7 @@ class PuppetLint
       self.fix = false
       self.json = false
       self.show_ignored = false
+      self.ignore_paths = ['vendor/**/*.pp']
     end
   end
 end
