@@ -265,13 +265,6 @@ export class ConnectionManager implements IConnectionManager {
         result.options.shell = true;
         break;
     }
-    // Check if this really is a Puppet Agent installation
-    if (!fs.existsSync(path.join(puppetAgentDir, "VERSION"))) {
-      this.logger.debug(logPrefix + "Could not find a valid Puppet Agent installation at " + puppetAgentDir);
-      return null;
-    } else {
-      this.logger.debug(logPrefix + "Found a valid Puppet Agent installation at " + puppetAgentDir);
-    }
 
     let puppetDir = path.join(puppetAgentDir,"puppet");
     let facterDir = path.join(puppetAgentDir,"facter");
