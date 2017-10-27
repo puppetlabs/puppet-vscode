@@ -112,7 +112,7 @@ If you haven't see the Problems Pane update in awhile, or hover and intellisense
 
 You can reload the Puppet Lanuguage Server by opening the command palette and starting to type `Puppet`. A list of Puppet commands will appear, select `Puppet: Restart Current Session`. This will restart the Puppet Language Server without reloading VSCode or losing any work currently open in the editor.
 
-(https://raw.githubusercontent.com/jpogran/puppet-vscode/master/client/docs/assets/reload_language_server.gif)
+![Reload Puppet Language Server](https://raw.githubusercontent.com/jpogran/puppet-vscode/master/client/docs/assets/reload_language_server.gif)
 
 ## Reporting Problems
 
