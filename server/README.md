@@ -73,11 +73,11 @@ I, [2017-06-08T13:23:40.474286 #18496]  INFO -- : Preloading Functions (Async)..
 
 * Ensure that Puppet Agent is installed
 
-[Linux](https://docs.puppet.com/puppet/4.10/install_linux.html)
+[Linux](https://puppet.com/docs/puppet/latest/install_linux.html)
 
-[Windows](https://docs.puppet.com/puppet/4.10/install_windows.html)
+[Windows](https://puppet.com/docs/puppet/latest/install_windows.html)
 
-[MacOSX](https://docs.puppet.com/puppet/4.10/install_osx.html)
+[MacOSX](https://puppet.com/docs/puppet/latest/install_osx.html)
 
 
 * Clone this repository
