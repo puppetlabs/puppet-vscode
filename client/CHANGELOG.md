@@ -5,6 +5,16 @@ All notable changes to the "vscode-puppet" extension will be documented in this 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## Unreleased
+## 0.7.2 - 2017-11-01
+
+- (GH-165) Broken readme link
+- (GH-88)  Rework Node Graph Preview to use local svg
+- (GH-154) Use hosted JSON schema files
+- (GH-169) Fix bug in sytanx highlighting
+- (GH-167) Add PDK New Task command
+- (GH-156) Document restarting Puppet extension command
+- (GH-177) Remove detection of Puppet VERSION file
+- (GH-175) Fix 'could not find valid version of Puppet'
 
 ## 0.7.1 - 2017-09-29
 
