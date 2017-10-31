@@ -42,6 +42,14 @@ Style/EmptyMethod:
 Style/RegexpLiteral:
   Enabled: false
 
+# Sometimes, I actually want both!
+Style/DateTime:
+  Enabled: false
+
+# Please don't fail at failing.
+Lint/UnneededDisable:
+  Enabled: false
+
 # In some cases readability is better without these cops enabled
 Style/ConditionalAssignment:
   Enabled: false
