@@ -37,6 +37,7 @@ Create or open any Puppet manifest with the extension `.pp` or `.epp` and the ex
 - Import from `puppet resource` directly into manifests
 - Node graph preview
 - Puppet Development Kit integration
+- (Experimental) Local debugging of Puppet manifests
 
 ## Feature information
 
@@ -98,6 +99,32 @@ The following commands are supported:
 To use any of the above commands, open the command palette and start typing a command. You can also use the right-click context menu or the editor menu to reach these commands.
 
 `PDK New Module` is available even if the extension isn't loaded, the rest of the commands are only available when the extension is loaded.
+
+### Locally debugging Puppet manifests
+
+**Note - This is an experimental feature**
+
+The Puppet extension is able to debug the compilation of a Puppet manifest, much like a Go, PowerShell, C# etc.  The debugger supports:
+
+* Line breakpoints but not conditions on those breakpoints
+* Function breakpoints
+* Exception breakpoints
+* Call stack
+* Variables, but only at the top stack frame
+* Limited interactive debug console.  For example, you can assign a variable a value, but just as in regular Puppet you can't change its value later
+* Step In, Out, Over
+
+You may be presented with a Launch Configuration on first use.  Please see the [VSCode Debugging link](https://code.visualstudio.com/docs/editor/debugging) for instructions on how to set this up.
+
+Settings:
+
+`manifest` - The manifest to apply.  By default this is the currently open file in the editor
+
+`noop` - Whether the `puppet apply` sets No Operation (Noop) mode.  By default, this is set to false.  This means when runing the debugger it can make changes to your system
+
+`args` - Additional arguements to pass to `puppet apply`, for example `['--debug']` will output debug information
+
+![Puppet Debug Adapter](https://raw.githubusercontent.com/jpogran/puppet-vscode/master/client/docs/assets/puppet_debug.gif)
 
 ## Installing the Extension
 
