@@ -9,7 +9,8 @@ module PuppetLanguageServer
         'completionProvider' => {
           'resolveProvider' => true,
           'triggerCharacters' => ['>', '$', '[', '=']
-        }
+        },
+        'definitionProvider' => true,
       }
     end
   end

@@ -5,8 +5,8 @@ begin
   require 'languageserver/languageserver'
   require 'puppet-vscode'
 
-  %w[json_rpc_handler message_router server_capabilities document_validator
-    puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
+  %w[json_rpc_handler message_router server_capabilities document_validator puppet_parser_helper puppet_helper 
+    facter_helper completion_provider hover_provider definition_provider puppet_monkey_patches].each do |lib|
     begin
       require "puppet-languageserver/#{lib}"
     rescue LoadError
@@ -126,6 +126,9 @@ module PuppetLanguageServer
 
       log_message(:info, 'Preloading Functions (Async)...')
       PuppetLanguageServer::PuppetHelper.load_functions_async
+
+      log_message(:info, 'Preloading Classes (Async)...')
+      PuppetLanguageServer::PuppetHelper.load_classes_async
     else
       log_message(:info, 'Skipping preloading Puppet')
     end

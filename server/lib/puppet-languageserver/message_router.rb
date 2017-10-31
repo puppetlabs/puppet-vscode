@@ -184,6 +184,20 @@ TEXT
           PuppetLanguageServer.log_message(:error, "(textDocument/hover) #{exception}")
           request.reply_result(LanguageServer::Hover.create_nil_response)
         end
+
+      when 'textDocument/definition'
+        file_uri = request.params['textDocument']['uri']
+        line_num = request.params['position']['line']
+        char_num = request.params['position']['character']
+        content = documents.document(file_uri)
+        begin
+          #raise "Not Implemented"
+          request.reply_result(PuppetLanguageServer::DefinitionProvider.find_definition(content, line_num, char_num))
+        rescue StandardError => exception
+          PuppetLanguageServer.log_message(:error, "(textDocument/definition) #{exception}")
+          request.reply_result($null)
+        end
+
       else
         PuppetLanguageServer.log_message(:error, "Unknown RPC method #{request.rpc_method}")
       end
