@@ -78,7 +78,7 @@ module PuppetDebugServer
     options[:servicename] = 'DEBUG SERVER'
 
     server.add_service(options[:ipaddress], options[:port])
-    trap('INT') { server.stop }
+    trap('INT') { server.stop_services(true) }
     server.start(PuppetDebugServer::MessageRouter, options, 2)
 
     log_message(:info, 'Debug Server exited.')

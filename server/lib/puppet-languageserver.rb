@@ -127,7 +127,7 @@ module PuppetLanguageServer
     options[:servicename] = 'LANGUAGE SERVER'
 
     server.add_service(options[:ipaddress], options[:port])
-    trap('INT') { server.stop }
+    trap('INT') { server.stop_services(true) }
     server.start(PuppetLanguageServer::MessageRouter, options, 2)
 
     log_message(:info, 'Language Server exited.')

@@ -124,7 +124,7 @@ module PuppetVSCode
 
       # Output to STDOUT.  This is required by clients so it knows the server is now running
       self.class.s_locker.synchronize do
-        self.class.services.each do |_service, options|
+        self.class.services.each_value do |options|
           $stdout.write("#{@handler_start_options[:servicename]} RUNNING #{options[:hostname]}:#{options[:port]}\n")
         end
       end
@@ -279,20 +279,30 @@ module PuppetVSCode
     end
 
     # @api public
-    def stop_services
+    def stop_services(from_trap = false)
       log('Stopping services')
-      self.class.s_locker.synchronize do
-        self.class.services.each do |s, p|
-          begin
-            s.close
-          rescue # rubocop:disable Lint/RescueWithoutErrorClass
-            # Swallow all errors
-            true
-          end
-          log("Stopped listening on #{p[:hostname]}:#{p[:port]}")
+      if from_trap
+        # synchronize is not allowed when called from a trap statement
+        stop_all_services
+      else
+        self.class.s_locker.synchronize do
+          stop_all_services
         end
-        self.class.services.clear
       end
+    end
+
+    # @api private
+    def stop_all_services
+      self.class.services.each do |s, p|
+        begin
+          s.close
+        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+          # Swallow all errors
+          true
+        end
+        log("Stopped listening on #{p[:hostname]}:#{p[:port]}")
+      end
+      self.class.services.clear
     end
 
     # @api public
