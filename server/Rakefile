@@ -3,6 +3,12 @@ require 'rspec/core/rake_task'
 rubocop_available = Gem::Specification::find_all_by_name('rubocop').any?
 require 'rubocop/rake_task' if rubocop_available
 
+begin
+  require 'packaging/rake_task'
+rescue LoadError
+  require File.expand_path(File.join(File.dirname(__FILE__), 'packaging', 'rake_task'))
+end
+
 desc 'Run rspec tests with coloring.'
 RSpec::Core::RakeTask.new(:test) do |t|
   t.rspec_opts = %w[--color --format documentation]
