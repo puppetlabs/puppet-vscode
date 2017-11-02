@@ -50,7 +50,7 @@ module PuppetLanguageServer
             next if problem[:kind] == :error && problem[:check] == :syntax
             # Ignore linting errors what were ignored by puppet-lint
             next if problem[:kind] == :ignored
-            
+
             severity = case problem[:kind]
                        when :error
                          LanguageServer::DIAGNOSTICSEVERITY_ERROR
@@ -74,7 +74,7 @@ module PuppetLanguageServer
           end
         end
       # rubocop:disable Lint/HandleExceptions
-      rescue => _exception
+      rescue StandardError => _exception
         # If anything catastrophic happens we resort to puppet parsing anyway
       end
 
@@ -87,7 +87,7 @@ module PuppetLanguageServer
           validation_environment = env
           validation_environment.check_for_reparse
           validation_environment.known_resource_types.clear
-        rescue => detail
+        rescue StandardError => detail
           # Somtimes the error is in the cause not the root object itself
           detail = detail.cause if !detail.respond_to?(:line) && detail.respond_to?(:cause) && detail.cause.respond_to?(:line)
 

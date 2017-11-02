@@ -122,7 +122,7 @@ module PuppetLanguageServer
       #   If during paring we modified the source we may need to change the cursor location
       begin
         line_offset = result.line_offsets[line_num]
-      rescue
+      rescue StandardError => _e
         line_offset = result['locator'].line_index[line_num]
       end
       # Typically we're completing after something was typed, so go back one char

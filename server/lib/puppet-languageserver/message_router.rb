@@ -27,44 +27,47 @@ module PuppetLanguageServer
 
   module CrashDump
     def self.default_crash_file
-      File.join(Dir.tmpdir(),'puppet_language_server_crash.txt')
+      File.join(Dir.tmpdir, 'puppet_language_server_crash.txt')
     end
 
     def self.write_crash_file(err, filename = nil, additional = {})
       # Create the crash text
 
-      puppet_version         = Puppet.version rescue 'Unknown'
-      facter_version         = Facter.version rescue 'Unknown'
-      languageserver_version = PuppetLanguageServer.version rescue 'Unknown'
+      puppet_version         = Puppet.version rescue 'Unknown' # rubocop:disable Lint/RescueWithoutErrorClass, Style/RescueModifier
+      facter_version         = Facter.version rescue 'Unknown' # rubocop:disable Lint/RescueWithoutErrorClass, Style/RescueModifier
+      languageserver_version = PuppetLanguageServer.version rescue 'Unknown' # rubocop:disable Lint/RescueWithoutErrorClass, Style/RescueModifier
 
+      # rubocop:disable Layout/IndentHeredoc
       crashtext = <<-TEXT
 Puppet Language Server Crash File
 -=--=--=--=--=--=--=--=--=--=--=-
-#{DateTime.now.strftime("%a %b %e %Y %H:%M:%S %Z")}
+#{DateTime.now.strftime('%a %b %e %Y %H:%M:%S %Z')}
 Puppet Version #{puppet_version}
 Facter Version #{facter_version}
 Ruby Version #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}
 Language Server Version #{languageserver_version}
 
-Error: #{err.to_s}
+Error: #{err}
 
 Backtrace
 ---------
-#{err.backtrace.join("\n") }
+#{err.backtrace.join("\n")}
 
 TEXT
+      # rubocop:enable Layout/IndentHeredoc
+
       # Append the documents in the cache
       PuppetLanguageServer::DocumentStore.document_uris.each do |uri|
         crashtext += "Document - #{uri}\n---\n#{PuppetLanguageServer::DocumentStore.document(uri)}\n\n"
       end
       # Append additional objects from the crash
-      additional.each do |k,v|
-        crashtext += "#{k}\n---\n#{v.to_s}\n\n"
+      additional.each do |k, v|
+        crashtext += "#{k}\n---\n#{v}\n\n"
       end
 
       crash_file = filename.nil? ? default_crash_file : filename
       File.open(crash_file, 'wb') { |file| file.write(crashtext) }
-    rescue
+    rescue # rubocop:disable Lint/RescueWithoutErrorClass, Lint/HandleExceptions
       # Swallow all errors.  Errors in the error handler should not
       # terminate the application
     end
@@ -98,8 +101,7 @@ TEXT
                                                                   'facterVersion'   => Facter.version,
                                                                   'factsLoaded'     => PuppetLanguageServer::FacterHelper.facts_loaded?,
                                                                   'functionsLoaded' => PuppetLanguageServer::PuppetHelper.functions_loaded?,
-                                                                  'typesLoaded'     => PuppetLanguageServer::PuppetHelper.types_loaded?
-                                                                  ))
+                                                                  'typesLoaded'     => PuppetLanguageServer::PuppetHelper.types_loaded?))
 
       when 'puppet/getResource'
         type_name = request.params['typename']
@@ -117,7 +119,7 @@ TEXT
           resources = [resources] unless resources.nil?
         end
         if resources.nil? || resources.length.zero?
-          request.reply_result(LanguageServer::PuppetCompilation.create('data' => '')) 
+          request.reply_result(LanguageServer::PuppetCompilation.create('data' => ''))
           return
         end
         # TODO: Should probably move this to a helper?
@@ -140,11 +142,11 @@ TEXT
           }
           node_graph = PuppetLanguageServer::PuppetParserHelper.compile_to_pretty_relationship_graph(content)
           if node_graph.vertices.count.zero?
-            error_content = "There were no resources created in the node graph. Is there an include statement missing?"
+            error_content = 'There were no resources created in the node graph. Is there an include statement missing?'
           else
             dot_content = node_graph.to_dot(options)
           end
-        rescue => exception
+        rescue StandardError => exception
           error_content = "Error while parsing the file. #{exception}"
         end
         request.reply_result(LanguageServer::PuppetCompilation.create('dotContent' => dot_content,
@@ -157,7 +159,7 @@ TEXT
         content = documents.document(file_uri)
         begin
           request.reply_result(PuppetLanguageServer::CompletionProvider.complete(content, line_num, char_num))
-        rescue => exception
+        rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(textDocument/completion) #{exception}")
           request.reply_result(LanguageServer::CompletionList.create_nil_response)
         end
@@ -165,7 +167,7 @@ TEXT
       when 'completionItem/resolve'
         begin
           request.reply_result(PuppetLanguageServer::CompletionProvider.resolve(request.params.clone))
-        rescue => exception
+        rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(completionItem/resolve) #{exception}")
           # Spit back the same params if an error happens
           request.reply_result(request.params)
@@ -178,18 +180,15 @@ TEXT
         content = documents.document(file_uri)
         begin
           request.reply_result(PuppetLanguageServer::HoverProvider.resolve(content, line_num, char_num))
-        rescue => exception
+        rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(textDocument/hover) #{exception}")
           request.reply_result(LanguageServer::Hover.create_nil_response)
         end
       else
         PuppetLanguageServer.log_message(:error, "Unknown RPC method #{request.rpc_method}")
       end
-    rescue => err
-      PuppetLanguageServer::CrashDump.write_crash_file(err, nil, {
-        'request' => request.rpc_method,
-        'params'  => request.params,
-      })
+    rescue StandardError => err
+      PuppetLanguageServer::CrashDump.write_crash_file(err, nil, 'request' => request.rpc_method, 'params' => request.params)
       raise
     end
 
@@ -227,11 +226,8 @@ TEXT
       else
         PuppetLanguageServer.log_message(:error, "Unknown RPC notification #{method}")
       end
-    rescue => err
-      PuppetLanguageServer::CrashDump.write_crash_file(err, nil, {
-        'notification' => method,
-        'params'  => params,
-      })
+    rescue StandardError => err
+      PuppetLanguageServer::CrashDump.write_crash_file(err, nil, 'notification' => method, 'params' => params)
       raise
     end
   end

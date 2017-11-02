@@ -80,7 +80,7 @@ module PuppetLanguageServer
 
       # We're already in a callback so no need to invoke as a callback
       connection_data[:handler].receive_data(data)
-    rescue => e
+    rescue StandardError => e
       # should also log error
       remove_connection(io)
       log("Closed socket due to error - #{e}\n#{e.backtrace}")
@@ -102,7 +102,8 @@ module PuppetLanguageServer
       thread_cycle = proc do
         begin
           io_review
-        rescue
+        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+          # Swallow all errors
           false
         end
         true while fire_event
@@ -122,7 +123,7 @@ module PuppetLanguageServer
 
       # Output to STDOUT.  This is required by Langugage Client so it knows the server is now running
       self.class.s_locker.synchronize do
-        self.class.services.each do |_service, options|
+        self.class.services.each_value do |options|
           $stdout.write("LANGUAGE SERVER RUNNING #{options[:hostname]}:#{options[:port]}\n")
         end
       end
@@ -144,7 +145,9 @@ module PuppetLanguageServer
               end
             end
           end
-        rescue true
+        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+          # Swallow all errors
+          true
         end
         break if self.class.services.empty?
       end
@@ -233,8 +236,9 @@ module PuppetLanguageServer
             if self.class.services[io]
               begin
                 callback(self, :add_connection, io.accept_nonblock, self.class.services[io])
-              rescue Errno::EWOULDBLOCK => _
-              rescue => e
+              rescue Errno::EWOULDBLOCK => _ # rubocop:disable Lint/HandleExceptions
+                # There's nothing too handle. Swallow the error
+              rescue StandardError => e
                 log(e.message)
               end
             elsif self.class.io_connection_dic[io]
@@ -248,7 +252,8 @@ module PuppetLanguageServer
           io_r[2].each do |io|
             begin
               (remove_connection(io) || self.class.services.delete(io)).close
-            rescue
+            rescue # rubocop:disable Lint/RescueWithoutErrorClass
+              # Swallow all errors
               true
             end
           end
@@ -279,7 +284,8 @@ module PuppetLanguageServer
         self.class.services.each do |s, p|
           begin
             s.close
-          rescue
+          rescue # rubocop:disable Lint/RescueWithoutErrorClass
+            # Swallow all errors
             true
           end
           log("Stopped listening on #{p[:hostname]}:#{p[:port]}")
@@ -299,10 +305,11 @@ module PuppetLanguageServer
     # @api private
     def stop_connections
       self.class.c_locker.synchronize do
-        self.class.io_connection_dic.each do |io, _params|
+        self.class.io_connection_dic.each_key do |io|
           begin
             io.close
-          rescue
+          rescue # rubocop:disable Lint/RescueWithoutErrorClass
+            # Swallow all errors
             true
           end
         end
@@ -333,7 +340,8 @@ module PuppetLanguageServer
         connection_count = self.class.io_connection_dic.count
         begin
           io.close
-        rescue
+        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+          # Swallow all errors
           true
         end
       end

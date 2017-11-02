@@ -86,7 +86,7 @@ module PuppetLanguageServer
     end
 
     def self.all_facts(&block)
-      PuppetLanguageServer::FacterHelper.facts.each do |name, _value|
+      PuppetLanguageServer::FacterHelper.facts.each_key do |name|
         item = LanguageServer::CompletionItem.create('label' => name.to_s,
                                                      'insertText' => "'#{name}'",
                                                      'kind'       => LanguageServer::COMPLETIONITEMKIND_VARIABLE,
@@ -110,7 +110,7 @@ module PuppetLanguageServer
 
     def self.all_statement_functions(&block)
       # Find functions which don't return values i.e. statements
-      PuppetLanguageServer::PuppetHelper.functions.select { |_key, obj| obj[:type] == :statement }.each do |key, _obj|
+      PuppetLanguageServer::PuppetHelper.functions.select { |_key, obj| obj[:type] == :statement }.each_key do |key|
         item = LanguageServer::CompletionItem.create('label' => key.to_s,
                                                      'kind'   => LanguageServer::COMPLETIONITEMKIND_FUNCTION,
                                                      'detail' => 'Function',

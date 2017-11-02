@@ -10,7 +10,7 @@ module PuppetLanguageServer
     @function_module = nil
     @types_loaded = nil
     @functions_loaded = nil
-    
+
     def self.reset
       @ops_lock_types.synchronize do
         @ops_lock_funcs.synchronize do
@@ -142,13 +142,14 @@ module PuppetLanguageServer
 
       autoloader = Puppet::Util::Autoload.new(self, 'puppet/type')
       autoloader.files_to_load.each do |file|
-        name = file.gsub(autoloader.path + '/','')
+        name = file.gsub(autoloader.path + '/', '')
+        next if autoloader.loaded?(name)
         begin
           result = autoloader.load(name)
           PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_types] type #{file} did not load") unless result
         rescue StandardError => err
           PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_types] Error loading type #{file}: #{err}")
-        end unless autoloader.loaded?(name)
+        end
       end
 
       Puppet::Type.eachtype do |type|
@@ -172,13 +173,14 @@ module PuppetLanguageServer
 
       # This is an expensive call
       autoloader.files_to_load.each do |file|
-        name = file.gsub(autoloader.path + '/','')
+        name = file.gsub(autoloader.path + '/', '')
+        next if autoloader.loaded?(name)
         begin
           result = autoloader.load(name)
           PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_functions] function #{file} did not load") unless result
         rescue StandardError => err
           PuppetLanguageServer.log_message(:error, "[PuppetHelper::_load_functions] Error loading function #{file}: #{err}")
-        end unless autoloader.loaded?(name)
+        end
       end
 
       @function_module = Puppet::Parser::Functions.environment_module(Puppet.lookup(:current_environment))

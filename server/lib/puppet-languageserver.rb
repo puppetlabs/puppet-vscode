@@ -25,7 +25,7 @@ module PuppetLanguageServer
         preload_puppet: true,
         debug: nil,
         fast_start_tcpserver: true,
-        workspace: nil,
+        workspace: nil
       }
 
       opt_parser = OptionParser.new do |opts|
