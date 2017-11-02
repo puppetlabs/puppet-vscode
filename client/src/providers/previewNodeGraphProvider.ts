@@ -76,6 +76,9 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
             label = ""`
 
             var graphContent = compileResult.dotContent;
+            // vis.jz sees backslashes as escape characters, however they are not in the DOT language.  Instead
+            // we should escape any backslash coming from a valid DOT file in preparation to be rendered
+            graphContent = graphContent.replace(/\\/g,"\\\\");
             graphContent = graphContent.replace(`label = "vscode"`,styling);
 
             svgContent = viz(graphContent,"svg");
