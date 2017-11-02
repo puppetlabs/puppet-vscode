@@ -1,8 +1,9 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { IConnectionManager, ConnectionStatus } from '../../connection';
-import { Logger } from '../../logging';
+import { ConnectionStatus } from '../../interfaces';
+import { IConnectionManager } from '../../connection';
+import { ILogger } from '../../logging';
 import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';
 
@@ -13,9 +14,9 @@ class RequestParams implements messages.PuppetResourceRequestParams {
 
 export class puppetResourceCommand {
   private _connectionManager: IConnectionManager = undefined;
-  private logger: Logger = undefined;
+  private logger: ILogger = undefined;
 
-  constructor(connMgr: IConnectionManager, logger: Logger) {
+  constructor(connMgr: IConnectionManager, logger: ILogger) {
     this._connectionManager = connMgr;
     this.logger = logger;
   }

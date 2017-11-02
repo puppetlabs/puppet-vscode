@@ -27,7 +27,8 @@
     "Linters",
     "Languages",
     "Snippets",
-    "Formatters"
+    "Formatters",
+    "Debuggers"
   ],
   "keywords": [
     "puppet",
@@ -309,7 +310,70 @@
           "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
         }
       }
-    }
+    },
+    "breakpoints": [
+      {
+        "language": "puppet"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "Puppet",
+        "label": "Puppet Debugger",
+        "program": "./out/src/debugAdapter.js",
+        "runtime": "node",
+        "languages": [
+          "puppet"
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Puppet: Apply Current File",
+            "description": "Apply current file (in active editor window) under debugger",
+            "body": {
+              "type": "Puppet",
+              "request": "launch",
+              "name": "Puppet Apply current file",
+              "manifest": "^\"\\${file}\"",
+              "args": [],
+              "noop": false,
+              "cwd": "^\"\\${file}\""
+            }
+          }
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Deprecated. Please use the 'manifest' property instead to specify the absolute path to the Puppet manifest to launch under the debugger."
+              },
+              "manifest": {
+                "type": "string",
+                "description": "Optional: Absolute path to the Puppet manifest to launch under the debugger."
+              },
+              "noop": {
+                "type": "boolean",
+                "description": "Optional: Whether the the Puppet run is in NoOp mode. Default is false.",
+                "default": false
+              },
+              "args": {
+                "type": "array",
+                "description": "Command line arguments to pass to Puppet.",
+                "items": {
+                "type": "string"
+                },
+                "default": []
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Absolute path to the working directory. Default is the current workspace.",
+                "default": "${workspaceRoot}"
+              }
+            }
+          }
+        }
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "node node_modules/gulp/bin/gulp.js build",
@@ -333,6 +397,8 @@
   "dependencies": {
     "vscode-languageclient": "~3.3.0",
     "vscode-extension-telemetry": "^0.0.6",
-    "viz.js":"~1.8.0"
+    "viz.js":"~1.8.0",
+    "vscode-debugprotocol": "^1.19.0",
+    "vscode-debugadapter": "^1.19.0"
   }
 }

@@ -3,7 +3,7 @@ require 'socket'
 # Based on code from
 # http://stackoverflow.com/questions/29858113/unable-to-make-socket-accept-non-blocking-ruby-2-2
 
-module PuppetLanguageServer
+module PuppetVSCode
   class SimpleTCPServerConnection
     attr_accessor :socket
     attr_accessor :simple_tcp_server
@@ -11,17 +11,17 @@ module PuppetLanguageServer
     # Methods to override
     def post_init
       # Override this to recieve events after a client is connected
-      PuppetLanguageServer.log_message(:debug, 'TCPSRV: Client has connected')
+      PuppetVSCode.log_message(:debug, 'TCPSRV: Client has connected')
     end
 
     def unbind
       # Override this to recieve events after a client is disconnected
-      PuppetLanguageServer.log_message(:debug, 'TCPSRV: Client has disconnected')
+      PuppetVSCode.log_message(:debug, 'TCPSRV: Client has disconnected')
     end
 
     def receive_data(data)
       # Override this to recieve data
-      PuppetLanguageServer.log_message(:debug, "TCPSRV: Received #{data.length} characters")
+      PuppetVSCode.log_message(:debug, "TCPSRV: Received #{data.length} characters")
     end
 
     # @api public
@@ -67,8 +67,7 @@ module PuppetLanguageServer
     @c_locker = Mutex.new
 
     def log(message)
-      # Override this to recieve log messages
-      PuppetLanguageServer.log_message(:debug, "TCPSRV: #{message}")
+      PuppetVSCode.log_message(:debug, "TCPSRV: #{message}")
     end
 
     ####
@@ -95,7 +94,9 @@ module PuppetLanguageServer
     @handler_start_options = nil
     @server_options = nil
 
-    def start(handler = PuppetLanguageServer::SimpleTCPServerConnection, connection_options = {}, max_threads = 2)
+    def start(handler = PuppetVSCode::SimpleTCPServerConnection, connection_options = {}, max_threads = 2)
+      connection_options[:servicename] = 'LANGUAGE SERVER' if connection_options[:servicename].nil?
+
       # prepare threads
       exit_flag = false
       threads = []
@@ -121,10 +122,10 @@ module PuppetLanguageServer
       log("Will stop the server in #{connection_options[:connection_timeout]} seconds if no connection is made.") if kill_timer > 0
       log('Will stop the server when client disconnects') if !@server_options[:stop_on_client_exit].nil? && @server_options[:stop_on_client_exit]
 
-      # Output to STDOUT.  This is required by Langugage Client so it knows the server is now running
+      # Output to STDOUT.  This is required by clients so it knows the server is now running
       self.class.s_locker.synchronize do
         self.class.services.each_value do |options|
-          $stdout.write("LANGUAGE SERVER RUNNING #{options[:hostname]}:#{options[:port]}\n")
+          $stdout.write("#{@handler_start_options[:servicename]} RUNNING #{options[:hostname]}:#{options[:port]}\n")
         end
       end
       $stdout.flush
@@ -278,20 +279,30 @@ module PuppetLanguageServer
     end
 
     # @api public
-    def stop_services
+    def stop_services(from_trap = false)
       log('Stopping services')
-      self.class.s_locker.synchronize do
-        self.class.services.each do |s, p|
-          begin
-            s.close
-          rescue # rubocop:disable Lint/RescueWithoutErrorClass
-            # Swallow all errors
-            true
-          end
-          log("Stopped listening on #{p[:hostname]}:#{p[:port]}")
+      if from_trap
+        # synchronize is not allowed when called from a trap statement
+        stop_all_services
+      else
+        self.class.s_locker.synchronize do
+          stop_all_services
         end
-        self.class.services.clear
       end
+    end
+
+    # @api private
+    def stop_all_services
+      self.class.services.each do |s, p|
+        begin
+          s.close
+        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+          # Swallow all errors
+          true
+        end
+        log("Stopped listening on #{p[:hostname]}:#{p[:port]}")
+      end
+      self.class.services.clear
     end
 
     # @api public

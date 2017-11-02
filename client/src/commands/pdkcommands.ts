@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import * as messages from '../../src/messages';
 import { IConnectionManager } from '../../src/connection';
-import { Logger } from '../../src/logging';
+import { ILogger } from '../../src/logging';
 import { pdkNewModuleCommand } from './pdk/pdkNewModuleCommand';
 import { pdkNewClassCommand } from './pdk/pdkNewClassCommand';
 import { pdkNewTaskCommand } from './pdk/pdkNewTaskCommand';
 import { pdkValidateCommand } from './pdk/pdkValidateCommand';
 import { pdkTestUnitCommand } from './pdk/pdkTestCommand';
 
-export function setupPDKCommands(langID: string, connManager: IConnectionManager, ctx: vscode.ExtensionContext, logger: Logger, terminal: vscode.Terminal) {
+export function setupPDKCommands(langID: string, connManager: IConnectionManager, ctx: vscode.ExtensionContext, logger: ILogger, terminal: vscode.Terminal) {
   let newModuleCommand = new pdkNewModuleCommand(logger, terminal);
   ctx.subscriptions.push(newModuleCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PDKCommandStrings.PdkNewModuleCommandId, () => {

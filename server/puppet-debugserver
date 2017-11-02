@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+# Add the debug server into the load path
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'lib'))
+
+require 'puppet-debugserver'
+
+PuppetDebugServer.init_puppet(PuppetDebugServer::CommandLineParser.parse(ARGV))
+PuppetDebugServer.rpc_server(PuppetDebugServer::CommandLineParser.parse(ARGV))

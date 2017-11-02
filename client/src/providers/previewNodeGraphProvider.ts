@@ -3,7 +3,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { CompileNodeGraphRequest } from '../messages';
-import { IConnectionManager, ConnectionStatus } from '../connection';
+import { ConnectionStatus } from '../interfaces';
+import { IConnectionManager } from '../connection';
 import { reporter } from '../telemetry/telemetry';
 import * as messages from '../messages';
 import * as viz from 'viz.js';

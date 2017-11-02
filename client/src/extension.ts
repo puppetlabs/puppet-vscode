@@ -3,9 +3,11 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { ConnectionManager, IConnectionConfiguration, ConnectionType } from './connection';
+import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
-import { Logger } from './logging';
+import { ILogger } from './logging';
+import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 
 const langID = 'puppet'; // don't change this
@@ -21,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
   notifyOnNewExtensionVersion(context, puppetExtensionVersion)
 
   context.subscriptions.push(new Reporter(context));
-  var logger = new Logger();
+  var logger = new OutputChannelLogger();
   connManager = new ConnectionManager(context, logger);
 
   var configSettings = new ConnectionConfiguration(context);
