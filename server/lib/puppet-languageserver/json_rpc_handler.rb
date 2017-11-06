@@ -37,7 +37,7 @@ module PuppetLanguageServer
   KEY_CODE      = 'code'.freeze
   KEY_MESSAGE   = 'message'.freeze
 
-  class JSONRPCHandler < PuppetVSCode::SimpleTCPServerConnection
+  class JSONRPCHandler < PuppetVSCode::SocketConnection
     def initialize(*_options)
       @key_jsonrpc = KEY_JSONRPC
       @key_id = KEY_ID
