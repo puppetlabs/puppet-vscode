@@ -1,0 +1,11 @@
+site_name: Puppet VSCode Extension
+repo_url: https://github.com/jpogran/puppet-vscode
+site_description:
+site_author:
+copyright:
+theme: windmill
+extra:
+  logo: img/logo.png
+  version: 0.7.2
+
+  version: 0.7.2
