@@ -21,7 +21,7 @@ module PuppetVSCode
   def self.init_logging(options)
     if options[:debug].nil?
       @logger = nil
-    elsif options[:debug].casecmp 'stdout'
+    elsif (options[:debug].casecmp 'stdout').zero?
       @logger = Logger.new($stdout)
     elsif !options[:debug].to_s.empty?
       # Log to file

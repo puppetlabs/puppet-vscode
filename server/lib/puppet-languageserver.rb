@@ -1,24 +1,32 @@
-require 'languageserver/languageserver'
-require 'puppet-vscode'
+begin
+  original_verbose = $VERBOSE
+  $VERBOSE = nil
 
-%w[json_rpc_handler message_router server_capabilities document_validator
-   puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
-  begin
-    require "puppet-languageserver/#{lib}"
-  rescue LoadError
-    require File.expand_path(File.join(File.dirname(__FILE__), 'puppet-languageserver', 'lib'))
+  require 'languageserver/languageserver'
+  require 'puppet-vscode'
+
+  %w[json_rpc_handler message_router server_capabilities document_validator
+    puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
+    begin
+      require "puppet-languageserver/#{lib}"
+    rescue LoadError
+      require File.expand_path(File.join(File.dirname(__FILE__), 'puppet-languageserver', 'lib'))
+    end
   end
-end
 
-require 'puppet'
-require 'optparse'
-require 'logger'
+  require 'puppet'
+  require 'optparse'
+  require 'logger'
+ensure
+  $VERBOSE = original_verbose
+end
 
 module PuppetLanguageServer
   class CommandLineParser
     def self.parse(options)
       # Set defaults here
       args = {
+        stdio: false,
         port: 8081,
         ipaddress: '127.0.0.1',
         stop_on_client_exit: true,
@@ -58,6 +66,10 @@ module PuppetLanguageServer
 
         opts.on('-s', '--slow-start', 'Delay starting the TCP Server until Puppet initialisation has completed.  Default is to start fast') do |_misc|
           args[:fast_start_tcpserver] = false
+        end
+
+        opts.on('--stdio', "Runs the server in stdio mode, without a TCP listener") do |_misc|
+          args[:stdio] = true
         end
 
         opts.on('--local-workspace=PATH', 'The workspace or file path that will be used to provide module-specific functionality. Default is no workspace path.') do |path|
@@ -122,13 +134,29 @@ module PuppetLanguageServer
   def self.rpc_server(options)
     log_message(:info, 'Starting RPC Server...')
 
-    server = PuppetVSCode::SimpleTCPServer.new
+    if options[:stdio]
+      $stdin.sync = true
+      $stdout.sync = true
 
-    options[:servicename] = 'LANGUAGE SERVER'
+      handler = PuppetLanguageServer::MessageRouter.new
+      handler.socket = $stdout
+      handler.post_init
 
-    server.add_service(options[:ipaddress], options[:port])
-    trap('INT') { server.stop_services(true) }
-    server.start(PuppetLanguageServer::MessageRouter, options, 2)
+      loop do
+        data = $stdin.readpartial(1048576)
+        raise 'Receieved an empty input string' if data.length.zero?
+
+        handler.receive_data(data)
+      end
+    else
+      server = PuppetVSCode::SimpleTCPServer.new
+
+      options[:servicename] = 'LANGUAGE SERVER'
+
+      server.add_service(options[:ipaddress], options[:port])
+      trap('INT') { server.stop_services(true) }
+      server.start(PuppetLanguageServer::MessageRouter, options, 2)
+    end
 
     log_message(:info, 'Language Server exited.')
   end
