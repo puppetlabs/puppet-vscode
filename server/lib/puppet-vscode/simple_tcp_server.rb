@@ -4,8 +4,9 @@ require 'socket'
 # http://stackoverflow.com/questions/29858113/unable-to-make-socket-accept-non-blocking-ruby-2-2
 
 module PuppetVSCode
-  class SocketConnection
+  class SimpleTCPServerConnection
     attr_accessor :socket
+    attr_accessor :simple_tcp_server
 
     # Methods to override
     def post_init
@@ -33,21 +34,6 @@ module PuppetVSCode
       socket.write(data)
       true
     end
-
-    # @api public
-    def close_connection_after_writing
-      true
-    end
-
-    # @api public
-    def close_connection
-      true
-    end
-  end
-
-  class SimpleTCPServerConnection < SocketConnection
-    attr_accessor :socket
-    attr_accessor :simple_tcp_server
 
     # @api public
     def close_connection_after_writing
