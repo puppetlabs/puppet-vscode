@@ -1,18 +1,25 @@
-require 'languageserver/languageserver'
-require 'puppet-vscode'
+begin
+  original_verbose = $VERBOSE
+  $VERBOSE = nil
 
-%w[json_rpc_handler message_router server_capabilities document_validator
-   puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
-  begin
-    require "puppet-languageserver/#{lib}"
-  rescue LoadError
-    require File.expand_path(File.join(File.dirname(__FILE__), 'puppet-languageserver', 'lib'))
+  require 'languageserver/languageserver'
+  require 'puppet-vscode'
+
+  %w[json_rpc_handler message_router server_capabilities document_validator
+    puppet_parser_helper puppet_helper facter_helper completion_provider hover_provider].each do |lib|
+    begin
+      require "puppet-languageserver/#{lib}"
+    rescue LoadError
+      require File.expand_path(File.join(File.dirname(__FILE__), 'puppet-languageserver', 'lib'))
+    end
   end
-end
 
-require 'puppet'
-require 'optparse'
-require 'logger'
+  require 'puppet'
+  require 'optparse'
+  require 'logger'
+ensure
+  $VERBOSE = original_verbose
+end
 
 module PuppetLanguageServer
   class CommandLineParser
