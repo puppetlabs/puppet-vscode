@@ -287,7 +287,10 @@ export class ConnectionManager implements IConnectionManager {
 
         connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
           lastVersionResponse = versionDetails
-          if (versionDetails.factsLoaded && versionDetails.functionsLoaded && versionDetails.typesLoaded) {
+          if (versionDetails.factsLoaded &&
+              versionDetails.functionsLoaded &&
+              versionDetails.typesLoaded &&
+              versionDetails.classesLoaded) {
             clearInterval(handle);
             connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
             resolve();
@@ -297,7 +300,8 @@ export class ConnectionManager implements IConnectionManager {
             if (versionDetails.factsLoaded) { progress++; }
             if (versionDetails.functionsLoaded) { progress++; }
             if (versionDetails.typesLoaded) { progress++; }
-            progress = Math.round(progress / 3.0 * 100);
+            if (versionDetails.classesLoaded) { progress++; }
+            progress = Math.round(progress / 4.0 * 100);
 
             this.setConnectionStatus("Loading Puppet (" + progress.toString() + "%)", ConnectionStatus.Starting);
           }
