@@ -281,18 +281,19 @@ export class ConnectionManager implements IConnectionManager {
         // After 30 seonds timeout the progress
         if (count >= 30 || connectionManager.languageClient == undefined) {
           clearInterval(handle);
-          connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+          this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
           resolve();
+          return;
         }
 
         connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
           lastVersionResponse = versionDetails
-          if (versionDetails.factsLoaded &&
+          if (!connectionManager.connectionConfiguration.preLoadPuppet || (versionDetails.factsLoaded &&
               versionDetails.functionsLoaded &&
               versionDetails.typesLoaded &&
-              versionDetails.classesLoaded) {
+              versionDetails.classesLoaded)) {
             clearInterval(handle);
-            connectionManager.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+            this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
             resolve();
           } else {
             let progress = 0;
@@ -358,6 +359,7 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
+    console.log(statusText)
     // Set color and icon for 'Running' by default
     var statusIconText = "$(terminal) ";
     var statusColor = "#affc74";
