@@ -1,0 +1,4 @@
+define deftypeone(
+  $ensure       = 'UNSET',
+) {
+}
