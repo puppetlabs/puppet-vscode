@@ -353,8 +353,8 @@
               },
               "noop": {
                 "type": "boolean",
-                "description": "Optional: Whether the the Puppet run is in NoOp mode. Default is false.",
-                "default": false
+                "description": "Optional: Whether the the Puppet run is in NoOp mode. Default is true.",
+                "default": true
               },
               "args": {
                 "type": "array",
