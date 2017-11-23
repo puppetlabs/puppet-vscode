@@ -5,6 +5,15 @@ All notable changes to the "vscode-puppet" extension will be documented in this 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## Unreleased
+## 0.8.0 - 2017-11-24
+
+- (GH-180) Backslashes in File Path do not display in Node Graph
+- (GH-100) Experimental Puppet-Debugger
+- (PR-194) Fix logger in PDK New Task
+- (PR-195) Do not error in validation exception handler
+- (GH-187) Add stdio mode to language server
+- (maint) Fix rubocop violations
+
 ## 0.7.2 - 2017-11-01
 
 - (GH-165) Broken readme link
