@@ -33,6 +33,7 @@ Create or open any Puppet manifest with the extension `.pp` or `.epp` and the ex
 - Code snippets
 - Linting
 - IntelliSense for resources, parameters and more
+- Go to Definition of functions, types and classes
 - Validation of `metadata.json` files
 - Import from `puppet resource` directly into manifests
 - Node graph preview
