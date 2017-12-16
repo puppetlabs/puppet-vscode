@@ -10,7 +10,7 @@ begin
     begin
       require "puppet-languageserver/#{lib}"
     rescue LoadError
-      require File.expand_path(File.join(File.dirname(__FILE__), 'puppet-languageserver', 'lib'))
+      require File.expand_path(File.join(File.dirname(__FILE__), 'puppet-languageserver', lib))
     end
   end
 
