@@ -31,13 +31,14 @@ module PuppetVSCode
 
     # @api public
     def send_data(data)
+      return false if socket.nil?
       socket.write(data)
       true
     end
 
     # @api public
     def close_connection_after_writing
-      socket.flush
+      socket.flush unless socket.nil?
       simple_tcp_server.remove_connection_async(socket)
     end
 
