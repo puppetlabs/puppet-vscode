@@ -58,6 +58,51 @@ EOT
       it_should_behave_like "a single definition result", /user\.rb/
     end
 
+    context 'When cursor is on a puppet class' do
+      let(:content) { <<-EOT
+class Test::NoParams {
+  class { 'testclasses':
+    ensure => 'present',
+  }
+}
+EOT
+      }
+      let(:line_num) { 1 }
+      let(:char_num) { 13 }
+
+      it_should_behave_like "a single definition result", /init\.pp/
+    end
+
+    context 'When cursor is on a root puppet class' do
+      let(:content) { <<-EOT
+class Test::NoParams {
+  class { '::testclasses':
+    ensure => 'present',
+  }
+}
+EOT
+      }
+      let(:line_num) { 1 }
+      let(:char_num) { 13 }
+
+      it_should_behave_like "a single definition result", /init\.pp/
+    end
+
+    context 'When cursor is on a fully qualified puppet class' do
+      let(:content) { <<-EOT
+class Test::NoParams {
+  class { 'testclasses::nestedclass':
+    ensure => 'present',
+  }
+}
+EOT
+      }
+      let(:line_num) { 1 }
+      let(:char_num) { 13 }
+
+      it_should_behave_like "a single definition result", /nestedclass\.pp/
+    end
+
     context 'When cursor is on a defined type' do
       let(:content) { <<-EOT
 class Test::NoParams {

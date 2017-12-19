@@ -14,6 +14,21 @@ module PuppetLanguageServer
         func_name = item.functor_expr.value
         response << function_name(resource_name)
 
+      when 'Puppet::Pops::Model::LiteralString'
+        # LiteralString could be anything.  Context is the key here
+        parent = path.last
+
+        # What if it's a resource name.  Then the Literal String must be the same as the Resource Title
+        # e.g.
+        # class { 'testclass':    <--- testclass would be the LiteralString inside a ResourceBody
+        # }
+        if !parent.nil? &&
+          parent.class.to_s == 'Puppet::Pops::Model::ResourceBody' &&
+          parent.title.value == item.value
+            resource_name = item.value
+            response << type_or_class(resource_name)
+        end
+
       when 'Puppet::Pops::Model::QualifiedName'
         # Qualified names could be anything.  Context is the key here
         parent = path.last
