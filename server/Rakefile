@@ -48,8 +48,11 @@ task :gem_revendor do
   # Clean out the vendor directory first
   puts "Clearing the vendor directory..."
   vendor_dir = File.join(File.dirname(__FILE__),'vendor')
-  FileUtils.rm_rf(vendor_dir) if Dir.exists?(vendor_dir)
-  Dir.mkdir(vendor_dir)
+  gem_list.each do |vendor|
+    gem_dir = File.join(vendor_dir,vendor[:directory])
+    FileUtils.rm_rf(gem_dir) if Dir.exists?(gem_dir)
+  end
+  Dir.mkdir(vendor_dir) unless Dir.exists?(vendor_dir)
 
   gem_list.each do |vendor|
     puts "Vendoring #{vendor[:directory]}..."
@@ -82,7 +85,7 @@ Gem List
 --------
 
 HEREDOC
-  gem_list.each { |vendor| readme += "* #{vendor[:directory]} (#{vendor[:github_repo]} ref #{vendor[:github_ref]})"}
+  gem_list.each { |vendor| readme += "* #{vendor[:directory]} (#{vendor[:github_repo]} ref #{vendor[:github_ref]})\n"}
   File.open(File.join(vendor_dir,'README.md'), 'wb') { |file| file.write(readme + "\n") }
 end
 
