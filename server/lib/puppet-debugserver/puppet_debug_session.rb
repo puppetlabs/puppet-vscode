@@ -15,7 +15,7 @@ module PuppetDebugServer
     @session_compiler = nil # TODO Not sure we need this
     @session_paused_state = {}
     @session_variables_cache = {}
-    
+
     def self.puppet_thread_id
       @puppet_thread.object_id.to_i unless @puppet_thread.nil?
     end
@@ -78,7 +78,7 @@ module PuppetDebugServer
         clear_paused_state
       }
     end
-    
+
     def self.continue_next_session
       @session_mutex.synchronize {
         @session_paused = false
@@ -159,7 +159,7 @@ module PuppetDebugServer
       @session_paused_state[:pops_target]       = options[:pops_target] unless options[:pops_target].nil?
       @session_paused_state[:scope]             = options[:scope] unless options[:scope].nil?
       @session_paused_state[:pops_depth_level]  = options[:pops_depth_level] unless options[:pops_depth_level].nil?
-      
+
       PuppetDebugServer::PuppetDebugSession.connection.send_stopped_event(reason, {
         'description' => description,
         'text'        => text,
@@ -323,13 +323,14 @@ module PuppetDebugServer
 
         frame = {
           'id' => stack_frames.count,
-          'name' => target._pcore_type.simple_name.to_s,
+          'name' => get_puppet_class_name(target),
           'line' => 0,
           'column' => 0,
         }
 
         # TODO need to check on the client capabilities of zero or one based indexes
         if target.is_a?(Puppet::Pops::Model::Positioned)
+          # TODO - Potential issue here with 4.10.x not implementing .file on the Positioned class
           frame['source'] = PuppetDebugServer::Protocol::Source.create({
             'path'   => target.file,
           })
@@ -346,7 +347,7 @@ module PuppetDebugServer
 
         stack_frames << frame
       end
-      
+
       # Generate StackFrame for an error
       unless @session_paused_state[:exception].nil?
         err = @session_paused_state[:exception]
@@ -358,6 +359,7 @@ module PuppetDebugServer
         }
 
         # TODO need to check on the client capabilities of zero or one based indexes
+        # TODO - Potential issue here with 4.10.x not implementing .file on the Positioned class
         unless err.file.nil? || err.line.nil?
           frame['source'] = PuppetDebugServer::Protocol::Source.create({
             'path'   => err.file,
@@ -388,11 +390,63 @@ module PuppetDebugServer
           stack_frames << frame
         end
       end
-      
+
       stack_frames
     end
 
+    # Public method but only called publicly for
+    # for testing
+    def self.reset_pops_eval_depth
+      @session_pops_eval_depth = 0
+    end
+
     # Private methods
+    def self.get_location_from_pops_object(obj)
+      pos = SourcePosition.new()
+      return pos unless obj.is_a?(Puppet::Pops::Model::Positioned)
+
+      if obj.respond_to?(:file) && obj.respond_to?(:line)
+        # These methods were added to the Puppet::Pops::Model::Positioned in Puppet 5.x
+        pos.file   = obj.file
+        pos.line   = obj.line
+        pos.offset = obj.offset
+        pos.length = obj.length
+      else
+        # Revert to Puppet 4.x location information.  A little more expensive to call
+        obj_loc = Puppet::Pops::Utils.find_closest_positioned(obj)
+        pos.file   = obj_loc.locator.file
+        pos.line   = obj_loc.line
+        pos.offset = obj_loc.offset
+        pos.length = obj_loc.length
+      end
+
+      pos
+    end
+
+    def self.get_puppet_class_name(obj)
+      # Puppet 5 has PCore Types
+      return obj._pcore_type.simple_name if obj.respond_to?(:_pcore_type)
+      # .. otherwise revert to simple naive text splitting
+      # e.g. Puppet::Pops::Model::CallNamedFunctionExpression becomes CallNamedFunctionExpression
+      obj.class.to_s.split('::').last
+    end
+
+    def self.get_ast_class_name(obj)
+      # Puppet 5 has PCore Types
+      return obj._pcore_type.name if obj.respond_to?(:_pcore_type)
+      # .. otherwise revert to Pops classname
+      obj.class.to_s
+    end
+
+    def self.line_for_offset(obj, offset)
+      # Puppet 5 exposes the source locator on the Pops object
+      return obj.locator.line_for_offset(offset) if obj.respond_to?(:locator)
+
+      # Revert to Puppet 4.x location information.  A little more expensive to call
+      obj_loc = Puppet::Pops::Utils.find_closest_positioned(obj)
+      obj_loc.locator.line_for_offset(offset)
+    end
+
     def self.debug_session_watcher
       loop do
         sleep(1)
@@ -414,8 +468,8 @@ module PuppetDebugServer
       cmd_args << '--noop' if @session_options['noop'] == true
       cmd_args.push(*@session_options['args']) unless @session_options['args'].nil?
 
-      @session_pops_eval_depth = 0
-      
+      reset_pops_eval_depth
+
       # Send experimental warning
       PuppetDebugServer::PuppetDebugSession.connection.send_output_event({
         'category' => 'console',
@@ -427,6 +481,13 @@ module PuppetDebugServer
         'output' => 'puppet ' + cmd_args.join(' ') + "\n",
       })
       Puppet::Util::CommandLine.new('puppet.rb',cmd_args).execute
+    end
+
+    class SourcePosition
+      attr_accessor :file
+      attr_accessor :line
+      attr_accessor :offset
+      attr_accessor :length
     end
   end
 end

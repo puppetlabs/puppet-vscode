@@ -5,8 +5,12 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','lib'))
 
 require 'puppet-debugserver'
 fixtures_dir = File.join(File.dirname(__FILE__),'fixtures')
-
+# Currently there is no way to re-initialize the puppet loader so for the moment
+# all tests must run off the single puppet config settings instead of per example setting
+puppet_settings = ['--vardir',File.join(fixtures_dir,'cache'),
+                   '--confdir',File.join(fixtures_dir,'confdir')]
 PuppetDebugServer::init_puppet(PuppetDebugServer::CommandLineParser.parse([]))
+Puppet.initialize_settings(puppet_settings)
 
 # Custom RSpec Matchers
 

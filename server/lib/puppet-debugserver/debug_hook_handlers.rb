@@ -1,7 +1,7 @@
 module PuppetDebugServer
   module PuppetDebugSession
     @hook_handler = nil
-    
+
     def self.hooks
       if @hook_handler.nil?
         @hook_handler = PuppetDebugServer::Hooks.new
@@ -25,49 +25,49 @@ module PuppetDebugServer
       target = args[1]
       # Ignore this if there is no positioning information available
       return unless target.is_a?(Puppet::Pops::Model::Positioned)
+      target_loc = get_location_from_pops_object(target)
+
       # Even if it's positioned, it can still contain invalid information.  Ignore it if
       # it's missing required information.  This can happen when evaluting strings (e.g. watches from VSCode)
       # i.e. not a file on disk
-      return if target.file.nil? || target.file.empty?
+      return if target_loc.file.nil? || target_loc.file.empty?
+      target_classname = get_puppet_class_name(target)
+      ast_classname = get_ast_class_name(target)
 
       # Break if we hit a specific puppet function
-      if target._pcore_type.simple_name == 'CallNamedFunctionExpression'
+      if target_classname == 'CallNamedFunctionExpression'
         # TODO Do we really need to break on a function called breakpoint?
         if target.functor_expr.value == 'breakpoint'
           # Re-raise the hook as a breakpoint
-          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, target._pcore_type.name] +args)
+          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, ast_classname] +args)
           return
         else
           func_names = PuppetDebugServer::PuppetDebugSession.function_breakpoints
           func_names.each do |func|
             next unless func['name'] == target.functor_expr.value
             # Re-raise the hook as a breakpoint
-            PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, target._pcore_type.name] + args)
+            PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, ast_classname] + args)
             return
           end
         end
       end
 
-      unless target.length == 0
+      unless target_loc.length == 0
         excluded_classes = ['BlockExpression','HostClassDefinition']
-        file_path = target.file
+        file_path = target_loc.file
         breakpoints = PuppetDebugServer::PuppetDebugSession.source_breakpoints(file_path)
-
-        #target._pcore_type.simple_name
         # TODO should check if it's an object we don't care aount
-
-        unless excluded_classes.include?(target._pcore_type.simple_name) || breakpoints.nil? || breakpoints.empty?
+        unless excluded_classes.include?(target_classname) || breakpoints.nil? || breakpoints.empty?
           # Calculate the start and end lines of the target
-          target_start_line = target.line
-          target_end_line   = target.locator.line_for_offset(target.offset + target.length)
+          target_start_line = target_loc.line
+          target_end_line   = line_for_offset(target, target_loc.offset + target_loc.length)
 
           breakpoints.each do |bp|
             bp_line = bp['line']
             # TODO Hit and conditional BreakPoints?
             if bp_line >= target_start_line && bp_line <= target_end_line
               # Re-raise the hook as a breakpoint
-              PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_breakpoint, [target._pcore_type.name, ''] + args)
-              #require 'pry'; binding.pry
+              PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_breakpoint, [ast_classname, ''] + args)
               return
             end
           end
@@ -79,14 +79,14 @@ module PuppetDebugServer
       when :stepin
         # Stepping-in is basically break on everything
         # Re-raise the hook as a step breakpoint
-        PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_step_breakpoint, [target._pcore_type.name, ''] + args)
+        PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_step_breakpoint, [ast_classname, ''] + args)
         return
       when :next
         # Next will break on anything at this Pop depth or shallower
         # Re-raise the hook as a step breakpoint
         run_options = PuppetDebugServer::PuppetDebugSession.run_mode_options
         if !run_options[:pops_depth_level].nil? && @session_pops_eval_depth <= run_options[:pops_depth_level]
-          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_step_breakpoint, [target._pcore_type.name, ''] + args)
+          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_step_breakpoint, [ast_classname, ''] + args)
           return
         end
       when :stepout
@@ -94,11 +94,12 @@ module PuppetDebugServer
         # Re-raise the hook as a step breakpoint
         run_options = PuppetDebugServer::PuppetDebugSession.run_mode_options
         if !run_options[:pops_depth_level].nil? && @session_pops_eval_depth < run_options[:pops_depth_level]
-          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_step_breakpoint, [target._pcore_type.name, ''] + args)
+          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_step_breakpoint, [ast_classname, ''] + args)
           return
         end
       end
     end
+
     def self.hook_after_pops_evaluate(args)
       @session_pops_eval_depth = @session_pops_eval_depth - 1
       target = args[1]
@@ -191,7 +192,7 @@ module PuppetDebugServer
       str = msg.respond_to?(:multiline) ? msg.multiline : msg.to_s
       str = msg.source == 'Puppet' ? str : "#{msg.source}: #{str}"
 
-      level = msg.level.to_s.capitalize 
+      level = msg.level.to_s.capitalize
 
       category = 'stderr'
       category = 'stdout' if msg.level == :notice || msg.level == :info || msg.level == :debug

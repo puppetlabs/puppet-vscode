@@ -20,7 +20,7 @@ class Puppet::Parser::Compiler
       # Based on puppet/lib/puppet/parser/compiler.rb
       begin
         node.environment.check_for_reparse
-      
+
         errors = node.environment.validation_errors
         if !errors.empty?
           errors.each { |e| Puppet.err(e) } if errors.size > 1
@@ -52,6 +52,7 @@ class Puppet::Parser::Compiler
         raise Puppet::Error, message, detail.backtrace
       end
     rescue Puppet::ParseErrorWithIssue => detail
+      # TODO - Potential issue here with 4.10.x not implementing .file on the Positioned class
       # Just re-raise if there is no Puppet manifest file associated with the error
       raise if detail.file.nil? || detail.line.nil? || detail.pos.nil?
       PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_exception, [detail])
@@ -88,7 +89,7 @@ class Puppet::Pops::Evaluator::EvaluatorImpl
     result = original_evaluate(target, scope)
 
     PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_after_pops_evaluate, [self, target, scope])
-    
+
     result
   end
 end
