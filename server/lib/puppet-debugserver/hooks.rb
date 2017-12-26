@@ -58,6 +58,18 @@ module PuppetDebugServer
   #   Fires after the Puppet::Parser::Functions is reset
   #   Arguments:
   #     Puppet::Parser::Functions - Instance of Puppet::Parser::Functions
+  #
+  # :hook_before_pops_evaluate
+  #   Fires before an item in the AST is evaluated
+  #   Arguments:
+  #     The Pops object about to be evaluated
+  #     The scope of the Pops object
+  #
+  # :hook_after_pops_evaluate
+  #   Fires after an item in the AST is evaluated
+  #   Arguments:
+  #     The Pops object about to be evaluated
+  #     The scope of the Pops object
 
   class Hooks
     def initialize
