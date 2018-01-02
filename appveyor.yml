@@ -9,19 +9,33 @@ environment:
   # LTS Agent
   - PUPPET_GEM_VERSION: "~> 4.7.0"
     RUBY_VER: 21-x64
-    RAKE_TASK: test
+    RAKE_TASK: test_languageserver
   # Latest 4.x branch
   - PUPPET_GEM_VERSION: "~> 4.0"
     RUBY_VER: 21-x64
-    RAKE_TASK: test
+    RAKE_TASK: test_languageserver
   # Latest Puppet
   - PUPPET_GEM_VERSION: "~> 5.0"
     RUBY_VER: 24-x64
-    RAKE_TASK: test
+    RAKE_TASK: test_languageserver
   # Specific Puppet version testing
   - PUPPET_GEM_VERSION: "5.1.0"
     RUBY_VER: 24-x64
-    RAKE_TASK: test
+    RAKE_TASK: test_languageserver
+
+  # Debug Server testing
+  # LTS Agent
+  - PUPPET_GEM_VERSION: "~> 4.7.0"
+    RUBY_VER: 21-x64
+    RAKE_TASK: test_debugserver
+  # Latest 4.x branch
+  - PUPPET_GEM_VERSION: "~> 4.0"
+    RUBY_VER: 21-x64
+    RAKE_TASK: test_debugserver
+  # Latest Puppet
+  - PUPPET_GEM_VERSION: "~> 5.0"
+    RUBY_VER: 24-x64
+    RAKE_TASK: test_debugserver
 
   # Ruby style
   - PUPPET_GEM_VERSION: "~> 4.0"

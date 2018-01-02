@@ -3,16 +3,16 @@ require 'rspec/core/rake_task'
 rubocop_available = Gem::Specification::find_all_by_name('rubocop').any?
 require 'rubocop/rake_task' if rubocop_available
 
-desc 'Run rspec tests with coloring.'
-RSpec::Core::RakeTask.new(:test) do |t|
-  t.rspec_opts = %w[--color --format documentation]
-  t.pattern    = 'spec/'
+desc 'Run rspec tests for the Language Server with coloring.'
+RSpec::Core::RakeTask.new(:test_languageserver) do |t|
+  t.rspec_opts = %w[--color --format documentation --default-path spec/languageserver]
+  t.pattern    = 'spec/languageserver'
 end
 
-desc 'Run rspec tests and save JUnit output to results.xml.'
-RSpec::Core::RakeTask.new(:junit) do |t|
-  t.rspec_opts = %w[-r yarjuf -f JUnit -o results.xml]
-  t.pattern    = 'spec/'
+desc 'Run rspec tests for the Debug Server with coloring.'
+RSpec::Core::RakeTask.new(:test_debugserver) do |t|
+  t.rspec_opts = %w[--color --format documentation --default-path spec/debugserver]
+  t.pattern    = 'spec/debugserver'
 end
 
 if rubocop_available
@@ -54,7 +54,7 @@ task :gem_revendor do
   gem_list.each do |vendor|
     puts "Vendoring #{vendor[:directory]}..."
     gem_dir = File.join(vendor_dir,vendor[:directory])
-    
+
     sh "git clone #{vendor[:github_repo]} #{gem_dir}"
     Dir.chdir(gem_dir) do
       sh 'git fetch origin'

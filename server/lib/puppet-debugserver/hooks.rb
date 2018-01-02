@@ -2,7 +2,7 @@
 
 module PuppetDebugServer
   # This code was inspired from Puppet-Debugger (https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger/hooks.rb) which was borrowed from Pry hooks file
-  
+
   # Both puppet-debugger and pry are licensed with MIT
   # https://raw.githubusercontent.com/nwops/puppet-debugger/master/LICENSE.txt
   # https://raw.githubusercontent.com/pry/pry/master/LICENSE
@@ -28,7 +28,7 @@ module PuppetDebugServer
   #     String - Breakpoint full text
   #     Object - self where the function breakpoint was hit
   #     Object[] - optional objects
-  # 
+  #
   # :hook_exception
   #   Fires when a exception is hit
   #   Arguments:
@@ -58,6 +58,18 @@ module PuppetDebugServer
   #   Fires after the Puppet::Parser::Functions is reset
   #   Arguments:
   #     Puppet::Parser::Functions - Instance of Puppet::Parser::Functions
+  #
+  # :hook_before_pops_evaluate
+  #   Fires before an item in the AST is evaluated
+  #   Arguments:
+  #     The Pops object about to be evaluated
+  #     The scope of the Pops object
+  #
+  # :hook_after_pops_evaluate
+  #   Fires after an item in the AST is evaluated
+  #   Arguments:
+  #     The Pops object about to be evaluated
+  #     The scope of the Pops object
 
   class Hooks
     def initialize
@@ -114,6 +126,7 @@ module PuppetDebugServer
     # @param [Array] args The arguments to pass to each hook function.
     # @return [Object] The return value of the last executed hook.
     def exec_hook(event_name, *args, &block)
+      PuppetDebugServer.log_message(:debug, "Starting to executing hook #{event_name}") unless event_name == :hook_log_message
       @hooks[event_name.to_s].map do |hook_name, callable|
         begin
           callable.call(*args, &block)
@@ -122,6 +135,7 @@ module PuppetDebugServer
           e
         end
       end.last
+      PuppetDebugServer.log_message(:debug, "Finished to executing hook #{event_name}") unless event_name == :hook_log_message
     end
 
     # @param [Symbol] event_name The name of the event.

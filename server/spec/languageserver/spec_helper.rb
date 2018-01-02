@@ -1,9 +1,10 @@
 # Emulate the setup from the root 'puppet-languageserver' file
 
+root = File.join(File.dirname(__FILE__),'..','..')
 # Add the language server into the load path
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','lib'))
+$LOAD_PATH.unshift(File.join(root,'lib'))
 # Add the vendored gems into the load path
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','vendor','puppet-lint','lib'))
+$LOAD_PATH.unshift(File.join(root,'vendor','puppet-lint','lib'))
 
 require 'puppet-languageserver'
 fixtures_dir = File.join(File.dirname(__FILE__),'fixtures')
