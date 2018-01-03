@@ -11,6 +11,7 @@ export interface PuppetVersionDetails {
   factsLoaded: boolean;
   functionsLoaded: boolean;
   typesLoaded: boolean;
+  classesLoaded: boolean;
 }
 
 export interface PuppetResourceRequestParams {

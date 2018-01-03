@@ -7,6 +7,7 @@ module LanguageServer
     #   factsLoaded: boolean;
     #   functionsLoaded: boolean;
     #   typesLoaded: boolean;
+    #   classesLoaded: boolean;
     # }
 
     def self.create(options)
@@ -20,7 +21,8 @@ module LanguageServer
       result['factsLoaded']     = options['factsLoaded'] unless options['factsLoaded'].nil?
       result['functionsLoaded'] = options['functionsLoaded'] unless options['functionsLoaded'].nil?
       result['typesLoaded']     = options['typesLoaded'] unless options['typesLoaded'].nil?
-
+      result['classesLoaded']   = options['classesLoaded'] unless options['classesLoaded'].nil?
+      
       result['languageServerVersion'] = PuppetVSCode.version
 
       result

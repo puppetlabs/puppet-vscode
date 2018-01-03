@@ -1,0 +1,9 @@
+{
+  "name": "testfixture-definedtypes",
+  "version": "0.1.0",
+  "author": "testfixture",
+  "summary": "Test fixture with defined types",
+  "license": "Apache-2.0",
+  "source": "http://localhost",
+  "dependencies": []
+}
