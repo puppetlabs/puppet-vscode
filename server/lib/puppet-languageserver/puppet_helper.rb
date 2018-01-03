@@ -200,10 +200,9 @@ module PuppetLanguageServer
         module_path_list << File.join(Puppet.settings[:environmentpath], Puppet.settings[:environment], 'modules') unless Puppet.settings[:environment].nil?
 
         module_path_list.concat(Pathname.new(Puppet.settings[:environmentpath])
-                                  .children
-                                  .select { |c| c.directory? }
-                                  .collect { |c| File.join(c, 'modules') }
-                               )
+                                        .children
+                                        .select { |c| c.directory? }
+                                        .collect { |c| File.join(c, 'modules') })
       end
       module_path_list.uniq!
       PuppetLanguageServer.log_message(:debug, "[PuppetHelper::_load_classes] Loading classes from #{module_path_list}")
@@ -211,14 +210,14 @@ module PuppetLanguageServer
       # Find all of the manifest paths for all of the modules...
       manifest_path_list = []
       module_path_list.each do |module_path|
-        next unless File.exists?(module_path)
+        next unless File.exist?(module_path)
         Pathname.new(module_path)
-          .children
-          .select { |c| c.directory? }
-          .each do |module_filepath|
-            manifest_path = File.join(module_filepath,'manifests')
-            manifest_path_list << manifest_path if File.exists?(manifest_path)
-          end
+                .children
+                .select { |c| c.directory? }
+                .each do |module_filepath|
+                  manifest_path = File.join(module_filepath, 'manifests')
+                  manifest_path_list << manifest_path if File.exist?(manifest_path)
+                end
       end
 
       # Find and parse all manifests in the manifest paths
@@ -228,7 +227,7 @@ module PuppetLanguageServer
           classes = load_classes_from_manifest(manifest_file)
           next if classes.nil?
           classes.each do |key, data|
-            @class_load_info[key] = data unless @class_load_info.has_key?(name)
+            @class_load_info[key] = data unless @class_load_info.key?(name)
           end
         end
       end
@@ -240,7 +239,7 @@ module PuppetLanguageServer
     private_class_method :_load_classes
 
     def self.load_classes_from_manifest(manifest_file)
-      file_content = File.open(manifest_file, "r:UTF-8") { |f| f.read }
+      file_content = File.open(manifest_file, 'r:UTF-8') { |f| f.read }
 
       parser = Puppet::Pops::Parser::Parser.new
       result = nil
@@ -253,9 +252,9 @@ module PuppetLanguageServer
 
       class_info = {}
       # Enumerate the entire AST looking for classes and defined types
-      # TODO - Need to learn how to read the help/docs for hover support
+      # TODO: Need to learn how to read the help/docs for hover support
       if result.model.respond_to? :eAllContents
-        # TODO Puppet 4 language stuff
+        # TODO: Puppet 4 language stuff
         result.model.eAllContents.select do |item|
           case item.class.to_s
           when 'Puppet::Pops::Model::HostClassDefinition'

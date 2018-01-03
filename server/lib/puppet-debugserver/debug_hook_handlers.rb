@@ -6,22 +6,22 @@ module PuppetDebugServer
       if @hook_handler.nil?
         @hook_handler = PuppetDebugServer::Hooks.new
 
-        @hook_handler.add_hook(:hook_before_apply_exit, :debug_session)           { |args| PuppetDebugServer::PuppetDebugSession::on_hook_before_apply_exit(args) }
-        @hook_handler.add_hook(:hook_breakpoint, :debug_session)                  { |args| PuppetDebugServer::PuppetDebugSession::hook_breakpoint(args) }
-        @hook_handler.add_hook(:hook_step_breakpoint, :debug_session)             { |args| PuppetDebugServer::PuppetDebugSession::hook_step_breakpoint(args) }
-        @hook_handler.add_hook(:hook_function_breakpoint, :debug_session)         { |args| PuppetDebugServer::PuppetDebugSession::hook_function_breakpoint(args) }
-        @hook_handler.add_hook(:hook_before_compile, :debug_session)              { |args| PuppetDebugServer::PuppetDebugSession::hook_before_compile(args) }
-        @hook_handler.add_hook(:hook_exception, :debug_session)                   { |args| PuppetDebugServer::PuppetDebugSession::hook_exception(args) }
-        @hook_handler.add_hook(:hook_log_message, :debug_session)                 { |args| PuppetDebugServer::PuppetDebugSession::hook_log_message(args) }
-        @hook_handler.add_hook(:hook_after_parser_function_reset, :debug_session) { |args| PuppetDebugServer::PuppetDebugSession::hook_after_parser_function_reset(args) }
-        @hook_handler.add_hook(:hook_before_pops_evaluate, :debug_session)        { |args| PuppetDebugServer::PuppetDebugSession::hook_before_pops_evaluate(args) }
-        @hook_handler.add_hook(:hook_after_pops_evaluate, :debug_session)         { |args| PuppetDebugServer::PuppetDebugSession::hook_after_pops_evaluate(args) }
+        @hook_handler.add_hook(:hook_before_apply_exit, :debug_session)           { |args| PuppetDebugServer::PuppetDebugSession.on_hook_before_apply_exit(args) }
+        @hook_handler.add_hook(:hook_breakpoint, :debug_session)                  { |args| PuppetDebugServer::PuppetDebugSession.hook_breakpoint(args) }
+        @hook_handler.add_hook(:hook_step_breakpoint, :debug_session)             { |args| PuppetDebugServer::PuppetDebugSession.hook_step_breakpoint(args) }
+        @hook_handler.add_hook(:hook_function_breakpoint, :debug_session)         { |args| PuppetDebugServer::PuppetDebugSession.hook_function_breakpoint(args) }
+        @hook_handler.add_hook(:hook_before_compile, :debug_session)              { |args| PuppetDebugServer::PuppetDebugSession.hook_before_compile(args) }
+        @hook_handler.add_hook(:hook_exception, :debug_session)                   { |args| PuppetDebugServer::PuppetDebugSession.hook_exception(args) }
+        @hook_handler.add_hook(:hook_log_message, :debug_session)                 { |args| PuppetDebugServer::PuppetDebugSession.hook_log_message(args) }
+        @hook_handler.add_hook(:hook_after_parser_function_reset, :debug_session) { |args| PuppetDebugServer::PuppetDebugSession.hook_after_parser_function_reset(args) }
+        @hook_handler.add_hook(:hook_before_pops_evaluate, :debug_session)        { |args| PuppetDebugServer::PuppetDebugSession.hook_before_pops_evaluate(args) }
+        @hook_handler.add_hook(:hook_after_pops_evaluate, :debug_session)         { |args| PuppetDebugServer::PuppetDebugSession.hook_after_pops_evaluate(args) }
       end
       @hook_handler
     end
 
     def self.hook_before_pops_evaluate(args)
-      @session_pops_eval_depth = @session_pops_eval_depth + 1
+      @session_pops_eval_depth += 1
       target = args[1]
       # Ignore this if there is no positioning information available
       return unless target.is_a?(Puppet::Pops::Model::Positioned)
@@ -36,10 +36,10 @@ module PuppetDebugServer
 
       # Break if we hit a specific puppet function
       if target_classname == 'CallNamedFunctionExpression'
-        # TODO Do we really need to break on a function called breakpoint?
+        # TODO: Do we really need to break on a function called breakpoint?
         if target.functor_expr.value == 'breakpoint'
           # Re-raise the hook as a breakpoint
-          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, ast_classname] +args)
+          PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, ast_classname] + args)
           return
         else
           func_names = PuppetDebugServer::PuppetDebugSession.function_breakpoints
@@ -47,16 +47,16 @@ module PuppetDebugServer
             next unless func['name'] == target.functor_expr.value
             # Re-raise the hook as a breakpoint
             PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_function_breakpoint, [target.functor_expr.value, ast_classname] + args)
-            return
+            return # rubocop:disable Lint/NonLocalExitFromIterator
           end
         end
       end
 
-      unless target_loc.length == 0
-        excluded_classes = ['BlockExpression','HostClassDefinition']
+      unless target_loc.length.zero?
+        excluded_classes = %w[BlockExpression HostClassDefinition]
         file_path = target_loc.file
         breakpoints = PuppetDebugServer::PuppetDebugSession.source_breakpoints(file_path)
-        # TODO should check if it's an object we don't care aount
+        # TODO: Should check if it's an object we don't care aount
         unless excluded_classes.include?(target_classname) || breakpoints.nil? || breakpoints.empty?
           # Calculate the start and end lines of the target
           target_start_line = target_loc.line
@@ -64,11 +64,11 @@ module PuppetDebugServer
 
           breakpoints.each do |bp|
             bp_line = bp['line']
-            # TODO Hit and conditional BreakPoints?
+            # TODO: What about Hit and Conditional BreakPoints?
             if bp_line >= target_start_line && bp_line <= target_end_line
               # Re-raise the hook as a breakpoint
               PuppetDebugServer::PuppetDebugSession.hooks.exec_hook(:hook_breakpoint, [ast_classname, ''] + args)
-              return
+              return # rubocop:disable Lint/NonLocalExitFromIterator
             end
           end
         end
@@ -101,7 +101,7 @@ module PuppetDebugServer
     end
 
     def self.hook_after_pops_evaluate(args)
-      @session_pops_eval_depth = @session_pops_eval_depth - 1
+      @session_pops_eval_depth -= @session_pops_eval_depth
       target = args[1]
       return unless target.is_a?(Puppet::Pops::Model::Positioned)
     end
@@ -109,8 +109,8 @@ module PuppetDebugServer
     def self.hook_after_parser_function_reset(args)
       func_object = args[0]
 
-      # TODO Do we really need to break on a function called breakpoint?
-      func_object.newfunction(:breakpoint, :type => :rvalue, :arity => -1, :doc => "Breakpoint Function") do |arguments|
+      # TODO: Do we really need to break on a function called breakpoint?
+      func_object.newfunction(:breakpoint, :type => :rvalue, :arity => -1, :doc => 'Breakpoint Function') do |arguments|
         # This function is just a place holder.  It gets interpretted at the pops_evaluate hooks but the function
         # itself still needs to exist though.
       end
@@ -120,10 +120,10 @@ module PuppetDebugServer
       option = args[0]
 
       PuppetDebugServer::PuppetDebugSession.connection.send_exited_event(option)
-      PuppetDebugServer::PuppetDebugSession.connection.send_output_event({
+      PuppetDebugServer::PuppetDebugSession.connection.send_output_event(
         'category' => 'console',
-        'output' => "puppet exited with #{option}",
-      })
+        'output' => "puppet exited with #{option}"
+      )
     end
 
     def self.hook_breakpoint(args)
@@ -156,21 +156,22 @@ module PuppetDebugServer
       end
 
       break_description = break_display_text if break_description.empty?
-      PuppetDebugServer::PuppetDebugSession.raise_and_wait_stopped_event(reason, break_display_text, break_description, {
+      PuppetDebugServer::PuppetDebugSession.raise_and_wait_stopped_event(
+        reason,
+        break_display_text,
+        break_description,
         :pops_target       => pops_target_object,
         :scope             => scope_object,
         :pops_depth_level  => pops_depth_level,
         :puppet_stacktrace => Puppet::Pops::PuppetStack.stacktrace
-      })
+      )
     end
 
     def self.hook_before_compile(args)
       PuppetDebugServer::PuppetDebugSession.session_compiler = args[0]
 
       # Spin-wait for the configurationDone message from the client before we continue compilation
-      begin
-        sleep(0.5)
-      end while !PuppetDebugServer::PuppetDebugSession.client_completed_configuration?
+      sleep(0.5) until PuppetDebugServer::PuppetDebugSession.client_completed_configuration?
     end
 
     def self.hook_exception(args)
@@ -180,14 +181,16 @@ module PuppetDebugServer
       error_detail = args[0]
 
       PuppetDebugServer::PuppetDebugSession.raise_and_wait_stopped_event(
-        'exception', 'Compilation Exception', error_detail.basic_message, {
+        'exception',
+        'Compilation Exception',
+        error_detail.basic_message,
         :session_exception => error_detail,
         :puppet_stacktrace => Puppet::Pops::PuppetStack.stacktrace_from_backtrace(error_detail)
-      })
+      )
     end
 
     def self.hook_log_message(args)
-      return if self.suppress_log_messages
+      return if suppress_log_messages
       msg = args[0]
       str = msg.respond_to?(:multiline) ? msg.multiline : msg.to_s
       str = msg.source == 'Puppet' ? str : "#{msg.source}: #{str}"
@@ -197,10 +200,10 @@ module PuppetDebugServer
       category = 'stderr'
       category = 'stdout' if msg.level == :notice || msg.level == :info || msg.level == :debug
 
-      PuppetDebugServer::PuppetDebugSession.connection.send_output_event({
+      PuppetDebugServer::PuppetDebugSession.connection.send_output_event(
         'category' => category,
         'output' => "#{level}: #{str}\n"
-      })
+      )
     end
   end
 end

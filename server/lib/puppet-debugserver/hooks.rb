@@ -1,5 +1,3 @@
-#require 'puppet-debugger/support/errors'
-
 module PuppetDebugServer
   # This code was inspired from Puppet-Debugger (https://raw.githubusercontent.com/nwops/puppet-debugger/master/lib/puppet-debugger/hooks.rb) which was borrowed from Pry hooks file
 
@@ -77,7 +75,7 @@ module PuppetDebugServer
     end
 
     # Ensure that duplicates have their @hooks object.
-    def initialize_copy(orig)
+    def initialize_copy
       hooks_dup = @hooks.dup
       @hooks.each do |k, v|
         hooks_dup[k] = v.dup
@@ -96,7 +94,7 @@ module PuppetDebugServer
     # @param [#call] callable The callable.
     # @yield The block to use as the callable (if no `callable` provided).
     # @return [PuppetDebugger::Hooks] The receiver.
-    def add_hook(event_name, hook_name, callable=nil, &block)
+    def add_hook(event_name, hook_name, callable = nil, &block)
       event_name = event_name.to_s
 
       # do not allow duplicates, but allow multiple `nil` hooks
@@ -106,11 +104,11 @@ module PuppetDebugServer
       end
 
       if !block && !callable
-        raise ArgumentError, "Must provide a block or callable."
+        raise ArgumentError, 'Must provide a block or callable.'
       end
 
       # ensure we only have one anonymous hook
-      @hooks[event_name].delete_if { |h, k| h.nil? } if hook_name.nil?
+      @hooks[event_name].delete_if { |h, _k| h.nil? } if hook_name.nil?
 
       if block
         @hooks[event_name] << [hook_name, block]
@@ -127,7 +125,7 @@ module PuppetDebugServer
     # @return [Object] The return value of the last executed hook.
     def exec_hook(event_name, *args, &block)
       PuppetDebugServer.log_message(:debug, "Starting to executing hook #{event_name}") unless event_name == :hook_log_message
-      @hooks[event_name.to_s].map do |hook_name, callable|
+      @hooks[event_name.to_s].map do |_hook_name, callable|
         begin
           callable.call(*args, &block)
         rescue ::RuntimeError => e
@@ -148,7 +146,7 @@ module PuppetDebugServer
     # @param [Symbol] hook_name The name of the hook
     # @return [#call] a specific hook for a given event.
     def get_hook(event_name, hook_name)
-      hook = @hooks[event_name.to_s].find do |current_hook_name, callable|
+      hook = @hooks[event_name.to_s].find do |current_hook_name, _callable|
         current_hook_name == hook_name
       end
       hook.last if hook
@@ -197,8 +195,6 @@ module PuppetDebugServer
 
     protected
 
-    def hooks
-      @hooks
-    end
+    attr_reader :hooks
   end
 end

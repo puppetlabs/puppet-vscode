@@ -39,7 +39,7 @@ module PuppetDebugServer
         result = ProtocolMessage.create(options)
         raise('command is a required field for Request') if options['command'].nil?
 
-        result['command']  = options['command']
+        result['command'] = options['command']
         result['arguments'] = options['arguments'] unless options['arguments'].nil?
 
         result
@@ -60,7 +60,7 @@ module PuppetDebugServer
         result = ProtocolMessage.create(options)
         raise('event is a required field for Event') if options['event'].nil?
 
-        result['event']  = options['event']
+        result['event'] = options['event']
         result['body'] = options['body'] unless options['body'].nil?
 
         result
@@ -83,8 +83,8 @@ module PuppetDebugServer
     # }
     module Response
       def self.create_from_request(options, request = nil)
-        result = ProtocolMessage.create({ 'seq' => -1, 'type' => 'response'})
-        
+        result = ProtocolMessage.create('seq' => -1, 'type' => 'response')
+
         raise('success is a required field for Response') if options['success'].nil?
 
         result['request_seq'] = options['request_seq'] unless options['request_seq'].nil?
@@ -120,8 +120,8 @@ module PuppetDebugServer
     # 	// event: 'initialized';
     # }
     module InitializedEvent
-      def self.create(options = {})
-        result = Event.create({ 'event' => 'initialized', 'seq' => -1 })
+      def self.create(_options = {})
+        result = Event.create('event' => 'initialized', 'seq' => -1)
 
         result
       end
@@ -153,7 +153,7 @@ module PuppetDebugServer
     # }
     module StoppedEvent
       def self.create(options = {})
-        result = Event.create({ 'event' => 'stopped', 'seq' => -1 })
+        result = Event.create('event' => 'stopped', 'seq' => -1)
         raise('reason is a required field for StoppedEvent') if options['reason'].nil?
 
         result['body']                      = {}
@@ -177,7 +177,7 @@ module PuppetDebugServer
         result = Request.create(options)
         raise('command is a required field for InitializeRequest') if options['command'].nil?
 
-        result['command']  = options['command']
+        result['command'] = options['command']
         result['arguments'] = InitializeRequestArguments.create(options['arguments']) unless options['arguments'].nil?
 
         result
@@ -232,7 +232,6 @@ module PuppetDebugServer
       end
     end
 
-
     # /** Event message for 'terminated' event types.
     # 	The event indicates that debugging of the debuggee has terminated.
     # */
@@ -247,7 +246,7 @@ module PuppetDebugServer
     # }
     module TerminatedEvent
       def self.create(options = {})
-        result = Event.create({ 'event' => 'terminated', 'seq' => -1 })
+        result = Event.create('event' => 'terminated', 'seq' => -1)
         result['body'] = {}
         result['body']['restart'] = options['restart'] unless options['restart'].nil?
 
@@ -269,14 +268,14 @@ module PuppetDebugServer
     # }
     module ThreadEvent
       def self.create(options = {})
-        result = Event.create({ 'event' => 'thread', 'seq' => -1 })
+        result = Event.create('event' => 'thread', 'seq' => -1)
 
         raise('reason is a required field for ThreadEvent') if options['reason'].nil?
         raise('threadId is a required field for ThreadEvent') if options['threadId'].nil?
-        
+
         result['body'] = {
           'reason'   => options['reason'],
-          'threadId' => options['threadId'],
+          'threadId' => options['threadId']
         }
 
         result
@@ -301,7 +300,7 @@ module PuppetDebugServer
     # }
     module OutputEvent
       def self.create(options = {})
-        result = Event.create({ 'event' => 'output', 'seq' => -1 })
+        result = Event.create('event' => 'output', 'seq' => -1)
         raise('output is a required field for OutputEvent') if options['output'].nil?
 
         result['body'] = { 'category' => 'console' }
@@ -313,7 +312,6 @@ module PuppetDebugServer
         result
       end
     end
-
 
     # /** Event message for 'exited' event type.
     # 	The event indicates that the debuggee has exited.
@@ -327,7 +325,7 @@ module PuppetDebugServer
     # }
     module ExitedEvent
       def self.create(options = {})
-        result = Event.create({ 'event' => 'exited', 'seq' => -1 })
+        result = Event.create('event' => 'exited', 'seq' => -1)
         raise('exitCode is a required field for ExitedEvent') if options['exitCode'].nil?
         result['body'] = {}
         result['body']['exitCode'] = options['exitCode']
@@ -335,7 +333,6 @@ module PuppetDebugServer
         result
       end
     end
-
 
     # /** Launch request; value of command field is 'launch'. */
     # export interface LaunchRequest extends Request {
@@ -347,7 +344,7 @@ module PuppetDebugServer
         result = Request.create(options)
         raise('command is a required field for InitializeRequest') if options['command'].nil?
 
-        result['command']  = options['command']
+        result['command']   = options['command']
         result['arguments'] = LaunchRequestArguments.create(options['arguments']) unless options['arguments'].nil?
 
         result
@@ -375,7 +372,6 @@ module PuppetDebugServer
         Response.create_from_request(options, request)
       end
     end
-
 
     # /** SetBreakpoints request; value of command field is 'setBreakpoints'.
     # 	Sets multiple breakpoints for a single source and clears all previous breakpoints in that source.
@@ -509,7 +505,7 @@ module PuppetDebugServer
       def self.create(options)
         raise('threadId is a required field for NextArguments') if options['threadId'].nil?
 
-        {'threadId' => options['threadId']}
+        { 'threadId' => options['threadId'] }
       end
     end
 
@@ -558,7 +554,7 @@ module PuppetDebugServer
       def self.create(options)
         raise('threadId is a required field for StepInArguments') if options['threadId'].nil?
 
-        result = {'threadId' => options['threadId']}
+        result = { 'threadId' => options['threadId'] }
         result['targetId'] = options['targetId'] unless options['targetId'].nil?
 
         result
@@ -622,7 +618,7 @@ module PuppetDebugServer
       def self.create(options)
         raise('threadId is a required field for StepOutArguments') if options['threadId'].nil?
 
-        {'threadId' => options['threadId']}
+        { 'threadId' => options['threadId'] }
       end
     end
 
@@ -650,7 +646,7 @@ module PuppetDebugServer
       def self.create(options)
         result = {
           'startFrame' => 0,
-          'levels' => 0,
+          'levels'     => 0
         }
 
         raise('threadId is a required field for StackTraceArguments') if options['threadId'].nil?
@@ -663,7 +659,7 @@ module PuppetDebugServer
         result
       end
     end
-    
+
     # /** Response to 'stackTrace' request. */
     # export interface StackTraceResponse extends Response {
     # 	body: {
@@ -683,7 +679,7 @@ module PuppetDebugServer
 
         result['body'] = {
           'stackFrames' => options['stackFrames'],
-          'totalFrames' => options['stackFrames'].count,
+          'totalFrames' => options['stackFrames'].count
         }
 
         result
@@ -718,7 +714,7 @@ module PuppetDebugServer
     module ScopesArguments
       def self.create(options)
         raise('frameId is a required field for ScopesArguments') if options['frameId'].nil?
-        
+
         result = {}
 
         result['frameId'] = options['frameId']
@@ -741,7 +737,7 @@ module PuppetDebugServer
         raise('scopes is a required field for ScopesResponse') if options['scopes'].nil?
 
         result['body'] = {
-          'scopes' => options['scopes'],
+          'scopes' => options['scopes']
         }
 
         result
@@ -785,15 +781,15 @@ module PuppetDebugServer
     module VariablesArguments
       def self.create(options)
         raise('variablesReference is a required field for VariablesArguments') if options['variablesReference'].nil?
-        
+
         result = {}
 
         result['variablesReference'] = options['variablesReference']
-        result['filter']     = options['filter'] unless options['filter'].nil?
-        result['start']     = options['start'] unless options['start'].nil?
-        result['count']     = options['count'] unless options['count'].nil?
-        result['format']     = options['format'] unless options['format'].nil?
-        
+        result['filter']             = options['filter'] unless options['filter'].nil?
+        result['start']              = options['start'] unless options['start'].nil?
+        result['count']              = options['count'] unless options['count'].nil?
+        result['format']             = options['format'] unless options['format'].nil?
+
         result
       end
     end
@@ -812,7 +808,7 @@ module PuppetDebugServer
         raise('variables is a required field for VariablesResponse') if options['variables'].nil?
 
         result['body'] = {
-          'variables' => options['variables'],
+          'variables' => options['variables']
         }
 
         result
@@ -873,14 +869,14 @@ module PuppetDebugServer
     module EvaluateArguments
       def self.create(options)
         raise('expression is a required field for EvaluateArguments') if options['expression'].nil?
-        
+
         result = {}
 
         result['expression'] = options['expression']
         result['frameId']    = options['frameId'] unless options['frameId'].nil?
         result['context']    = options['context'] unless options['context'].nil?
         result['format']     = options['format'] unless options['format'].nil?
-        
+
         result
       end
     end
@@ -910,19 +906,18 @@ module PuppetDebugServer
 
         raise('result is a required field for EvaluateResponse') if options['result'].nil?
         raise('variablesReference is a required field for EvaluateResponse') if options['variablesReference'].nil?
-        
+
         result['body'] = {
           'result'             => options['result'],
-          'variablesReference' => options['variablesReference'],
+          'variablesReference' => options['variablesReference']
         }
         result['body']['type']             = options['type'] unless options['type'].nil?
         result['body']['namedVariables']   = options['namedVariables'] unless options['namedVariables'].nil?
         result['body']['indexedVariables'] = options['indexedVariables'] unless options['indexedVariables'].nil?
-        
+
         result
       end
     end
-
 
     # /** Information about the capabilities of a debug adapter. */
     # export interface Capabilities {
@@ -1018,7 +1013,7 @@ module PuppetDebugServer
         raise('breakpoints is a required field for SetBreakpointsResponse') if options['breakpoints'].nil?
 
         result['body'] = {
-          'breakpoints' => options['breakpoints'],
+          'breakpoints' => options['breakpoints']
         }
 
         result
@@ -1157,11 +1152,11 @@ module PuppetDebugServer
         raise('variablesReference is a required field for Scope') if options['variablesReference'].nil?
         raise('expensive is a required field for Scope') if options['expensive'].nil?
 
-        result['name']   = options['name']
-        result['variablesReference']   = options['variablesReference']
-        result['expensive']   = options['expensive']
-        
-        ['namedVariables', 'indexedVariables', 'source', 'line', 'column', 'endLine', 'endColumn'].each do |varname|
+        result['name']               = options['name']
+        result['variablesReference'] = options['variablesReference']
+        result['expensive']          = options['expensive']
+
+        %w[namedVariables indexedVariables source line column endLine endColumn].each do |varname|
           result[varname]  = options[varname] unless options[varname].nil?
         end
 
@@ -1209,15 +1204,14 @@ module PuppetDebugServer
         result['name']               = options['name']
         result['value']              = options['value']
         result['variablesReference'] = options['variablesReference']
-        
-        ['type', 'kind', 'evaluateName', 'namedVariables', 'indexedVariables'].each do |varname|
+
+        %w[type kind evaluateName namedVariables indexedVariables'].each do |varname|
           result[varname]  = options[varname] unless options[varname].nil?
         end
 
         result
       end
     end
-
 
     # /** Properties of a breakpoint passed to the setBreakpoints request. */
     # export interface SourceBreakpoint {
@@ -1303,6 +1297,5 @@ module PuppetDebugServer
         result
       end
     end
-
   end
 end

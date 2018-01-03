@@ -21,7 +21,7 @@ module PuppetDebugServer
         ipaddress: '127.0.0.1',
         stop_on_client_exit: true,
         connection_timeout: 10,
-        debug: nil,
+        debug: nil
       }
 
       opt_parser = OptionParser.new do |opts|
@@ -60,11 +60,11 @@ module PuppetDebugServer
   end
 
   def self.log_message(severity, message)
-    PuppetVSCode::log_message(severity, message)
+    PuppetVSCode.log_message(severity, message)
   end
 
   def self.init_puppet(options)
-    PuppetVSCode::init_logging(options)
+    PuppetVSCode.init_logging(options)
     log_message(:info, "Debug Server is v#{PuppetVSCode.version}")
 
     true

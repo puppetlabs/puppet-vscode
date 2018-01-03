@@ -77,6 +77,7 @@ module PuppetLanguageServer
       rescue StandardError => _exception
         # If anything catastrophic happens we resort to puppet parsing anyway
       end
+      # rubocop:enable Lint/HandleExceptions
 
       # TODO: Should I wrap this thing in a big rescue block?
       Puppet[:code] = content
@@ -92,7 +93,7 @@ module PuppetLanguageServer
           detail = detail.cause if !detail.respond_to?(:line) && detail.respond_to?(:cause)
           ex_line = detail.respond_to?(:line) && !detail.line.nil? ? detail.line - 1 : nil # Line numbers from puppet exceptions are base 1
           ex_pos = detail.respond_to?(:pos) && !detail.pos.nil? ? detail.pos : nil # Pos numbers from puppet are base 1
-          
+
           message = detail.respond_to?(:message) ? detail.message : nil
           message = detail.basic_message if message.nil? && detail.respond_to?(:basic_message)
 

@@ -103,7 +103,7 @@ module PuppetVSCode
       thread_cycle = proc do
         begin
           io_review
-        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+        rescue # rubocop:disable Style/RescueStandardError
           # Swallow all errors
           false
         end
@@ -146,7 +146,7 @@ module PuppetVSCode
               end
             end
           end
-        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+        rescue # rubocop:disable Style/RescueStandardError
           # Swallow all errors
           true
         end
@@ -253,7 +253,7 @@ module PuppetVSCode
           io_r[2].each do |io|
             begin
               (remove_connection(io) || self.class.services.delete(io)).close
-            rescue # rubocop:disable Lint/RescueWithoutErrorClass
+            rescue # rubocop:disable Style/RescueStandardError
               # Swallow all errors
               true
             end
@@ -296,7 +296,7 @@ module PuppetVSCode
       self.class.services.each do |s, p|
         begin
           s.close
-        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+        rescue # rubocop:disable Style/RescueStandardError
           # Swallow all errors
           true
         end
@@ -319,7 +319,7 @@ module PuppetVSCode
         self.class.io_connection_dic.each_key do |io|
           begin
             io.close
-          rescue # rubocop:disable Lint/RescueWithoutErrorClass
+          rescue # rubocop:disable Style/RescueStandardError
             # Swallow all errors
             true
           end
@@ -351,7 +351,7 @@ module PuppetVSCode
         connection_count = self.class.io_connection_dic.count
         begin
           io.close
-        rescue # rubocop:disable Lint/RescueWithoutErrorClass
+        rescue # rubocop:disable Style/RescueStandardError
           # Swallow all errors
           true
         end
