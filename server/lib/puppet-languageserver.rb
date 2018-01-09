@@ -5,8 +5,8 @@ begin
   require 'languageserver/languageserver'
   require 'puppet-vscode'
 
-  %w[json_rpc_handler message_router server_capabilities document_validator puppet_parser_helper puppet_helper 
-    facter_helper completion_provider hover_provider definition_provider puppet_monkey_patches].each do |lib|
+  %w[json_rpc_handler message_router server_capabilities document_validator puppet_parser_helper puppet_helper
+     facter_helper completion_provider hover_provider definition_provider puppet_monkey_patches].each do |lib|
     begin
       require "puppet-languageserver/#{lib}"
     rescue LoadError
@@ -68,7 +68,7 @@ module PuppetLanguageServer
           args[:fast_start_tcpserver] = false
         end
 
-        opts.on('--stdio', "Runs the server in stdio mode, without a TCP listener") do |_misc|
+        opts.on('--stdio', 'Runs the server in stdio mode, without a TCP listener') do |_misc|
           args[:stdio] = true
         end
 
@@ -93,11 +93,11 @@ module PuppetLanguageServer
   end
 
   def self.log_message(severity, message)
-    PuppetVSCode::log_message(severity, message)
+    PuppetVSCode.log_message(severity, message)
   end
 
   def self.init_puppet(options)
-    PuppetVSCode::init_logging(options)
+    PuppetVSCode.init_logging(options)
     log_message(:info, "Language Server is v#{PuppetVSCode.version}")
     log_message(:info, "Using Puppet v#{Puppet.version}")
 

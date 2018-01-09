@@ -22,7 +22,7 @@ module LanguageServer
       result['functionsLoaded'] = options['functionsLoaded'] unless options['functionsLoaded'].nil?
       result['typesLoaded']     = options['typesLoaded'] unless options['typesLoaded'].nil?
       result['classesLoaded']   = options['classesLoaded'] unless options['classesLoaded'].nil?
-      
+
       result['languageServerVersion'] = PuppetVSCode.version
 
       result

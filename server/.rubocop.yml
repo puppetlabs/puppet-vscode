@@ -33,7 +33,7 @@ Metrics/PerceivedComplexity:
   Enabled: false
 Metrics/CyclomaticComplexity:
   Enabled: false
-  
+
 # Empty method definitions over more than one line is ok
 Style/EmptyMethod:
   Enabled: false
@@ -59,3 +59,13 @@ Next:
 # Enforce LF line endings, even when on Windows
 Layout/EndOfLine:
   EnforcedStyle: lf
+
+# We only alias for monkey patching
+Style/Alias:
+  Enabled: false
+
+# Harder to read when on
+Style/SymbolProc:
+  Enabled: false
+Style/HashSyntax:
+  Enabled: false

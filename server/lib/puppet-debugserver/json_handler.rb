@@ -74,9 +74,9 @@ module PuppetDebugServer
 
     def send_response(response)
       # Modify the response
-      fail('protocol message type was not set to response') unless response['type'] == 'response'
+      raise('protocol message type was not set to response') unless response['type'] == 'response'
       response['seq'] = @response_sequence
-      @response_sequence = @response_sequence + 1 # Not thread safe possibly. It's ok on MRI ruby, not jruby
+      @response_sequence += @response_sequence # Not thread safe possibly. It's ok on MRI ruby, not jruby
 
       response_json = encode_json(response)
       PuppetDebugServer.log_message(:debug, "--- OUTBOUND\n#{response_json}\n---")
@@ -87,9 +87,9 @@ module PuppetDebugServer
 
     def send_event(response)
       # Modify the response
-      fail('protocol message type was not set to event') unless response['type'] == 'event'
+      raise('protocol message type was not set to event') unless response['type'] == 'event'
       response['seq'] = @response_sequence
-      @response_sequence = @response_sequence + 1 # Not thread safe possibly. It's ok on MRI ruby, not jruby
+      @response_sequence += 1 # Not thread safe possibly. It's ok on MRI ruby, not jruby
 
       response_json = encode_json(response)
       PuppetDebugServer.log_message(:debug, "--- OUTBOUND\n#{response_json}\n---")
@@ -114,7 +114,7 @@ module PuppetDebugServer
       # Batch: multiple requests/notifications in an array.
       # NOTE: Not implemented as it doesn't make sense using JSON RPC over pure TCP / UnixSocket.
       else
-        PuppetDebugServer.log_message(:error, "Closing connection as request is not a Hash")
+        PuppetDebugServer.log_message(:error, 'Closing connection as request is not a Hash')
         close_connection_after_writing
         @state = :ignore
       end
@@ -131,7 +131,7 @@ module PuppetDebugServer
     end
 
     # This method must be overriden in the user's inherited class.
-    def receive_request(request, request_json)
+    def receive_request(request, _request_json)
       PuppetDebugServer.log_message(:debug, "request received:\n#{request.inspect}")
     end
 

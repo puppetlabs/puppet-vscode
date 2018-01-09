@@ -37,7 +37,7 @@ module PuppetLanguageServer
       facter_version         = Facter.version rescue 'Unknown' # rubocop:disable Lint/RescueWithoutErrorClass, Style/RescueModifier
       languageserver_version = PuppetLanguageServer.version rescue 'Unknown' # rubocop:disable Lint/RescueWithoutErrorClass, Style/RescueModifier
 
-      # rubocop:disable Layout/IndentHeredoc
+      # rubocop:disable Layout/IndentHeredoc, Style/FormatStringToken
       crashtext = <<-TEXT
 Puppet Language Server Crash File
 -=--=--=--=--=--=--=--=--=--=--=-
@@ -54,7 +54,7 @@ Backtrace
 #{err.backtrace.join("\n")}
 
 TEXT
-      # rubocop:enable Layout/IndentHeredoc
+      # rubocop:enable Layout/IndentHeredoc, Style/FormatStringToken
 
       # Append the documents in the cache
       PuppetLanguageServer::DocumentStore.document_uris.each do |uri|
@@ -67,7 +67,7 @@ TEXT
 
       crash_file = filename.nil? ? default_crash_file : filename
       File.open(crash_file, 'wb') { |file| file.write(crashtext) }
-    rescue # rubocop:disable Lint/RescueWithoutErrorClass, Lint/HandleExceptions
+    rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
       # Swallow all errors.  Errors in the error handler should not
       # terminate the application
     end
@@ -192,11 +192,10 @@ TEXT
         char_num = request.params['position']['character']
         content = documents.document(file_uri)
         begin
-          #raise "Not Implemented"
           request.reply_result(PuppetLanguageServer::DefinitionProvider.find_definition(content, line_num, char_num))
         rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(textDocument/definition) #{exception}")
-          request.reply_result($null)
+          request.reply_result(nil)
         end
 
       else
