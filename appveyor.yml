@@ -50,11 +50,6 @@ environment:
 
 matrix:
   fast_finish: true
-  allow_failures:
-    # Ruby style
-    - PUPPET_GEM_VERSION: "~> 4.0"
-      RUBY_VER: 23-x64
-      RAKE_TASK: rubocop
 
 install:
 - ps: |
