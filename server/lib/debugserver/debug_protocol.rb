@@ -334,6 +334,15 @@ module PuppetDebugServer
       end
     end
 
+    # /** Response to 'configurationDone' request. This is just an acknowledgement, so no body field is required. */
+    # export interface ConfigurationDoneResponse extends Response {
+    # }
+    module ConfigurationDoneResponse
+      def self.create_from_request(options, request = nil)
+        Response.create_from_request(options, request)
+      end
+    end
+
     # /** Launch request; value of command field is 'launch'. */
     # export interface LaunchRequest extends Request {
     # 	// command: 'launch';

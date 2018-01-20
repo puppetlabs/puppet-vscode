@@ -70,7 +70,7 @@ module PuppetDebugServer
         PuppetDebugServer.log_message(:debug, 'Received configurationDone request.')
         PuppetDebugServer::PuppetDebugSession.client_completed_configuration = true
 
-        response = PuppetDebugServer::Protocol::LaunchResponse.create_from_request(
+        response = PuppetDebugServer::Protocol::ConfigurationDoneResponse.create_from_request(
           {
             'success' => true
           }, request
@@ -135,10 +135,9 @@ module PuppetDebugServer
         PuppetDebugServer.log_message(:debug, 'Received threads request.')
 
         if PuppetDebugServer::PuppetDebugSession.puppet_thread_id.nil?
-          response = PuppetDebugServer::Protocol::ThreadsResponse.create_from_request(
+          response = PuppetDebugServer::Protocol::Response.create_from_request(
             {
-              'success' => false,
-              'threads' => []
+              'success' => false
             }, request
           )
         else
