@@ -267,6 +267,12 @@
       "type": "object",
       "title": "puppet",
       "properties": {
+        "puppet.format.enable": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Enable/disable the Puppet formatter"
+        },
         "puppet.languageserver.address": {
           "type": "string",
           "default": "127.0.0.1",

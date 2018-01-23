@@ -24,6 +24,33 @@ module PuppetLanguageServer
       module_root
     end
 
+    # Similar to 'validate' this will run puppet-lint and returns
+    # the manifest with any fixes applied
+    #
+    # Returns:
+    #  [ <Int> Number of problems fixed,
+    #    <String> New Content
+    #  ]
+    def self.fix_validate_errors(content, workspace)
+      # Find module root and attempt to build PuppetLint options
+      module_root = find_module_root_from_path(workspace)
+      linter_options = nil
+      if module_root.nil?
+        linter_options = PuppetLint::OptParser.build
+      else
+        Dir.chdir(module_root.to_s) { linter_options = PuppetLint::OptParser.build }
+      end
+      linter_options.parse!(['--fix'])
+
+      linter = PuppetLint::Checks.new
+      linter.load_data(nil, content)
+
+      problems = linter.run(nil, content)
+      problems_fixed = problems.nil? ? 0 : problems.count { |item| item[:kind] == :fixed }
+
+      [problems_fixed, linter.manifest]
+    end
+
     def self.validate(content, workspace, _max_problems = 100)
       result = []
       # TODO: Need to implement max_problems

@@ -153,6 +153,30 @@ TEXT
         request.reply_result(LanguageServer::PuppetCompilation.create('dotContent' => dot_content,
                                                                       'error' => error_content))
 
+      when 'puppet/fixDiagnosticErrors'
+        begin
+          formatted_request = LanguageServer::PuppetFixDiagnosticErrorsRequest.create(request.params)
+          file_uri = formatted_request['documentUri']
+          content = documents.document(file_uri)
+
+          changes, new_content = PuppetLanguageServer::DocumentValidator.fix_validate_errors(content, @workspace)
+
+          request.reply_result(LanguageServer::PuppetFixDiagnosticErrorsResponse.create(
+                                 'documentUri'  => formatted_request['documentUri'],
+                                 'fixesApplied' => changes,
+                                 'newContent'   => changes > 0 || formatted_request['alwaysReturnContent'] ? new_content : nil
+          ))
+        rescue StandardError => exception
+          PuppetLanguageServer.log_message(:error, "(puppet/fixDiagnosticErrors) #{exception}")
+          unless formatted_request.nil?
+            request.reply_result(LanguageServer::PuppetFixDiagnosticErrorsResponse.create(
+                                   'documentUri'  => formatted_request['documentUri'],
+                                   'fixesApplied' => 0,
+                                   'newContent'   => formatted_request['alwaysReturnContent'] ? content : nil # rubocop:disable Metrics/BlockNesting
+            ))
+          end
+        end
+
       when 'textDocument/completion'
         file_uri = request.params['textDocument']['uri']
         line_num = request.params['position']['line']
