@@ -21,6 +21,7 @@ module PuppetDebugServer
     end
 
     def self.hook_before_pops_evaluate(args)
+      return if PuppetDebugServer::PuppetDebugSession.session_paused?
       @session_pops_eval_depth += 1
       target = args[1]
       # Ignore this if there is no positioning information available
@@ -101,7 +102,8 @@ module PuppetDebugServer
     end
 
     def self.hook_after_pops_evaluate(args)
-      @session_pops_eval_depth -= @session_pops_eval_depth
+      return if PuppetDebugServer::PuppetDebugSession.session_paused?
+      @session_pops_eval_depth -= 1
       target = args[1]
       return unless target.is_a?(Puppet::Pops::Model::Positioned)
     end
