@@ -7,6 +7,7 @@ import {
   getNodeGraphUri, showNodeGraph
 } from '../../src/providers/previewNodeGraphProvider';
 import { puppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
+import { PuppetFormatDocumentProvider } from '../providers/puppetFormatDocumentProvider';
 
 export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: ILogger){
 
@@ -14,6 +15,16 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
   ctx.subscriptions.push(resourceCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetResourceCommandId, () => {
     resourceCommand.run();
+  }));
+
+  ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider('puppet', {
+    provideDocumentFormattingEdits: (document, options, token) => {
+      if (vscode.workspace.getConfiguration('puppet').get('format.enable')) {
+        return PuppetFormatDocumentProvider(document, options, connManager)
+      } else {
+        return []
+      }
+    }
   }));
 
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId,

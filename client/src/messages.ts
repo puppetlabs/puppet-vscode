@@ -16,7 +16,7 @@ export interface PuppetVersionDetails {
 
 export interface PuppetResourceRequestParams {
   typename: string;
-  title:string;
+  title: string;
 }
 
 export namespace PuppetResourceRequest {
@@ -26,6 +26,21 @@ export namespace PuppetResourceRequest {
 export interface PuppetResourceResponse {
   data: string;
   error: string;
+}
+
+export interface PuppetFixDiagnosticErrorsRequestParams {
+  documentUri: string;
+  alwaysReturnContent: boolean;
+}
+
+export namespace PuppetFixDiagnosticErrorsRequest {
+  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void, void>('puppet/fixDiagnosticErrors');
+}
+
+export interface PuppetFixDiagnosticErrorsResponse {
+  documentUri: string;
+  fixesApplied: number;
+  newContent: string;
 }
 
 export namespace CompileNodeGraphRequest {

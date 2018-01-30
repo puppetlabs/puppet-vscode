@@ -3,6 +3,102 @@ require 'spec_helper'
 describe 'document_validator' do
   let(:subject) { PuppetLanguageServer::DocumentValidator }
 
+  describe '#fix_validate_errors' do
+    describe "Given an incomplete manifest which has syntax errors but no lint errors" do
+      let(:manifest) { 'user { \'Bob\'' }
+
+      it "should return no changes" do
+        problems_fixed, new_content = subject.fix_validate_errors(manifest, nil)
+        expect(problems_fixed).to eq(0)
+        expect(new_content).to eq(manifest)
+      end
+    end
+
+    describe "Given a complete manifest which has a single fixable lint errors" do
+      let(:manifest) { "
+        user { \"Bob\":
+          ensure => 'present'
+        }"
+      }
+      let(:new_manifest) { "
+        user { 'Bob':
+          ensure => 'present'
+        }"
+      }
+
+      it "should return changes" do
+        problems_fixed, new_content = subject.fix_validate_errors(manifest, nil)
+        expect(problems_fixed).to eq(1)
+        expect(new_content).to eq(new_manifest)
+      end
+    end
+
+    describe "Given a complete manifest which has multiple fixable lint errors" do
+      let(:manifest) { "
+        // bad comment
+        user { \"Bob\":
+          name => 'username',
+          ensure => 'present'
+        }"
+      }
+      let(:new_manifest) { "
+        # bad comment
+        user { 'Bob':
+          name   => 'username',
+          ensure => 'present'
+        }"
+      }
+
+      it "should return changes" do
+        problems_fixed, new_content = subject.fix_validate_errors(manifest, nil)
+        expect(problems_fixed).to eq(3)
+        expect(new_content).to eq(new_manifest)
+      end
+    end
+
+
+    describe "Given a complete manifest which has unfixable lint errors" do
+      let(:manifest) { "
+        user { 'Bob':
+          name   => 'name',
+          ensure => 'present'
+        }"
+      }
+
+      it "should return no changes" do
+        problems_fixed, new_content = subject.fix_validate_errors(manifest, nil)
+        expect(problems_fixed).to eq(0)
+        expect(new_content).to eq(manifest)
+      end
+    end
+
+    describe "Given a complete manifest with CRLF which has fixable lint errors" do
+      let(:manifest)     { "user { \"Bob\":\r\nensure  => 'present'\r\n}" }
+      let(:new_manifest) { "user { 'Bob':\r\nensure  => 'present'\r\n}" }
+
+      it "should preserve CRLF" do
+        pending('Release of https://github.com/rodjek/puppet-lint/commit/2a850ab3fd3694a4dd0c4d2f22a1e60b9ca0a495')
+        problems_fixed, new_content = subject.fix_validate_errors(manifest, nil)
+        expect(problems_fixed).to eq(1)
+        expect(new_content).to eq(new_manifest)
+      end
+    end
+
+    describe "Given a complete manifest which has disabed fixable lint errors" do
+      let(:manifest) { "
+        user { \"Bob\": # lint:ignore:double_quoted_strings
+          ensure  => 'present'
+        }"
+      }
+
+      it "should return no changes" do
+        problems_fixed, new_content = subject.fix_validate_errors(manifest, nil)
+        expect(problems_fixed).to eq(0)
+        expect(new_content).to eq(manifest)
+      end
+    end
+  end
+
   describe '#validate' do
     describe "Given an incomplete manifest which has syntax errors" do
       let(:manifest) { 'user { "Bob"' }
