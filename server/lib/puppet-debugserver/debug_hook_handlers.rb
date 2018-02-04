@@ -158,6 +158,11 @@ module PuppetDebugServer
       end
 
       break_description = break_display_text if break_description.empty?
+      stack_trace = Puppet::Pops::PuppetStack.stacktrace
+      # Due to https://github.com/puppetlabs/puppet/commit/0f96dd918b6184261bc2219e5e68e246ffbeac10
+      # Prior to Puppet 4.8.0, stacktrace is in reverse order
+      stack_trace.reverse! if Gem::Version.new(Puppet.version) < Gem::Version.new('4.8.0')
+
       PuppetDebugServer::PuppetDebugSession.raise_and_wait_stopped_event(
         reason,
         break_display_text,
@@ -165,7 +170,7 @@ module PuppetDebugServer
         :pops_target       => pops_target_object,
         :scope             => scope_object,
         :pops_depth_level  => pops_depth_level,
-        :puppet_stacktrace => Puppet::Pops::PuppetStack.stacktrace
+        :puppet_stacktrace => stack_trace
       )
     end
 
