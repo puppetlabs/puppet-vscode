@@ -76,7 +76,7 @@ module PuppetDebugServer
       # Modify the response
       raise('protocol message type was not set to response') unless response['type'] == 'response'
       response['seq'] = @response_sequence
-      @response_sequence += @response_sequence # Not thread safe possibly. It's ok on MRI ruby, not jruby
+      @response_sequence += 1 # Not thread safe possibly. It's ok on MRI ruby, not jruby
 
       response_json = encode_json(response)
       PuppetDebugServer.log_message(:debug, "--- OUTBOUND\n#{response_json}\n---")

@@ -321,18 +321,18 @@ module PuppetDebugServer
 
         # TODO: Need to check on the client capabilities of zero or one based indexes
         if target.is_a?(Puppet::Pops::Model::Positioned)
-          # TODO: Potential issue here with 4.10.x not implementing .file on the Positioned class
+          target_loc = get_location_from_pops_object(target)
           frame['source'] = PuppetDebugServer::Protocol::Source.create(
-            'path' => target.file
+            'path' => target_loc.file
           )
-          frame['name']   = target.file
-          frame['line']   = target.line
-          frame['column'] = target.pos || 0
+          frame['name']   = target_loc.file
+          frame['line']   = target_loc.line
+          frame['column'] = pos_on_line(target, target_loc.offset)
 
-          if target.length > 0 # rubocop:disable Style/ZeroLengthPredicate
-            end_offset = target.offset + target.length
-            frame['endLine']   = target.locator.line_for_offset(end_offset)
-            frame['endColumn'] = target.locator.pos_on_line(end_offset)
+          if target_loc.length > 0 # rubocop:disable Style/ZeroLengthPredicate
+            end_offset = target_loc.offset + target_loc.length
+            frame['endLine']   = line_for_offset(target, end_offset)
+            frame['endColumn'] = pos_on_line(target, end_offset)
           end
         end
 
@@ -350,7 +350,6 @@ module PuppetDebugServer
         }
 
         # TODO: Need to check on the client capabilities of zero or one based indexes
-        # TODO: Potential issue here with 4.10.x not implementing .file on the Positioned class
         unless err.file.nil? || err.line.nil?
           frame['source'] = PuppetDebugServer::Protocol::Source.create(
             'path' => err.file
@@ -443,6 +442,16 @@ module PuppetDebugServer
       obj_loc.locator.line_for_offset(offset)
     end
     private_class_method :line_for_offset
+
+    def self.pos_on_line(obj, offset)
+      # Puppet 5 exposes the source locator on the Pops object
+      return obj.locator.pos_on_line(offset) if obj.respond_to?(:locator)
+
+      # Revert to Puppet 4.x location information.  A little more expensive to call
+      obj_loc = Puppet::Pops::Utils.find_closest_positioned(obj)
+      obj_loc.locator.pos_on_line(offset)
+    end
+    private_class_method :pos_on_line
 
     def self.debug_session_watcher
       loop do
