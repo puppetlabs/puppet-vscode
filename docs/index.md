@@ -1,12 +1,15 @@
 ## Features
 This project is a visual studio code extension which provides Puppet Language support, including the following features:
 
-+ Syntax Highlighting
-+ Real-time linting
-+ PDK commands
-+ Auto-complete for facts and most (?) Puppet language facets
-+ Preview node graphs
-+ More!
++ Syntax highlighting
++ Code snippets
++ Linting
++ IntelliSense for resources, parameters and more
++ Validation of `metadata.json` files
++ Import from `puppet resource` directly into manifests
++ Node graph preview
++ Puppet Development Kit integration
++ (Experimental) Local debugging of Puppet manifests
 
 ## Getting Started
 
