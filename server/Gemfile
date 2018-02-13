@@ -19,6 +19,11 @@ group :development do
     gem 'puppet',                            :require => false
   end
 
+  case RUBY_PLATFORM
+  when /darwin/
+    gem 'CFPropertyList'
+  end
+
   gem "win32-dir", "<= 0.4.9",      :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
   gem "win32-eventlog", "<= 0.6.5", :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]
   gem "win32-process", "<= 0.7.5",  :require => false, :platforms => ["mswin", "mingw", "x64_mingw"]

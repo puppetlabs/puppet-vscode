@@ -10,7 +10,7 @@ describe 'End to End Testing' do
 
     # Start the debug server
     debug_entrypoint = File.join($root_dir,'puppet-debugserver')
-    @debug_stdin, @debug_stdout, @debug_stderr, wait_thr = Open3.popen3('ruby.exe',debug_entrypoint,
+    @debug_stdin, @debug_stdout, @debug_stderr, wait_thr = Open3.popen3('ruby',debug_entrypoint,
                                                                         '--timeout=10',
                                                                         "--port=#{@debug_port}",
                                                                         "--ip=#{@debug_host}")
