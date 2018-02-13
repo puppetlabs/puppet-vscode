@@ -286,6 +286,10 @@
     </dict>
     <dict>
       <key>include</key>
+      <string>#numbers</string>
+    </dict>
+    <dict>
+      <key>include</key>
       <string>#variable</string>
     </dict>
     <dict>
@@ -732,6 +736,40 @@
           <string>(\$\{)(?:[a-zA-Zx7f-xff\$]|::)(?:[a-zA-Z0-9_x7f-xff\$]|::)*(\})</string>
           <key>name</key>
           <string>variable.other.readwrite.global.puppet</string>
+        </dict>
+      </array>
+    </dict>
+    <!-- Ref https://github.com/puppetlabs/puppet-specifications/blob/master/language/lexical_structure.md#numbers -->
+    <key>numbers</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <!-- Hex numbers -->
+        <dict>
+          <key>comment</key>
+          <string>HEX 0x 0-f</string>
+          <key>match</key>
+          <string>(?&lt;!\w|\d)([-+]?)(?i:0x)(?i:[0-9a-f])+(?!\w|\d)</string>
+          <key>name</key>
+          <string>constant.numeric.hexadecimal.puppet</string>
+        </dict>
+        <!-- Integers and Octal numbers -->
+        <dict>
+          <key>comment</key>
+          <string>INTEGERS [(+|-)] digits [e [(+|-)] digits]</string>
+          <key>match</key>
+          <string>(?&lt;!\w|\.)([-+]?)(?&lt;!\d)\d+(?i:e(\+|-){0,1}\d+){0,1}(?!\w|\d|\.)</string>
+          <key>name</key>
+          <string>constant.numeric.integer.puppet</string>
+        </dict>
+        <!-- Floating point numbers -->
+        <dict>
+          <key>comment</key>
+          <string>FLOAT [(+|-)] digits . digits [e [(+|-)] digits]</string>
+          <key>match</key>
+          <string>(?&lt;!\w)([-+]?)\d+\.\d+(?i:e(\+|-){0,1}\d+){0,1}(?!\w|\d)</string>
+          <key>name</key>
+          <string>constant.numeric.integer.puppet</string>
         </dict>
       </array>
     </dict>
