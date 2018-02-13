@@ -54,6 +54,10 @@
       <array>
         <dict>
           <key>include</key>
+          <string>#puppet-datatypes</string>
+        </dict>
+        <dict>
+          <key>include</key>
           <string>#variables</string>
         </dict>
         <dict>
@@ -124,6 +128,10 @@
       <string>meta.definition.plan.puppet</string>
       <key>patterns</key>
       <array>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatypes</string>
+        </dict>
         <dict>
           <key>include</key>
           <string>#variables</string>
@@ -267,6 +275,10 @@
       <string>((\$?)"?[a-zA-Z_\x{7f}-\x{ff}][a-zA-Z0-9_\x{7f}-\x{ff}]*"?):(?=\s+|$)</string>
       <key>name</key>
       <string>entity.name.section.puppet</string>
+    </dict>
+    <dict>
+      <key>include</key>
+      <string>#puppet-datatypes</string>
     </dict>
     <dict>
       <key>include</key>
@@ -720,6 +732,80 @@
           <string>(\$\{)(?:[a-zA-Zx7f-xff\$]|::)(?:[a-zA-Z0-9_x7f-xff\$]|::)*(\})</string>
           <key>name</key>
           <string>variable.other.readwrite.global.puppet</string>
+        </dict>
+      </array>
+    </dict>
+    <!-- Ref: https://github.com/puppetlabs/puppet-specifications/blob/master/language/types_values_variables.md#the-type-system -->
+    <key>puppet-datatypes</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-noparameters</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-withparameters</string>
+        </dict>
+      </array>
+    </dict>
+    <key>puppet-datatype-noparameters</key>
+    <dict>
+      <key>begin</key>
+      <string>(?:\s|,|^)([A-Z][a-zA-Z]*)(?:\s|])</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.other.attribute-name.datatype.puppet</string>
+        </dict>
+      </dict>
+      <key>end</key>
+      <string>\b|\$</string>
+      <key>endCaptures</key>
+      <dict />
+    </dict>
+    <key>puppet-datatype-withparameters</key>
+    <dict>
+      <key>begin</key>
+      <string>(\b[A-Z][a-zA-Z]*)\[</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.other.attribute-name.datatype.puppet</string>
+        </dict>
+      </dict>
+      <key>end</key>
+      <string>(?=\])</string>
+      <key>endCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.other.attribute-name.datatype.puppet</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-withparameters</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-noparameters</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#strings</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#numbers</string>
         </dict>
       </array>
     </dict>
