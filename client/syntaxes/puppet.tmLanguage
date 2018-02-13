@@ -54,6 +54,10 @@
       <array>
         <dict>
           <key>include</key>
+          <string>#puppet-datatypes</string>
+        </dict>
+        <dict>
+          <key>include</key>
           <string>#variables</string>
         </dict>
         <dict>
@@ -96,6 +100,57 @@
               <string>support.type.puppet</string>
             </dict>
           </array>
+        </dict>
+      </array>
+    </dict>
+    <!-- Ref https://puppet.com/docs/bolt/0.x/writing_plans.html#naming-plans -->
+    <dict>
+      <key>begin</key>
+      <string>(?x)^\s*
+          (plan)\s+
+          ((?:[a-z][a-z0-9_]+::)*[a-z][a-z0-9_]+)\s* # identifier</string>
+      <key>captures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>storage.type.puppet</string>
+        </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>entity.name.type.plan.puppet</string>
+        </dict>
+      </dict>
+      <key>end</key>
+      <string>(?={)</string>
+      <key>name</key>
+      <string>meta.definition.plan.puppet</string>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatypes</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#constants</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#strings</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#numbers</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#line_comment</string>
         </dict>
       </array>
     </dict>
@@ -223,7 +278,15 @@
     </dict>
     <dict>
       <key>include</key>
+      <string>#puppet-datatypes</string>
+    </dict>
+    <dict>
+      <key>include</key>
       <string>#strings</string>
+    </dict>
+    <dict>
+      <key>include</key>
+      <string>#numbers</string>
     </dict>
     <dict>
       <key>include</key>
@@ -673,6 +736,114 @@
           <string>(\$\{)(?:[a-zA-Zx7f-xff\$]|::)(?:[a-zA-Z0-9_x7f-xff\$]|::)*(\})</string>
           <key>name</key>
           <string>variable.other.readwrite.global.puppet</string>
+        </dict>
+      </array>
+    </dict>
+    <!-- Ref https://github.com/puppetlabs/puppet-specifications/blob/master/language/lexical_structure.md#numbers -->
+    <key>numbers</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <!-- Hex numbers -->
+        <dict>
+          <key>comment</key>
+          <string>HEX 0x 0-f</string>
+          <key>match</key>
+          <string>(?&lt;!\w|\d)([-+]?)(?i:0x)(?i:[0-9a-f])+(?!\w|\d)</string>
+          <key>name</key>
+          <string>constant.numeric.hexadecimal.puppet</string>
+        </dict>
+        <!-- Integers and Octal numbers -->
+        <dict>
+          <key>comment</key>
+          <string>INTEGERS [(+|-)] digits [e [(+|-)] digits]</string>
+          <key>match</key>
+          <string>(?&lt;!\w|\.)([-+]?)(?&lt;!\d)\d+(?i:e(\+|-){0,1}\d+){0,1}(?!\w|\d|\.)</string>
+          <key>name</key>
+          <string>constant.numeric.integer.puppet</string>
+        </dict>
+        <!-- Floating point numbers -->
+        <dict>
+          <key>comment</key>
+          <string>FLOAT [(+|-)] digits . digits [e [(+|-)] digits]</string>
+          <key>match</key>
+          <string>(?&lt;!\w)([-+]?)\d+\.\d+(?i:e(\+|-){0,1}\d+){0,1}(?!\w|\d)</string>
+          <key>name</key>
+          <string>constant.numeric.integer.puppet</string>
+        </dict>
+      </array>
+    </dict>
+    <!-- Ref: https://github.com/puppetlabs/puppet-specifications/blob/master/language/types_values_variables.md#the-type-system -->
+    <key>puppet-datatypes</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-noparameters</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-withparameters</string>
+        </dict>
+      </array>
+    </dict>
+    <key>puppet-datatype-noparameters</key>
+    <dict>
+      <key>begin</key>
+      <string>(?:\s|,|^)([A-Z][a-zA-Z]*)(?:\s|])</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.other.attribute-name.datatype.puppet</string>
+        </dict>
+      </dict>
+      <key>end</key>
+      <string>\b|\$</string>
+      <key>endCaptures</key>
+      <dict />
+    </dict>
+    <key>puppet-datatype-withparameters</key>
+    <dict>
+      <key>begin</key>
+      <string>(\b[A-Z][a-zA-Z]*)\[</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.other.attribute-name.datatype.puppet</string>
+        </dict>
+      </dict>
+      <key>end</key>
+      <string>(?=\])</string>
+      <key>endCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.other.attribute-name.datatype.puppet</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-withparameters</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#puppet-datatype-noparameters</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#strings</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#numbers</string>
         </dict>
       </array>
     </dict>
