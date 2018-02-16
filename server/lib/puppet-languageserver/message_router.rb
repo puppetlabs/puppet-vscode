@@ -86,6 +86,19 @@ TEXT
       PuppetLanguageServer::DocumentStore
     end
 
+    def document_type(uri)
+      case uri
+      when /\/Puppetfile$/i
+        :puppetfile
+      when /\.pp$/i
+        :manifest
+      when /\.epp$/i
+        :epp
+      else
+        :unknown
+      end
+    end
+
     def receive_request(request)
       case request.rpc_method
       when 'initialize'
@@ -129,6 +142,10 @@ TEXT
 
       when 'puppet/compileNodeGraph'
         file_uri = request.params['external']
+        unless document_type(file_uri) == :manifest
+          request.reply_result(LanguageServer::PuppetCompilation.create('error' => 'Files of this type can not be used to create a node graph.'))
+          return
+        end
         content = documents.document(file_uri)
 
         dot_content = nil
@@ -159,7 +176,12 @@ TEXT
           file_uri = formatted_request['documentUri']
           content = documents.document(file_uri)
 
-          changes, new_content = PuppetLanguageServer::DocumentValidator.fix_validate_errors(content, @workspace)
+          case document_type(file_uri)
+          when :manifest
+            changes, new_content = PuppetLanguageServer::DocumentValidator.fix_validate_errors(content, @workspace)
+          else
+            raise "Unable to fixDiagnosticErrors on #{file_uri}"
+          end
 
           request.reply_result(LanguageServer::PuppetFixDiagnosticErrorsResponse.create(
                                  'documentUri'  => formatted_request['documentUri'],
@@ -183,7 +205,12 @@ TEXT
         char_num = request.params['position']['character']
         content = documents.document(file_uri)
         begin
-          request.reply_result(PuppetLanguageServer::CompletionProvider.complete(content, line_num, char_num))
+          case document_type(file_uri)
+          when :manifest
+            request.reply_result(PuppetLanguageServer::CompletionProvider.complete(content, line_num, char_num))
+          else
+            raise "Unable to provide completion on #{file_uri}"
+          end
         rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(textDocument/completion) #{exception}")
           request.reply_result(LanguageServer::CompletionList.create_nil_response)
@@ -204,7 +231,12 @@ TEXT
         char_num = request.params['position']['character']
         content = documents.document(file_uri)
         begin
-          request.reply_result(PuppetLanguageServer::HoverProvider.resolve(content, line_num, char_num))
+          case document_type(file_uri)
+          when :manifest
+            request.reply_result(PuppetLanguageServer::HoverProvider.resolve(content, line_num, char_num))
+          else
+            raise "Unable to provide hover on #{file_uri}"
+          end
         rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(textDocument/hover) #{exception}")
           request.reply_result(LanguageServer::Hover.create_nil_response)
@@ -216,7 +248,12 @@ TEXT
         char_num = request.params['position']['character']
         content = documents.document(file_uri)
         begin
-          request.reply_result(PuppetLanguageServer::DefinitionProvider.find_definition(content, line_num, char_num))
+          case document_type(file_uri)
+          when :manifest
+            request.reply_result(PuppetLanguageServer::DefinitionProvider.find_definition(content, line_num, char_num))
+          else
+            raise "Unable to provide definition on #{file_uri}"
+          end
         rescue StandardError => exception
           PuppetLanguageServer.log_message(:error, "(textDocument/definition) #{exception}")
           request.reply_result(nil)
@@ -244,7 +281,12 @@ TEXT
         file_uri = params['textDocument']['uri']
         content = params['textDocument']['text']
         documents.set_document(file_uri, content)
-        reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
+        case document_type(file_uri)
+        when :manifest
+          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
+        else
+          reply_diagnostics(file_uri, [])
+        end
 
       when 'textDocument/didClose'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didClose notification.')
@@ -256,7 +298,12 @@ TEXT
         file_uri = params['textDocument']['uri']
         content = params['contentChanges'][0]['text'] # TODO: Bad hardcoding zero
         documents.set_document(file_uri, content)
-        reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
+        case document_type(file_uri)
+        when :manifest
+          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
+        else
+          reply_diagnostics(file_uri, [])
+        end
 
       when 'textDocument/didSave'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didSave notification.')

@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe 'message_router' do
+  MANIFEST_FILENAME = 'file:///something.pp'
+  PUPPETFILE_FILENAME = 'file:///Puppetfile'
+  EPP_FILENAME = 'file:///something.epp'
+  UNKNOWN_FILENAME = 'file:///I_do_not_work.exe'
+  ERROR_CAUSING_FILE_CONTENT = "file_content which causes errros\n <%- Wee!\n class 'foo' {'"
+
   let(:subject_options) { nil }
   let(:subject) { PuppetLanguageServer::MessageRouter.new(subject_options) }
 
@@ -41,7 +47,7 @@ describe 'message_router' do
 
     # initialize - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#initialize
     context 'given an initialize request' do
-      let(:request_rpc_method) { 'initialize' } 
+      let(:request_rpc_method) { 'initialize' }
       it 'should reply with capabilites' do
         expect(request).to receive(:reply_result).with(hash_including('capabilities'))
 
@@ -51,7 +57,7 @@ describe 'message_router' do
 
     # shutdown - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#shutdown
     context 'given a shutdown request' do
-      let(:request_rpc_method) { 'shutdown' } 
+      let(:request_rpc_method) { 'shutdown' }
       it 'should reply with nil' do
         expect(request).to receive(:reply_result).with(nil)
 
@@ -60,7 +66,7 @@ describe 'message_router' do
     end
 
     context 'given a puppet/getVersion request' do
-      let(:request_rpc_method) { 'puppet/getVersion' } 
+      let(:request_rpc_method) { 'puppet/getVersion' }
       it 'should reply with the Puppet Version' do
         expect(request).to receive(:reply_result).with(hash_including('puppetVersion'))
 
@@ -197,7 +203,7 @@ describe 'message_router' do
 
     context 'given a puppet/compileNodeGraph request' do
       let(:request_rpc_method) { 'puppet/compileNodeGraph' }
-      let(:file_uri) { 'file:///something.pp' }
+      let(:file_uri) { MANIFEST_FILENAME }
       let(:file_content) { 'some file content' }
       let(:dot_content) { 'some graph content' }
       let(:request_params) {{
@@ -208,6 +214,22 @@ describe 'message_router' do
         # Create fake document store
         subject.documents.clear
         subject.documents.set_document(file_uri,file_content)
+      end
+
+      context 'and a file which is not a puppet manifest' do
+        let(:file_uri) { UNKNOWN_FILENAME }
+
+        it 'should reply with the error text' do
+          expect(request).to receive(:reply_result).with(hash_including('error' => /Files of this type/))
+
+          subject.receive_request(request)
+        end
+
+        it 'should not reply with dotContent' do
+          expect(request).to_not receive(:reply_result).with(hash_including('dotContent'))
+
+          subject.receive_request(request)
+        end
       end
 
       context 'and an error during generation of the node graph' do
@@ -261,13 +283,13 @@ describe 'message_router' do
 
           it 'should reply with the error text' do
             expect(request).to receive(:reply_result).with(hash_including('error' => /no resources/))
-  
+
             subject.receive_request(request)
           end
-  
+
           it 'should not reply with dotContent' do
             expect(request).to_not receive(:reply_result).with(hash_including('dotContent'))
-  
+
             subject.receive_request(request)
           end
         end
@@ -281,7 +303,7 @@ describe 'message_router' do
       let(:char_num) { 2 }
       let(:request_params) {{
         'textDocument' => {
-          'uri' => 'file:///something.pp'
+          'uri' => file_uri
         },
         'position' => {
           'line' => line_num,
@@ -289,19 +311,11 @@ describe 'message_router' do
         },
       }}
 
-      it 'should call complete method on the Completion Provider' do
-        expect(PuppetLanguageServer::CompletionProvider).to receive(:complete).with(Object,line_num,char_num).and_return('something')
-
-        subject.receive_request(request)
-      end
-
-      context 'and an error occurs during completion' do
-        before(:each) do
-          expect(PuppetLanguageServer::CompletionProvider).to receive(:complete).and_raise('MockError')
-        end
+      context 'for a file the server does not understand' do
+        let(:file_uri) { UNKNOWN_FILENAME }
 
         it 'should log an error message' do
-          expect(PuppetLanguageServer).to receive(:log_message).with(:error,/MockError/)
+          expect(PuppetLanguageServer).to receive(:log_message).with(:error,/Unable to provide completion/)
 
           subject.receive_request(request)
         end
@@ -310,6 +324,33 @@ describe 'message_router' do
           expect(request).to receive(:reply_result).with(hash_including('isIncomplete' => false, 'items' => []))
 
           subject.receive_request(request)
+        end
+      end
+
+      context 'for a puppet manifest file' do
+        let(:file_uri) { MANIFEST_FILENAME }
+        it 'should call complete method on the Completion Provider' do
+          expect(PuppetLanguageServer::CompletionProvider).to receive(:complete).with(Object,line_num,char_num).and_return('something')
+
+          subject.receive_request(request)
+        end
+
+        context 'and an error occurs during completion' do
+          before(:each) do
+            expect(PuppetLanguageServer::CompletionProvider).to receive(:complete).and_raise('MockError')
+          end
+
+          it 'should log an error message' do
+            expect(PuppetLanguageServer).to receive(:log_message).with(:error,/MockError/)
+
+            subject.receive_request(request)
+          end
+
+          it 'should reply with a complete, empty response' do
+            expect(request).to receive(:reply_result).with(hash_including('isIncomplete' => false, 'items' => []))
+
+            subject.receive_request(request)
+          end
         end
       end
     end
@@ -328,7 +369,7 @@ describe 'message_router' do
 
         subject.receive_request(request)
       end
-      
+
       context 'and an error occurs during resolution' do
         before(:each) do
           expect(PuppetLanguageServer::CompletionProvider).to receive(:resolve).and_raise('MockError')
@@ -355,7 +396,7 @@ describe 'message_router' do
       let(:char_num) { 2 }
       let(:request_params) {{
         'textDocument' => {
-          'uri' => 'file:///something.pp'
+          'uri' => file_uri
         },
         'position' => {
           'line' => line_num,
@@ -363,19 +404,11 @@ describe 'message_router' do
         },
       }}
 
-      it 'should call resolve method on the Hover Provider' do
-        expect(PuppetLanguageServer::HoverProvider).to receive(:resolve).with(Object,line_num,char_num).and_return('something')
-
-        subject.receive_request(request)
-      end
-
-      context 'and an error occurs during resolution' do
-        before(:each) do
-          expect(PuppetLanguageServer::HoverProvider).to receive(:resolve).and_raise('MockError')
-        end
+      context 'for a file the server does not understand' do
+        let(:file_uri) { UNKNOWN_FILENAME }
 
         it 'should log an error message' do
-          expect(PuppetLanguageServer).to receive(:log_message).with(:error,/MockError/)
+          expect(PuppetLanguageServer).to receive(:log_message).with(:error,/Unable to provide hover/)
 
           subject.receive_request(request)
         end
@@ -384,6 +417,34 @@ describe 'message_router' do
           expect(request).to receive(:reply_result).with(hash_including('contents' => nil))
 
           subject.receive_request(request)
+        end
+      end
+
+      context 'for a puppet manifest file' do
+        let(:file_uri) { MANIFEST_FILENAME }
+
+        it 'should call resolve method on the Hover Provider' do
+          expect(PuppetLanguageServer::HoverProvider).to receive(:resolve).with(Object,line_num,char_num).and_return('something')
+
+          subject.receive_request(request)
+        end
+
+        context 'and an error occurs during resolution' do
+          before(:each) do
+            expect(PuppetLanguageServer::HoverProvider).to receive(:resolve).and_raise('MockError')
+          end
+
+          it 'should log an error message' do
+            expect(PuppetLanguageServer).to receive(:log_message).with(:error,/MockError/)
+
+            subject.receive_request(request)
+          end
+
+          it 'should reply with nil for the contents' do
+            expect(request).to receive(:reply_result).with(hash_including('contents' => nil))
+
+            subject.receive_request(request)
+          end
         end
       end
     end
@@ -453,43 +514,94 @@ describe 'message_router' do
     end
 
     # textDocument/didOpen - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#textDocument_didOpen
-    context 'given an textDocument/didOpen notification' do
-      let(:notification_method) { 'textDocument/didOpen' }
-      let(:notification_params) { {
-        'textDocument' => {
-          'uri' => file_uri,
-          'languageId' => 'puppet',
-          'version' => 1,
-          'text' => file_content,
-        }
-      }}
-      let(:file_uri) { 'file:///newfile.pp' }
-      let(:file_content) { 'file_content' }
+    context 'given a textDocument/didOpen notification' do
+      let(:validation_result) { ['validation_result'] }
+
+      shared_examples_for "an opened document with validation errors" do |file_uri, file_content|
+        let(:notification_method) { 'textDocument/didOpen' }
+        let(:notification_params) { {
+          'textDocument' => {
+            'uri' => file_uri,
+            'languageId' => 'puppet',
+            'version' => 1,
+            'text' => file_content,
+          }
+        }}
+
+        it 'should add the document to the document store' do
+          subject.receive_notification(notification_method, notification_params)
+          expect(subject.documents.document(file_uri)).to eq(file_content)
+        end
+
+        it 'should reply with diagnostic information on the file' do
+          expect(subject).to receive(:reply_diagnostics).with(file_uri,validation_result).and_return(true)
+          subject.receive_notification(notification_method, notification_params)
+        end
+      end
+
+      shared_examples_for "an opened document with no validation errors" do |file_uri, file_content|
+        let(:notification_method) { 'textDocument/didOpen' }
+        let(:notification_params) { {
+          'textDocument' => {
+            'uri' => file_uri,
+            'languageId' => 'puppet',
+            'version' => 1,
+            'text' => file_content,
+          }
+        }}
+
+        it 'should add the document to the document store' do
+          subject.receive_notification(notification_method, notification_params)
+          expect(subject.documents.document(file_uri)).to eq(file_content)
+        end
+
+        it 'should reply with empty diagnostic information on the file' do
+          expect(subject).to receive(:reply_diagnostics).with(file_uri,[]).and_return(true)
+          subject.receive_notification(notification_method, notification_params)
+        end
+      end
 
       before(:each) do
-        allow(PuppetLanguageServer::DocumentValidator).to receive(:validate).and_return([])
-        allow(subject).to receive(:reply_diagnostics).and_return(true)
         subject.documents.clear
       end
 
-      it 'should add the document to the document store' do
-        subject.receive_notification(notification_method, notification_params)
-        expect(subject.documents.document(file_uri)).to eq(file_content)
+      context 'for a puppet manifest file' do
+        before(:each) do
+          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate).and_return(validation_result)
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "an opened document with validation errors", MANIFEST_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
-      it 'should reply with diagnostic information on the file' do
-        expect(subject).to receive(:reply_diagnostics).with(file_uri,[]).and_return(true)
-        subject.receive_notification(notification_method, notification_params)
+      context 'for a Puppetfile file' do
+        before(:each) do
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "an opened document with no validation errors", PUPPETFILE_FILENAME, ERROR_CAUSING_FILE_CONTENT
+      end
+
+      context 'for an EPP template file' do
+        before(:each) do
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "an opened document with no validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
+      end
+
+      context 'for an unknown file' do
+        before(:each) do
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "an opened document with no validation errors", UNKNOWN_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
     end
 
     # textDocument/didClose - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#didclosetextdocument-notification
-    context 'given an textDocument/didClose notification' do
+    context 'given a textDocument/didClose notification' do
       let(:notification_method) { 'textDocument/didClose' }
       let(:notification_params) { {
         'textDocument' => { 'uri' => file_uri}
       }}
-      let(:file_uri) { 'file:///somthing.pp' }
+      let(:file_uri) { MANIFEST_FILENAME }
       let(:file_content) { 'file_content' }
 
       before(:each) do
@@ -504,19 +616,10 @@ describe 'message_router' do
     end
 
     # textDocument/didChange - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#didchangetextdocument-notification
-    context 'given an textDocument/didChange notification' do
-      let(:notification_method) { 'textDocument/didChange' }
-      let(:file_uri) { 'file:///newfile.pp' }
-      let(:new_file_content ) { 'new_file_content' }
-      let(:file_content) { 'file_content' }
+    context 'given a textDocument/didChange notification and a TextDocumentSyncKind of Full' do
+      let(:validation_result) { ['validation_result'] }
 
-      before(:each) do
-        allow(PuppetLanguageServer::DocumentValidator).to receive(:validate).and_return([])
-        allow(subject).to receive(:reply_diagnostics).and_return(true)
-        subject.documents.clear
-      end
-
-      context 'and a TextDocumentSyncKind of Full' do
+      shared_examples_for "a changed document with validation errors" do |file_uri, new_file_content|
         let(:notification_params) { {
           'textDocument' => {
             'uri' => file_uri,
@@ -530,6 +633,8 @@ describe 'message_router' do
             }
           ]
         }}
+        let(:notification_method) { 'textDocument/didChange' }
+        let(:new_file_content ) { 'new_file_content' }
 
         it 'should update the document in the document store' do
           subject.receive_notification(notification_method, notification_params)
@@ -537,14 +642,76 @@ describe 'message_router' do
         end
 
         it 'should reply with diagnostic information on the file' do
-          expect(subject).to receive(:reply_diagnostics).with(file_uri,[]).and_return(true)
+          expect(subject).to receive(:reply_diagnostics).with(file_uri, validation_result).and_return(true)
           subject.receive_notification(notification_method, notification_params)
         end
+      end
+
+      shared_examples_for "a changed document with no validation errors" do |file_uri, new_file_content|
+        let(:notification_params) { {
+          'textDocument' => {
+            'uri' => file_uri,
+            'version' => 2,
+          },
+          'contentChanges' => [
+            {
+              'range' => nil,
+              'rangeLength' => nil,
+              'text' => new_file_content,
+            }
+          ]
+        }}
+        let(:notification_method) { 'textDocument/didChange' }
+        let(:new_file_content ) { 'new_file_content' }
+
+        it 'should update the document in the document store' do
+          subject.receive_notification(notification_method, notification_params)
+          expect(subject.documents.document(file_uri)).to eq(new_file_content)
+        end
+
+        it 'should reply with empty diagnostic information on the file' do
+          expect(subject).to receive(:reply_diagnostics).with(file_uri, []).and_return(true)
+          subject.receive_notification(notification_method, notification_params)
+        end
+      end
+
+      before(:each) do
+        subject.documents.clear
+      end
+
+      context 'for a puppet manifest file' do
+        before(:each) do
+          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate).and_return(validation_result)
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "a changed document with validation errors", MANIFEST_FILENAME, ERROR_CAUSING_FILE_CONTENT
+      end
+
+      context 'for a Puppetfile file' do
+        before(:each) do
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "a changed document with no validation errors", PUPPETFILE_FILENAME, ERROR_CAUSING_FILE_CONTENT
+      end
+
+      context 'for an EPP template file' do
+        before(:each) do
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "a changed document with no validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
+      end
+
+      context 'for a file the server does not understand' do
+        before(:each) do
+          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate).exactly(0).times
+          allow(subject).to receive(:reply_diagnostics).and_return(true)
+        end
+        it_should_behave_like "a changed document with no validation errors", UNKNOWN_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
     end
 
     # textDocument/didSave - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#didsavetextdocument-notification
-    context 'given an textDocument/didSave notification' do
+    context 'given a textDocument/didSave notification' do
       let(:notification_method) { 'textDocument/didSave' }
       it 'should log a message' do
         expect(PuppetLanguageServer).to receive(:log_message).with(:info,String)
