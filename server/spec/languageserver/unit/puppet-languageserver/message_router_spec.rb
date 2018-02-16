@@ -582,9 +582,10 @@ describe 'message_router' do
 
       context 'for an EPP template file' do
         before(:each) do
+          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate_epp).and_return(validation_result)
           allow(subject).to receive(:reply_diagnostics).and_return(true)
         end
-        it_should_behave_like "an opened document with no validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "an opened document with validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for an unknown file' do
@@ -696,9 +697,10 @@ describe 'message_router' do
 
       context 'for an EPP template file' do
         before(:each) do
+          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate_epp).and_return(validation_result)
           allow(subject).to receive(:reply_diagnostics).and_return(true)
         end
-        it_should_behave_like "a changed document with no validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "a changed document with validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for a file the server does not understand' do

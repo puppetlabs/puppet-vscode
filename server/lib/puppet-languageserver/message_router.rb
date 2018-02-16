@@ -284,6 +284,8 @@ TEXT
         case document_type(file_uri)
         when :manifest
           reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
+        when :epp
+          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate_epp(content, @workspace))
         else
           reply_diagnostics(file_uri, [])
         end
@@ -301,6 +303,8 @@ TEXT
         case document_type(file_uri)
         when :manifest
           reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
+        when :epp
+          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate_epp(content, @workspace))
         else
           reply_diagnostics(file_uri, [])
         end
