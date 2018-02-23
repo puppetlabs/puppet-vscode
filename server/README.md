@@ -112,6 +112,7 @@ Usage: puppet-languageserver.rb [options]
         --debug=DEBUG                Output debug information.  Either specify a filename or 'STDOUT'.  Default is no debug output
     -s, --slow-start                 Delay starting the TCP Server until Puppet initialisation has completed.  Default is to start fast
         --stdio                      Runs the server in stdio mode, without a TCP listener
+        --local-workspace=PATH       The workspace or file path that will be used to provide module-specific functionality. Default is no workspace path.
     -h, --help                       Prints this help
     -v, --version                    Prints the Langauge Server version
 ```
