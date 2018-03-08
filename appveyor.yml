@@ -1,4 +1,4 @@
-version: 0.7.0-appv.{build}
+version: 99.99.0-appv.{build}
 clone_depth: 10
 init:
 - SET
