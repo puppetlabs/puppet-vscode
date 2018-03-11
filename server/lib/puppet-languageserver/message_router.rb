@@ -1,27 +1,42 @@
 module PuppetLanguageServer
-  # TODO: Thread/Atomic safe? probably not
   module DocumentStore
     @documents = {}
+    @doc_mutex = Mutex.new
 
-    def self.set_document(uri, content)
-      @documents[uri] = content
+    def self.set_document(uri, content, doc_version)
+      @doc_mutex.synchronize do
+        @documents[uri] = {
+          :content => content,
+          :version => doc_version
+        }
+      end
     end
 
     def self.remove_document(uri)
-      @documents[uri] = nil
+      @doc_mutex.synchronize { @documents[uri] = nil }
     end
 
     def self.clear
-      @documents.clear
+      @doc_mutex.synchronize { @documents.clear }
     end
 
-    def self.document(uri)
-      return nil if @documents[uri].nil?
-      @documents[uri].clone
+    def self.document(uri, doc_version = nil)
+      @doc_mutex.synchronize do
+        return nil if @documents[uri].nil?
+        return nil unless doc_version.nil? || @documents[uri][:version] == doc_version
+        @documents[uri][:content].clone
+      end
+    end
+
+    def self.document_version(uri)
+      @doc_mutex.synchronize do
+        return nil if @documents[uri].nil?
+        @documents[uri][:version]
+      end
     end
 
     def self.document_uris
-      @documents.keys.dup
+      @doc_mutex.synchronize { @documents.keys.dup }
     end
   end
 
@@ -280,7 +295,8 @@ TEXT
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didOpen notification.')
         file_uri = params['textDocument']['uri']
         content = params['textDocument']['text']
-        documents.set_document(file_uri, content)
+        doc_version = params['textDocument']['version']
+        documents.set_document(file_uri, content, doc_version)
         case document_type(file_uri)
         when :manifest
           reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
@@ -299,7 +315,8 @@ TEXT
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didChange notification.')
         file_uri = params['textDocument']['uri']
         content = params['contentChanges'][0]['text'] # TODO: Bad hardcoding zero
-        documents.set_document(file_uri, content)
+        doc_version = params['textDocument']['version']
+        documents.set_document(file_uri, content, doc_version)
         case document_type(file_uri)
         when :manifest
           reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))

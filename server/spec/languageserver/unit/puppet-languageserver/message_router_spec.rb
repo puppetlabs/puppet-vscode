@@ -213,7 +213,7 @@ describe 'message_router' do
       before(:each) do
         # Create fake document store
         subject.documents.clear
-        subject.documents.set_document(file_uri,file_content)
+        subject.documents.set_document(file_uri,file_content, 0)
       end
 
       context 'and a file which is not a puppet manifest' do
@@ -607,7 +607,7 @@ describe 'message_router' do
 
       before(:each) do
         subject.documents.clear
-        subject.documents.set_document(file_uri,file_content)
+        subject.documents.set_document(file_uri,file_content, 0)
       end
 
       it 'should remove the document from the document store' do

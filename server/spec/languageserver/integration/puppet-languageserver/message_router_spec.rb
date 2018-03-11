@@ -20,7 +20,7 @@ describe 'message_router' do
 
       # Populate the document cache
       PuppetLanguageServer::DocumentStore.clear
-      documents.each { |uri, content| PuppetLanguageServer::DocumentStore.set_document(uri, content) }
+      documents.each { |uri, content| PuppetLanguageServer::DocumentStore.set_document(uri, content, 0) }
     end
 
     context 'given a request that raises an error' do
@@ -95,7 +95,7 @@ describe 'message_router' do
 
       # Populate the document cache
       PuppetLanguageServer::DocumentStore.clear
-      documents.each { |uri, content| PuppetLanguageServer::DocumentStore.set_document(uri, content) }
+      documents.each { |uri, content| PuppetLanguageServer::DocumentStore.set_document(uri, content, 0) }
     end
 
     context 'given a request that raises an error' do
