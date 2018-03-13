@@ -297,14 +297,7 @@ TEXT
         content = params['textDocument']['text']
         doc_version = params['textDocument']['version']
         documents.set_document(file_uri, content, doc_version)
-        case document_type(file_uri)
-        when :manifest
-          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
-        when :epp
-          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate_epp(content, @workspace))
-        else
-          reply_diagnostics(file_uri, [])
-        end
+        PuppetLanguageServer::ValidationQueue.enqueue(file_uri, doc_version, @workspace, self)
 
       when 'textDocument/didClose'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didClose notification.')
@@ -317,14 +310,7 @@ TEXT
         content = params['contentChanges'][0]['text'] # TODO: Bad hardcoding zero
         doc_version = params['textDocument']['version']
         documents.set_document(file_uri, content, doc_version)
-        case document_type(file_uri)
-        when :manifest
-          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate(content, @workspace))
-        when :epp
-          reply_diagnostics(file_uri, PuppetLanguageServer::DocumentValidator.validate_epp(content, @workspace))
-        else
-          reply_diagnostics(file_uri, [])
-        end
+        PuppetLanguageServer::ValidationQueue.enqueue(file_uri, doc_version, @workspace, self)
 
       when 'textDocument/didSave'
         PuppetLanguageServer.log_message(:info, 'Received textDocument/didSave notification.')
