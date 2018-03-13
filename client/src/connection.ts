@@ -106,7 +106,7 @@ export class ConnectionManager implements IConnectionManager {
         this.languageServerClient = undefined;
     }
 
-    // The language server process we spawn will close once the 
+    // The language server process we spawn will close once the
     // client disconnects.  No need to forcibly kill the process here. Also the language
     // client will try and send a shutdown event, which will throw errors if the language
     // client can no longer transmit the message.
@@ -164,6 +164,9 @@ export class ConnectionManager implements IConnectionManager {
       args.push('--ip=127.0.0.1');
     } else {
       args.push('--ip=' + this.connectionConfiguration.host);
+    }
+    if (vscode.workspace.workspaceFolders != undefined) {
+      args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
     args.push('--port=' + this.connectionConfiguration.port);
     args.push('--timeout=' + this.connectionConfiguration.timeout);

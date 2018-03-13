@@ -48,11 +48,11 @@ module PuppetDebugServer
 
     # /** Server-initiated event. */
     # export interface Event extends ProtocolMessage {
-    # 	// type: 'event';
-    # 	/** Type of event. */
-    # 	event: string;
-    # 	/** Event-specific information. */
-    # 	body?: any;
+    #   // type: 'event';
+    #   /** Type of event. */
+    #   event: string;
+    #   /** Event-specific information. */
+    #   body?: any;
     # }
     module Event
       def self.create(options = {})
@@ -106,18 +106,18 @@ module PuppetDebugServer
     end
 
     # /** Event message for 'initialized' event type.
-    # 	This event indicates that the debug adapter is ready to accept configuration requests (e.g. SetBreakpointsRequest, SetExceptionBreakpointsRequest).
-    # 	A debug adapter is expected to send this event when it is ready to accept configuration requests (but not before the InitializeRequest has finished).
-    # 	The sequence of events/requests is as follows:
-    # 	- adapters sends InitializedEvent (after the InitializeRequest has returned)
-    # 	- frontend sends zero or more SetBreakpointsRequest
-    # 	- frontend sends one SetFunctionBreakpointsRequest
-    # 	- frontend sends a SetExceptionBreakpointsRequest if one or more exceptionBreakpointFilters have been defined (or if supportsConfigurationDoneRequest is not defined or false)
-    # 	- frontend sends other future configuration requests
-    # 	- frontend sends one ConfigurationDoneRequest to indicate the end of the configuration
+    #   This event indicates that the debug adapter is ready to accept configuration requests (e.g. SetBreakpointsRequest, SetExceptionBreakpointsRequest).
+    #   A debug adapter is expected to send this event when it is ready to accept configuration requests (but not before the InitializeRequest has finished).
+    #   The sequence of events/requests is as follows:
+    #   - adapters sends InitializedEvent (after the InitializeRequest has returned)
+    #   - frontend sends zero or more SetBreakpointsRequest
+    #   - frontend sends one SetFunctionBreakpointsRequest
+    #   - frontend sends a SetExceptionBreakpointsRequest if one or more exceptionBreakpointFilters have been defined (or if supportsConfigurationDoneRequest is not defined or false)
+    #   - frontend sends other future configuration requests
+    #   - frontend sends one ConfigurationDoneRequest to indicate the end of the configuration
     # */
     # export interface InitializedEvent extends Event {
-    # 	// event: 'initialized';
+    #   // event: 'initialized';
     # }
     module InitializedEvent
       def self.create(_options = {})
@@ -128,28 +128,28 @@ module PuppetDebugServer
     end
 
     # /** Event message for 'stopped' event type.
-    # 	The event indicates that the execution of the debuggee has stopped due to some condition.
-    # 	This can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.
+    #   The event indicates that the execution of the debuggee has stopped due to some condition.
+    #   This can be caused by a break point previously set, a stepping action has completed, by executing a debugger statement etc.
     # */
     # export interface StoppedEvent extends Event {
-    # 	// event: 'stopped';
-    # 	body: {
-    # 		/** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry').
-    # 			For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
-    # 		*/
-    # 		reason: string;
-    # 		/** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is. */
-    # 		description?: string;
-    # 		/** The thread which was stopped. */
-    # 		threadId?: number;
-    # 		/** Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI. */
-    # 		text?: string;
-    # 		/** If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
-    # 			*  The client should use this information to enable that all threads can be expanded to access their stacktraces.
-    # 			*  If the attribute is missing or false, only the thread with the given threadId can be expanded.
-    # 		*/
-    # 		allThreadsStopped?: boolean;
-    # 	};
+    #   // event: 'stopped';
+    #   body: {
+    #     /** The reason for the event (such as: 'step', 'breakpoint', 'exception', 'pause', 'entry').
+    #       For backward compatibility this string is shown in the UI if the 'description' attribute is missing (but it must not be translated).
+    #     */
+    #     reason: string;
+    #     /** The full reason for the event, e.g. 'Paused on exception'. This string is shown in the UI as is. */
+    #     description?: string;
+    #     /** The thread which was stopped. */
+    #     threadId?: number;
+    #     /** Additional information. E.g. if reason is 'exception', text contains the exception name. This string is shown in the UI. */
+    #     text?: string;
+    #     /** If allThreadsStopped is true, a debug adapter can announce that all threads have stopped.
+    #       *  The client should use this information to enable that all threads can be expanded to access their stacktraces.
+    #       *  If the attribute is missing or false, only the thread with the given threadId can be expanded.
+    #     */
+    #     allThreadsStopped?: boolean;
+    #   };
     # }
     module StoppedEvent
       def self.create(options = {})
@@ -169,8 +169,8 @@ module PuppetDebugServer
 
     # /** Initialize request; value of command field is 'initialize'. */
     # export interface InitializeRequest extends Request {
-    # 	// command: 'initialize';
-    # 	arguments: InitializeRequestArguments;
+    #   // command: 'initialize';
+    #   arguments: InitializeRequestArguments;
     # }
     module InitializeRequest
       def self.create(options)
@@ -186,22 +186,22 @@ module PuppetDebugServer
 
     # /** Arguments for 'initialize' request. */
     # export interface InitializeRequestArguments {
-    # 	/** The ID of the (frontend) client using this adapter. */
-    # 	clientID?: string;
-    # 	/** The ID of the debug adapter. */
-    # 	adapterID: string;
-    # 	/** If true all line numbers are 1-based (default). */
-    # 	linesStartAt1?: boolean;
-    # 	/** If true all column numbers are 1-based (default). */
-    # 	columnsStartAt1?: boolean;
-    # 	/** Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. */
-    # 	pathFormat?: string;
-    # 	/** Client supports the optional type attribute for variables. */
-    # 	supportsVariableType?: boolean;
-    # 	/** Client supports the paging of variables. */
-    # 	supportsVariablePaging?: boolean;
-    # 	/** Client supports the runInTerminal request. */
-    # 	supportsRunInTerminalRequest?: boolean;
+    #   /** The ID of the (frontend) client using this adapter. */
+    #   clientID?: string;
+    #   /** The ID of the debug adapter. */
+    #   adapterID: string;
+    #   /** If true all line numbers are 1-based (default). */
+    #   linesStartAt1?: boolean;
+    #   /** If true all column numbers are 1-based (default). */
+    #   columnsStartAt1?: boolean;
+    #   /** Determines in what format paths are specified. Possible values are 'path' or 'uri'. The default is 'path', which is the native format. */
+    #   pathFormat?: string;
+    #   /** Client supports the optional type attribute for variables. */
+    #   supportsVariableType?: boolean;
+    #   /** Client supports the paging of variables. */
+    #   supportsVariablePaging?: boolean;
+    #   /** Client supports the runInTerminal request. */
+    #   supportsRunInTerminalRequest?: boolean;
     # }
     module InitializeRequestArguments
       def self.create(options)
@@ -223,8 +223,8 @@ module PuppetDebugServer
 
     # /** Response to 'initialize' request. */
     # export interface InitializeResponse extends Response {
-    # 	/** The capabilities of this debug adapter. */
-    # 	body?: Capabilities;
+    #   /** The capabilities of this debug adapter. */
+    #   body?: Capabilities;
     # }
     module InitializeResponse
       def self.create_from_request(options, request = nil)
@@ -233,16 +233,16 @@ module PuppetDebugServer
     end
 
     # /** Event message for 'terminated' event types.
-    # 	The event indicates that debugging of the debuggee has terminated.
+    #   The event indicates that debugging of the debuggee has terminated.
     # */
     # export interface TerminatedEvent extends Event {
-    # 	// event: 'terminated';
-    # 	body?: {
-    # 		/** A debug adapter may set 'restart' to true (or to an arbitrary object) to request that the front end restarts the session.
-    # 			The value is not interpreted by the client and passed unmodified as an attribute '__restart' to the launchRequest.
-    # 		*/
-    # 		restart?: any;
-    # 	};
+    #   // event: 'terminated';
+    #   body?: {
+    #     /** A debug adapter may set 'restart' to true (or to an arbitrary object) to request that the front end restarts the session.
+    #       The value is not interpreted by the client and passed unmodified as an attribute '__restart' to the launchRequest.
+    #     */
+    #     restart?: any;
+    #   };
     # }
     module TerminatedEvent
       def self.create(options = {})
@@ -255,16 +255,16 @@ module PuppetDebugServer
     end
 
     # /** Event message for 'thread' event type.
-    # 	The event indicates that a thread has started or exited.
+    #   The event indicates that a thread has started or exited.
     # */
     # export interface ThreadEvent extends Event {
-    # 	// event: 'thread';
-    # 	body: {
-    # 		/** The reason for the event (such as: 'started', 'exited'). */
-    # 		reason: string;
-    # 		/** The identifier of the thread. */
-    # 		threadId: number;
-    # 	};
+    #   // event: 'thread';
+    #   body: {
+    #     /** The reason for the event (such as: 'started', 'exited'). */
+    #     reason: string;
+    #     /** The identifier of the thread. */
+    #     threadId: number;
+    #   };
     # }
     module ThreadEvent
       def self.create(options = {})
@@ -283,20 +283,20 @@ module PuppetDebugServer
     end
 
     # /** Event message for 'output' event type.
-    # 	The event indicates that the target has produced some output.
+    #   The event indicates that the target has produced some output.
     # */
     # export interface OutputEvent extends Event {
-    # 	// event: 'output';
-    # 	body: {
-    # 		/** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
-    # 		category?: string;
-    # 		/** The output to report. */
-    # 		output: string;
-    # 		/** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest. */
-    # 		variablesReference?: number;
-    # 		/** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
-    # 		data?: any;
-    # 	};
+    #   // event: 'output';
+    #   body: {
+    #     /** The category of output (such as: 'console', 'stdout', 'stderr', 'telemetry'). If not specified, 'console' is assumed. */
+    #     category?: string;
+    #     /** The output to report. */
+    #     output: string;
+    #     /** If an attribute 'variablesReference' exists and its value is > 0, the output contains objects which can be retrieved by passing variablesReference to the VariablesRequest. */
+    #     variablesReference?: number;
+    #     /** Optional data to report. For the 'telemetry' category the data will be sent to telemetry, for the other categories the data is shown in JSON format. */
+    #     data?: any;
+    #   };
     # }
     module OutputEvent
       def self.create(options = {})
@@ -314,14 +314,14 @@ module PuppetDebugServer
     end
 
     # /** Event message for 'exited' event type.
-    # 	The event indicates that the debuggee has exited.
+    #   The event indicates that the debuggee has exited.
     # */
     # export interface ExitedEvent extends Event {
-    # 	// event: 'exited';
-    # 	body: {
-    # 		/** The exit code returned from the debuggee. */
-    # 		exitCode: number;
-    # 	};
+    #   // event: 'exited';
+    #   body: {
+    #     /** The exit code returned from the debuggee. */
+    #     exitCode: number;
+    #   };
     # }
     module ExitedEvent
       def self.create(options = {})
@@ -345,8 +345,8 @@ module PuppetDebugServer
 
     # /** Launch request; value of command field is 'launch'. */
     # export interface LaunchRequest extends Request {
-    # 	// command: 'launch';
-    # 	arguments: LaunchRequestArguments;
+    #   // command: 'launch';
+    #   arguments: LaunchRequestArguments;
     # }
     module LaunchRequest
       def self.create(options)
@@ -362,8 +362,8 @@ module PuppetDebugServer
 
     # /** Arguments for 'launch' request. */
     # export interface LaunchRequestArguments {
-    # 	/** If noDebug is true the launch request should launch the program without enabling debugging. */
-    # 	noDebug?: boolean;
+    #   /** If noDebug is true the launch request should launch the program without enabling debugging. */
+    #   noDebug?: boolean;
     # }
     module LaunchRequestArguments
       def self.create(options)
@@ -383,13 +383,13 @@ module PuppetDebugServer
     end
 
     # /** SetBreakpoints request; value of command field is 'setBreakpoints'.
-    # 	Sets multiple breakpoints for a single source and clears all previous breakpoints in that source.
-    # 	To clear all breakpoint for a source, specify an empty array.
-    # 	When a breakpoint is hit, a StoppedEvent (event type 'breakpoint') is generated.
+    #   Sets multiple breakpoints for a single source and clears all previous breakpoints in that source.
+    #   To clear all breakpoint for a source, specify an empty array.
+    #   When a breakpoint is hit, a StoppedEvent (event type 'breakpoint') is generated.
     # */
     # export interface SetBreakpointsRequest extends Request {
-    # 	// command: 'setBreakpoints';
-    # 	arguments: SetBreakpointsArguments;
+    #   // command: 'setBreakpoints';
+    #   arguments: SetBreakpointsArguments;
     # }
     module SetBreakpointsRequest
       def self.create(options)
@@ -405,14 +405,14 @@ module PuppetDebugServer
     end
 
     # export interface SetBreakpointsArguments {
-    # 	/** The source location of the breakpoints; either source.path or source.reference must be specified. */
-    # 	source: Source;
-    # 	/** The code locations of the breakpoints. */
-    # 	breakpoints?: SourceBreakpoint[];
-    # 	/** Deprecated: The code locations of the breakpoints. */
-    # 	lines?: number[];
-    # 	/** A value of true indicates that the underlying source has been modified which results in new breakpoint locations. */
-    # 	sourceModified?: boolean;
+    #   /** The source location of the breakpoints; either source.path or source.reference must be specified. */
+    #   source: Source;
+    #   /** The code locations of the breakpoints. */
+    #   breakpoints?: SourceBreakpoint[];
+    #   /** Deprecated: The code locations of the breakpoints. */
+    #   lines?: number[];
+    #   /** A value of true indicates that the underlying source has been modified which results in new breakpoint locations. */
+    #   sourceModified?: boolean;
     # }
     module SetBreakpointsArguments
       def self.create(options)
@@ -430,13 +430,13 @@ module PuppetDebugServer
     end
 
     # /** SetFunctionBreakpoints request; value of command field is 'setFunctionBreakpoints'.
-    # 	Sets multiple function breakpoints and clears all previous function breakpoints.
-    # 	To clear all function breakpoint, specify an empty array.
-    # 	When a function breakpoint is hit, a StoppedEvent (event type 'function breakpoint') is generated.
+    #   Sets multiple function breakpoints and clears all previous function breakpoints.
+    #   To clear all function breakpoint, specify an empty array.
+    #   When a function breakpoint is hit, a StoppedEvent (event type 'function breakpoint') is generated.
     # */
     # export interface SetFunctionBreakpointsRequest extends Request {
-    # 	// command: 'setFunctionBreakpoints';
-    # 	arguments: SetFunctionBreakpointsArguments;
+    #   // command: 'setFunctionBreakpoints';
+    #   arguments: SetFunctionBreakpointsArguments;
     # }
     module SetFunctionBreakpointsRequest
       def self.create(options)
@@ -469,10 +469,10 @@ module PuppetDebugServer
 
     # /** Response to 'continue' request. */
     # export interface ContinueResponse extends Response {
-    # 	body: {
-    # 		/** If true, the continue request has ignored the specified thread and continued all threads instead. If this attribute is missing a value of 'true' is assumed for backward compatibility. */
-    # 		allThreadsContinued?: boolean;
-    # 	};
+    #   body: {
+    #     /** If true, the continue request has ignored the specified thread and continued all threads instead. If this attribute is missing a value of 'true' is assumed for backward compatibility. */
+    #     allThreadsContinued?: boolean;
+    #   };
     # }
     module ContinueResponse
       def self.create_from_request(options, request = nil)
@@ -485,12 +485,12 @@ module PuppetDebugServer
     end
 
     # /** Next request; value of command field is 'next'.
-    # 	The request starts the debuggee to run again for one step.
-    # 	The debug adapter first sends the NextResponse and then a StoppedEvent (event type 'step') after the step has completed.
+    #   The request starts the debuggee to run again for one step.
+    #   The debug adapter first sends the NextResponse and then a StoppedEvent (event type 'step') after the step has completed.
     # */
     # export interface NextRequest extends Request {
-    # 	// command: 'next';
-    # 	arguments: NextArguments;
+    #   // command: 'next';
+    #   arguments: NextArguments;
     # }
     module NextRequest
       def self.create(options)
@@ -507,8 +507,8 @@ module PuppetDebugServer
 
     # /** Arguments for 'next' request. */
     # export interface NextArguments {
-    # 	/** Execute 'next' for this thread. */
-    # 	threadId: number;
+    #   /** Execute 'next' for this thread. */
+    #   threadId: number;
     # }
     module NextArguments
       def self.create(options)
@@ -528,16 +528,16 @@ module PuppetDebugServer
     end
 
     # /** StepIn request; value of command field is 'stepIn'.
-    # 	The request starts the debuggee to step into a function/method if possible.
-    # 	If it cannot step into a target, 'stepIn' behaves like 'next'.
-    # 	The debug adapter first sends the StepInResponse and then a StoppedEvent (event type 'step') after the step has completed.
-    # 	If there are multiple function/method calls (or other targets) on the source line,
-    # 	the optional argument 'targetId' can be used to control into which target the 'stepIn' should occur.
-    # 	The list of possible targets for a given source line can be retrieved via the 'stepInTargets' request.
+    #   The request starts the debuggee to step into a function/method if possible.
+    #   If it cannot step into a target, 'stepIn' behaves like 'next'.
+    #   The debug adapter first sends the StepInResponse and then a StoppedEvent (event type 'step') after the step has completed.
+    #   If there are multiple function/method calls (or other targets) on the source line,
+    #   the optional argument 'targetId' can be used to control into which target the 'stepIn' should occur.
+    #   The list of possible targets for a given source line can be retrieved via the 'stepInTargets' request.
     # */
     # export interface StepInRequest extends Request {
-    # 	// command: 'stepIn';
-    # 	arguments: StepInArguments;
+    #   // command: 'stepIn';
+    #   arguments: StepInArguments;
     # }
     module StepInRequest
       def self.create(options)
@@ -554,10 +554,10 @@ module PuppetDebugServer
 
     # /** Arguments for 'stepIn' request. */
     # export interface StepInArguments {
-    # 	/** Execute 'stepIn' for this thread. */
-    # 	threadId: number;
-    # 	/** Optional id of the target to step into. */
-    # 	targetId?: number;
+    #   /** Execute 'stepIn' for this thread. */
+    #   threadId: number;
+    #   /** Optional id of the target to step into. */
+    #   targetId?: number;
     # }
     module StepInArguments
       def self.create(options)
@@ -581,8 +581,8 @@ module PuppetDebugServer
 
     # /** StackTrace request; value of command field is 'stackTrace'. The request returns a stacktrace from the current execution state. */
     # export interface StackTraceRequest extends Request {
-    # 	// command: 'stackTrace';
-    # 	arguments: StackTraceArguments;
+    #   // command: 'stackTrace';
+    #   arguments: StackTraceArguments;
     # }
     module StackTraceRequest
       def self.create(options)
@@ -598,12 +598,12 @@ module PuppetDebugServer
     end
 
     # /** StepOut request; value of command field is 'stepOut'.
-    # 	The request starts the debuggee to run again for one step.
-    # 	The debug adapter first sends the StepOutResponse and then a StoppedEvent (event type 'step') after the step has completed.
+    #   The request starts the debuggee to run again for one step.
+    #   The debug adapter first sends the StepOutResponse and then a StoppedEvent (event type 'step') after the step has completed.
     # */
     # export interface StepOutRequest extends Request {
-    # 	// command: 'stepOut';
-    # 	arguments: StepOutArguments;
+    #   // command: 'stepOut';
+    #   arguments: StepOutArguments;
     # }
     module StepOutRequest
       def self.create(options)
@@ -620,8 +620,8 @@ module PuppetDebugServer
 
     # /** Arguments for 'stepOut' request. */
     # export interface StepOutArguments {
-    # 	/** Execute 'stepOut' for this thread. */
-    # 	threadId: number;
+    #   /** Execute 'stepOut' for this thread. */
+    #   threadId: number;
     # }
     module StepOutArguments
       def self.create(options)
@@ -642,14 +642,14 @@ module PuppetDebugServer
 
     # /** Arguments for 'stackTrace' request. */
     # export interface StackTraceArguments {
-    # 	/** Retrieve the stacktrace for this thread. */
-    # 	threadId: number;
-    # 	/** The index of the first frame to return; if omitted frames start at 0. */
-    # 	startFrame?: number;
-    # 	/** The maximum number of frames to return. If levels is not specified or 0, all frames are returned. */
-    # 	levels?: number;
-    # 	/** Specifies details on how to format the stack frames. */
-    # 	format?: StackFrameFormat;
+    #   /** Retrieve the stacktrace for this thread. */
+    #   threadId: number;
+    #   /** The index of the first frame to return; if omitted frames start at 0. */
+    #   startFrame?: number;
+    #   /** The maximum number of frames to return. If levels is not specified or 0, all frames are returned. */
+    #   levels?: number;
+    #   /** Specifies details on how to format the stack frames. */
+    #   format?: StackFrameFormat;
     # }
     module StackTraceArguments
       def self.create(options)
@@ -671,14 +671,14 @@ module PuppetDebugServer
 
     # /** Response to 'stackTrace' request. */
     # export interface StackTraceResponse extends Response {
-    # 	body: {
-    # 		/** The frames of the stackframe. If the array has length zero, there are no stackframes available.
-    # 			This means that there is no location information available.
-    # 		*/
-    # 		stackFrames: StackFrame[];
-    # 		/** The total number of frames available. */
-    # 		totalFrames?: number;
-    # 	};
+    #   body: {
+    #     /** The frames of the stackframe. If the array has length zero, there are no stackframes available.
+    #       This means that there is no location information available.
+    #     */
+    #     stackFrames: StackFrame[];
+    #     /** The total number of frames available. */
+    #     totalFrames?: number;
+    #   };
     # }
     module StackTraceResponse
       def self.create_from_request(options, request = nil)
@@ -696,11 +696,11 @@ module PuppetDebugServer
     end
 
     #   /** Scopes request; value of command field is 'scopes'.
-    # 	The request returns the variable scopes for a given stackframe ID.
+    #   The request returns the variable scopes for a given stackframe ID.
     # */
     # export interface ScopesRequest extends Request {
-    # 	// command: 'scopes';
-    # 	arguments: ScopesArguments;
+    #   // command: 'scopes';
+    #   arguments: ScopesArguments;
     # }
     module ScopesRequest
       def self.create(options)
@@ -717,8 +717,8 @@ module PuppetDebugServer
 
     # /** Arguments for 'scopes' request. */
     # export interface ScopesArguments {
-    # 	/** Retrieve the scopes for this stackframe. */
-    # 	frameId: number;
+    #   /** Retrieve the scopes for this stackframe. */
+    #   frameId: number;
     # }
     module ScopesArguments
       def self.create(options)
@@ -754,12 +754,12 @@ module PuppetDebugServer
     end
 
     # /** Variables request; value of command field is 'variables'.
-    # 	Retrieves all child variables for the given variable reference.
-    # 	An optional filter can be used to limit the fetched children to either named or indexed children.
+    #   Retrieves all child variables for the given variable reference.
+    #   An optional filter can be used to limit the fetched children to either named or indexed children.
     # */
     # export interface VariablesRequest extends Request {
-    # 	// command: 'variables';
-    # 	arguments: VariablesArguments;
+    #   // command: 'variables';
+    #   arguments: VariablesArguments;
     # }
     module VariablesRequest
       def self.create(options)
@@ -776,16 +776,16 @@ module PuppetDebugServer
 
     # /** Arguments for 'variables' request. */
     # export interface VariablesArguments {
-    # 	/** The Variable reference. */
-    # 	variablesReference: number;
-    # 	/** Optional filter to limit the child variables to either named or indexed. If ommited, both types are fetched. */
-    # 	filter?: 'indexed' | 'named';
-    # 	/** The index of the first variable to return; if omitted children start at 0. */
-    # 	start?: number;
-    # 	/** The number of variables to return. If count is missing or 0, all variables are returned. */
-    # 	count?: number;
-    # 	/** Specifies details on how to format the Variable values. */
-    # 	format?: ValueFormat;
+    #   /** The Variable reference. */
+    #   variablesReference: number;
+    #   /** Optional filter to limit the child variables to either named or indexed. If ommited, both types are fetched. */
+    #   filter?: 'indexed' | 'named';
+    #   /** The index of the first variable to return; if omitted children start at 0. */
+    #   start?: number;
+    #   /** The number of variables to return. If count is missing or 0, all variables are returned. */
+    #   count?: number;
+    #   /** Specifies details on how to format the Variable values. */
+    #   format?: ValueFormat;
     # }
     module VariablesArguments
       def self.create(options)
@@ -805,10 +805,10 @@ module PuppetDebugServer
 
     # /** Response to 'variables' request. */
     # export interface VariablesResponse extends Response {
-    # 	body: {
-    # 		/** All (or a range) of variables for the given variable reference. */
-    # 		variables: Variable[];
-    # 	};
+    #   body: {
+    #     /** All (or a range) of variables for the given variable reference. */
+    #     variables: Variable[];
+    #   };
     # }
     module VariablesResponse
       def self.create_from_request(options, request = nil)
@@ -826,10 +826,10 @@ module PuppetDebugServer
 
     # /** Response to 'threads' request. */
     # export interface ThreadsResponse extends Response {
-    # 	body: {
-    # 		/** All threads. */
-    # 		threads: Thread[];
-    # 	};
+    #   body: {
+    #     /** All threads. */
+    #     threads: Thread[];
+    #   };
     # }
     module ThreadsResponse
       def self.create_from_request(options, request = nil)
@@ -844,12 +844,12 @@ module PuppetDebugServer
     end
 
     #   /** Evaluate request; value of command field is 'evaluate'.
-    # 	Evaluates the given expression in the context of the top most stack frame.
-    # 	The expression has access to any variables and arguments that are in scope.
+    #   Evaluates the given expression in the context of the top most stack frame.
+    #   The expression has access to any variables and arguments that are in scope.
     # */
     # export interface EvaluateRequest extends Request {
-    # 	// command: 'evaluate';
-    # 	arguments: EvaluateArguments;
+    #   // command: 'evaluate';
+    #   arguments: EvaluateArguments;
     # }
     module EvaluateRequest
       def self.create(options)
@@ -866,14 +866,14 @@ module PuppetDebugServer
 
     # /** Arguments for 'evaluate' request. */
     # export interface EvaluateArguments {
-    # 	/** The expression to evaluate. */
-    # 	expression: string;
-    # 	/** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
-    # 	frameId?: number;
-    # 	/** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
-    # 	context?: string;
-    # 	/** Specifies details on how to format the Evaluate result. */
-    # 	format?: ValueFormat;
+    #   /** The expression to evaluate. */
+    #   expression: string;
+    #   /** Evaluate the expression in the scope of this stack frame. If not specified, the expression is evaluated in the global scope. */
+    #   frameId?: number;
+    #   /** The context in which the evaluate request is run. Possible values are 'watch' if evaluate is run in a watch, 'repl' if run from the REPL console, or 'hover' if run from a data hover. */
+    #   context?: string;
+    #   /** Specifies details on how to format the Evaluate result. */
+    #   format?: ValueFormat;
     # }
     module EvaluateArguments
       def self.create(options)
@@ -892,22 +892,22 @@ module PuppetDebugServer
 
     # /** Response to 'evaluate' request. */
     # export interface EvaluateResponse extends Response {
-    # 	body: {
-    # 		/** The result of the evaluate request. */
-    # 		result: string;
-    # 		/** The optional type of the evaluate result. */
-    # 		type?: string;
-    # 		/** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
-    # 		variablesReference: number;
-    # 		/** The number of named child variables.
-    # 			The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-    # 		*/
-    # 		namedVariables?: number;
-    # 		/** The number of indexed child variables.
-    # 			The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
-    # 		*/
-    # 		indexedVariables?: number;
-    # 	};
+    #   body: {
+    #     /** The result of the evaluate request. */
+    #     result: string;
+    #     /** The optional type of the evaluate result. */
+    #     type?: string;
+    #     /** If variablesReference is > 0, the evaluate result is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
+    #     variablesReference: number;
+    #     /** The number of named child variables.
+    #       The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+    #     */
+    #     namedVariables?: number;
+    #     /** The number of indexed child variables.
+    #       The client can use this optional information to present the variables in a paged UI and fetch them in chunks.
+    #     */
+    #     indexedVariables?: number;
+    #   };
     # }
     module EvaluateResponse
       def self.create_from_request(options, request = nil)
@@ -930,48 +930,48 @@ module PuppetDebugServer
 
     # /** Information about the capabilities of a debug adapter. */
     # export interface Capabilities {
-    # 	/** The debug adapter supports the configurationDoneRequest. */
-    # 	supportsConfigurationDoneRequest?: boolean;
-    # 	/** The debug adapter supports function breakpoints. */
-    # 	supportsFunctionBreakpoints?: boolean;
-    # 	/** The debug adapter supports conditional breakpoints. */
-    # 	supportsConditionalBreakpoints?: boolean;
-    # 	/** The debug adapter supports breakpoints that break execution after a specified number of hits. */
-    # 	supportsHitConditionalBreakpoints?: boolean;
-    # 	/** The debug adapter supports a (side effect free) evaluate request for data hovers. */
-    # 	supportsEvaluateForHovers?: boolean;
-    # 	/** Available filters or options for the setExceptionBreakpoints request. */
-    # 	exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
-    # 	/** The debug adapter supports stepping back via the stepBack and reverseContinue requests. */
-    # 	supportsStepBack?: boolean;
-    # 	/** The debug adapter supports setting a variable to a value. */
-    # 	supportsSetVariable?: boolean;
-    # 	/** The debug adapter supports restarting a frame. */
-    # 	supportsRestartFrame?: boolean;
-    # 	/** The debug adapter supports the gotoTargetsRequest. */
-    # 	supportsGotoTargetsRequest?: boolean;
-    # 	/** The debug adapter supports the stepInTargetsRequest. */
-    # 	supportsStepInTargetsRequest?: boolean;
-    # 	/** The debug adapter supports the completionsRequest. */
-    # 	supportsCompletionsRequest?: boolean;
-    # 	/** The debug adapter supports the modules request. */
-    # 	supportsModulesRequest?: boolean;
-    # 	/** The set of additional module information exposed by the debug adapter. */
-    # 	additionalModuleColumns?: ColumnDescriptor[];
-    # 	/** Checksum algorithms supported by the debug adapter. */
-    # 	supportedChecksumAlgorithms?: ChecksumAlgorithm[];
-    # 	/** The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
-    # 	supportsRestartRequest?: boolean;
-    # 	/** The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request. */
-    # 	supportsExceptionOptions?: boolean;
-    # 	/** The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest. */
-    # 	supportsValueFormattingOptions?: boolean;
-    # 	/** The debug adapter supports the exceptionInfo request. */
-    # 	supportsExceptionInfoRequest?: boolean;
-    # 	/** The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request. */
-    # 	supportTerminateDebuggee?: boolean;
-    # 	/** The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported. */
-    # 	supportsDelayedStackTraceLoading?: boolean;
+    #   /** The debug adapter supports the configurationDoneRequest. */
+    #   supportsConfigurationDoneRequest?: boolean;
+    #   /** The debug adapter supports function breakpoints. */
+    #   supportsFunctionBreakpoints?: boolean;
+    #   /** The debug adapter supports conditional breakpoints. */
+    #   supportsConditionalBreakpoints?: boolean;
+    #   /** The debug adapter supports breakpoints that break execution after a specified number of hits. */
+    #   supportsHitConditionalBreakpoints?: boolean;
+    #   /** The debug adapter supports a (side effect free) evaluate request for data hovers. */
+    #   supportsEvaluateForHovers?: boolean;
+    #   /** Available filters or options for the setExceptionBreakpoints request. */
+    #   exceptionBreakpointFilters?: ExceptionBreakpointsFilter[];
+    #   /** The debug adapter supports stepping back via the stepBack and reverseContinue requests. */
+    #   supportsStepBack?: boolean;
+    #   /** The debug adapter supports setting a variable to a value. */
+    #   supportsSetVariable?: boolean;
+    #   /** The debug adapter supports restarting a frame. */
+    #   supportsRestartFrame?: boolean;
+    #   /** The debug adapter supports the gotoTargetsRequest. */
+    #   supportsGotoTargetsRequest?: boolean;
+    #   /** The debug adapter supports the stepInTargetsRequest. */
+    #   supportsStepInTargetsRequest?: boolean;
+    #   /** The debug adapter supports the completionsRequest. */
+    #   supportsCompletionsRequest?: boolean;
+    #   /** The debug adapter supports the modules request. */
+    #   supportsModulesRequest?: boolean;
+    #   /** The set of additional module information exposed by the debug adapter. */
+    #   additionalModuleColumns?: ColumnDescriptor[];
+    #   /** Checksum algorithms supported by the debug adapter. */
+    #   supportedChecksumAlgorithms?: ChecksumAlgorithm[];
+    #   /** The debug adapter supports the RestartRequest. In this case a client should not implement 'restart' by terminating and relaunching the adapter but by calling the RestartRequest. */
+    #   supportsRestartRequest?: boolean;
+    #   /** The debug adapter supports 'exceptionOptions' on the setExceptionBreakpoints request. */
+    #   supportsExceptionOptions?: boolean;
+    #   /** The debug adapter supports a 'format' attribute on the stackTraceRequest, variablesRequest, and evaluateRequest. */
+    #   supportsValueFormattingOptions?: boolean;
+    #   /** The debug adapter supports the exceptionInfo request. */
+    #   supportsExceptionInfoRequest?: boolean;
+    #   /** The debug adapter supports the 'terminateDebuggee' attribute on the 'disconnect' request. */
+    #   supportTerminateDebuggee?: boolean;
+    #   /** The debug adapter supports the delayed loading of parts of the stack, which requires that both the 'startFrame' and 'levels' arguments and the 'totalFrames' result of the 'StackTrace' request are supported. */
+    #   supportsDelayedStackTraceLoading?: boolean;
     # }
     module Capabilities
       def self.create(_options)
@@ -1004,16 +1004,16 @@ module PuppetDebugServer
     end
 
     # /** Response to 'setBreakpoints' request.
-    # 	Returned is information about each breakpoint created by this request.
-    # 	This includes the actual code location and whether the breakpoint could be verified.
-    # 	The breakpoints returned are in the same order as the elements of the 'breakpoints'
-    # 	(or the deprecated 'lines') in the SetBreakpointsArguments.
+    #   Returned is information about each breakpoint created by this request.
+    #   This includes the actual code location and whether the breakpoint could be verified.
+    #   The breakpoints returned are in the same order as the elements of the 'breakpoints'
+    #   (or the deprecated 'lines') in the SetBreakpointsArguments.
     # */
     # export interface SetBreakpointsResponse extends Response {
-    # 	body: {
-    # 		/** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
-    # 		breakpoints: Breakpoint[];
-    # 	};
+    #   body: {
+    #     /** Information about the breakpoints. The array elements are in the same order as the elements of the 'breakpoints' (or the deprecated 'lines') in the SetBreakpointsArguments. */
+    #     breakpoints: Breakpoint[];
+    #   };
     # }
     module SetBreakpointsResponse
       def self.create_from_request(options, request = nil)
@@ -1031,10 +1031,10 @@ module PuppetDebugServer
 
     # /** A Thread */
     # export interface Thread {
-    # 	/** Unique identifier for the thread. */
-    # 	id: number;
-    # 	/** A name of the thread. */
-    # 	name: string;
+    #   /** Unique identifier for the thread. */
+    #   id: number;
+    #   /** A name of the thread. */
+    #   name: string;
     # }
     module Thread
       def self.create(options)
@@ -1051,20 +1051,20 @@ module PuppetDebugServer
 
     # /** A Source is a descriptor for source code. It is returned from the debug adapter as part of a StackFrame and it is used by clients when specifying breakpoints. */
     # export interface Source {
-    # 	/** The short name of the source. Every source returned from the debug adapter has a name. When sending a source to the debug adapter this name is optional. */
-    # 	name?: string;
-    # 	/** The path of the source to be shown in the UI. It is only used to locate and load the content of the source if no sourceReference is specified (or its vaule is 0). */
-    # 	path?: string;
-    # 	/** If sourceReference > 0 the contents of the source must be retrieved through the SourceRequest (even if a path is specified). A sourceReference is only valid for a session, so it must not be used to persist a source. */
-    # 	sourceReference?: number;
-    # 	/** An optional hint for how to present the source in the UI. A value of 'deemphasize' can be used to indicate that the source is not available or that it is skipped on stepping. */
-    # 	presentationHint?: 'normal' | 'emphasize' | 'deemphasize';
-    # 	/** The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc. */
-    # 	origin?: string;
-    # 	/** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
-    # 	adapterData?: any;
-    # 	/** The checksums associated with this file. */
-    # 	checksums?: Checksum[];
+    #   /** The short name of the source. Every source returned from the debug adapter has a name. When sending a source to the debug adapter this name is optional. */
+    #   name?: string;
+    #   /** The path of the source to be shown in the UI. It is only used to locate and load the content of the source if no sourceReference is specified (or its vaule is 0). */
+    #   path?: string;
+    #   /** If sourceReference > 0 the contents of the source must be retrieved through the SourceRequest (even if a path is specified). A sourceReference is only valid for a session, so it must not be used to persist a source. */
+    #   sourceReference?: number;
+    #   /** An optional hint for how to present the source in the UI. A value of 'deemphasize' can be used to indicate that the source is not available or that it is skipped on stepping. */
+    #   presentationHint?: 'normal' | 'emphasize' | 'deemphasize';
+    #   /** The (optional) origin of this source: possible values 'internal module', 'inlined content from source map', etc. */
+    #   origin?: string;
+    #   /** Optional data that a debug adapter might want to loop through the client. The client should leave the data intact and persist it across sessions. The client should not interpret the data. */
+    #   adapterData?: any;
+    #   /** The checksums associated with this file. */
+    #   checksums?: Checksum[];
     # }
     module Source
       def self.create(options)
@@ -1084,24 +1084,24 @@ module PuppetDebugServer
 
     # /** A Stackframe contains the source location. */
     # export interface StackFrame {
-    # 	/** An identifier for the stack frame. It must be unique across all threads. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe. */
-    # 	id: number;
-    # 	/** The name of the stack frame, typically a method name. */
-    # 	name: string;
-    # 	/** The optional source of the frame. */
-    # 	source?: Source;
-    # 	/** The line within the file of the frame. If source is null or doesn't exist, line is 0 and must be ignored. */
-    # 	line: number;
-    # 	/** The column within the line. If source is null or doesn't exist, column is 0 and must be ignored. */
-    # 	column: number;
-    # 	/** An optional end line of the range covered by the stack frame. */
-    # 	endLine?: number;
-    # 	/** An optional end column of the range covered by the stack frame. */
-    # 	endColumn?: number;
-    # 	/** The module associated with this frame, if any. */
-    # 	moduleId?: number | string;
-    # 	/** An optional hint for how to present this frame in the UI. A value of 'label' can be used to indicate that the frame is an artificial frame that is used as a visual label or separator. A value of 'subtle' can be used to change the appearance of a frame in a 'subtle' way. */
-    # 	presentationHint?: 'normal' | 'label' | 'subtle';
+    #   /** An identifier for the stack frame. It must be unique across all threads. This id can be used to retrieve the scopes of the frame with the 'scopesRequest' or to restart the execution of a stackframe. */
+    #   id: number;
+    #   /** The name of the stack frame, typically a method name. */
+    #   name: string;
+    #   /** The optional source of the frame. */
+    #   source?: Source;
+    #   /** The line within the file of the frame. If source is null or doesn't exist, line is 0 and must be ignored. */
+    #   line: number;
+    #   /** The column within the line. If source is null or doesn't exist, column is 0 and must be ignored. */
+    #   column: number;
+    #   /** An optional end line of the range covered by the stack frame. */
+    #   endLine?: number;
+    #   /** An optional end column of the range covered by the stack frame. */
+    #   endColumn?: number;
+    #   /** The module associated with this frame, if any. */
+    #   moduleId?: number | string;
+    #   /** An optional hint for how to present this frame in the UI. A value of 'label' can be used to indicate that the frame is an artificial frame that is used as a visual label or separator. A value of 'subtle' can be used to change the appearance of a frame in a 'subtle' way. */
+    #   presentationHint?: 'normal' | 'label' | 'subtle';
     # }
     module Stackframe
       def self.create(options)
@@ -1174,33 +1174,33 @@ module PuppetDebugServer
     end
 
     #   /** A Variable is a name/value pair.
-    # 	Optionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.
-    # 	An optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.
-    # 	If the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.
-    # 	If the number of named or indexed children is large, the numbers should be returned via the optional 'namedVariables' and 'indexedVariables' attributes.
-    # 	The client can use this optional information to present the children in a paged UI and fetch them in chunks.
+    #   Optionally a variable can have a 'type' that is shown if space permits or when hovering over the variable's name.
+    #   An optional 'kind' is used to render additional properties of the variable, e.g. different icons can be used to indicate that a variable is public or private.
+    #   If the value is structured (has children), a handle is provided to retrieve the children with the VariablesRequest.
+    #   If the number of named or indexed children is large, the numbers should be returned via the optional 'namedVariables' and 'indexedVariables' attributes.
+    #   The client can use this optional information to present the children in a paged UI and fetch them in chunks.
     # */
     # export interface Variable {
-    # 	/** The variable's name. */
-    # 	name: string;
-    # 	/** The variable's value. This can be a multi-line text, e.g. for a function the body of a function. */
-    # 	value: string;
-    # 	/** The type of the variable's value. Typically shown in the UI when hovering over the value. */
-    # 	type?: string;
-    # 	/** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
-    # 	kind?: string;
-    # 	/** Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value. */
-    # 	evaluateName?: string;
-    # 	/** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
-    # 	variablesReference: number;
-    # 	/** The number of named child variables.
-    # 		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
-    # 	*/
-    # 	namedVariables?: number;
-    # 	/** The number of indexed child variables.
-    # 		The client can use this optional information to present the children in a paged UI and fetch them in chunks.
-    # 	*/
-    # 	indexedVariables?: number;
+    #   /** The variable's name. */
+    #   name: string;
+    #   /** The variable's value. This can be a multi-line text, e.g. for a function the body of a function. */
+    #   value: string;
+    #   /** The type of the variable's value. Typically shown in the UI when hovering over the value. */
+    #   type?: string;
+    #   /** Properties of a variable that can be used to determine how to render the variable in the UI. Format of the string value: TBD. */
+    #   kind?: string;
+    #   /** Optional evaluatable name of this variable which can be passed to the 'EvaluateRequest' to fetch the variable's value. */
+    #   evaluateName?: string;
+    #   /** If variablesReference is > 0, the variable is structured and its children can be retrieved by passing variablesReference to the VariablesRequest. */
+    #   variablesReference: number;
+    #   /** The number of named child variables.
+    #     The client can use this optional information to present the children in a paged UI and fetch them in chunks.
+    #   */
+    #   namedVariables?: number;
+    #   /** The number of indexed child variables.
+    #     The client can use this optional information to present the children in a paged UI and fetch them in chunks.
+    #   */
+    #   indexedVariables?: number;
     # }
     module Variable
       def self.create(options)
@@ -1224,14 +1224,14 @@ module PuppetDebugServer
 
     # /** Properties of a breakpoint passed to the setBreakpoints request. */
     # export interface SourceBreakpoint {
-    # 	/** The source line of the breakpoint. */
-    # 	line: number;
-    # 	/** An optional source column of the breakpoint. */
-    # 	column?: number;
-    # 	/** An optional expression for conditional breakpoints. */
-    # 	condition?: string;
-    # 	/** An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed. */
-    # 	hitCondition?: string;
+    #   /** The source line of the breakpoint. */
+    #   line: number;
+    #   /** An optional source column of the breakpoint. */
+    #   column?: number;
+    #   /** An optional expression for conditional breakpoints. */
+    #   condition?: string;
+    #   /** An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed. */
+    #   hitCondition?: string;
     # }
     module SourceBreakpoint
       def self.create(options)

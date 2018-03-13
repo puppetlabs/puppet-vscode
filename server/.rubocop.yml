@@ -47,7 +47,11 @@ Style/DateTime:
   Enabled: false
 
 # Please don't fail at failing.
-Lint/UnneededDisable:
+Lint/UnneededCopDisableDirective:
+  Enabled: false
+
+# Don't care
+Naming/MemoizedInstanceVariableName:
   Enabled: false
 
 # In some cases readability is better without these cops enabled
