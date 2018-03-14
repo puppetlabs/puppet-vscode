@@ -101,6 +101,8 @@ To use any of the above commands, open the command palette and start typing a co
 
 `PDK New Module` is available even if the extension isn't loaded, the rest of the commands are only available when the extension is loaded.
 
+`pdk convert` is not available in the command palette as it is a complicated command that requires user input to succeed. It is better to use it from the builtin terminal.
+
 ### Locally debugging Puppet manifests
 
 **Note - This is an experimental feature**
@@ -177,4 +179,3 @@ This extension collects telemetry data to help us build a better experience for 
 ## License
 
 This extension is [licensed under the Apache-2.0 License](LICENSE.txt).
-
