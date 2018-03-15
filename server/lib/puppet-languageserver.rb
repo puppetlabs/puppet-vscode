@@ -73,6 +73,12 @@ module PuppetLanguageServer
           args[:stdio] = true
         end
 
+        opts.on('--enable-file-cache', 'Enables the file system cache for Puppet Objects (types, class etc.)') do |_misc|
+          args[:cache] = {
+            :persistent_cache => :file
+          }
+        end
+
         opts.on('--local-workspace=PATH', 'The workspace or file path that will be used to provide module-specific functionality. Default is no workspace path.') do |path|
           args[:workspace] = path
         end

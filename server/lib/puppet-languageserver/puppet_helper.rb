@@ -1,12 +1,12 @@
 require 'puppet/indirector/face'
 require 'pathname'
 
-%w[puppet_helper/faux_objects puppet_helper/cache].each do |lib|
- begin
-   require "puppet-languageserver/#{lib}"
- rescue LoadError
-   require File.expand_path(File.join(File.dirname(__FILE__), lib))
- end
+%w[puppet_helper/faux_objects puppet_helper/cache puppet_helper/file_cache].each do |lib|
+  begin
+    require "puppet-languageserver/#{lib}"
+  rescue LoadError
+    require File.expand_path(File.join(File.dirname(__FILE__), lib))
+  end
 end
 
 module PuppetLanguageServer

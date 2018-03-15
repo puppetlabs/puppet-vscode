@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-225](https://github.com/jpogran/puppet-vscode/issues/225)) Readd Local Workspace comand line option
 - ([GH-231](https://github.com/jpogran/puppet-vscode/issues/231)) Make Document Validation asynchronous
 - ([GH-236](https://github.com/jpogran/puppet-vscode/issues/236)) Remove the preload option
+- ([GH-236](https://github.com/jpogran/puppet-vscode/issues/236)) Add experimental file cache option
 
 ## 0.9.0 - 2018-02-01
 

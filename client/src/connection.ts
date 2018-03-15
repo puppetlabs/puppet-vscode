@@ -170,6 +170,9 @@ export class ConnectionManager implements IConnectionManager {
     }
     args.push('--port=' + this.connectionConfiguration.port);
     args.push('--timeout=' + this.connectionConfiguration.timeout);
+    if (this.connectionConfiguration.enableFileCache) {
+      args.push('--enable-file-cache');
+    }
     if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
       args.push('--debug=' + this.connectionConfiguration.debugFilePath);
     }

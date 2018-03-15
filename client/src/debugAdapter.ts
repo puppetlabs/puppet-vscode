@@ -43,6 +43,7 @@ class DebugConfiguration implements IConnectionConfiguration {
   public host: string = "127.0.0.1";
   public port: number = 8082;
   public timeout: number = 10;
+  public enableFileCache: boolean = undefined;
   public debugFilePath: string; // = "STDOUT";
   public puppetAgentDir: string;
 }

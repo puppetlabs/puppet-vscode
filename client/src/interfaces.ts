@@ -21,6 +21,7 @@ export interface IConnectionConfiguration {
   host: string;
   port: number;
   timeout: number;
+  enableFileCache: boolean;
   debugFilePath: string;
   puppetAgentDir: string;
 }

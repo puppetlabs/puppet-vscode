@@ -25,7 +25,14 @@ module PuppetLanguageServer
       end
 
       def configure_persistent_cache(options = {})
-        @persistent_cache = nil
+        options = {} if options.nil?
+        # Configure the persistent cache if specified
+        case options[:persistent_cache]
+        when :file
+          @persistent_cache = PuppetLanguageServer::PuppetHelper::PersistentFileCache.new(options[:persistent_cache_options])
+        else
+          @persistent_cache = nil
+        end
         true
       end
 
