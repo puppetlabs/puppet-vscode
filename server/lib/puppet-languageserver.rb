@@ -102,6 +102,9 @@ module PuppetLanguageServer
     log_message(:info, "Language Server is v#{PuppetVSCode.version}")
     log_message(:info, "Using Puppet v#{Puppet.version}")
 
+    log_message(:info, 'Initializing Puppet Helper Cache...')
+    PuppetLanguageServer::PuppetHelper.configure_cache(options[:cache])
+
     log_message(:info, 'Initializing settings...')
     if options[:fast_start_tcpserver]
       Thread.new do

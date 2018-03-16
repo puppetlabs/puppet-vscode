@@ -1,28 +1,26 @@
 require 'puppet/indirector/face'
 require 'pathname'
 
-%w[puppet_helper/faux_objects].each do |lib|
-  begin
-    require "puppet-languageserver/#{lib}"
-  rescue LoadError
-    require File.expand_path(File.join(File.dirname(__FILE__), lib))
-  end
+%w[puppet_helper/faux_objects puppet_helper/cache].each do |lib|
+ begin
+   require "puppet-languageserver/#{lib}"
+ rescue LoadError
+   require File.expand_path(File.join(File.dirname(__FILE__), lib))
+ end
 end
 
 module PuppetLanguageServer
   module PuppetHelper
     # Reference - https://github.com/puppetlabs/puppet/blob/master/lib/puppet/reference/type.rb
 
-    @ops_lock_types = Mutex.new
-    @ops_lock_funcs = Mutex.new
-    @ops_lock_classes = Mutex.new
-    @class_load_info = {}
-    @function_load_info = {}
-    @type_load_info = {}
-
     @default_types_loaded = nil
     @default_functions_loaded = nil
     @default_classes_loaded = nil
+    @inmemory_cache = nil
+
+    def self.configure_cache(options = {})
+      @inmemory_cache = PuppetLanguageServer::PuppetHelper::Cache.new(options)
+    end
 
     # Resource Face
     def self.resource_face_get_by_typename(typename)
@@ -47,25 +45,20 @@ module PuppetLanguageServer
     end
 
     def self.load_types
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
       _load_default_types
     end
 
     def self.get_type(name)
-      result = nil
-      return result if @default_types_loaded.nil?
-      @ops_lock_types.synchronize do
-        result = @type_load_info[name.intern]
-      end
-      result
+      return nil if @default_types_loaded == false
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
+      @inmemory_cache.object_by_name(:type, name)
     end
 
     def self.type_names
-      result = []
-      return result if @default_types_loaded.nil?
-      @ops_lock_types.synchronize do
-        result = @type_load_info.keys.map(&:to_s)
-      end
-      result
+      return [] if @default_types_loaded == false
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
+      @inmemory_cache.object_names_by_section(:type).map(&:to_s)
     end
 
     # Functions
@@ -74,6 +67,7 @@ module PuppetLanguageServer
     end
 
     def self.load_functions
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
       _load_default_functions if @default_functions_loaded.nil?
     end
 
@@ -84,33 +78,29 @@ module PuppetLanguageServer
     end
 
     def self.filtered_function_names(&block)
+      return [] if @default_functions_loaded == false
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
+      _load_default_functions if @default_functions_loaded.nil?
       result = []
-      return result if @default_functions_loaded.nil?
-      @ops_lock_funcs.synchronize do
-        @function_load_info.each do |name, data|
-          filter = block.call(name, data)
-          result << name if filter == true
-        end
+      @inmemory_cache.objects_by_section(:function) do |name, data|
+        filter = block.call(name, data)
+        result << name if filter == true
       end
       result
     end
 
     def self.function(name)
-      result = nil
-      return result if @default_functions_loaded.nil?
-      @ops_lock_funcs.synchronize do
-        result = @function_load_info[name.intern].dup if @function_load_info.key?(name.intern)
-      end
-      result
+      return nil if @default_functions_loaded == false
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
+      _load_default_functions unless @default_functions_loaded
+      @inmemory_cache.object_by_name(:function, name)
     end
 
     def self.function_names
-      result = []
-      return result if @default_functions_loaded.nil?
-      @ops_lock_funcs.synchronize do
-        result = @function_load_info.keys.map(&:to_s)
-      end
-      result
+      return [] if @default_functions_loaded == false
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
+      _load_default_functions if @default_functions_loaded.nil?
+      @inmemory_cache.object_names_by_section(:function).map(&:to_s)
     end
 
     # Classes and Defined Types
@@ -119,22 +109,20 @@ module PuppetLanguageServer
     end
 
     def self.load_classes
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
       _load_default_classes if @default_classes_loaded.nil?
+    end
+
+    def self.get_class(name)
+      return nil if @default_classes_loaded == false
+      raise('Puppet Helper Cache has not been configured') if @inmemory_cache.nil?
+      @inmemory_cache.object_by_name(:class, name)
     end
 
     def self.load_classes_async
       Thread.new do
         load_classes
       end
-    end
-
-    def self.get_class(name)
-      result = nil
-      return result if @default_classes_loaded.nil?
-      @ops_lock_funcs.synchronize do
-        result = @class_load_info[name.intern].dup if @class_load_info.key?(name.intern)
-      end
-      result
     end
 
     def self.prune_resource_parameters(resources)
@@ -199,6 +187,11 @@ module PuppetLanguageServer
     private_class_method :_load_default_classes
 
     def self.load_classes_from_manifest(manifest_file)
+      # TODO: Add ignore cache switch
+      return 0 if @inmemory_cache.exist?(manifest_file, :class)
+      return 0 if @inmemory_cache.load_from_persistent_cache!(manifest_file)
+      @inmemory_cache.set(manifest_file, :class, nil)
+
       file_content = File.open(manifest_file, 'r:UTF-8') { |f| f.read }
 
       parser = Puppet::Pops::Parser::Parser.new
@@ -210,7 +203,7 @@ module PuppetLanguageServer
         return 0
       end
 
-      class_info_count = 0
+      class_info = {}
       # Enumerate the entire AST looking for classes and defined types
       # TODO: Need to learn how to read the help/docs for hover support
       if result.model.respond_to? :eAllContents
@@ -233,10 +226,7 @@ module PuppetLanguageServer
 
           obj = FauxPuppetClass.new
           obj.from_puppet!(item.name, puppet_class)
-          @ops_lock_classes.synchronize do
-            @class_load_info[item.name.intern] = obj
-          end
-          class_info_count += 1
+          class_info[item.name.intern] = obj
         end
       else
         result.model._pcore_all_contents([]) do |item|
@@ -257,14 +247,12 @@ module PuppetLanguageServer
 
           obj = FauxPuppetClass.new
           obj.from_puppet!(item.name, puppet_class)
-          @ops_lock_classes.synchronize do
-            @class_load_info[item.name.intern] = obj
-          end
-          class_info_count += 1
+          class_info[item.name.intern] = obj
         end
       end
 
-      class_info_count
+      @inmemory_cache.set(manifest_file, :class, class_info)
+      class_info.count
     end
 
     def self.load_type_file(name, autoloader, env)
@@ -274,6 +262,9 @@ module PuppetLanguageServer
         PuppetLanguageServer.log_message(:warn, "[PuppetHelper::load_type_file] Could not find absolute path of type #{name}")
         return 0
       end
+      # TODO: Add ignore cache switch
+      return 0 if @inmemory_cache.exist?(absolute_name, :type)
+      return 0 if @inmemory_cache.load_from_persistent_cache!(absolute_name)
 
       # Get the list of currently loaded types
       loaded_types = []
@@ -290,6 +281,7 @@ module PuppetLanguageServer
         end
       end
 
+      @inmemory_cache.set(absolute_name, :type, nil)
       unless autoloader.loaded?(name)
         # This is an expensive call
         unless autoloader.load(name)
@@ -298,7 +290,7 @@ module PuppetLanguageServer
       end
 
       # Find the types that were loaded
-      type_count = 0
+      types = {}
       # Due to PUP-8301, if no types have been loaded yet then Puppet::Type.eachtype
       # will throw instead of not yielding.
       begin
@@ -308,10 +300,10 @@ module PuppetLanguageServer
           next if item.name == :component || item.name == :whit
           obj = FauxType.new
           obj.from_puppet!(item.name, item)
-          @ops_lock_types.synchronize do
-            @type_load_info[obj.key] = obj
-          end
-          type_count += 1
+          # TODO: Need to use calling_source in the cache backing store
+          # Perhaps I should be incrementally adding items to the cache instead of batch mode?
+          obj.calling_source = absolute_name
+          types[obj.key] = obj
         end
       rescue NoMethodError => detail
         # Detect PUP-8301
@@ -322,9 +314,10 @@ module PuppetLanguageServer
         end
       end
 
-      PuppetLanguageServer.log_message(:warn, "[PuppetHelper::load_type_file] type #{absolute_name} did not load any types") if type_count.zero?
+      PuppetLanguageServer.log_message(:warn, "[PuppetHelper::load_type_file] type #{absolute_name} did not load any types") if types.empty?
+      @inmemory_cache.set(absolute_name, :type, types)
 
-      type_count
+      types.count
     end
     private_class_method :load_type_file
 
@@ -361,9 +354,13 @@ module PuppetLanguageServer
         PuppetLanguageServer.log_message(:warn, "[PuppetHelper::load_function_file] Could not find absolute path of function #{name}")
         return 0
       end
+      # TODO: Add ignore cache switch
+      return 0 if @inmemory_cache.exist?(absolute_name, :function)
+      return 0 if @inmemory_cache.load_from_persistent_cache!(absolute_name)
 
       function_module = Puppet::Parser::Functions.environment_module(env)
       function_count = 0
+      @inmemory_cache.set(absolute_name, :function, nil)
       unless autoloader.loaded?(name)
         # This is an expensive call
         unless autoloader.load(name, env)
@@ -379,14 +376,11 @@ module PuppetLanguageServer
         obj = FauxFunction.new
         obj.from_puppet!(func_name, item)
         obj.calling_source = absolute_name
-        @ops_lock_funcs.synchronize do
-          @function_load_info[obj.key] = obj
-        end
-
         funcs[obj.key] = obj
         function_count += 1
       end
       PuppetLanguageServer.log_message(:warn, "[PuppetHelper::load_function_file] file #{absolute_name} did load any functions") if function_count.zero?
+      @inmemory_cache.set(absolute_name, :function, funcs)
 
       function_count
     end
@@ -412,16 +406,17 @@ module PuppetLanguageServer
       filenames.uniq!.compact!
       # Now add the functions in each file to the cache
       filenames.each do |filename|
+        @inmemory_cache.set(filename, :function, nil)
+        funcs = {}
         function_module.all_function_info
                        .select { |_k, i| filename.casecmp(i[:source_location][:source].to_s).zero? }
                        .each do |name, item|
           obj = FauxFunction.new
           obj.from_puppet!(name, item)
-          @ops_lock_funcs.synchronize do
-            @function_load_info[obj.key] = obj
-          end
+          funcs[obj.key] = obj
           function_count += 1
         end
+        @inmemory_cache.set(filename, :function, funcs)
       end
 
       # Now we can load functions from the default locations
