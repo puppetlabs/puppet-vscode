@@ -288,11 +288,6 @@
           "default": 10,
           "description": "The timeout to connect to the local Puppet Language Server"
         },
-        "puppet.languageserver.preLoadPuppet": {
-          "type": "boolean",
-          "default": true,
-          "description": "Initalize Puppet and Facter when local Puppet Language Server starts"
-        },
         "puppet.languageserver.debugFilePath": {
           "type": "string",
           "default": "",

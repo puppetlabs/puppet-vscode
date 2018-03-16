@@ -56,7 +56,8 @@ module PuppetLanguageServer
           args[:connection_timeout] = timeout.to_i
         end
 
-        opts.on('-d', '--no-preload', 'Do not preload Puppet information when the language server starts.  Default is to preload') do |_misc|
+        opts.on('-d', '--no-preload', '** DEPRECATED ** Do not preload Puppet information when the language server starts.  Default is to preload') do |_misc|
+          puts '** WARNING ** Using "--no-preload" may cause Puppet Type loading to be incomplete.'
           args[:preload_puppet] = false
         end
 
@@ -118,11 +119,11 @@ module PuppetLanguageServer
 
     log_message(:info, "Using Facter v#{Facter.version}")
     if options[:preload_puppet]
+      log_message(:info, 'Preloading Puppet Types (Sync)...')
+      PuppetLanguageServer::PuppetHelper.load_types
+
       log_message(:info, 'Preloading Facter (Async)...')
       PuppetLanguageServer::FacterHelper.load_facts_async
-
-      log_message(:info, 'Preloading Puppet Types (Async)...')
-      PuppetLanguageServer::PuppetHelper.load_types_async
 
       log_message(:info, 'Preloading Functions (Async)...')
       PuppetLanguageServer::PuppetHelper.load_functions_async

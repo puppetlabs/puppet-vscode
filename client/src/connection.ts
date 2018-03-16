@@ -170,7 +170,6 @@ export class ConnectionManager implements IConnectionManager {
     }
     args.push('--port=' + this.connectionConfiguration.port);
     args.push('--timeout=' + this.connectionConfiguration.timeout);
-    if (this.connectionConfiguration.preLoadPuppet == false) { args.push('--no-preload'); }
     if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
       args.push('--debug=' + this.connectionConfiguration.debugFilePath);
     }
@@ -291,10 +290,10 @@ export class ConnectionManager implements IConnectionManager {
 
         connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
           lastVersionResponse = versionDetails
-          if (!connectionManager.connectionConfiguration.preLoadPuppet || (versionDetails.factsLoaded &&
+          if (versionDetails.factsLoaded &&
               versionDetails.functionsLoaded &&
               versionDetails.typesLoaded &&
-              versionDetails.classesLoaded)) {
+              versionDetails.classesLoaded) {
             clearInterval(handle);
             this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
             resolve();
