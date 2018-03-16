@@ -8,6 +8,10 @@ describe 'completion_provider' do
   let(:subject) { PuppetLanguageServer::CompletionProvider }
   let(:nil_response) { LanguageServer::CompletionList.create_nil_response }
 
+  before(:all) do
+    wait_for_puppet_loading
+  end
+
   describe '#complete' do
     describe "Given an incomplete manifest which has syntax errors" do
       it "should raise an error" do

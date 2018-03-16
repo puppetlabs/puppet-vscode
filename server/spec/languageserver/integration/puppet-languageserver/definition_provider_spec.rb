@@ -19,14 +19,7 @@ describe 'definition_provider' do
 
   describe '#find_defintion' do
     before(:all) do
-      # Ensure the functions are loaded so that defintion information is available
-      PuppetLanguageServer::PuppetHelper.load_functions unless PuppetLanguageServer::PuppetHelper.functions_loaded?
-
-      # Ensure the types are loaded so that defintion information is available
-      PuppetLanguageServer::PuppetHelper.load_types unless PuppetLanguageServer::PuppetHelper.types_loaded?
-
-      # Ensure the classes are loaded so that defintion information is available
-      PuppetLanguageServer::PuppetHelper.load_classes unless PuppetLanguageServer::PuppetHelper.classes_loaded?
+      wait_for_puppet_loading
     end
 
     context 'When cursor is on a function name' do

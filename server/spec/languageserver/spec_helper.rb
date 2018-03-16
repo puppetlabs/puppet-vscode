@@ -11,10 +11,28 @@ fixtures_dir = File.join(File.dirname(__FILE__),'fixtures')
 
 # Currently there is no way to re-initialize the puppet loader so for the moment
 # all tests must run off the single puppet config settings instead of per example setting
-server_options = PuppetLanguageServer::CommandLineParser.parse(['--no-preload'])
+server_options = PuppetLanguageServer::CommandLineParser.parse([])
 server_options[:puppet_settings] = ['--vardir',File.join(fixtures_dir,'cache'),
                                     '--confdir',File.join(fixtures_dir,'confdir')]
 PuppetLanguageServer::init_puppet(server_options)
+
+def wait_for_puppet_loading
+  interation = 0
+  loop do
+    break if PuppetLanguageServer::PuppetHelper.functions_loaded? &&
+             PuppetLanguageServer::PuppetHelper.types_loaded? &&
+             PuppetLanguageServer::PuppetHelper.classes_loaded?
+    sleep(1)
+    interation += 1
+    next if interation < 30
+    raise <<-ERRORMSG
+            Puppet has not be initialised in time:
+            functions_loaded? = #{PuppetLanguageServer::PuppetHelper.functions_loaded?}
+            types_loaded? = #{PuppetLanguageServer::PuppetHelper.types_loaded?}
+            classes_loaded? = #{PuppetLanguageServer::PuppetHelper.classes_loaded?}
+          ERRORMSG
+  end
+end
 
 # Custom RSpec Matchers
 RSpec::Matchers.define :be_completion_item_with_type do |value|
