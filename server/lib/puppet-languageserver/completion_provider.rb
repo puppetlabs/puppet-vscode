@@ -10,7 +10,7 @@ module PuppetLanguageServer
         # We are in the root of the document.
 
         # Add keywords
-        keywords(%w[class define application]) { |x| items << x }
+        keywords(%w[class define application site]) { |x| items << x }
 
         # Add resources
         all_resources { |x| items << x }

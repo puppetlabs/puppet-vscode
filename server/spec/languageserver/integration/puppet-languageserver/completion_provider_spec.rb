@@ -206,4 +206,267 @@ EOT
       end
     end
   end
+
+  describe '#resolve' do
+    it 'should return the original request if it is not understood' do
+      resolve_request = {
+        'label'  => 'spec-test-label',
+        'kind'   => LanguageServer::COMPLETIONITEMKIND_TEXT,
+        'detail' => 'spec-test-detail',
+        'data'   => { 'type' => 'unknown_type' }
+      }
+
+      result = subject.resolve(resolve_request)
+      expect(result).to eq(resolve_request)
+    end
+
+    context 'when resolving a variable_expr_fact request' do
+      let(:content) { <<-EOT
+  $test = $facts[
+EOT
+      }
+      let(:line_num) { 0 }
+      let(:char_num) { 17 }
+
+      before(:each) do
+        # Generate the resolution request based on a completion response
+        @completion_response = subject.complete(content, line_num, char_num)
+      end
+
+      context 'for a well known fact (operatingsystem)' do
+        before(:each) do
+          @resolve_request = @completion_response["items"].find do |item|
+            item["label"] == 'operatingsystem' && item["kind"] == LanguageServer::COMPLETIONITEMKIND_VARIABLE
+          end
+          raise RuntimeError, "operatingsystem fact could not be found" if @resolve_request.nil?
+        end
+
+        it 'should return the fact value' do
+          result = subject.resolve(@resolve_request)
+          expect(result['documentation']).to eq(Facter.fact('operatingsystem').value)
+        end
+      end
+
+      context 'for a fact that does not exist' do
+        it 'should return empty string' do
+          resolve_request = {
+            'label'  => 'spec-test-label',
+            'kind'   => LanguageServer::COMPLETIONITEMKIND_TEXT,
+            'detail' => 'spec-test-detail',
+            'data'   => { 'type' => 'variable_expr_fact', 'expr' => 'I_dont_exist'}
+          }
+
+          result = subject.resolve(resolve_request)
+
+          expect(result['documentation']).to eq('')
+        end
+      end
+    end
+
+    context 'when resolving a keyword request' do
+      let(:content) { <<-EOT
+        class Alice {
+        }
+      EOT
+      }
+      let(:line_num) { 0 }
+      let(:char_num) { 0 }
+
+      before(:each) do
+        # Generate the resolution request based on a completion response
+        @completion_response = subject.complete(content, line_num, char_num)
+      end
+
+      %w[class define].each do |testcase|
+        context "for #{testcase}" do
+          before(:each) do
+            @resolve_request = @completion_response["items"].find do |item|
+              item["label"] == testcase && item["kind"] == LanguageServer::COMPLETIONITEMKIND_KEYWORD
+            end
+            raise RuntimeError, "A #{testcase} keyword response could not be found" if @resolve_request.nil?
+          end
+
+          it 'should return the documentation' do
+            result = subject.resolve(@resolve_request)
+            expect(result['documentation']).to match(/.+/)
+          end
+
+          it 'should return a text snippet' do
+            result = subject.resolve(@resolve_request)
+            expect(result['insertText']).to match(/.+/)
+            expect(result['insertTextFormat']).to eq(LanguageServer::INSERTTEXTFORMAT_SNIPPET)
+          end
+        end
+      end
+
+      %w[application site].each do |testcase|
+        context "for #{testcase}" do
+          before(:each) do
+            @resolve_request = @completion_response["items"].find do |item|
+              item["label"] == testcase && item["kind"] == LanguageServer::COMPLETIONITEMKIND_KEYWORD
+            end
+            raise RuntimeError, "A #{testcase} keyword response could not be found" if @resolve_request.nil?
+          end
+
+          it 'should return the documentation' do
+            result = subject.resolve(@resolve_request)
+            expect(result['documentation']).to match(/.+/)
+          end
+
+          it 'should return Orchestrator detail' do
+            result = subject.resolve(@resolve_request)
+            expect(result['detail']).to eq('Orchestrator')
+          end
+
+          it 'should return a text snippet' do
+            result = subject.resolve(@resolve_request)
+            expect(result['insertText']).to match(/.+/)
+            expect(result['insertTextFormat']).to eq(LanguageServer::INSERTTEXTFORMAT_SNIPPET)
+          end
+        end
+      end
+    end
+
+    context 'when resolving a function request' do
+      let(:content) { <<-EOT
+        class Alice {
+        }
+      EOT
+      }
+      let(:line_num) { 0 }
+      let(:char_num) { 0 }
+
+      before(:each) do
+        # Generate the resolution request based on a completion response
+        @completion_response = subject.complete(content, line_num, char_num)
+      end
+
+      context 'for a well known function (alert)' do
+        before(:each) do
+          @resolve_request = @completion_response["items"].find do |item|
+            item["label"] == 'alert' && item["kind"] == LanguageServer::COMPLETIONITEMKIND_FUNCTION
+          end
+          raise RuntimeError, "alert function could not be found" if @resolve_request.nil?
+        end
+
+        it 'should return the documentation' do
+          result = subject.resolve(@resolve_request)
+          expect(result['documentation']).to match(/.+/)
+        end
+
+        it 'should return a text snippet' do
+          result = subject.resolve(@resolve_request)
+          expect(result['insertText']).to match(/.+/)
+          expect(result['insertTextFormat']).to eq(LanguageServer::INSERTTEXTFORMAT_SNIPPET)
+        end
+      end
+    end
+
+    context 'when resolving a resource_type request' do
+      let(:content) { <<-EOT
+        class Alice {
+        }
+      EOT
+      }
+      let(:line_num) { 0 }
+      let(:char_num) { 0 }
+
+      before(:each) do
+        # Generate the resolution request based on a completion response
+        @completion_response = subject.complete(content, line_num, char_num)
+      end
+
+      context 'for a well known puppet type (user)' do
+        before(:each) do
+          @resolve_request = @completion_response["items"].find do |item|
+            item["label"] == 'user' && item["kind"] == LanguageServer::COMPLETIONITEMKIND_MODULE
+          end
+          raise RuntimeError, "user type could not be found" if @resolve_request.nil?
+        end
+
+        it 'should return the documentation' do
+          result = subject.resolve(@resolve_request)
+          expect(result['documentation']).to match(/.+/)
+        end
+
+        it 'should return a text snippet' do
+          result = subject.resolve(@resolve_request)
+          expect(result['insertText']).to match(/.+/)
+          expect(result['insertTextFormat']).to eq(LanguageServer::INSERTTEXTFORMAT_SNIPPET)
+        end
+      end
+    end
+
+    context 'when resolving a resource_parameter request' do
+      let(:content) { <<-EOT
+        user { 'Alice':
+
+        }
+      EOT
+      }
+      let(:line_num) { 1 }
+      let(:char_num) { 0 }
+
+      before(:each) do
+        # Generate the resolution request based on a completion response
+        @completion_response = subject.complete(content, line_num, char_num)
+      end
+
+      context 'for the name parameter of a well known puppet type (user)' do
+        before(:each) do
+          @resolve_request = @completion_response["items"].find do |item|
+            item["label"] == 'name' && item["kind"] == LanguageServer::COMPLETIONITEMKIND_PROPERTY
+          end
+          raise RuntimeError, "name parameter could not be found" if @resolve_request.nil?
+        end
+
+        it 'should return the documentation' do
+          result = subject.resolve(@resolve_request)
+          expect(result['documentation']).to match(/.+/)
+        end
+
+        it 'should return a text literal with the parameter defintion' do
+          result = subject.resolve(@resolve_request)
+          expect(result['insertText']).to match(/.+ => /)
+          expect(result['insertTextFormat']).to be_nil
+        end
+      end
+    end
+
+    context 'when resolving a resource_property request' do
+      let(:content) { <<-EOT
+        user { 'Alice':
+
+        }
+      EOT
+      }
+      let(:line_num) { 1 }
+      let(:char_num) { 0 }
+
+      before(:each) do
+        # Generate the resolution request based on a completion response
+        @completion_response = subject.complete(content, line_num, char_num)
+      end
+
+      context 'for the ensure property of a well known puppet type (user)' do
+        before(:each) do
+          @resolve_request = @completion_response["items"].find do |item|
+            item["label"] == 'ensure' && item["kind"] == LanguageServer::COMPLETIONITEMKIND_PROPERTY
+          end
+          raise RuntimeError, "ensure property could not be found" if @resolve_request.nil?
+        end
+
+        it 'should return the documentation' do
+          result = subject.resolve(@resolve_request)
+          expect(result['documentation']).to match(/.+/)
+        end
+
+        it 'should return a text literal with the property defintion' do
+          result = subject.resolve(@resolve_request)
+          expect(result['insertText']).to match(/.+ => /)
+          expect(result['insertTextFormat']).to be_nil
+        end
+      end
+    end
+  end
 end
