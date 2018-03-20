@@ -213,7 +213,7 @@ describe 'message_router' do
       before(:each) do
         # Create fake document store
         subject.documents.clear
-        subject.documents.set_document(file_uri,file_content)
+        subject.documents.set_document(file_uri,file_content, 0)
       end
 
       context 'and a file which is not a puppet manifest' do
@@ -515,9 +515,7 @@ describe 'message_router' do
 
     # textDocument/didOpen - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#textDocument_didOpen
     context 'given a textDocument/didOpen notification' do
-      let(:validation_result) { ['validation_result'] }
-
-      shared_examples_for "an opened document with validation errors" do |file_uri, file_content|
+      shared_examples_for "an opened document with enqueued validation" do |file_uri, file_content|
         let(:notification_method) { 'textDocument/didOpen' }
         let(:notification_params) { {
           'textDocument' => {
@@ -533,30 +531,8 @@ describe 'message_router' do
           expect(subject.documents.document(file_uri)).to eq(file_content)
         end
 
-        it 'should reply with diagnostic information on the file' do
-          expect(subject).to receive(:reply_diagnostics).with(file_uri,validation_result).and_return(true)
-          subject.receive_notification(notification_method, notification_params)
-        end
-      end
-
-      shared_examples_for "an opened document with no validation errors" do |file_uri, file_content|
-        let(:notification_method) { 'textDocument/didOpen' }
-        let(:notification_params) { {
-          'textDocument' => {
-            'uri' => file_uri,
-            'languageId' => 'puppet',
-            'version' => 1,
-            'text' => file_content,
-          }
-        }}
-
-        it 'should add the document to the document store' do
-          subject.receive_notification(notification_method, notification_params)
-          expect(subject.documents.document(file_uri)).to eq(file_content)
-        end
-
-        it 'should reply with empty diagnostic information on the file' do
-          expect(subject).to receive(:reply_diagnostics).with(file_uri,[]).and_return(true)
+        it 'should enqueue the file for validation' do
+          expect(PuppetLanguageServer::ValidationQueue).to receive(:enqueue).with(file_uri, 1, Object, Object)
           subject.receive_notification(notification_method, notification_params)
         end
       end
@@ -566,33 +542,19 @@ describe 'message_router' do
       end
 
       context 'for a puppet manifest file' do
-        before(:each) do
-          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate).and_return(validation_result)
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "an opened document with validation errors", MANIFEST_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "an opened document with enqueued validation", MANIFEST_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for a Puppetfile file' do
-        before(:each) do
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "an opened document with no validation errors", PUPPETFILE_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "an opened document with enqueued validation", PUPPETFILE_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for an EPP template file' do
-        before(:each) do
-          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate_epp).and_return(validation_result)
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "an opened document with validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "an opened document with enqueued validation", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for an unknown file' do
-        before(:each) do
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "an opened document with no validation errors", UNKNOWN_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "an opened document with enqueued validation", UNKNOWN_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
     end
 
@@ -607,7 +569,7 @@ describe 'message_router' do
 
       before(:each) do
         subject.documents.clear
-        subject.documents.set_document(file_uri,file_content)
+        subject.documents.set_document(file_uri,file_content, 0)
       end
 
       it 'should remove the document from the document store' do
@@ -618,9 +580,7 @@ describe 'message_router' do
 
     # textDocument/didChange - https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#didchangetextdocument-notification
     context 'given a textDocument/didChange notification and a TextDocumentSyncKind of Full' do
-      let(:validation_result) { ['validation_result'] }
-
-      shared_examples_for "a changed document with validation errors" do |file_uri, new_file_content|
+      shared_examples_for "a changed document with enqueued validation" do |file_uri, new_file_content|
         let(:notification_params) { {
           'textDocument' => {
             'uri' => file_uri,
@@ -642,36 +602,8 @@ describe 'message_router' do
           expect(subject.documents.document(file_uri)).to eq(new_file_content)
         end
 
-        it 'should reply with diagnostic information on the file' do
-          expect(subject).to receive(:reply_diagnostics).with(file_uri, validation_result).and_return(true)
-          subject.receive_notification(notification_method, notification_params)
-        end
-      end
-
-      shared_examples_for "a changed document with no validation errors" do |file_uri, new_file_content|
-        let(:notification_params) { {
-          'textDocument' => {
-            'uri' => file_uri,
-            'version' => 2,
-          },
-          'contentChanges' => [
-            {
-              'range' => nil,
-              'rangeLength' => nil,
-              'text' => new_file_content,
-            }
-          ]
-        }}
-        let(:notification_method) { 'textDocument/didChange' }
-        let(:new_file_content ) { 'new_file_content' }
-
-        it 'should update the document in the document store' do
-          subject.receive_notification(notification_method, notification_params)
-          expect(subject.documents.document(file_uri)).to eq(new_file_content)
-        end
-
-        it 'should reply with empty diagnostic information on the file' do
-          expect(subject).to receive(:reply_diagnostics).with(file_uri, []).and_return(true)
+        it 'should enqueue the file for validation' do
+          expect(PuppetLanguageServer::ValidationQueue).to receive(:enqueue).with(file_uri, 2, Object, Object)
           subject.receive_notification(notification_method, notification_params)
         end
       end
@@ -681,34 +613,19 @@ describe 'message_router' do
       end
 
       context 'for a puppet manifest file' do
-        before(:each) do
-          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate).and_return(validation_result)
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "a changed document with validation errors", MANIFEST_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "a changed document with enqueued validation", MANIFEST_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for a Puppetfile file' do
-        before(:each) do
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "a changed document with no validation errors", PUPPETFILE_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "a changed document with enqueued validation", PUPPETFILE_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for an EPP template file' do
-        before(:each) do
-          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate_epp).and_return(validation_result)
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "a changed document with validation errors", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "a changed document with enqueued validation", EPP_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
 
       context 'for a file the server does not understand' do
-        before(:each) do
-          expect(PuppetLanguageServer::DocumentValidator).to receive(:validate).exactly(0).times
-          allow(subject).to receive(:reply_diagnostics).and_return(true)
-        end
-        it_should_behave_like "a changed document with no validation errors", UNKNOWN_FILENAME, ERROR_CAUSING_FILE_CONTENT
+        it_should_behave_like "a changed document with enqueued validation", UNKNOWN_FILENAME, ERROR_CAUSING_FILE_CONTENT
       end
     end
 
