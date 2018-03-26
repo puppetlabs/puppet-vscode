@@ -16,7 +16,14 @@ export enum ConnectionType {
   Remote
 }
 
+export enum ProtocolType{
+  UNKNOWN,
+  STDIO,
+  TCP
+}
+
 export interface IConnectionConfiguration {
+  protocolType: ProtocolType;
   type: ConnectionType;
   host: string;
   port: number;
