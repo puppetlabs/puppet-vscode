@@ -3,8 +3,8 @@ import path = require('path');
 import vscode = require('vscode');
 import cp = require('child_process');
 import { ILogger } from '../src/logging';
-import { IConnectionConfiguration, ConnectionStatus, ConnectionType } from './interfaces'
-import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
+import { IConnectionConfiguration, ConnectionStatus, ConnectionType, ProtocolType } from './interfaces'
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 import { ConnectionConfiguration } from './configuration';
 import { setupPuppetCommands } from '../src/commands/puppetcommands';
 import { setupPDKCommands } from '../src/commands/pdkcommands';
@@ -73,13 +73,21 @@ export class ConnectionManager implements IConnectionManager {
 
     this.createStatusBarItem();
 
-    if (this.connectionConfiguration.host == '127.0.0.1' ||
-        this.connectionConfiguration.host == 'localhost' ||
-        this.connectionConfiguration.host == '') {
-      this.connectionConfiguration.type = ConnectionType.Local
-    } else {
-      this.connectionConfiguration.type = ConnectionType.Remote
+    switch(this.connectionConfiguration.protocolType){
+      case ProtocolType.STDIO:
+        this.connectionConfiguration.type = ConnectionType.Local
+        break;
+      case ProtocolType.TCP:
+        if (this.connectionConfiguration.host == '127.0.0.1' ||
+          this.connectionConfiguration.host == 'localhost' ||
+          this.connectionConfiguration.host == '') {
+          this.connectionConfiguration.type = ConnectionType.Local
+        } else {
+          this.connectionConfiguration.type = ConnectionType.Remote
+        }
+        break;
     }
+    
 
     this.languageServerClient = undefined
     this.languageServerProcess = undefined
@@ -132,7 +140,7 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   private onLanguageServerStart(proc : cp.ChildProcess) {
-    this.logger.debug('LanguageServer Process Started: ' + proc)
+    this.logger.debug('LanguageServer Process Started: ' + proc.pid)
     this.languageServerProcess = proc
     if (this.languageServerProcess == undefined) {
         if (this.connectionStatus == ConnectionStatus.Failed) {
@@ -160,15 +168,25 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   public startLanguageServerProcess(cmd : string, args : Array<string>, options : cp.SpawnOptions, callback : Function) {
-    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
-      args.push('--ip=127.0.0.1');
-    } else {
-      args.push('--ip=' + this.connectionConfiguration.host);
+
+    switch(this.connectionConfiguration.protocolType){
+      case ProtocolType.STDIO:
+        args.push('--stdio');
+        break;
+      case ProtocolType.TCP:
+        if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
+          args.push('--ip=127.0.0.1');
+        } else {
+          args.push('--ip=' + this.connectionConfiguration.host);
+        }
+        args.push('--port=' + this.connectionConfiguration.port);
+        break;
+      default:
+        break;
     }
     if (vscode.workspace.workspaceFolders != undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
-    args.push('--port=' + this.connectionConfiguration.port);
     args.push('--timeout=' + this.connectionConfiguration.timeout);
     if (this.connectionConfiguration.preLoadPuppet == false) { args.push('--no-preload'); }
     if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
@@ -201,22 +219,33 @@ export class ConnectionManager implements IConnectionManager {
 
     let connMgr : ConnectionManager = this;
     let logger = this.logger;
-    // Start a server to get a random port
-    this.logger.debug(logPrefix + 'Creating server process to identify random port')
-    const server = net.createServer()
-      .on('close', () => {
-        logger.debug(logPrefix + 'Server process to identify random port disconnected');
-        connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
-      })
-      .on('error', (err) => {
-        throw err;
-      });
+    if(this.connectionConfiguration.protocolType === ProtocolType.TCP){
+      // Start a server to get a random port
+      this.logger.debug(logPrefix + 'Creating server process to identify random port')
+      const server = net.createServer()
+        .on('close', () => {
+          logger.debug(logPrefix + 'Server process to identify random port disconnected');
+          connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+        })
+        .on('error', (err) => {
+          throw err;
+        });
 
-    // Listen on random port
-    server.listen(0);
-    this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
-    connMgr.connectionConfiguration.port = server.address().port;
-    server.close();
+      // Listen on random port
+      server.listen(0);
+      this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
+      connMgr.connectionConfiguration.port = server.address().port;
+      server.close();
+    }else{
+      connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+    }
+  }
+
+  private createLangClientStdio(): LanguageClient {
+    let serverOptions: ServerOptions = {
+      run : { transport: TransportKind.stdio }
+    };
+    
   }
 
   private startLangClientTCP(): LanguageClient {
@@ -226,6 +255,7 @@ export class ConnectionManager implements IConnectionManager {
     let connMgr:ConnectionManager = this;
     let serverOptions: ServerOptions = function () {
       return new Promise((resolve, reject) => {
+        // how do we stdio here
         var client = new net.Socket();
         client.connect(connMgr.connectionConfiguration.port, connMgr.connectionConfiguration.host, function () {
           resolve({ reader: client, writer: client });
