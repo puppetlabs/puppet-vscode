@@ -2,11 +2,12 @@
 
 import * as vscode from 'vscode';
 
-import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { IConnectionConfiguration, ConnectionType, ProtocolType } from './interfaces';
 import { ConnectionManager } from './connection';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
   public type: ConnectionType = ConnectionType.Unknown;
+  public protocolType: ProtocolType = ProtocolType.UNKNOWN;
   public host: string = undefined;
   public port: number = undefined;
   public timeout: number = undefined;
@@ -17,11 +18,23 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   constructor(context: vscode.ExtensionContext) {
     let config = vscode.workspace.getConfiguration('puppet');
 
-    this.host            = config['languageserver']['address'];
-    this.port            = config['languageserver']['port'];
-    this.timeout         = config['languageserver']['timeout'];
+    switch(config['languageserver']['protocol']){
+      case 'stdio':
+       this.protocolType = ProtocolType.STDIO;
+       break;
+      case 'tcp':
+        this.protocolType = ProtocolType.TCP;
+        break;
+      default:
+        this.protocolType = ProtocolType.STDIO;
+        break;
+    }
+
+    this.host          = config['languageserver']['address'];
+    this.port          = config['languageserver']['port'];
+    this.timeout       = config['languageserver']['timeout'];
     this.enableFileCache = config['languageserver']['filecache']['enable'];
-    this.debugFilePath   = config['languageserver']['debugFilePath'];
+    this.debugFilePath = config['languageserver']['debugFilePath'];
 
     this.puppetAgentDir = config['puppetAgentDir'];
   }
