@@ -7,7 +7,7 @@ import { ConnectionStatus } from '../interfaces';
 import { IConnectionManager } from '../connection';
 import { reporter } from '../telemetry/telemetry';
 import * as messages from '../messages';
-import * as viz from 'viz.js';
+import * as viz from 'viz.js/viz.js';
 
 export function isNodeGraphFile(document: vscode.TextDocument) {
   return document.languageId === 'puppet'
