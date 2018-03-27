@@ -43,7 +43,7 @@ class DebugConfiguration implements IConnectionConfiguration {
   public host: string = "127.0.0.1";
   public port: number = 8082;
   public timeout: number = 10;
-  public preLoadPuppet: boolean = false;
+  public enableFileCache: boolean = undefined;
   public debugFilePath: string; // = "STDOUT";
   public puppetAgentDir: string;
 }
@@ -117,7 +117,7 @@ function startDebugServer(config:DebugConfiguration, debugLogger: ILogger) {
   if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(rubyfile, config, debugLogger); }
   // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
   // if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(rubyfile, config, debugLogger); }
-  
+
   if (localServer == null) {
     sendErrorMessage("Unable to find a valid ruby environment");
     process.exit(255);
@@ -145,7 +145,7 @@ function startDebugging(config:DebugConfiguration, debugLogger:ILogger) {
   debugServerProc.on('close', (exitCode) => {
     debugLogger.debug("Debug server terminated with exit code: " + exitCode);
     debugServerProc.kill();
-    process.exit(exitCode); 
+    process.exit(exitCode);
   });
 
   debugServerProc.on('error', (data) => {
@@ -155,19 +155,19 @@ function startDebugging(config:DebugConfiguration, debugLogger:ILogger) {
   process.on('SIGTERM', () => {
     debugLogger.debug("Received SIGTERM");
     debugServerProc.kill();
-    process.exit(0); 
+    process.exit(0);
   });
 
   process.on('SIGHUP', () => {
     debugLogger.debug("Received SIGHUP");
     debugServerProc.kill();
-    process.exit(0); 
+    process.exit(0);
   });
 
   process.on('exit', () => {
     debugLogger.debug("Received Exit");
     debugServerProc.kill();
-    process.exit(0); 
+    process.exit(0);
   });
 }
 

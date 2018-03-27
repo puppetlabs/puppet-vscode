@@ -65,14 +65,14 @@ module PuppetLanguageServer
     def self.type_or_class(resource_name)
       # Strip the leading double-colons for root resource names
       resource_name = resource_name.slice(2, resource_name.length - 2) if resource_name.start_with?('::')
-      location = PuppetLanguageServer::PuppetHelper.type_load_info(resource_name)
-      location = PuppetLanguageServer::PuppetHelper.class_load_info(resource_name) if location.nil?
-      unless location.nil?
+      item = PuppetLanguageServer::PuppetHelper.get_type(resource_name)
+      item = PuppetLanguageServer::PuppetHelper.get_class(resource_name) if item.nil?
+      unless item.nil?
         return LanguageServer::Location.create(
-          'uri' => 'file:///' + location['source'],
-          'fromline' => location['line'],
+          'uri' => 'file:///' + item.source,
+          'fromline' => item.line,
           'fromchar' => 0,
-          'toline' => location['line'],
+          'toline' => item.line,
           'tochar' => 1024
         )
       end
@@ -81,17 +81,15 @@ module PuppetLanguageServer
     private_class_method :type_or_class
 
     def self.function_name(func_name)
-      location = PuppetLanguageServer::PuppetHelper.function_load_info(func_name)
-      unless location.nil?
-        return LanguageServer::Location.create(
-          'uri' => 'file:///' + location['source'],
-          'fromline' => location['line'],
-          'fromchar' => 0,
-          'toline' => location['line'],
-          'tochar' => 1024
-        )
-      end
-      nil
+      item = PuppetLanguageServer::PuppetHelper.function(func_name)
+      return nil if item.nil? || item.source.nil? || item.line.nil?
+      LanguageServer::Location.create(
+        'uri' => 'file:///' + item.source,
+        'fromline' => item.line,
+        'fromchar' => 0,
+        'toline' => item.line,
+        'tochar' => 1024
+      )
     end
     private_class_method :function_name
   end

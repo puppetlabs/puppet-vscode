@@ -13,16 +13,26 @@ module Puppet
           monkey_index = Kernel.caller_locations.find_index { |loc| loc.path.match(/puppet_monkey_patches\.rb/) }
           monkey_index = -1 if monkey_index.nil?
           caller = Kernel.caller_locations[monkey_index + 1]
-          # rubocop:disable Layout/IndentHash, Style/BracesAroundHashParameters
-          PuppetLanguageServer::PuppetHelper.add_function_load_info(name, {
-            'source' => caller.absolute_path,
-            'line'   => caller.lineno - 1 # Convert to a zero based line number system
-          })
-          # rubocop:enable Layout/IndentHash, Style/BracesAroundHashParameters
-
-          original_newfunction(name, options, &block)
+          # Call the original new function method
+          result = original_newfunction(name, options, &block)
+          # Append the caller information
+          result[:source_location] = {
+            :source => caller.absolute_path,
+            :line   => caller.lineno - 1, # Convert to a zero based line number system
+          }
+          result
         end
       end
+    end
+  end
+end
+
+# Add an additional method on Puppet Types to store their source location
+require 'puppet/type'
+module Puppet
+  class Type
+    class << self
+      attr_accessor :_source_location
     end
   end
 end
@@ -34,16 +44,15 @@ module Puppet
     module Manager
       alias_method :original_newtype, :newtype
       def newtype(name, options = {}, &block)
-        if block_given? && !block.source_location.nil?
-          # rubocop:disable Layout/IndentHash, Style/BracesAroundHashParameters
-          PuppetLanguageServer::PuppetHelper.add_type_load_info(name, {
-            'source' => block.source_location[0],
-            'line'   => block.source_location[1] - 1 # Convert to a zero based line number system
-          })
-          # rubocop:enable Layout/IndentHash, Style/BracesAroundHashParameters
-        end
+        result = original_newtype(name, options, &block)
 
-        original_newtype(name, options, &block)
+        if block_given? && !block.source_location.nil?
+          result._source_location = {
+            :source => block.source_location[0],
+            :line   => block.source_location[1] - 1, # Convert to a zero based line number system
+          }
+        end
+        result
       end
     end
   end

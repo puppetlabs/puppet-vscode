@@ -44,29 +44,26 @@ module PuppetLanguageServer
         # We are inside a resource definition.  Should display all available
         # properities and parameters.
 
-        # TODO: Should really cache all of the resources and params/props for quick
-        # searching and then only actually instatiate when needed.  For the moment,
-        # instantiate all the things!
-
-        item_type = Puppet::Type.type(item.type_name.value)
+        item_type = PuppetLanguageServer::PuppetHelper.get_type(item.type_name.value)
         # Add Parameters
-        item_type.parameters.each do |param|
-          items << LanguageServer::CompletionItem.create('label'  => param.to_s,
+        item_type.parameters.each_key do |name|
+          items << LanguageServer::CompletionItem.create('label'  => name.to_s,
                                                          'kind'   => LanguageServer::COMPLETIONITEMKIND_PROPERTY,
                                                          'detail' => 'Parameter',
                                                          'data'   => { 'type' => 'resource_parameter',
-                                                                       'param' => param.to_s,
+                                                                       'param' => name.to_s,
                                                                        'resource_type' => item.type_name.value })
         end
         # Add Properties
-        item_type.properties.each do |prop|
-          items << LanguageServer::CompletionItem.create('label'  => prop.name.to_s,
+        item_type.properties.each_key do |name|
+          items << LanguageServer::CompletionItem.create('label'  => name.to_s,
                                                          'kind'   => LanguageServer::COMPLETIONITEMKIND_PROPERTY,
                                                          'detail' => 'Property',
                                                          'data'   => { 'type' => 'resource_property',
-                                                                       'prop' => prop.name.to_s,
+                                                                       'prop' => name.to_s,
                                                                        'resource_type' => item.type_name.value })
         end
+        # TODO: What about meta parameters?
       end
 
       LanguageServer::CompletionList.create('isIncomplete' => incomplete,
@@ -110,12 +107,12 @@ module PuppetLanguageServer
 
     def self.all_statement_functions(&block)
       # Find functions which don't return values i.e. statements
-      PuppetLanguageServer::PuppetHelper.functions.select { |_key, obj| obj[:type] == :statement }.each_key do |key|
-        item = LanguageServer::CompletionItem.create('label' => key.to_s,
+      PuppetLanguageServer::PuppetHelper.filtered_function_names { |_name, data| data.type == :statement }.each do |name|
+        item = LanguageServer::CompletionItem.create('label' => name.to_s,
                                                      'kind'   => LanguageServer::COMPLETIONITEMKIND_FUNCTION,
                                                      'detail' => 'Function',
                                                      'data'   => { 'type' => 'function',
-                                                                   'name' => key.to_s })
+                                                                   'name' => name.to_s })
         block.call(item) if block
       end
     end
@@ -162,32 +159,36 @@ module PuppetLanguageServer
 
       when 'function'
         item_type = PuppetLanguageServer::PuppetHelper.function(data['name'])
-        completion_item['documentation'] = item_type[:doc] unless item_type[:doc].nil?
+        completion_item['documentation'] = item_type.doc unless item_type.doc.nil?
         completion_item['insertText'] = "#{data['name']}(${1:value}"
-        (2..item_type[:arity]).each do |index|
+        (2..item_type.arity).each do |index|
           completion_item['insertText'] += ", ${#{index}:value}"
         end
         completion_item['insertText'] += ')'
         completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
 
       when 'resource_type'
-        item_type = Puppet::Type.type(data['name'])
+        item_type = PuppetLanguageServer::PuppetHelper.get_type(data['name'])
         # TODO: More things?
         completion_item['documentation'] = item_type.doc unless item_type.doc.nil?
         completion_item['insertText'] = "#{data['name']} { '${1:title}':\n\tensure => '${2:present}'\n}"
         completion_item['insertTextFormat'] = LanguageServer::INSERTTEXTFORMAT_SNIPPET
       when 'resource_parameter'
-        item_type = Puppet::Type.type(data['resource_type'])
-        param_type = item_type.attrclass(data['param'].intern)
-        # TODO: More things?
-        completion_item['documentation'] = param_type.doc unless param_type.doc.nil?
-        completion_item['insertText'] = "#{data['param']} => "
+        item_type = PuppetLanguageServer::PuppetHelper.get_type(data['resource_type'])
+        param_type = item_type.parameters[data['param'].intern]
+        unless param_type.nil?
+          # TODO: More things?
+          completion_item['documentation'] = param_type[:doc] unless param_type[:doc].nil?
+          completion_item['insertText'] = "#{data['param']} => "
+        end
       when 'resource_property'
-        item_type = Puppet::Type.type(data['resource_type'])
-        prop_type = item_type.attrclass(data['prop'].intern)
-        # TODO: More things?
-        completion_item['documentation'] = prop_type.doc unless prop_type.doc.nil?
-        completion_item['insertText'] = "#{data['prop']} => "
+        item_type = PuppetLanguageServer::PuppetHelper.get_type(data['resource_type'])
+        prop_type = item_type.properties[data['prop'].intern]
+        unless prop_type.nil?
+          # TODO: More things?
+          completion_item['documentation'] = prop_type[:doc] unless prop_type[:doc].nil?
+          completion_item['insertText'] = "#{data['prop']} => "
+        end
       end
 
       LanguageServer::CompletionItem.create(completion_item)

@@ -288,10 +288,10 @@
           "default": 10,
           "description": "The timeout to connect to the local Puppet Language Server"
         },
-        "puppet.languageserver.preLoadPuppet": {
+        "puppet.languageserver.filecache.enable": {
           "type": "boolean",
-          "default": true,
-          "description": "Initalize Puppet and Facter when local Puppet Language Server starts"
+          "default": false,
+          "description": "(Experimental) Enable a persistent file cache for Puppet objects in the Language Server"
         },
         "puppet.languageserver.debugFilePath": {
           "type": "string",

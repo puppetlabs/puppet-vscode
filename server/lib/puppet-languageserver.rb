@@ -56,7 +56,8 @@ module PuppetLanguageServer
           args[:connection_timeout] = timeout.to_i
         end
 
-        opts.on('-d', '--no-preload', 'Do not preload Puppet information when the language server starts.  Default is to preload') do |_misc|
+        opts.on('-d', '--no-preload', '** DEPRECATED ** Do not preload Puppet information when the language server starts.  Default is to preload') do |_misc|
+          puts '** WARNING ** Using "--no-preload" may cause Puppet Type loading to be incomplete.'
           args[:preload_puppet] = false
         end
 
@@ -70,6 +71,12 @@ module PuppetLanguageServer
 
         opts.on('--stdio', 'Runs the server in stdio mode, without a TCP listener') do |_misc|
           args[:stdio] = true
+        end
+
+        opts.on('--enable-file-cache', 'Enables the file system cache for Puppet Objects (types, class etc.)') do |_misc|
+          args[:cache] = {
+            :persistent_cache => :file
+          }
         end
 
         opts.on('--local-workspace=PATH', 'The workspace or file path that will be used to provide module-specific functionality. Default is no workspace path.') do |path|
@@ -101,6 +108,9 @@ module PuppetLanguageServer
     log_message(:info, "Language Server is v#{PuppetVSCode.version}")
     log_message(:info, "Using Puppet v#{Puppet.version}")
 
+    log_message(:info, 'Initializing Puppet Helper Cache...')
+    PuppetLanguageServer::PuppetHelper.configure_cache(options[:cache])
+
     log_message(:info, 'Initializing settings...')
     if options[:fast_start_tcpserver]
       Thread.new do
@@ -118,11 +128,11 @@ module PuppetLanguageServer
 
     log_message(:info, "Using Facter v#{Facter.version}")
     if options[:preload_puppet]
+      log_message(:info, 'Preloading Puppet Types (Sync)...')
+      PuppetLanguageServer::PuppetHelper.load_types
+
       log_message(:info, 'Preloading Facter (Async)...')
       PuppetLanguageServer::FacterHelper.load_facts_async
-
-      log_message(:info, 'Preloading Puppet Types (Async)...')
-      PuppetLanguageServer::PuppetHelper.load_types_async
 
       log_message(:info, 'Preloading Functions (Async)...')
       PuppetLanguageServer::PuppetHelper.load_functions_async

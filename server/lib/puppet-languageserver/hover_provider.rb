@@ -40,10 +40,10 @@ module PuppetLanguageServer
         item_type = PuppetLanguageServer::PuppetHelper.get_type(path[distance_up_ast - 1].type_name.value)
         raise "#{path[distance_up_ast - 1].type_name.value} is not a valid puppet type" if item_type.nil?
         # Check if it's a property
-        attribute = item_type.validproperty?(item.attribute_name)
+        attribute = item_type.properties.keys.include?(item.attribute_name.intern)
         if attribute != false
           content = get_attribute_property_content(item_type, item.attribute_name.intern)
-        elsif item_type.validparameter?(item.attribute_name.intern)
+        elsif item_type.parameters.keys.include?(item.attribute_name.intern)
           content = get_attribute_parameter_content(item_type, item.attribute_name.intern)
         end
 
@@ -102,17 +102,17 @@ module PuppetLanguageServer
     end
 
     def self.get_attribute_parameter_content(item_type, param)
-      param_type = item_type.attrclass(param)
+      param_type = item_type.parameters[param]
       content = "**#{param}** Parameter"
-      content += "\n\n#{param_type.doc}" unless param_type.doc.nil?
+      content += "\n\n#{param_type[:doc]}" unless param_type[:doc].nil?
       content
     end
 
     def self.get_attribute_property_content(item_type, property)
-      prop_type = item_type.attrclass(property)
+      prop_type = item_type.properties[property]
       content = "**#{property}** Property"
-      content += "\n\n(_required_)" if prop_type.required?
-      content += "\n\n#{prop_type.doc}" unless prop_type.doc.nil?
+      content += "\n\n(_required_)" if prop_type[:required?]
+      content += "\n\n#{prop_type[:doc]}" unless prop_type[:doc].nil?
       content
     end
 
@@ -124,7 +124,7 @@ module PuppetLanguageServer
 
       # TODO: what about rvalue?
       content = "**#{func_name}** Function\n\n" # TODO: Do I add in the params from the arity number?
-      content += func_info[:doc]
+      content += func_info.doc
 
       content
     end
