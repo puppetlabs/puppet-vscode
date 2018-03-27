@@ -142,6 +142,11 @@ module PuppetLanguageServer
     else
       log_message(:info, 'Skipping preloading Puppet')
     end
+
+    log_message(:info, 'Enabling Task Plans...')
+    if Puppet.version >= '5.0.0.0'
+      Puppet[:tasks] = true
+    end
   end
 
   def self.rpc_server(options)
