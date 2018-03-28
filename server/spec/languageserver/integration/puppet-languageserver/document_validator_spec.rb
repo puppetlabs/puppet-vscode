@@ -146,6 +146,18 @@ describe 'document_validator' do
       end
     end
 
+    describe "Given a complete manifest with linting errors" do
+      let(:manifest_fixture) { File.join($fixtures_dir,'manifest_with_lint_errors.pp') }
+      let(:manifest_lf) { File.open(manifest_fixture, 'r') { |file| file.read } }
+      let(:manifest_crlf) { File.open(manifest_fixture, 'r') { |file| file.read }.gsub("\n","\r\n") }
+
+      it "should return same errors for both LF and CRLF line endings" do
+        lint_error_lf = subject.validate(manifest_lf, nil)
+        lint_error_crlf = subject.validate(manifest_crlf, nil)
+        expect(lint_error_crlf).to eq(lint_error_lf)
+      end
+   end
+
     describe "Given a complete manifest with a single linting error" do
       let(:manifest) { "
         user { 'Bob':
