@@ -5,7 +5,7 @@ Status](https://secure.travis-ci.org/rodjek/puppet-lint.png)](http://travis-ci.o
 [![Inline docs](http://inch-ci.org/github/rodjek/puppet-lint.png?branch=master)](http://inch-ci.org/github/rodjek/puppet-lint)
 
 Puppet Lint tests Puppet code against the recommended [Puppet language style
-guide](http://docs.puppet.com/puppet/latest/style_guide.html). Puppet Lint validates only code style; it does not validate syntax. To test syntax, use Puppet's `puppet parser validate` command.
+guide](http://puppet.com/docs/puppet/latest/style_guide.html). Puppet Lint validates only code style; it does not validate syntax. To test syntax, use Puppet's `puppet parser validate` command.
 
 ## Compatibility warning
 
@@ -45,6 +45,10 @@ puppet-lint --fix /modules
 
 Puppet Lint options allow you to modify which checks to run. You can disable any of the checks temporarily or permanently, or you can limit testing to specific checks.
 
+#### List all available checks
+
+To list all available checks along with basic usage documentation, use the `--list-checks` option.
+
 #### Run specific checks
 
 To run only specific checks, use the `--only-checks` option, with a comma-separated list of arguments specifying which checks to make:
@@ -65,7 +69,7 @@ You can disable specific Lint checks on the command line, disable them permanent
 
 #### Disable checks on the command line
 
-To disable any of the checks when running the `puppet-lint` command, add a `--no-<check name>-check` flag to the command. For example, to skip the 140-character check, run:
+To disable any of the checks when running the `puppet-lint` command, add a `--no-<check_name>-check` flag to the command. For example, to skip the 140-character check, run:
 
 ```
 puppet-lint --no-140chars-check modules/
