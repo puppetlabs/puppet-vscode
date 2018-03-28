@@ -11,4 +11,5 @@ Note - To improve the packaging size, test files etc. were stripped from the Gem
 Gem List
 --------
 
-* puppet-lint (https://github.com/rodjek/puppet-lint.git ref 2.3.3)
+* puppet-lint (https://github.com/rodjek/puppet-lint.git ref 2.3.5)
+

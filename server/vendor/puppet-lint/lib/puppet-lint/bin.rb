@@ -19,9 +19,8 @@ class PuppetLint::Bin
   #
   # Returns an Integer exit code to be passed back to the shell.
   def run
-    opts = PuppetLint::OptParser.build
-
     begin
+      opts = PuppetLint::OptParser.build(@args)
       opts.parse!(@args)
     rescue OptionParser::InvalidOption => e
       puts "puppet-lint: #{e.message}"
@@ -34,6 +33,11 @@ class PuppetLint::Bin
       return 0
     end
 
+    if PuppetLint.configuration.list_checks
+      puts PuppetLint.configuration.checks
+      return 0
+    end
+
     if @args[0].nil?
       puts 'puppet-lint: no file specified'
       puts "puppet-lint: try 'puppet-lint --help' for more information"
@@ -42,6 +46,7 @@ class PuppetLint::Bin
 
     begin
       path = @args[0]
+      path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
       path = if File.directory?(path)
                Dir.glob("#{path}/**/*.pp")
              else
@@ -51,9 +56,11 @@ class PuppetLint::Bin
       PuppetLint.configuration.with_filename = true if path.length > 1
 
       return_val = 0
+      ignore_paths = PuppetLint.configuration.ignore_paths
 
       puts '[' if PuppetLint.configuration.json
       path.each do |f|
+        next if ignore_paths.any? { |p| File.fnmatch(p, f) }
         l = PuppetLint.new
         l.file = f
         l.run
