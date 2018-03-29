@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## 0.10.0 - 2018-03-29
+
 - ([GH-218](https://github.com/jpogran/puppet-vscode/issues/218)) Validate EPP files
 - ([GH-244](https://github.com/jpogran/puppet-vscode/issues/244)) Update puppet-lint to 2.3.5
 - ([GH-245](https://github.com/jpogran/puppet-vscode/issues/245)) Update puppet-lint to 2.3.5
