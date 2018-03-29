@@ -6,6 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+- ([GH-218](https://github.com/jpogran/puppet-vscode/issues/218)) Validate EPP files
+- ([GH-244](https://github.com/jpogran/puppet-vscode/issues/244)) Update puppet-lint to 2.3.5
+- ([GH-245](https://github.com/jpogran/puppet-vscode/issues/245)) Update puppet-lint to 2.3.5
+- ([GH-216](https://github.com/jpogran/puppet-vscode/issues/216)) Better syntax highlighting
+- ([GH-214](https://github.com/jpogran/puppet-vscode/issues/214)) Updated readme for pdk 1.3.X
 - ([GH-225](https://github.com/jpogran/puppet-vscode/issues/225)) Readd Local Workspace comand line option
 - ([GH-231](https://github.com/jpogran/puppet-vscode/issues/231)) Make Document Validation asynchronous
 - ([GH-236](https://github.com/jpogran/puppet-vscode/issues/236)) Remove the preload option
