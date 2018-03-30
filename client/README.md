@@ -1,6 +1,9 @@
 
 [![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
 
+
+# **FYI**: The Puppet VS Code extension is moving from https://github.com/jpogran/puppet-vscode to the https://github.com/lingua-pupuli  organization after the 0.10.0 release. All issues and commits will move over automatically, so there should be no appreciable difference for anyone. During the move the links below will not work. After the move we will issue a new release and the links will work in the Extension viewer.
+
 # Puppet Language Support for Visual Studio Code
 
 This extension provides full Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/).
