@@ -5,43 +5,6 @@ init:
 
 environment:
   matrix:
-  # Language Server testing
-  # LTS Agent
-  - PUPPET_GEM_VERSION: "~> 4.7.0"
-    RUBY_VER: 21-x64
-    RAKE_TASK: test_languageserver
-  # Latest 4.x branch
-  - PUPPET_GEM_VERSION: "~> 4.0"
-    RUBY_VER: 21-x64
-    RAKE_TASK: test_languageserver
-  # Latest Puppet
-  - PUPPET_GEM_VERSION: "~> 5.0"
-    RUBY_VER: 24-x64
-    RAKE_TASK: test_languageserver
-  # Specific Puppet version testing
-  - PUPPET_GEM_VERSION: "5.1.0"
-    RUBY_VER: 24-x64
-    RAKE_TASK: test_languageserver
-
-  # Debug Server testing
-  # LTS Agent
-  - PUPPET_GEM_VERSION: "~> 4.7.0"
-    RUBY_VER: 21-x64
-    RAKE_TASK: test_debugserver
-  # Latest 4.x branch
-  - PUPPET_GEM_VERSION: "~> 4.0"
-    RUBY_VER: 21-x64
-    RAKE_TASK: test_debugserver
-  # Latest Puppet
-  - PUPPET_GEM_VERSION: "~> 5.0"
-    RUBY_VER: 24-x64
-    RAKE_TASK: test_debugserver
-
-  # Ruby style
-  - PUPPET_GEM_VERSION: "~> 4.0"
-    RUBY_VER: 23-x64
-    RAKE_TASK: rubocop
-
   # Extension testing
   # Package it up to a VSIX
   - nodejs_version: "7.4.0"
@@ -53,27 +16,8 @@ matrix:
 
 install:
 - ps: |
-     Write-Host "Setting build version..."
-     $ENV:APPVEYOR_BUILD_VERSION | Out-File -FilePath 'server\lib\puppet-languageserver\VERSION' -Encoding ASCII -Confirm:$false -Force
-
-     if ($ENV:RUBY_VER -ne $null) {
-       Set-Location -Path ".\server"
-       $ENV:Path = 'C:\Ruby' + $ENV:RUBY_VER + '\bin;' + $ENV:Path
-
-       Write-Host "Ruby Version..."
-       & ruby -v
-       Write-Host "Gem Version..."
-       & gem -v
-       Write-Host "Bundle Version..."
-       & bundle -v
-       & bundle install
-
-       type Gemfile.lock
-     }
-
      if ($ENV:nodejs_version -ne $null) {
        Install-Product node $env:nodejs_version $env:nodejs_arch
-       Set-Location -Path ".\client"
 
        Write-Host "Node Version..."
        & node --version
@@ -99,9 +43,8 @@ build_script:
 - cmd: IF NOT [%VSCE_TASK%] == [] vsce %VSCE_TASK%
 
 test_script:
-- cmd: IF NOT [%RAKE_TASK%] == [] bundle exec rake %RAKE_TASK%
 - cmd: IF NOT [%NPM_TASK%] == [] npm run %NPM_TASK%
 - cmd: IF NOT [%GULP_TASK%] == [] node node_modules\gulp\bin\gulp.js %GULP_TASK%
 
 artifacts:
-- path: client/*.vsix
+- path: .\*.vsix

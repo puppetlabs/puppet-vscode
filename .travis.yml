@@ -15,44 +15,6 @@ env:
   global:
     VSCODE_BUILD_VERBOSE: true
   matrix:
-    # Language Server testing
-    # LTS Agent
-    - PUPPET_GEM_VERSION="~> 4.7.0"
-      RUBY_VER=2.1.9
-      RAKE_TASK=test_languageserver
-
-    # Latest 4.x branch
-    - PUPPET_GEM_VERSION="~> 4.0"
-      RUBY_VER=2.1.9
-      RAKE_TASK=test_languageserver
-    # Latest Puppet
-    - PUPPET_GEM_VERSION="~> 5.0"
-      RUBY_VER=2.4.1
-      RAKE_TASK=test_languageserver
-    # Specific Puppet version testing
-    - PUPPET_GEM_VERSION="5.1.0"
-      RUBY_VER=2.4.1
-      RAKE_TASK=test_languageserver
-
-    # Debug Server testing
-    # LTS Agent
-    - PUPPET_GEM_VERSION="~> 4.7.0"
-      RUBY_VER=2.1.9
-      RAKE_TASK=test_debugserver
-    # Latest 4.x branch
-    - PUPPET_GEM_VERSION="~> 4.0"
-      RUBY_VER=2.1.9
-      RAKE_TASK=test_debugserver
-    # Latest Puppet
-    - PUPPET_GEM_VERSION="~> 5.0"
-      RUBY_VER=2.4.1
-      RAKE_TASK=test_debugserver
-
-    # Ruby style
-    - PUPPET_GEM_VERSION="~> 4.0"
-      RUBY_VER=2.4.1
-      RAKE_TASK=rubocop
-
     # Extension testing
 
     # Package it up to a VSIX
@@ -64,18 +26,7 @@ before_install: true
 
 install:
   - "export BUILD_VERSION=0.7.0-travis.$TRAVIS_BUILD_NUMBER"
-  - if [ "$RUBY_VER" != "" ]; then
-      cd server;
-      rvm install $RUBY_VER;
-      rvm use $RUBY_VER;
-      ruby -v;
-      gem -v;
-      bundle -v;
-      bundle install;
-      cat Gemfile.lock;
-    fi
   - if [ "$nodejs_version" != "" ]; then
-      cd client;
       git clone --depth 1 https://github.com/creationix/nvm.git ./.nvm;
       source ./.nvm/nvm.sh;
       nvm install $nodejs_version;
@@ -95,9 +46,6 @@ install:
     fi
 
 script:
-  - if [ "$RAKE_TASK" != "" ]; then
-      bundle exec rake $RAKE_TASK;
-    fi
   - if [ "$VSCE_TASK" != "" ]; then
       vsce $VSCE_TASK;
     fi
