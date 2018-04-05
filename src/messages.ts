@@ -20,7 +20,9 @@ export interface PuppetResourceRequestParams {
 }
 
 export namespace PuppetResourceRequest {
-  export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void, void>('puppet/getResource');
+  export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void, void>(
+    'puppet/getResource'
+  );
 }
 
 export interface PuppetResourceResponse {
@@ -34,7 +36,9 @@ export interface PuppetFixDiagnosticErrorsRequestParams {
 }
 
 export namespace PuppetFixDiagnosticErrorsRequest {
-  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void, void>('puppet/fixDiagnosticErrors');
+  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void, void>(
+    'puppet/fixDiagnosticErrors'
+  );
 }
 
 export interface PuppetFixDiagnosticErrorsResponse {
@@ -53,8 +57,8 @@ export interface CompileNodeGraphResponse {
   data: string;
 }
 
-export class PuppetCommandStrings{
-  static PuppetResourceCommandId:string = 'extension.puppetResource';
+export class PuppetCommandStrings {
+  static PuppetResourceCommandId: string = 'extension.puppetResource';
   static PuppetNodeGraphToTheSideCommandId = 'extension.puppetShowNodeGraphToSide';
   static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
   static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
