@@ -1,15 +1,13 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as cp from 'child_process';
-import ChildProcess = cp.ChildProcess;
 import { ILogger } from '../../logging';
 import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';
 
-export class pdkNewTaskCommand {
-  private logger: ILogger = undefined;
-  private terminal: vscode.Terminal = undefined;
+export class PDKNewTaskCommand {
+  private logger: ILogger;
+  private terminal: vscode.Terminal;
 
   constructor(logger: ILogger, terminal: vscode.Terminal) {
     this.logger = logger;
@@ -18,7 +16,7 @@ export class pdkNewTaskCommand {
 
   public run() {
     let nameOpts: vscode.QuickPickOptions = {
-      placeHolder: "Enter a name for the new Puppet Task",
+      placeHolder: 'Enter a name for the new Puppet Task',
       matchOnDescription: true,
       matchOnDetail: true
     };
@@ -28,11 +26,10 @@ export class pdkNewTaskCommand {
       if (reporter) {
         reporter.sendTelemetryEvent(messages.PDKCommandStrings.PdkNewTaskCommandId);
       }
-    })
+    });
   }
 
   public dispose(): any {
     this.terminal.dispose();
-    this.terminal = undefined;
   }
 }
