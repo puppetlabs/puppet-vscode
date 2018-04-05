@@ -5,7 +5,7 @@ import { ILogger } from '../../src/logging';
 import { PDKNewModuleCommand } from './pdk/PDKNewModuleCommand';
 import { PDKNewClassCommand } from './pdk/PDKNewClassCommand';
 import { PDKNewTaskCommand } from './pdk/PDKNewTaskCommand';
-import { pdkValidateCommand } from './pdk/pdkValidateCommand';
+import { PDKValidateCommand } from './pdk/PDKValidateCommand';
 import { PDKTestUnitCommand } from './pdk/pdkTestCommand';
 
 export function setupPDKCommands(langID: string, connManager: IConnectionManager, ctx: vscode.ExtensionContext, logger: ILogger, terminal: vscode.Terminal) {
@@ -27,7 +27,7 @@ export function setupPDKCommands(langID: string, connManager: IConnectionManager
     newTaskCommand.run();
   }));
 
-  let validateCommand = new pdkValidateCommand(logger, terminal);
+  let validateCommand = new PDKValidateCommand(logger, terminal);
   ctx.subscriptions.push(validateCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PDKCommandStrings.PdkValidateCommandId, () => {
     validateCommand.run();
