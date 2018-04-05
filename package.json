@@ -384,9 +384,9 @@
   "scripts": {
     "vscode:prepublish": "node node_modules/gulp/bin/gulp.js build",
     "compile": "tsc -p ./",
-    "compile-watch": "tsc -watch -p ./",
+    "watch": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.32",
@@ -396,6 +396,7 @@
     "gulp-bump": "^3.1.0",
     "run-sequence": "^2.2.1",
     "typescript": "^2.0.3",
+    "tslint": "^5.8.0",
     "vsce": "^1.18.0",
     "vscode": "^1.1.13",
     "yargs": "^11.0.0"
