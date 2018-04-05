@@ -3,16 +3,15 @@
 import * as vscode from 'vscode';
 
 import { IConnectionConfiguration, ConnectionType } from './interfaces';
-import { ConnectionManager } from './connection';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
   public type: ConnectionType = ConnectionType.Unknown;
-  public host: string = undefined;
-  public port: number = undefined;
-  public timeout: number = undefined;
-  public enableFileCache: boolean = undefined;
-  public debugFilePath: string = undefined;
-  public puppetAgentDir: string = undefined;
+  public host: string;
+  public port: number;
+  public timeout: number;
+  public enableFileCache: boolean;
+  public debugFilePath: string;
+  public puppetAgentDir: string;
 
   constructor(context: vscode.ExtensionContext) {
     let config = vscode.workspace.getConfiguration('puppet');
