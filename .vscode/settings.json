@@ -1,10 +1,24 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "out": true, // set this to true to hide the "out" folder with the compiled JS files
-        ".vscode-test":true
-    },
-    "search.exclude": {
-        "out": true // set this to false to include "out" folder in search results
-    }
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+
+  "files.encoding": "utf8",
+  // The default end of line character. Use \n for LF and \r\n for CRLF.
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": false,
+  "files.exclude": {
+    "out": true, // set this to true to hide the "out" folder with the compiled JS files
+    ".vscode-test": true
+  },
+  "search.exclude": {
+    "out": true // set this to false to include "out" folder in search results
+  },
+
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2
 }
