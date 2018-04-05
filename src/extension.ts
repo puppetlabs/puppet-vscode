@@ -42,9 +42,9 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext, ver
   const viewReleaseNotes = 'View Release Notes';
   const suppressUpdateNotice = 'SuppressUpdateNotice';
   const dontShowAgainNotice = "Don't show again";
-  
+
   if (context.globalState.get(suppressUpdateNotice, false)) return;
-  
+
   const result = await vscode.window.showInformationMessage(`Puppet VSCode has been updated to v${version}`, dontShowAgainNotice, undefined, viewReleaseNotes);
   if (result === viewReleaseNotes) {
     vscode.commands.executeCommand('vscode.open', vscode.Uri.parse('https://marketplace.visualstudio.com/items/jpogran.puppet-vscode/changelog'));
