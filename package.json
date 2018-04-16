@@ -399,7 +399,9 @@
     "tslint": "^5.8.0",
     "vsce": "^1.18.0",
     "vscode": "^1.1.13",
-    "yargs": "^11.0.0"
+    "yargs": "^11.0.0",
+    "gulp-downloader": "^1.0.4",
+    "gulp-decompress": "^2.0.2"
   },
   "dependencies": {
     "vscode-languageclient": "~4.0.0",
