@@ -1,35 +1,25 @@
-
-[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Rating](https://vsmarketplacebadge.apphb.com/rating-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/jpogran/puppet-vscode) [![Build Status](https://travis-ci.org/jpogran/puppet-vscode.svg?branch=master)](https://travis-ci.org/jpogran/puppet-vscode)
-
 # Puppet Language Support for Visual Studio Code
 
 This extension provides Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/)
 
-The extension is composed of the VS Code Extension in the [`client/`](client) directory and the Puppet Language Server in the [`server/`](server) directory
-
 ## How to run the client and server for development
 
-### Run the language server
-
-Follow the instructions in the server documentation - [How to run the Language Server for Develoment](server/README.md#How_to_run_the_Language_Server_for_Development). Ensure you use the `--timeout=0` and `--no-stop` arguments so the server does not stop.
-
-### Run the client
+### Setup the client
 
 * Ensure nodejs is installed
 
 * Clone this repository
 
 ```bash
-> git clone https://github.com/jpogran/puppet-vscode.git
+> git clone https://github.com/lingua-pupuli/puppet-vscode.git
 
 > cd puppet-vscode
-> cd client
 ```
 
 * Install the node modules
 
 ```bash
-client > npm install
+> npm install
 ...
 
 > puppet-vscode@0.0.3 postinstall C:\Source\puppet-vscode\client
@@ -41,19 +31,41 @@ Fetching vscode.d.ts from: https://raw.githubusercontent.com/Microsoft/vscode/1.
 vscode.d.ts successfully installed!
 ```
 
-* Copy the Language Server for vendoring into the extensions
+### Vendor the Puppet Editor Services files
+
+By default the extension will use the specified released version of the Puppet Editor Services.  The version is set in the `editor-services.json` file; for example, to use version `0.10.0` of the Editor Services;
+
+``` json
+{
+  "release": "0.10.0"
+}
+```
+
+To use a local directory that contains the Puppet Editor services, use the directory configuration setting; for example if the the editor services was located in `C:\puppet-editor-services` use the following;
+
+``` json
+{
+  "directory": "C:\\puppet-editor-services"
+}
+```
+
+Note that backslashes in the path must be escaped.
+
+* Vendor the Editor Services for vendoring into the extension
 
 ```bash
-client > node node_modules/gulp/bin/gulp.js copy_language_server
-[15:13:02] Using gulpfile client/gulpfile.js
-[15:13:02] Starting 'copy_language_server'...
-[15:13:02] Finished 'copy_language_server' after 193 ms
+> node node_modules/gulp/bin/gulp.js clean vendor_editor_services
+[20:44:22] Using gulpfile C:\Source\puppet-vscode\gulpfile.js
+[20:44:22] Starting 'clean'...
+[20:44:22] Starting 'vendor_editor_services'...
+[20:44:22] Finished 'clean' after 92 ms
+[20:44:26] Finished 'vendor_editor_services' after 4.35 s
 ```
 
 * Start VS Code
 
 ```bash
-client > code .
+> code .
 ```
 
 * Once VS Code is running, press `F5` to start a build and a new VS Code development instance should start
@@ -64,4 +76,4 @@ client > code .
 
 ## Issues
 
-Please raise issues for the Language Server or Extension using the GitHub [issue tracker](https://github.com/jpogran/puppet-vscode/issues/new).
+Please raise issues for the Language Server or Extension using the GitHub [issue tracker](https://github.com/lingua-pupuli/puppet-vscode/issues/new).
