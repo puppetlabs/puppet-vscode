@@ -5,7 +5,7 @@ import { ILogger } from './logging';
 import { IConnectionConfiguration } from './interfaces';
 
 export class RubyHelper {
-  private static getDirectories(parent:string) {
+  private static getDirectories(parent: string) {
     return fs.readdirSync(parent).filter(function(file) {
       return fs.statSync(path.join(parent, file)).isDirectory();
     });
@@ -20,7 +20,7 @@ export class RubyHelper {
   }
 
   public static getRubyEnvFromPuppetAgent(
-    rubyFile:string,
+    rubyFile: string,
     connectionConfiguration: IConnectionConfiguration,
     logger: ILogger
   ) {
@@ -45,12 +45,14 @@ export class RubyHelper {
     //               | 'win32';
     switch (process.platform) {
       case 'win32':
-        let programFiles = process.env['ProgramFiles'];
+        let programFiles: string = 'C:/Program Files';
         if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
-          programFiles = process.env['ProgramW6432'];
+          programFiles = process.env['ProgramW6432'] || 'C:/Program Files(x86)';
+        } else {
+          programFiles = process.env['ProgramFiles'] || 'C:/Program Files';
         }
 
-        if (connectionConfiguration.puppetAgentDir === undefined) {
+        if (connectionConfiguration.puppetAgentDir === null) {
           puppetAgentDir = path.join(programFiles, 'Puppet Labs', 'Puppet'); // tslint:disable-line
         } else {
           puppetAgentDir = connectionConfiguration.puppetAgentDir;
@@ -59,7 +61,7 @@ export class RubyHelper {
         result.options.stdio = 'pipe';
         break;
       default:
-        if (connectionConfiguration.puppetAgentDir === undefined) {
+        if (connectionConfiguration.puppetAgentDir === null) {
           puppetAgentDir = '/opt/puppetlabs/puppet';
         } else {
           puppetAgentDir = connectionConfiguration.puppetAgentDir;
@@ -128,7 +130,11 @@ export class RubyHelper {
     return result;
   }
 
-  public static getRubyEnvFromPDK(rubyFile:string, connectionConfiguration: IConnectionConfiguration, logger: ILogger) {
+  public static getRubyEnvFromPDK(
+    rubyFile: string,
+    connectionConfiguration: IConnectionConfiguration,
+    logger: ILogger
+  ) {
     let logPrefix: string = '[getRubyEnvFromPDK] ';
     // setup defaults
     let spawn_options: cp.SpawnOptions = {};
@@ -150,9 +156,11 @@ export class RubyHelper {
     //               | 'win32';
     switch (process.platform) {
       case 'win32':
-        let programFiles = process.env['ProgramFiles'];
+        let programFiles: string = 'C:/Program Files';
         if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
-          programFiles = process.env['ProgramW6432'];
+          programFiles = process.env['ProgramW6432'] || 'C:/Program Files(x86)';
+        } else {
+          programFiles = process.env['ProgramFiles'] || 'C:/Program Files';
         }
 
         pdkDir = path.join(programFiles, 'Puppet Labs', 'DevelopmentKit'); // tslint:disable-line
