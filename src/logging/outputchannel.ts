@@ -70,7 +70,7 @@ export class OutputChannelLogger implements logging.ILogger {
       case 'error':
         return logging.LogLevel.Error;
       default:
-        return undefined;
+        return logging.LogLevel.Normal;
     }
   }
 
