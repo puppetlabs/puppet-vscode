@@ -67,7 +67,9 @@ export function setupPuppetCommands(
     vscode.workspace.onDidSaveTextDocument(document => {
       if (isNodeGraphFile(document)) {
         const uri = getNodeGraphUri(document.uri);
-        contentProvider.update(uri);
+        if (uri !== undefined) {
+          contentProvider.update(uri);
+        }
       }
     })
   );
