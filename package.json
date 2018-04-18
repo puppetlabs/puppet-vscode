@@ -395,7 +395,7 @@
     "gulp": "^3.9.1",
     "gulp-bump": "^3.1.0",
     "run-sequence": "^2.2.1",
-    "typescript": "^2.0.3",
+    "typescript": "2.3.x",
     "tslint": "^5.8.0",
     "vsce": "^1.18.0",
     "vscode": "^1.1.13",
@@ -404,9 +404,9 @@
     "gulp-decompress": "^2.0.2"
   },
   "dependencies": {
-    "vscode-languageclient": "~4.0.0",
+    "vscode-languageclient": "3.3.0",
     "vscode-extension-telemetry": "^0.0.15",
-    "viz.js": "~1.8.0",
+    "viz.js": "~1.7.0",
     "vscode-debugprotocol": "^1.19.0",
     "vscode-debugadapter": "^1.19.0"
   }
