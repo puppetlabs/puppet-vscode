@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+- Update Puppet Editor Services to 0.11.0
+
 ## 0.10.0 - 2018-03-29
 
 - ([GH-218](https://github.com/jpogran/puppet-vscode/issues/218)) Validate EPP files
