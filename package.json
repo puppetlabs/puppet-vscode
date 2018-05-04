@@ -93,6 +93,14 @@
       {
         "language": "json",
         "path": "./snippets/metadata.snippets.json"
+      },
+      {
+        "language": "ruby",
+        "path": "./snippets/ruby.snippets.json"
+      },
+      {
+        "language": "markdown",
+        "path": "./snippets/markdown.snippets.json"
       }
     ],
     "commands": [
