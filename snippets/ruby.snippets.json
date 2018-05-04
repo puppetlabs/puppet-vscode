@@ -1,0 +1,37 @@
+{
+  "Insert Pry" :{
+		"prefix": "pry",
+		"body":[
+			"require 'pry'; binding.pry;"
+		],
+		"description": "Add a pry binding with the require included."
+	},
+	"Insert do block" :{
+		"prefix": "do",
+		"body":[
+			"do",
+			"\t$0",
+			"end"
+		],
+		"description": "Insert a 'do' code block with indentation, and place cursor inside the block."
+	},
+	"Insert do with params" :{
+		"prefix": "do",
+		"body": [
+			"do | ${1:varname} |",
+			"\t${2:code}",
+			"end"
+		]
+	},
+	"Insert Before/After :all blocks": {
+		"prefix": "before",
+		"body":[
+			"\nbefore(:all) do",
+      "\tbackup_config",
+			"end",
+			"\nafter(:all) do",
+			"\treset_config",
+			"end"
+		]
+	}
+}

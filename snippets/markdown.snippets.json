@@ -1,0 +1,9 @@
+{
+  "Insert a ticket link": {
+		"prefix":"ticket",
+		"body":[
+			"([${1:ticket_number}](https://tickets.puppetlabs.com/browse/${1:ticket_number}))"
+		],
+		"description": "Insert a link to a ticket in Puppet Jira."
+	}
+}
