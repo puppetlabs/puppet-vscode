@@ -43,11 +43,26 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext, ver
   const suppressUpdateNotice = 'SuppressUpdateNotice';
   const dontShowAgainNotice = "Don't show again";
 
-  if (context.globalState.get(suppressUpdateNotice, false)) return;
+  if (context.globalState.get(suppressUpdateNotice, false)) {
+    return;
+  }
 
-  const result = await vscode.window.showInformationMessage(`Puppet VSCode has been updated to v${version}`, dontShowAgainNotice, undefined, viewReleaseNotes);
-  if (result === viewReleaseNotes) {
-    vscode.commands.executeCommand('vscode.open', vscode.Uri.parse('https://marketplace.visualstudio.com/items/jpogran.puppet-vscode/changelog'));
+  const result = await vscode.window.showInformationMessage(
+    `Puppet VSCode has been updated to v${version}`,
+    { modal: false },
+    { title: dontShowAgainNotice },
+    { title: viewReleaseNotes }
+  );
+
+  if (result === undefined) {
+    return;
+  }
+
+  if (result.title === viewReleaseNotes) {
+    vscode.commands.executeCommand(
+      'vscode.open',
+      vscode.Uri.parse('https://marketplace.visualstudio.com/items/jpogran.puppet-vscode/changelog')
+    );
   } else {
     context.globalState.update(suppressUpdateNotice, true);
   }
