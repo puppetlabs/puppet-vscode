@@ -5,9 +5,9 @@ import { ILogger } from '../../logging';
 import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';
 
-export class pdkNewModuleCommand {
-  private logger: ILogger = undefined;
-  private terminal: vscode.Terminal = undefined;
+export class PDKNewModuleCommand {
+  private logger: ILogger;
+  private terminal: vscode.Terminal;
 
   constructor(logger: ILogger, terminal: vscode.Terminal) {
     this.logger = logger;
@@ -44,6 +44,5 @@ export class pdkNewModuleCommand {
 
   public dispose(): any {
     this.terminal.dispose();
-    this.terminal = undefined;
   }
 }
