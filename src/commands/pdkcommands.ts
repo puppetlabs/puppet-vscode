@@ -6,7 +6,7 @@ import { PDKNewModuleCommand } from './pdk/pdkNewModuleCommand';
 import { PDKNewClassCommand } from './pdk/pdkNewClassCommand';
 import { PDKNewTaskCommand } from './pdk/pdkNewTaskCommand';
 import { pdkValidateCommand } from './pdk/pdkValidateCommand';
-import { pdkTestUnitCommand } from './pdk/pdkTestCommand';
+import { PDKTestUnitCommand } from './pdk/pdkTestCommand';
 
 export function setupPDKCommands(langID: string, connManager: IConnectionManager, ctx: vscode.ExtensionContext, logger: ILogger, terminal: vscode.Terminal) {
   let newModuleCommand = new PDKNewModuleCommand(logger, terminal);
@@ -33,7 +33,7 @@ export function setupPDKCommands(langID: string, connManager: IConnectionManager
     validateCommand.run();
   }));
 
-  let testUnitCommand = new pdkTestUnitCommand(logger, terminal);
+  let testUnitCommand = new PDKTestUnitCommand(logger, terminal);
   ctx.subscriptions.push(testUnitCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PDKCommandStrings.PdkTestUnitCommandId, () => {
     testUnitCommand.run();
