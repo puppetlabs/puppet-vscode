@@ -4,15 +4,14 @@ import TelemetryReporter from 'vscode-extension-telemetry';
 export var reporter: TelemetryReporter;
 
 export class Reporter extends vscode.Disposable {
-
   constructor(ctx: vscode.ExtensionContext) {
-
     super(() => reporter.dispose());
-
     let packageInfo = getPackageInfo(ctx);
-    reporter = packageInfo && new TelemetryReporter(packageInfo.name,
-      packageInfo.version, packageInfo.aiKey);
-
+    reporter = packageInfo && new TelemetryReporter(
+      packageInfo.name,
+      packageInfo.version,
+      packageInfo.aiKey
+    );
   }
 }
 
@@ -24,12 +23,9 @@ interface IPackageInfo {
 
 function getPackageInfo(context: vscode.ExtensionContext): IPackageInfo {
   let extensionPackage = require(context.asAbsolutePath('./package.json'));
-  if (extensionPackage) {
-    return {
-      name: extensionPackage.name,
-      version: extensionPackage.version,
-      aiKey: extensionPackage.aiKey
-    };
-  }
-  return;
+  return {
+    name: extensionPackage.name,
+    version: extensionPackage.version,
+    aiKey: extensionPackage.aiKey
+  };
 }
