@@ -6,12 +6,12 @@ import {
   PuppetNodeGraphContentProvider, isNodeGraphFile,
   getNodeGraphUri, showNodeGraph
 } from '../../src/providers/previewNodeGraphProvider';
-import { puppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
+import { PuppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
 import { PuppetFormatDocumentProvider } from '../providers/puppetFormatDocumentProvider';
 
 export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: ILogger){
 
-  let resourceCommand = new puppetResourceCommand(connManager, logger);
+  let resourceCommand = new PuppetResourceCommand(connManager, logger);
   ctx.subscriptions.push(resourceCommand);
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetResourceCommandId, () => {
     resourceCommand.run();
