@@ -8,7 +8,7 @@ export class OutputChannelLogger implements logging.ILogger {
   private logChannel: vscode.OutputChannel;
 
   // Minimum log level that is shown to users on logChannel
-  private minimumUserLogLevel: logging.LogLevel = undefined;
+  private minimumUserLogLevel: logging.LogLevel = logging.LogLevel.Normal;
 
   constructor() {
     this.logChannel = vscode.window.createOutputChannel("Puppet");
@@ -17,7 +17,7 @@ export class OutputChannelLogger implements logging.ILogger {
     let logLevelName = config['languageclient']['minimumUserLogLevel'];
     let logLevel = this.logLevelFromString(logLevelName);
 
-    if(logLevel == undefined) {
+    if (logLevel === undefined) {
       this.minimumUserLogLevel = logging.LogLevel.Normal;
       this.error("Logger could not interpret " + logLevelName + " as a log level setting");
     } else {
@@ -49,8 +49,8 @@ export class OutputChannelLogger implements logging.ILogger {
     this.logWithLevel(logging.LogLevel.Error, message);
   }
 
-  private logWithLevel(level: logging.LogLevel, message) {
-    let logMessage = this.logLevelPrefixAsString(level) + (new Date().toISOString()) + ' ' + message
+  private logWithLevel(level: logging.LogLevel, message: string) {
+    let logMessage = this.logLevelPrefixAsString(level) + (new Date().toISOString()) + ' ' + message;
 
     console.log(logMessage);
     if (level >= this.minimumUserLogLevel) {
@@ -65,7 +65,7 @@ export class OutputChannelLogger implements logging.ILogger {
       case "normal": return logging.LogLevel.Normal;
       case "warning": return logging.LogLevel.Warning;
       case "error": return logging.LogLevel.Error;
-      default:  return undefined;
+      default: return logging.LogLevel.Error;
     }
   }
 
