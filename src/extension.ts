@@ -6,6 +6,7 @@ import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
+import { PuppetExtensionConfiguration } from './puppetExtensionConfiguration';
 
 var connManager: ConnectionManager;
 
@@ -17,7 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger();
-  connManager = new ConnectionManager(context, logger);
+
+  var extensionConfig = new PuppetExtensionConfiguration(vscode.workspace.getConfiguration('puppet'));
+
+  connManager = new ConnectionManager(context, logger, extensionConfig);
 
   var configSettings = new ConnectionConfiguration(context);
   connManager.start(configSettings);

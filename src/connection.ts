@@ -12,6 +12,7 @@ import { reporter } from './telemetry/telemetry';
 import * as messages from '../src/messages';
 import fs = require('fs');
 import { RubyHelper } from './rubyHelper';
+import { PuppetExtensionConfiguration } from './puppetExtensionConfiguration';
 
 const langID = 'puppet'; // don't change this
 
@@ -33,6 +34,7 @@ export class ConnectionManager implements IConnectionManager {
   private commandsRegistered = false;
   private logger: ILogger = undefined;
   private terminal: vscode.Terminal = undefined
+  private extensionConfig:PuppetExtensionConfiguration;
 
   public get status() : ConnectionStatus {
     return this.connectionStatus;
@@ -44,9 +46,10 @@ export class ConnectionManager implements IConnectionManager {
     this.logger.show()
   }
 
-  constructor(context: vscode.ExtensionContext, logger: ILogger) {
+  constructor(context: vscode.ExtensionContext, logger: ILogger, extensionConfig:PuppetExtensionConfiguration) {
     this.logger = logger;
     this.extensionContext = context;
+    this.extensionConfig = extensionConfig;
   }
 
   public start(connectionConfig: IConnectionConfiguration) {
@@ -190,7 +193,11 @@ export class ConnectionManager implements IConnectionManager {
 
     let localServer = null
 
-    if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger); }
+    if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(
+      serverExe,
+      this.connectionConfiguration,
+      this.extensionConfig,
+      this.logger); }
     // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
     //if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(serverExe, this.connectionConfiguration, this.logger); }
 
