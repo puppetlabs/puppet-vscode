@@ -11,15 +11,25 @@ export class FileLogger implements logging.ILogger {
     this.logwriter = fs.createWriteStream(filename);
   }
 
-  public verbose(message: string) { this.emitMessage("VERBOSE",message); }
-  public debug(message: string)   { this.emitMessage("DEBUG",message); }
-  public normal(message: string)  { this.emitMessage("NORMAL",message); }
-  public warning(message: string) { this.emitMessage("WARNING",message); }
-  public error(message: string)   { this.emitMessage("ERROR",message); }
-  
+  public verbose(message: string) {
+    this.emitMessage('VERBOSE', message);
+  }
+  public debug(message: string) {
+    this.emitMessage('DEBUG', message);
+  }
+  public normal(message: string) {
+    this.emitMessage('NORMAL', message);
+  }
+  public warning(message: string) {
+    this.emitMessage('WARNING', message);
+  }
+  public error(message: string) {
+    this.emitMessage('ERROR', message);
+  }
+
   private emitMessage(severity: string, message: string) {
     if (this.logwriter.writable) {
-      this.logwriter.write(severity + ": " + message + "\n");
+      this.logwriter.write(severity + ': ' + message + '\n');
     }
   }
 }
