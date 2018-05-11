@@ -8,22 +8,22 @@ import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';
 
 class RequestParams implements messages.PuppetResourceRequestParams {
-  typename: string;
-  title: string;
+  typename: string = "";
+  title: string = "";
 }
 
-export class puppetResourceCommand {
-  private _connectionManager: IConnectionManager = undefined;
-  private logger: ILogger = undefined;
+export class PuppetResourceCommand {
+  private _connectionManager: IConnectionManager;
+  private logger: ILogger;
 
   constructor(connMgr: IConnectionManager, logger: ILogger) {
     this._connectionManager = connMgr;
     this.logger = logger;
   }
 
-  private pickPuppetResource(): Thenable<string> {
+  private pickPuppetResource(): Thenable<string | undefined> {
     let options: vscode.QuickPickOptions = {
-      placeHolder: "Enter a Puppet resource to interrogate",
+      placeHolder: 'Enter a Puppet resource to interrogate',
       matchOnDescription: true,
       matchOnDetail: true
     };
@@ -31,37 +31,45 @@ export class puppetResourceCommand {
   }
 
   public run() {
-    var thisCommand = this
+    var thisCommand = this;
 
-    if (thisCommand._connectionManager.status != ConnectionStatus.Running ) {
-      vscode.window.showInformationMessage("Puppet Resource is not available as the Language Server is not ready");
-      return
+    if (thisCommand._connectionManager.status !== ConnectionStatus.Running) {
+      vscode.window.showInformationMessage('Puppet Resource is not available as the Language Server is not ready');
+      return;
     }
 
-    this.pickPuppetResource().then((moduleName) => {
+    this.pickPuppetResource().then(moduleName => {
       if (moduleName) {
-
         let editor = vscode.window.activeTextEditor;
-        if (!editor) { return; }
+        if (!editor) {
+          return;
+        }
 
         let doc = editor.document;
-        let requestParams = new RequestParams;
+        let requestParams = new RequestParams();
         requestParams.typename = moduleName;
 
         thisCommand._connectionManager.languageClient
           .sendRequest(messages.PuppetResourceRequest.type, requestParams)
-          .then( (resourceResult) => {
-            if (resourceResult.error != undefined && resourceResult.error.length > 0) {
+          .then(resourceResult => {
+            if (resourceResult.error !== undefined && resourceResult.error.length > 0) {
               this.logger.error(resourceResult.error);
               return;
             }
-            if (resourceResult.data == undefined || resourceResult.data.length == 0) return;
+            if (resourceResult.data === undefined || resourceResult.data.length === 0) {
+              return;
+            }
 
+            if (!editor) {
+              return;
+            }
+
+            var newPosition;
             if (editor.selection.isEmpty) {
               const position = editor.selection.active;
-              var newPosition = position.with(position.line, 0);
-            }else{
-              var newPosition = new vscode.Position(0, 0);
+              newPosition = position.with(position.line, 0);
+            } else {
+              newPosition = new vscode.Position(0, 0);
             }
 
             this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
@@ -73,12 +81,11 @@ export class puppetResourceCommand {
     });
   }
 
-  private editCurrentDocument(uri, text, position) {
+  private editCurrentDocument(uri: vscode.Uri, text: string, position: vscode.Position) {
     let edit = new vscode.WorkspaceEdit();
     edit.insert(uri, position, text);
     vscode.workspace.applyEdit(edit);
   }
 
-  public dispose(): any {
-  }
+  public dispose(): any {}
 }

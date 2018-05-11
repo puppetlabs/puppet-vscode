@@ -7,14 +7,17 @@ import { ConnectionStatus } from '../interfaces';
 import { IConnectionManager } from '../connection';
 import { reporter } from '../telemetry/telemetry';
 import * as messages from '../messages';
-import * as viz from 'viz.js';
+import * as viz from 'viz.js'; // tslint:disable-line
 
 export function isNodeGraphFile(document: vscode.TextDocument) {
-  return document.languageId === 'puppet'
-    && document.uri.scheme !== 'puppet'; // prevent processing of own documents
+  return document.languageId === 'puppet' && document.uri.scheme !== 'puppet'; // prevent processing of own documents
 }
 
-export function getNodeGraphUri(uri: vscode.Uri) {
+export function getNodeGraphUri(uri: vscode.Uri | undefined) {
+  if (uri === undefined) {
+    return;
+  }
+
   if (uri.scheme === 'puppet') {
     return uri;
   }
@@ -29,44 +32,35 @@ export function getNodeGraphUri(uri: vscode.Uri) {
 export class PuppetNodeGraphContentProvider implements vscode.TextDocumentContentProvider {
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
   private _waiting: boolean = false;
-  private _connectionManager: IConnectionManager = undefined;
+  private _connectionManager: IConnectionManager;
   private _shownLanguageServerNotAvailable = false;
-  
-  constructor(
-    private context: vscode.ExtensionContext,
-    private connMgr: IConnectionManager
-  ) {
+
+  // tslint:disable-next-line
+  constructor(private context: vscode.ExtensionContext, private connMgr: IConnectionManager) {
     this._connectionManager = connMgr;
   }
 
   public provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
     const sourceUri = vscode.Uri.parse(uri.query);
-    var thisProvider = this
+    var thisProvider = this;
 
     return vscode.workspace.openTextDocument(sourceUri).then(document => {
-      const initialData = {
-        previewUri: uri.toString(),
-        source: sourceUri.toString(),
-      };
-
-      if (thisProvider._connectionManager.status != ConnectionStatus.Running ) {
+      if (thisProvider._connectionManager.status !== ConnectionStatus.Running) {
         if (!thisProvider._shownLanguageServerNotAvailable) {
-          vscode.window.showInformationMessage("Puppet Node Graph Preview is not available as the Language Server is not ready");
+          vscode.window.showInformationMessage(
+            'Puppet Node Graph Preview is not available as the Language Server is not ready'
+          );
           thisProvider._shownLanguageServerNotAvailable = true;
         }
-        return "Puppet Node Graph Preview is not available as the Language Server is not ready";
+        return 'Puppet Node Graph Preview is not available as the Language Server is not ready';
       }
 
-      // Content Security Policy
-      const nonce = new Date().getTime() + '' + new Date().getMilliseconds();
       // Use the language server to render the document
       return thisProvider._connectionManager.languageClient
         .sendRequest(CompileNodeGraphRequest.type, sourceUri)
-        .then(
-          (compileResult) => {
-
+        .then(compileResult => {
           var svgContent = '';
-          if (compileResult.dotContent != null) {
+          if (compileResult.dotContent !== null) {
             var styling = `
             bgcolor = "transparent"
             color = "white"
@@ -74,19 +68,21 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
             node [ shape="box" penwidth="2" color="#e0e0e0" style="rounded,filled" fontname="Courier New" fillcolor=black, fontcolor="white"]
             edge [ style="bold" color="#f0f0f0" penwith="2" ]
 
-            label = ""`
+            label = ""`;
 
             var graphContent = compileResult.dotContent;
             // vis.jz sees backslashes as escape characters, however they are not in the DOT language.  Instead
             // we should escape any backslash coming from a valid DOT file in preparation to be rendered
-            graphContent = graphContent.replace(/\\/g,"\\\\");
-            graphContent = graphContent.replace(`label = "vscode"`,styling);
+            graphContent = graphContent.replace(/\\/g, '\\\\');
+            graphContent = graphContent.replace(`label = "vscode"`, styling);
 
-            svgContent = viz(graphContent,"svg");
+            svgContent = viz(graphContent, 'svg');
           }
 
-          var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`
-          if (compileResult.error == null) { errorContent = ''; }
+          var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`;
+          if (compileResult.error === null) {
+            errorContent = '';
+          }
           if (reporter) {
             reporter.sendTelemetryEvent(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId);
           }
@@ -96,7 +92,7 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
             <div id="graphviz_svg_div">
               ${svgContent}
             </div>`;
-      })
+        });
     });
   }
 
@@ -117,6 +113,7 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
 
 export function showNodeGraph(uri?: vscode.Uri, sideBySide: boolean = false) {
   let resource = uri;
+
   if (!(resource instanceof vscode.Uri)) {
     if (vscode.window.activeTextEditor) {
       // we are relaxed and don't check for puppet files
@@ -125,10 +122,12 @@ export function showNodeGraph(uri?: vscode.Uri, sideBySide: boolean = false) {
     }
   }
 
-  const thenable = vscode.commands.executeCommand('vscode.previewHtml',
+  const thenable = vscode.commands.executeCommand(
+    'vscode.previewHtml',
     getNodeGraphUri(resource),
     getViewColumn(sideBySide),
-    `Node Graph '${path.basename(resource.fsPath)}'`);
+    `Node Graph '${path.basename(resource.fsPath)}'` // tslint:disable-line
+  );
 
   return thenable;
 }
