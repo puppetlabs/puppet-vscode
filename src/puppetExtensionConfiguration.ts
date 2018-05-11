@@ -100,7 +100,40 @@ export class PuppetExtensionConfiguration {
   }
 
   public type(): ConnectionType {
-    return ConnectionType.Unknown;
+    if (this.host() === '127.0.0.1' ||
+      this.host() === 'localhost' ||
+      this.host() === '') {
+      return ConnectionType.Local;
+    } else {
+      return ConnectionType.Remote;
+    }
+  }
+
+  public languageServerArguments(){
+    var args = new Array<string>();
+
+    args.push('--port=' + this.port());
+    args.push('--timeout=' + this.timeout());
+
+    if ((this.host() === undefined) || (this.host() === '')) {
+      args.push('--ip=127.0.0.1');
+    } else {
+      args.push('--ip=' + this.host());
+    }
+
+    if (vscode.workspace.workspaceFolders !== undefined) {
+      args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
+    }
+
+    if (this.enableFileCache()) {
+      args.push('--enable-file-cache');
+    }
+
+    if ((this.debugFilePath() !== undefined) && (this.debugFilePath() !== '')) {
+      args.push('--debug=' + this.debugFilePath());
+    }
+
+    return args;
   }
 
   private pathEnvSeparator() {
