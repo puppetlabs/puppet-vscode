@@ -18,7 +18,7 @@ export class RubyHelper {
       return ":";
     }
   }
-  
+
   public static getRubyEnvFromPuppetAgent(rubyFile, connectionConfiguration: IConnectionConfiguration, logger: ILogger) {
     let logPrefix: string = '[getRubyExecFromPuppetAgent] ';
     // setup defaults
@@ -56,7 +56,8 @@ export class RubyHelper {
           puppetAgentDir = connectionConfiguration.puppetAgentDir;
         }
 
-        result.options.stdio = 'pipe';
+        result.options.stdio = ['pipe', 'pipe', 'pipe'];
+        result.options.shell = false;
         break;
       default:
         if (connectionConfiguration.puppetAgentDir == undefined) {
@@ -65,7 +66,7 @@ export class RubyHelper {
           puppetAgentDir = connectionConfiguration.puppetAgentDir;
         }
 
-        result.options.stdio = 'pipe';
+        result.options.stdio = ['pipe', 'pipe', 'pipe'];
         result.options.shell = true;
         break;
     }
@@ -137,12 +138,12 @@ export class RubyHelper {
 
         pdkDir = path.join(programFiles, "Puppet Labs", "DevelopmentKit");
 
-        result.options.stdio = 'pipe';
+        result.options.stdio = ['pipe', 'pipe', 'pipe'];
         break;
       default:
         pdkDir = '/opt/puppetlabs/pdk';
 
-        result.options.stdio = 'pipe';
+        result.options.stdio = ['pipe', 'pipe', 'pipe'];
         result.options.shell = true;
         break;
     }
@@ -153,7 +154,7 @@ export class RubyHelper {
     } else {
       logger.debug(logPrefix + "Found a valid PDK installation at " + pdkDir);
     }
-      
+
     // Now to detect ruby versions
     let subdirs = this.getDirectories(path.join(pdkDir,"private", "ruby"));
     if (subdirs.length == 0) { return null; }
@@ -173,7 +174,7 @@ export class RubyHelper {
     // Setup the process environment variables
     if (result.options.env.PATH == undefined) { result.options.env.PATH = '' }
     if (result.options.env.RUBYLIB == undefined) { result.options.env.RUBYLIB = '' }
-    
+
     result.options.env.RUBY_DIR = rubyDir;
     result.options.env.PATH = path.join(pdkDir,'bin') + this.pathEnvSeparator() + path.join(rubyDir,'bin') + this.pathEnvSeparator() + result.options.env.PATH;
     result.options.env.RUBYLIB = path.join(pdkDir,'lib') + this.pathEnvSeparator() + result.options.env.RUBYLIB;
@@ -187,7 +188,7 @@ export class RubyHelper {
     logger.debug(logPrefix + "Using environment variable GEM_PATH=" + result.options.env.GEM_PATH);
     logger.debug(logPrefix + "Using environment variable GEM_HOME=" + result.options.env.GEM_HOME);
     logger.debug(logPrefix + "Using environment variable RUBYOPT=" + result.options.env.RUBYOPT);
-    
+
     return result;
   }
 }
