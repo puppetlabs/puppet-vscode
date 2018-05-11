@@ -13,6 +13,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public enableFileCache: boolean = undefined;
   public debugFilePath: string = undefined;
   public puppetAgentDir: string = undefined;
+  public langID = 'puppet'; // don't change this
 
   constructor(context: vscode.ExtensionContext) {
     let config = vscode.workspace.getConfiguration('puppet');

@@ -1,26 +1,19 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as path from 'path';
 
-import { IConnectionConfiguration, ConnectionType } from './interfaces';
 import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
-import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 
-const langID = 'puppet'; // don't change this
-var statusBarItem;
-var serverProc;
-
-var connManager: ConnectionManager = undefined;
+var connManager: ConnectionManager;
 
 export function activate(context: vscode.ExtensionContext) {
   const puppetExtension = vscode.extensions.getExtension('jpogran.puppet-vscode')!;
   const puppetExtensionVersion = puppetExtension.packageJSON.version;
 
-  notifyOnNewExtensionVersion(context, puppetExtensionVersion)
+  notifyOnNewExtensionVersion(context, puppetExtensionVersion);
 
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger();
@@ -32,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-  if (connManager != undefined) {
+  if (connManager !== undefined) {
     connManager.stop();
     connManager.dispose();
   }
