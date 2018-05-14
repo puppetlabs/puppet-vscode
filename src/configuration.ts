@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 import { IConnectionConfiguration, ConnectionType } from './interfaces';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
-  public type: ConnectionType = ConnectionType.Unknown;
+  // public type: ConnectionType = ConnectionType.Unknown;
   public host: string;
   public port: number;
   public timeout: number;

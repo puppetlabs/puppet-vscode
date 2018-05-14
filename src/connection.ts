@@ -12,6 +12,7 @@ import { reporter } from './telemetry/telemetry';
 import * as messages from '../src/messages';
 import fs = require('fs');
 import { RubyHelper } from './rubyHelper';
+import { PuppetExtensionConfiguration } from './puppetExtensionConfiguration';
 
 const langID = 'puppet'; // don't change this
 
@@ -28,25 +29,27 @@ export class ConnectionManager implements IConnectionManager {
   private statusBarItem: vscode.StatusBarItem;
   private connectionConfiguration: IConnectionConfiguration;
   private languageServerClient: LanguageClient = undefined;
-  private languageServerProcess = undefined;
-  private extensionContext = undefined;
+  private languageServerProcess;
+  private extensionContext: vscode.ExtensionContext;
   private commandsRegistered = false;
   private logger: ILogger = undefined;
   private terminal: vscode.Terminal = undefined
+  private extensionConfig: PuppetExtensionConfiguration;
 
-  public get status() : ConnectionStatus {
+  public get status(): ConnectionStatus {
     return this.connectionStatus;
   }
-  public get languageClient() : LanguageClient {
+  public get languageClient(): LanguageClient {
     return this.languageServerClient;
   }
   public showLogger() {
     this.logger.show()
   }
 
-  constructor(context: vscode.ExtensionContext, logger: ILogger) {
+  constructor(context: vscode.ExtensionContext, logger: ILogger, extensionConfig: PuppetExtensionConfiguration) {
     this.logger = logger;
     this.extensionContext = context;
+    this.extensionConfig = extensionConfig;
   }
 
   public start(connectionConfig: IConnectionConfiguration) {
@@ -73,19 +76,10 @@ export class ConnectionManager implements IConnectionManager {
 
     this.createStatusBarItem();
 
-    if (this.connectionConfiguration.host == '127.0.0.1' ||
-        this.connectionConfiguration.host == 'localhost' ||
-        this.connectionConfiguration.host == '') {
-      this.connectionConfiguration.type = ConnectionType.Local
-    } else {
-      this.connectionConfiguration.type = ConnectionType.Remote
-    }
-
-    this.languageServerClient = undefined
-    this.languageServerProcess = undefined
+    this.languageServerProcess = undefined;
     this.setConnectionStatus("Starting Puppet...", ConnectionStatus.Starting);
 
-    if (this.connectionConfiguration.type == ConnectionType.Local) {
+    if (this.extensionConfig.type() === ConnectionType.Local) {
       this.createLanguageServerProcess(contextPath, this.onLanguageServerStart.bind(this));
     }
     else {
@@ -102,8 +96,7 @@ export class ConnectionManager implements IConnectionManager {
 
     // Close the language server client
     if (this.languageServerClient !== undefined) {
-        this.languageServerClient.stop();
-        this.languageServerClient = undefined;
+      this.languageServerClient.stop();
     }
 
     // The language server process we spawn will close once the
@@ -117,64 +110,63 @@ export class ConnectionManager implements IConnectionManager {
     this.logger.debug('Stopped');
   }
 
-  public dispose() : void {
+  public dispose(): void {
     this.logger.debug('Disposing...');
     // Stop the current session
     this.stop();
 
     // Dispose of any subscriptions
     this.extensionContext.subscriptions.forEach(item => { item.dispose(); });
-    this.extensionContext.subscriptions.clear();
   }
 
   private logStart() {
     this.logger.debug('Congratulations, your extension "vscode-puppet" is now active!');
   }
 
-  private onLanguageServerStart(proc : cp.ChildProcess) {
+  private onLanguageServerStart(proc: cp.ChildProcess) {
     this.logger.debug('LanguageServer Process Started: ' + proc)
-    this.languageServerProcess = proc
-    if (this.languageServerProcess == undefined) {
-        if (this.connectionStatus == ConnectionStatus.Failed) {
-          // We've already handled this state.  Just return
-          return
-        }
-        throw new Error('Unable to start the Language Server Process');
+    this.languageServerProcess = proc;
+    if (this.languageServerProcess === undefined) {
+      if (this.connectionStatus === ConnectionStatus.Failed) {
+        // We've already handled this state.  Just return
+        return
       }
+      throw new Error('Unable to start the Language Server Process');
+    }
 
-      this.languageServerProcess.stdout.on('data', (data) => {
-        this.logger.debug("OUTPUT: " + data.toString());
+    this.languageServerProcess.stdout.on('data', (data) => {
+      this.logger.debug("OUTPUT: " + data.toString());
 
-        // If the language client isn't already running and it's sent the trigger text, start up a client
-        if ( (this.languageServerClient == undefined) && (data.toString().match("LANGUAGE SERVER RUNNING") != null) ) {
-          this.languageServerClient = this.startLangClientTCP();
-          this.extensionContext.subscriptions.push(this.languageServerClient.start());
-        }
-      });
+      // If the language client isn't already running and it's sent the trigger text, start up a client
+      if ((this.languageServerClient === undefined) && (data.toString().match("LANGUAGE SERVER RUNNING") !== null)) {
+        this.languageServerClient = this.startLangClientTCP();
+        this.extensionContext.subscriptions.push(this.languageServerClient.start());
+      }
+    });
 
-      this.languageServerProcess.on('close', (exitCode) => {
-        this.logger.debug("SERVER terminated with exit code: " + exitCode);
-      });
+    this.languageServerProcess.on('close', (exitCode) => {
+      this.logger.debug("SERVER terminated with exit code: " + exitCode);
+    });
 
-      this.logStart();
+    this.logStart();
   }
 
-  public startLanguageServerProcess(cmd : string, args : Array<string>, options : cp.SpawnOptions, callback : Function) {
-    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
+  public startLanguageServerProcess(cmd: string, args: Array<string>, options: cp.SpawnOptions, callback: Function) {
+    if ((this.extensionConfig.host() === undefined) || (this.extensionConfig.host() === '')) {
       args.push('--ip=127.0.0.1');
     } else {
-      args.push('--ip=' + this.connectionConfiguration.host);
+      args.push('--ip=' + this.extensionConfig.host());
     }
-    if (vscode.workspace.workspaceFolders != undefined) {
+    if (vscode.workspace.workspaceFolders !== undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
-    args.push('--port=' + this.connectionConfiguration.port);
-    args.push('--timeout=' + this.connectionConfiguration.timeout);
-    if (this.connectionConfiguration.enableFileCache) {
+    args.push('--port=' + this.extensionConfig.port());
+    args.push('--timeout=' + this.extensionConfig.timeout());
+    if (this.extensionConfig.enableFileCache()) {
       args.push('--enable-file-cache');
     }
-    if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
-      args.push('--debug=' + this.connectionConfiguration.debugFilePath);
+    if ((this.extensionConfig.debugFilePath() !== undefined) && (this.extensionConfig.debugFilePath() !== '')) {
+      args.push('--debug=' + this.extensionConfig.debugFilePath());
     }
 
     this.logger.debug("Starting the language server with " + cmd + " " + args.join(" "));
@@ -184,24 +176,30 @@ export class ConnectionManager implements IConnectionManager {
     callback(proc);
   }
 
-  private createLanguageServerProcess(serverExe: string, callback : Function) {
+  private createLanguageServerProcess(serverExe: string, callback: Function) {
     let logPrefix: string = '[createLanguageServerProcess] ';
     this.logger.debug(logPrefix + 'Language server found at: ' + serverExe)
 
-    let localServer = null
+    let localServer = null;
 
-    if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger); }
+    if (localServer === null) {
+      localServer = RubyHelper.getRubyEnvFromPuppetAgent(
+        serverExe,
+        this.connectionConfiguration,
+        this.extensionConfig,
+        this.logger);
+    }
     // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
     //if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(serverExe, this.connectionConfiguration, this.logger); }
 
-    if (localServer == null) {
+    if (localServer === null) {
       this.logger.warning(logPrefix + "Could not find a valid Puppet Agent installation");
       this.setSessionFailure("Could not find a valid Puppet Agent installation");
       vscode.window.showWarningMessage('Could not find a valid Puppet Agent installation. Functionality will be limited to syntax highlighting');
       return;
     }
 
-    let connMgr : ConnectionManager = this;
+    let connMgr: ConnectionManager = this;
     let logger = this.logger;
     // Start a server to get a random port
     this.logger.debug(logPrefix + 'Creating server process to identify random port')
@@ -225,7 +223,7 @@ export class ConnectionManager implements IConnectionManager {
     this.logger.debug('Configuring language server options')
     let langClient = this;
 
-    let connMgr:ConnectionManager = this;
+    let connMgr: ConnectionManager = this;
     let serverOptions: ServerOptions = function () {
       return new Promise((resolve, reject) => {
         var client = new net.Socket();
@@ -251,13 +249,13 @@ export class ConnectionManager implements IConnectionManager {
     var title = `tcp lang server (host ${this.connectionConfiguration.host} port ${this.connectionConfiguration.port})`;
     var languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
     languageServerClient.onReady().then(() => {
-      langClient.logger.debug('Language server client started, setting puppet version')
+      langClient.logger.debug('Language server client started, setting puppet version');
       this.setConnectionStatus("Loading Puppet", ConnectionStatus.Starting);
       this.queryLanguageServerStatus();
       // Send telemetry
       if (reporter) {
         languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-          reporter.sendTelemetryEvent('puppetVersion' +versionDetails.puppetVersion);
+          reporter.sendTelemetryEvent('puppetVersion' + versionDetails.puppetVersion);
           reporter.sendTelemetryEvent('facterVersion' + versionDetails.facterVersion);
           reporter.sendTelemetryEvent('languageServerVersion' + versionDetails.languageServerVersion);
           reporter.sendTelemetryEvent('version', {
@@ -284,7 +282,7 @@ export class ConnectionManager implements IConnectionManager {
         count++;
 
         // After 30 seonds timeout the progress
-        if (count >= 30 || connectionManager.languageClient == undefined) {
+        if (count >= 30 || connectionManager.languageClient === undefined) {
           clearInterval(handle);
           this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
           resolve();
@@ -292,11 +290,11 @@ export class ConnectionManager implements IConnectionManager {
         }
 
         connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-          lastVersionResponse = versionDetails
+          lastVersionResponse = versionDetails;
           if (versionDetails.factsLoaded &&
-              versionDetails.functionsLoaded &&
-              versionDetails.typesLoaded &&
-              versionDetails.classesLoaded) {
+            versionDetails.functionsLoaded &&
+            versionDetails.typesLoaded &&
+            versionDetails.classesLoaded) {
             clearInterval(handle);
             this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
             resolve();
@@ -318,7 +316,7 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   public restartConnection(connectionConfig?: IConnectionConfiguration) {
-    if (connectionConfig == undefined) {
+    if (connectionConfig === undefined) {
       connectionConfig = new ConnectionConfiguration(this.extensionContext);
     }
     this.stop();
@@ -338,7 +336,7 @@ export class ConnectionManager implements IConnectionManager {
         else {
           this.statusBarItem.show();
         }
-      })
+      });
     }
   }
 
@@ -349,13 +347,13 @@ export class ConnectionManager implements IConnectionManager {
       new ConnectionMenuItem(
         "Restart Current Puppet Session",
         () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId); }),
-    )
+    );
 
     menuItems.push(
       new ConnectionMenuItem(
         "Show Puppet Session Logs",
         () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
-    )
+    );
 
     vscode
       .window
@@ -364,16 +362,16 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
-    console.log(statusText)
+    console.log(statusText);
     // Set color and icon for 'Running' by default
     var statusIconText = "$(terminal) ";
     var statusColor = "#affc74";
 
-    if (status == ConnectionStatus.Starting) {
+    if (status === ConnectionStatus.Starting) {
       statusIconText = "$(sync) ";
       statusColor = "#f3fc74";
     }
-    else if (status == ConnectionStatus.Failed) {
+    else if (status === ConnectionStatus.Failed) {
       statusIconText = "$(alert) ";
       statusColor = "#fcc174";
     }
@@ -391,7 +389,6 @@ export class ConnectionManager implements IConnectionManager {
 class ConnectionMenuItem implements vscode.QuickPickItem {
   public description: string;
 
-  constructor(public readonly label: string, public readonly callback: () => void = () => { })
-  {
+  constructor(public readonly label: string, public readonly callback: () => void = () => { }) {
   }
 }

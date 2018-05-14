@@ -1,5 +1,6 @@
 'use strict';
 
+import * as vscode from 'vscode';
 import fs = require('fs');
 import path = require('path');
 import net = require('net');
@@ -9,6 +10,7 @@ import { NullLogger } from './logging/null';
 import { ILogger } from './logging';
 import { RubyHelper } from './rubyHelper';
 import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { PuppetExtensionConfiguration } from './puppetExtensionConfiguration';
 
 // This code just marshalls the STDIN/STDOUT to a socket
 
@@ -111,7 +113,7 @@ function startDebugServerProcess(cmd : string, args : Array<string>, config:Debu
   return proc;
 }
 
-function startDebugServer(config:DebugConfiguration, debugLogger: ILogger) {
+function startDebugServer(config:DebugConfiguration, extensionConfig:PuppetExtensionConfiguration, debugLogger: ILogger) {
   let localServer = null;
 
   let rubyfile = path.join(__dirname,'..','..','vendor', 'languageserver', 'puppet-debugserver');
@@ -121,7 +123,11 @@ function startDebugServer(config:DebugConfiguration, debugLogger: ILogger) {
   }
 
   // TODO use argv to pass in stuff?
-  if (localServer === null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(rubyfile, config, debugLogger); }
+  if (localServer === null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(
+    rubyfile,
+    config,
+    extensionConfig,
+    debugLogger); }
   // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
   // if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(rubyfile, config, debugLogger); }
 
@@ -146,8 +152,8 @@ function startDebugServer(config:DebugConfiguration, debugLogger: ILogger) {
   return debugServerProc;
 }
 
-function startDebugging(config:DebugConfiguration, debugLogger:ILogger) {
-  var debugServerProc = startDebugServer(config, debugLogger);
+function startDebugging(config:DebugConfiguration, extensionConfig:PuppetExtensionConfiguration, debugLogger:ILogger) {
+  var debugServerProc = startDebugServer(config, extensionConfig, debugLogger);
 
   debugServerProc.on('close', (exitCode) => {
     debugLogger.debug("Debug server terminated with exit code: " + exitCode);
@@ -188,9 +194,9 @@ let debugLogger = new NullLogger();
 debugLogger.normal("args = " + process.argv);
 
 let config = new DebugConfiguration();
-
+let extensionConfig = new PuppetExtensionConfiguration(vscode.workspace.getConfiguration('puppet'));
 // Launch command
-startDebugging(config, debugLogger);
+startDebugging(config, extensionConfig, debugLogger);
 
 // Attach command
 // startDebuggingProxy(config, debugLogger, true);
