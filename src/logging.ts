@@ -1,7 +1,5 @@
 'use strict';
 
-import * as vscode from 'vscode';
-
 export enum LogLevel {
   Verbose,
   Debug,
@@ -11,10 +9,10 @@ export enum LogLevel {
 }
 
 export interface ILogger {
-  show();
-  verbose(message: string);
-  debug(message: string);
-  normal(message: string);
-  warning(message: string);
-  error(message: string);
+  show():void;
+  verbose(message: string):void;
+  debug(message: string):void;
+  normal(message: string):void;
+  warning(message: string):void;
+  error(message: string):void;
 }
