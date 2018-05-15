@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { PuppetCommandStrings } from './messages';
 import { ConnectionStatus } from './interfaces';
+import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
 
 export class PuppetStatusBar {
   statusBarItem: vscode.StatusBarItem;
@@ -35,4 +36,26 @@ export class PuppetStatusBar {
     this.statusBarItem.color = statusColor;
     this.statusBarItem.text = statusIconText + statusText;
   }
+
+  public static showConnectionMenu() {
+    var menuItems: PuppetConnectionMenuItem[] = [];
+  
+    menuItems.push(
+      new PuppetConnectionMenuItem(
+        "Restart Current Puppet Session",
+        () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetRestartSessionCommandId); }),
+    )
+  
+    menuItems.push(
+      new PuppetConnectionMenuItem(
+        "Show Puppet Session Logs",
+        () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
+    )
+  
+    vscode
+      .window
+      .showQuickPick<PuppetConnectionMenuItem>(menuItems)
+      .then((selectedItem) => { selectedItem.callback(); });
+  }
+  
 }
