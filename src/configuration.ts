@@ -1,28 +1,182 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import * as path from 'path';
 
-import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { ConnectionType } from './interfaces';
+
+export interface IConnectionConfiguration {
+  type: ConnectionType;
+  host: string;
+  port: number;
+  timeout: number;
+  enableFileCache: boolean;
+  debugFilePath: string;
+  puppetAgentDir: string;
+  languageServerPath:string;
+  rubydir:string;
+  rubylib:string;
+  environmentPath:string;
+  sslCertFile:string;
+  sslCertDir:string;
+  pdkDir:string;
+  languageServerCommandLine:Array<string>;
+}
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
-  public type: ConnectionType = ConnectionType.Unknown;
   public host: string;
   public port: number;
   public timeout: number;
   public enableFileCache: boolean;
   public debugFilePath: string;
-  public puppetAgentDir: string;
   public langID: string = 'puppet'; // don't change this
+  config:vscode.WorkspaceConfiguration;
+  context:vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
-    let config = vscode.workspace.getConfiguration('puppet');
+    this.context = context;
+    this.config = vscode.workspace.getConfiguration('puppet');
 
-    this.host = config['languageserver']['address'];
-    this.port = config['languageserver']['port'];
-    this.timeout = config['languageserver']['timeout'];
-    this.enableFileCache = config['languageserver']['filecache']['enable'];
-    this.debugFilePath = config['languageserver']['debugFilePath'];
+    this.host = this.config['languageserver']['address'];
+    this.port = this.config['languageserver']['port'];
+    this.timeout = this.config['languageserver']['timeout'];
+    this.enableFileCache = this.config['languageserver']['filecache']['enable'];
+    this.debugFilePath = this.config['languageserver']['debugFilePath'];
+  }
 
-    this.puppetAgentDir = config['puppetAgentDir'];
+  get puppetAgentDir():string{
+    if(this.config['puppetAgentDir'] !== null){
+      return this.config['puppetAgentDir'];
+    }
+
+    switch(process.platform){
+      case 'win32':
+        let programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
+        if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
+          programFiles = process.env['ProgramW6432']  || 'C:\\Program Files';
+        }
+        return path.join(programFiles, 'Puppet Labs', 'Puppet');
+      default:
+        return '/opt/puppetlabs/puppet';
+    }
+  }
+
+  get pdkDir():string{
+    if(this.config['pdkDir'] !== null){
+      return this.config['pdkDir'];
+    }
+
+    switch(process.platform){
+      case 'win32':
+        let programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
+        if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
+          programFiles = process.env['ProgramW6432']  || 'C:\\Program Files';
+        }
+        return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit');
+      default:
+        return '/opt/puppetlabs/pdk';
+    }
+  }
+
+  get puppetDir():string{
+    return path.join(this.puppetAgentDir, 'puppet');
+  }
+
+  get facterDir():string{
+    return path.join(this.puppetAgentDir, 'facter');
+  }
+
+  get hieraDir():string{
+    return path.join(this.puppetAgentDir, 'hiera');
+  }
+
+  get mcoDir():string{
+    return path.join(this.puppetAgentDir, 'mcollective');
+  }
+
+  get rubydir():string{
+    return path.join(this.puppetAgentDir, 'sys', 'ruby');
+  }
+
+  get rubylib():string{
+    var p = path.join(this.puppetDir, 'lib') + this.pathEnvSeparator()
+                + path.join(this.facterDir, 'lib') + this.pathEnvSeparator()
+                + path.join(this.hieraDir, 'lib') + this.pathEnvSeparator()
+                + path.join(this.mcoDir, 'lib');
+
+    if (process.platform === 'win32') {
+      // Translate all slashes to / style to avoid puppet/ruby issue #11930
+      p = p.replace(/\\/g, '/');
+    }
+
+    return p;
+  }
+
+  get sslCertDir():string{
+    return path.join(this.puppetDir, 'ssl', 'certs');
+  }
+
+  get sslCertFile():string{
+    return path.join(this.puppetDir, 'ssl', 'cert.pem');
+  }
+
+  get environmentPath():string{
+    return path.join(this.puppetDir, 'bin') + this.pathEnvSeparator() +
+      path.join(this.facterDir, 'bin') + this.pathEnvSeparator() +
+      path.join(this.hieraDir, 'bin') + this.pathEnvSeparator() +
+      path.join(this.mcoDir, 'bin') + this.pathEnvSeparator() +
+      path.join(this.puppetAgentDir, 'bin') + this.pathEnvSeparator() +
+      path.join(this.rubydir, 'bin') + this.pathEnvSeparator() +
+      path.join(this.puppetAgentDir, 'sys', 'tools', 'bin') +
+      this.pathEnvSeparator();
+  }
+
+  get languageServerPath():string{
+    return this.context.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
+  }
+
+  get type(): ConnectionType{
+    if (this.host === '127.0.0.1' ||
+      this.host === 'localhost' ||
+      this.host === '') {
+      return ConnectionType.Local;
+    } else {
+      return ConnectionType.Remote;
+    }
+  }
+
+  get languageServerCommandLine():Array<string>{
+    var args = new Array<string>();
+
+    if ((this.host === undefined) || (this.host === '')) {
+      args.push('--ip=127.0.0.1');
+    } else {
+      args.push('--ip=' + this.host);
+    }
+
+    if (vscode.workspace.workspaceFolders !== undefined) {
+      args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
+    }
+
+    args.push('--port=' + this.port);
+    args.push('--timeout=' + this.timeout);
+
+    if (this.enableFileCache) {
+      args.push('--enable-file-cache');
+    }
+
+    if ((this.debugFilePath !== undefined) && (this.debugFilePath !== '')) {
+      args.push('--debug=' + this.debugFilePath);
+    }
+
+    return args;
+  }
+
+  pathEnvSeparator() {
+    if (process.platform === 'win32') {
+      return ';';
+    } else {
+      return ':';
+    }
   }
 }
