@@ -8,6 +8,7 @@ import {
 } from '../../src/providers/previewNodeGraphProvider';
 import { PuppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
 import { PuppetFormatDocumentProvider } from '../providers/puppetFormatDocumentProvider';
+import { PuppetStatusBar } from '../PuppetStatusBar';
 
 export function setupPuppetCommands(langID:string, connManager:IConnectionManager, ctx:vscode.ExtensionContext, logger: ILogger){
 
@@ -32,7 +33,7 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
   );
 
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
-    () => { connManager.showConnectionMenu(); }
+    () => { PuppetStatusBar.showConnectionMenu(); }
   ));
 
   ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId,

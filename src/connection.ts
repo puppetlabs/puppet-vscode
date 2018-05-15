@@ -11,13 +11,13 @@ import * as messages from '../src/messages';
 import fs = require('fs');
 import { RubyHelper } from './rubyHelper';
 import { PuppetStatusBar } from './PuppetStatusBar';
+import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
 
 const langID = 'puppet'; // don't change this
 
 export interface IConnectionManager {
   status: ConnectionStatus;
   languageClient: LanguageClient;
-  showConnectionMenu();
   showLogger();
   restartConnection(connectionConfig?: IConnectionConfiguration);
 }
@@ -306,27 +306,6 @@ export class ConnectionManager implements IConnectionManager {
     this.start(connectionConfig);
   }
 
-  public showConnectionMenu() {
-    var menuItems: ConnectionMenuItem[] = [];
-
-    menuItems.push(
-      new ConnectionMenuItem(
-        "Restart Current Puppet Session",
-        () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId); }),
-    )
-
-    menuItems.push(
-      new ConnectionMenuItem(
-        "Show Puppet Session Logs",
-        () => { vscode.commands.executeCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
-    )
-
-    vscode
-      .window
-      .showQuickPick<ConnectionMenuItem>(menuItems)
-      .then((selectedItem) => { selectedItem.callback(); });
-  }
-
   private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
     this.connectionStatus = status;
     this.statusBarItem.setConnectionStatus(statusText, status);
@@ -334,13 +313,5 @@ export class ConnectionManager implements IConnectionManager {
 
   private setSessionFailure(message: string, ...additionalMessages: string[]) {
     this.setConnectionStatus("Starting Error", ConnectionStatus.Failed);
-  }
-}
-
-class ConnectionMenuItem implements vscode.QuickPickItem {
-  public description: string;
-
-  constructor(public readonly label: string, public readonly callback: () => void = () => { })
-  {
   }
 }
