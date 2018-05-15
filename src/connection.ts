@@ -6,8 +6,6 @@ import { ILogger } from '../src/logging';
 import { IConnectionConfiguration, ConnectionStatus, ConnectionType } from './interfaces'
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { ConnectionConfiguration } from './configuration';
-import { setupPuppetCommands } from '../src/commands/puppetcommands';
-import { setupPDKCommands } from '../src/commands/pdkcommands';
 import { reporter } from './telemetry/telemetry';
 import * as messages from '../src/messages';
 import fs = require('fs');
@@ -30,9 +28,7 @@ export class ConnectionManager implements IConnectionManager {
   private languageServerClient: LanguageClient = undefined;
   private languageServerProcess = undefined;
   private extensionContext = undefined;
-  private commandsRegistered = false;
   private logger: ILogger = undefined;
-  private terminal: vscode.Terminal = undefined
 
   public get status() : ConnectionStatus {
     return this.connectionStatus;
@@ -54,22 +50,6 @@ export class ConnectionManager implements IConnectionManager {
     this.connectionConfiguration = connectionConfig;
     this.connectionConfiguration.type = ConnectionType.Unknown;
     var contextPath = this.extensionContext.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
-
-    if (!this.commandsRegistered) {
-      this.logger.debug('Configuring commands');
-
-      setupPuppetCommands(langID, this, this.extensionContext, this.logger);
-
-      this.terminal = vscode.window.createTerminal('Puppet PDK');
-      this.terminal.processId.then(
-        pid => {
-          this.logger.debug("pdk shell started, pid: " + pid);
-        });
-      setupPDKCommands(langID, this, this.extensionContext, this.logger, this.terminal);
-      this.extensionContext.subscriptions.push(this.terminal);
-
-      this.commandsRegistered = true;
-    }
 
     this.createStatusBarItem();
 
