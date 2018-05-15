@@ -12,6 +12,8 @@ import fs = require('fs');
 import { RubyHelper } from './rubyHelper';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
+import { PuppetVersionDetails } from '../src/messages';
+import { PuppetLanguageClient } from './PuppetLanguageClient';
 
 const langID = 'puppet'; // don't change this
 
@@ -27,12 +29,16 @@ export class ConnectionManager implements IConnectionManager {
   private statusBarItem: PuppetStatusBar;
   private connectionConfiguration: IConnectionConfiguration;
   private languageServerClient: LanguageClient;
-  private languageServerProcess;
+  private languageServerProcess: cp.ChildProcess;
   private extensionContext:vscode.ExtensionContext;
   private logger: ILogger;
+  private puppetLanguageClient:PuppetLanguageClient;
 
   public get status() : ConnectionStatus {
     return this.connectionStatus;
+  }
+  public set status(status:ConnectionStatus){
+    this.connectionStatus = status;
   }
   public get languageClient() : LanguageClient {
     return this.languageServerClient;
@@ -196,84 +202,28 @@ export class ConnectionManager implements IConnectionManager {
           connMgr.setSessionFailure("Could not start language client: ", err.message);
 
           return null;
-        })
+        });
       });
-    }
+    };
 
-    this.logger.debug('Configuring language server client options')
+    this.logger.debug('Configuring language server client options');
     let clientOptions: LanguageClientOptions = {
       documentSelector: [langID],
-    }
+    };
 
     this.logger.debug(`Starting language server client (host ${this.connectionConfiguration.host} port ${this.connectionConfiguration.port})`)
 
-    var title = `tcp lang server (host ${this.connectionConfiguration.host} port ${this.connectionConfiguration.port})`;
-    var languageServerClient = new LanguageClient(title, serverOptions, clientOptions)
-    languageServerClient.onReady().then(() => {
-      langClient.logger.debug('Language server client started, setting puppet version')
-      this.setConnectionStatus("Loading Puppet", ConnectionStatus.Starting);
-      this.queryLanguageServerStatus();
-      // Send telemetry
-      if (reporter) {
-        languageServerClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-          reporter.sendTelemetryEvent('puppetVersion' +versionDetails.puppetVersion);
-          reporter.sendTelemetryEvent('facterVersion' + versionDetails.facterVersion);
-          reporter.sendTelemetryEvent('languageServerVersion' + versionDetails.languageServerVersion);
-          reporter.sendTelemetryEvent('version', {
-            puppetVersion: versionDetails.puppetVersion,
-            facterVersion: versionDetails.facterVersion,
-            languageServerVersion: versionDetails.languageServerVersion,
-          });
-        });
-      }
-    }, (reason) => {
-      this.setSessionFailure("Could not start language service: ", reason);
-    });
+    this.puppetLanguageClient = new PuppetLanguageClient(
+      this.connectionConfiguration.host,
+      this.connectionConfiguration.port,
+      this,
+      serverOptions,
+      clientOptions,
+      this.statusBarItem,
+      this.logger
+    );
 
-    return languageServerClient;
-  }
-
-  private queryLanguageServerStatus() {
-    let connectionManager = this;
-
-    return new Promise((resolve, reject) => {
-      let count = 0;
-      let lastVersionResponse = null;
-      let handle = setInterval(() => {
-        count++;
-
-        // After 30 seonds timeout the progress
-        if (count >= 30 || connectionManager.languageClient == undefined) {
-          clearInterval(handle);
-          this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
-          resolve();
-          return;
-        }
-
-        connectionManager.languageClient.sendRequest(messages.PuppetVersionRequest.type).then((versionDetails) => {
-          lastVersionResponse = versionDetails
-          if (versionDetails.factsLoaded &&
-              versionDetails.functionsLoaded &&
-              versionDetails.typesLoaded &&
-              versionDetails.classesLoaded) {
-            clearInterval(handle);
-            this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
-            resolve();
-          } else {
-            let progress = 0;
-
-            if (versionDetails.factsLoaded) { progress++; }
-            if (versionDetails.functionsLoaded) { progress++; }
-            if (versionDetails.typesLoaded) { progress++; }
-            if (versionDetails.classesLoaded) { progress++; }
-            progress = Math.round(progress / 4.0 * 100);
-
-            this.setConnectionStatus("Loading Puppet (" + progress.toString() + "%)", ConnectionStatus.Starting);
-          }
-        });
-
-      }, 1000);
-    });
+    return this.puppetLanguageClient.languageServerClient;
   }
 
   public restartConnection(connectionConfig?: IConnectionConfiguration) {
