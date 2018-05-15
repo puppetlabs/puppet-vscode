@@ -8,6 +8,7 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 import { setupPuppetCommands } from './commands/puppetcommands';
 import { setupPDKCommands } from './commands/pdkcommands';
+import { PuppetStatusBar } from './PuppetStatusBar';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -22,7 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger();
-  connManager = new ConnectionManager(context, logger);
+  var statusBar = new PuppetStatusBar(langID);
+  connManager = new ConnectionManager(context, logger, statusBar);
 
   var configSettings = new ConnectionConfiguration(context);
 
