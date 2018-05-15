@@ -28,7 +28,7 @@ export class ConnectionManager implements IConnectionManager {
   private connectionConfiguration: IConnectionConfiguration;
   private languageServerClient: LanguageClient;
   private languageServerProcess;
-  private extensionContext;
+  private extensionContext:vscode.ExtensionContext;
   private logger: ILogger;
 
   public get status() : ConnectionStatus {
@@ -51,23 +51,13 @@ export class ConnectionManager implements IConnectionManager {
   public start(connectionConfig: IConnectionConfiguration) {
     // Setup the configuration
     this.connectionConfiguration = connectionConfig;
-    this.connectionConfiguration.type = ConnectionType.Unknown;
-    var contextPath = this.extensionContext.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
-
-    if (this.connectionConfiguration.host == '127.0.0.1' ||
-        this.connectionConfiguration.host == 'localhost' ||
-        this.connectionConfiguration.host == '') {
-      this.connectionConfiguration.type = ConnectionType.Local
-    } else {
-      this.connectionConfiguration.type = ConnectionType.Remote
-    }
 
     this.languageServerClient = undefined
     this.languageServerProcess = undefined
     this.setConnectionStatus("Starting Puppet...", ConnectionStatus.Starting);
 
     if (this.connectionConfiguration.type == ConnectionType.Local) {
-      this.createLanguageServerProcess(contextPath, this.onLanguageServerStart.bind(this));
+      this.createLanguageServerProcess(this.connectionConfiguration.languageServerPath, this.onLanguageServerStart.bind(this));
     }
     else {
       this.languageServerClient = this.startLangClientTCP();
@@ -141,22 +131,8 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   public startLanguageServerProcess(cmd : string, args : Array<string>, options : cp.SpawnOptions, callback : Function) {
-    if ((this.connectionConfiguration.host == undefined) || (this.connectionConfiguration.host == '')) {
-      args.push('--ip=127.0.0.1');
-    } else {
-      args.push('--ip=' + this.connectionConfiguration.host);
-    }
-    if (vscode.workspace.workspaceFolders != undefined) {
-      args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
-    }
-    args.push('--port=' + this.connectionConfiguration.port);
-    args.push('--timeout=' + this.connectionConfiguration.timeout);
-    if (this.connectionConfiguration.enableFileCache) {
-      args.push('--enable-file-cache');
-    }
-    if ((this.connectionConfiguration.debugFilePath != undefined) && (this.connectionConfiguration.debugFilePath != '')) {
-      args.push('--debug=' + this.connectionConfiguration.debugFilePath);
-    }
+    var parsed = this.connectionConfiguration.languageServerCommandLine;
+    args = args.concat(parsed);
 
     this.logger.debug("Starting the language server with " + cmd + " " + args.join(" "));
     var proc = cp.spawn(cmd, args, options)
@@ -169,13 +145,15 @@ export class ConnectionManager implements IConnectionManager {
     let logPrefix: string = '[createLanguageServerProcess] ';
     this.logger.debug(logPrefix + 'Language server found at: ' + serverExe)
 
-    let localServer = null
-
-    if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger); }
+    let localServer: {
+      command: string;
+      args: string[];
+      options: cp.SpawnOptions;
+    } | null = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger);
     // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
     //if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(serverExe, this.connectionConfiguration, this.logger); }
 
-    if (localServer == null) {
+    if (localServer === null) {
       this.logger.warning(logPrefix + "Could not find a valid Puppet Agent installation");
       this.setSessionFailure("Could not find a valid Puppet Agent installation");
       vscode.window.showWarningMessage('Could not find a valid Puppet Agent installation. Functionality will be limited to syntax highlighting');

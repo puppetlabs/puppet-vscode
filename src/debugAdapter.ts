@@ -45,6 +45,14 @@ function sendErrorMessage(message: string) {
 }
 
 class DebugConfiguration implements IConnectionConfiguration {
+  languageServerPath: string;
+  rubydir: string;
+  rubylib: string;
+  environmentPath: string;
+  sslCertFile: string;
+  sslCertDir: string;
+  pdkDir: string;
+  languageServerCommandLine: string[];
   public type: ConnectionType = ConnectionType.Local ;
   public host: string = "127.0.0.1";
   public port: number = 8082;

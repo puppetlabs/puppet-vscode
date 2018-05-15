@@ -9,8 +9,6 @@ import { Reporter } from './telemetry/telemetry';
 import { setupPuppetCommands } from './commands/puppetcommands';
 import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
-import { PuppetCommandStrings } from './messages';
-import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
