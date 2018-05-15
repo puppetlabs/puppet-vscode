@@ -10,6 +10,7 @@ import { reporter } from './telemetry/telemetry';
 import * as messages from '../src/messages';
 import fs = require('fs');
 import { RubyHelper } from './rubyHelper';
+import { PuppetStatusBar } from './PuppetStatusBar';
 
 const langID = 'puppet'; // don't change this
 
@@ -23,12 +24,12 @@ export interface IConnectionManager {
 
 export class ConnectionManager implements IConnectionManager {
   private connectionStatus: ConnectionStatus;
-  private statusBarItem: vscode.StatusBarItem;
+  private statusBarItem: PuppetStatusBar;
   private connectionConfiguration: IConnectionConfiguration;
-  private languageServerClient: LanguageClient = undefined;
-  private languageServerProcess = undefined;
-  private extensionContext = undefined;
-  private logger: ILogger = undefined;
+  private languageServerClient: LanguageClient;
+  private languageServerProcess;
+  private extensionContext;
+  private logger: ILogger;
 
   public get status() : ConnectionStatus {
     return this.connectionStatus;
@@ -40,9 +41,11 @@ export class ConnectionManager implements IConnectionManager {
     this.logger.show()
   }
 
-  constructor(context: vscode.ExtensionContext, logger: ILogger) {
+  constructor(context: vscode.ExtensionContext, logger: ILogger, statusBar: PuppetStatusBar) {
     this.logger = logger;
     this.extensionContext = context;
+    this.connectionStatus = ConnectionStatus.NotStarted;
+    this.statusBarItem = statusBar;
   }
 
   public start(connectionConfig: IConnectionConfiguration) {
@@ -50,8 +53,6 @@ export class ConnectionManager implements IConnectionManager {
     this.connectionConfiguration = connectionConfig;
     this.connectionConfiguration.type = ConnectionType.Unknown;
     var contextPath = this.extensionContext.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
-
-    this.createStatusBarItem();
 
     if (this.connectionConfiguration.host == '127.0.0.1' ||
         this.connectionConfiguration.host == 'localhost' ||
@@ -305,23 +306,6 @@ export class ConnectionManager implements IConnectionManager {
     this.start(connectionConfig);
   }
 
-  private createStatusBarItem() {
-    if (this.statusBarItem === undefined) {
-      this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
-
-      this.statusBarItem.command = messages.PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
-      this.statusBarItem.show();
-      vscode.window.onDidChangeActiveTextEditor(textEditor => {
-        if (textEditor === undefined || textEditor.document.languageId !== "puppet") {
-          this.statusBarItem.hide();
-        }
-        else {
-          this.statusBarItem.show();
-        }
-      })
-    }
-  }
-
   public showConnectionMenu() {
     var menuItems: ConnectionMenuItem[] = [];
 
@@ -344,23 +328,8 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
-    console.log(statusText)
-    // Set color and icon for 'Running' by default
-    var statusIconText = "$(terminal) ";
-    var statusColor = "#affc74";
-
-    if (status == ConnectionStatus.Starting) {
-      statusIconText = "$(sync) ";
-      statusColor = "#f3fc74";
-    }
-    else if (status == ConnectionStatus.Failed) {
-      statusIconText = "$(alert) ";
-      statusColor = "#fcc174";
-    }
-
     this.connectionStatus = status;
-    this.statusBarItem.color = statusColor;
-    this.statusBarItem.text = statusIconText + statusText;
+    this.statusBarItem.setConnectionStatus(statusText, status);
   }
 
   private setSessionFailure(message: string, ...additionalMessages: string[]) {
