@@ -9,8 +9,8 @@ import { ConnectionManager } from "./connection";
 export class PuppetLanguageClient {
   connectionStatus: ConnectionStatus;
   connectionManager:ConnectionManager;
-  clientOptions: any;
-  serverOptions: any;
+  clientOptions: LanguageClientOptions;
+  serverOptions: ServerOptions;
   port: number;
   host: string;
   languageServerClient: LanguageClient;
