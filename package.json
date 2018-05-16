@@ -267,11 +267,10 @@
       "type": "object",
       "title": "puppet",
       "properties": {
-        "puppet.format.enable": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Enable/disable the Puppet formatter"
+        "puppet.puppetAgentDir": {
+          "type": "string",
+          "default": null,
+          "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
         },
         "puppet.languageclient.protocol": {
           "type": "string",
@@ -280,6 +279,18 @@
           "enum": [
             "stdio",
             "tcp"
+          ]
+        },
+        "puppet.languageclient.minimumUserLogLevel": {
+          "type": "string",
+          "default": "normal",
+          "description": "Set the minimum log level that the user will see on the Puppet connection logs",
+          "enum": [
+            "verbose",
+            "debug",
+            "normal",
+            "warning",
+            "error"
           ]
         },
         "puppet.languageserver.address": {
@@ -307,22 +318,11 @@
           "default": "",
           "description": "Set the local Puppet Language Server to send debug information to a file"
         },
-        "puppet.languageclient.minimumUserLogLevel": {
-          "type": "string",
-          "default": "normal",
-          "description": "Set the minimum log level that the user will see on the Puppet connection logs",
-          "enum": [
-            "verbose",
-            "debug",
-            "normal",
-            "warning",
-            "error"
-          ]
-        },
-        "puppet.puppetAgentDir": {
-          "type": "string",
-          "default": null,
-          "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
+        "puppet.format.enable": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Enable/disable the Puppet formatter"
         }
       }
     },
