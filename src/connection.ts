@@ -28,11 +28,12 @@ export class ConnectionManager implements IConnectionManager {
   private languageServerProcess: cp.ChildProcess;
   private puppetLanguageClient: PuppetLanguageClient;
 
-  constructor(context: vscode.ExtensionContext, logger: ILogger, statusBar: PuppetStatusBar) {
+  constructor(context: vscode.ExtensionContext, logger: ILogger, statusBar: PuppetStatusBar, connectionConfiguration:IConnectionConfiguration) {
     this.logger = logger;
     this.extensionContext = context;
     this.connectionStatus = ConnectionStatus.NotStarted;
     this.statusBarItem = statusBar;
+    this.connectionConfiguration = connectionConfiguration;
   }
 
   public get status(): ConnectionStatus {

@@ -24,9 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger();
   var statusBar = new PuppetStatusBar(langID);
-  connManager = new ConnectionManager(context, logger, statusBar);
-
   var configSettings = new ConnectionConfiguration(context);
+  
+  connManager = new ConnectionManager(context, logger, statusBar, configSettings);
+
 
   if (!commandsRegistered) {
     logger.debug('Configuring commands');
