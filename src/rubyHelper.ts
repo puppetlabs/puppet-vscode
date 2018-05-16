@@ -33,7 +33,6 @@ export class RubyHelper {
       args: [rubyFile],
       options: spawn_options
     };
-    let puppetAgentDir: string = connectionConfiguration.puppetAgentDir;
 
     switch (process.platform) {
       case 'win32':

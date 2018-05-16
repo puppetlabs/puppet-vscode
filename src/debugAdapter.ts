@@ -8,7 +8,8 @@ import cp = require('child_process');
 import { NullLogger } from './logging/null';
 import { ILogger } from './logging';
 import { RubyHelper } from './rubyHelper';
-import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { ConnectionType } from './interfaces';
+import { IConnectionConfiguration } from './configuration';
 
 // This code just marshalls the STDIN/STDOUT to a socket
 

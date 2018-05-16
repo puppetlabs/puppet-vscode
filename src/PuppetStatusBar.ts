@@ -44,18 +44,22 @@ export class PuppetStatusBar {
       new PuppetConnectionMenuItem(
         "Restart Current Puppet Session",
         () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetRestartSessionCommandId); }),
-    )
+    );
   
     menuItems.push(
       new PuppetConnectionMenuItem(
         "Show Puppet Session Logs",
         () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
-    )
+    );
   
     vscode
       .window
       .showQuickPick<PuppetConnectionMenuItem>(menuItems)
-      .then((selectedItem) => { selectedItem.callback(); });
+      .then((selectedItem) => {
+        if(selectedItem){
+          selectedItem.callback();
+        }
+      });
   }
   
 }

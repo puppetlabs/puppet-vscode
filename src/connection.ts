@@ -1,18 +1,12 @@
 import net = require('net');
-import path = require('path');
 import vscode = require('vscode');
 import cp = require('child_process');
 import { ILogger } from '../src/logging';
 import { ConnectionStatus, ConnectionType } from './interfaces';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { ConnectionConfiguration, IConnectionConfiguration } from './configuration';
-import { reporter } from './telemetry/telemetry';
-import * as messages from '../src/messages';
-import fs = require('fs');
 import { RubyHelper } from './rubyHelper';
 import { PuppetStatusBar } from './PuppetStatusBar';
-import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
-import { PuppetVersionDetails } from '../src/messages';
 import { PuppetLanguageClient } from './PuppetLanguageClient';
 
 const langID = 'puppet'; // don't change this
@@ -20,18 +14,18 @@ const langID = 'puppet'; // don't change this
 export interface IConnectionManager {
   status: ConnectionStatus;
   languageClient: LanguageClient;
-  showLogger();
-  restartConnection(connectionConfig?: IConnectionConfiguration);
+  showLogger(): void;
+  restartConnection(connectionConfig?: IConnectionConfiguration): void;
 }
 
 export class ConnectionManager implements IConnectionManager {
   private connectionStatus: ConnectionStatus;
   private statusBarItem: PuppetStatusBar;
+  private logger: ILogger;
+  private extensionContext: vscode.ExtensionContext;
   private connectionConfiguration: IConnectionConfiguration;
   private languageServerClient: LanguageClient;
   private languageServerProcess: cp.ChildProcess;
-  private extensionContext: vscode.ExtensionContext;
-  private logger: ILogger;
   private puppetLanguageClient: PuppetLanguageClient;
 
   constructor(context: vscode.ExtensionContext, logger: ILogger, statusBar: PuppetStatusBar) {
@@ -79,14 +73,12 @@ export class ConnectionManager implements IConnectionManager {
     // Close the language server client
     if (this.languageServerClient !== undefined) {
       this.languageServerClient.stop();
-      this.languageServerClient = undefined;
     }
 
     // The language server process we spawn will close once the
     // client disconnects.  No need to forcibly kill the process here. Also the language
     // client will try and send a shutdown event, which will throw errors if the language
     // client can no longer transmit the message.
-    this.languageServerProcess = undefined;
 
     this.connectionStatus = ConnectionStatus.NotStarted;
 
@@ -102,7 +94,6 @@ export class ConnectionManager implements IConnectionManager {
     this.extensionContext.subscriptions.forEach(item => {
       item.dispose();
     });
-    this.extensionContext.subscriptions.clear();
   }
 
   public showLogger() {
@@ -160,7 +151,7 @@ export class ConnectionManager implements IConnectionManager {
       command: string;
       args: string[];
       options: cp.SpawnOptions;
-    } | null = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger);
+    } = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger);
     // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
     //if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(serverExe, this.connectionConfiguration, this.logger); }
 
@@ -194,25 +185,49 @@ export class ConnectionManager implements IConnectionManager {
     server.close();
   }
 
-  private startLangClientTCP(): LanguageClient {
-    this.logger.debug('Configuring language server options');
-    let langClient = this;
+  private STDIOServerOptions(serverProcess: cp.ChildProcess): ServerOptions {
+    let serverOptions: ServerOptions = function() {
+      return new Promise((resolve, reject) => {
+        resolve(serverProcess);
+      });
+    };
+    return serverOptions;
+  }
 
-    let connMgr: ConnectionManager = this;
+  private TCPServerOptions(
+    address: string,
+    port: number,
+    logger: ILogger,
+    connectionManager: ConnectionManager
+  ): ServerOptions {
     let serverOptions: ServerOptions = function() {
       return new Promise((resolve, reject) => {
         var client = new net.Socket();
-        client.connect(connMgr.connectionConfiguration.port, connMgr.connectionConfiguration.host, function() {
+        client.connect(port, address, function() {
           resolve({ reader: client, writer: client });
         });
         client.on('error', function(err) {
-          langClient.logger.error(`[Puppet Lang Server Client] ` + err);
-          connMgr.setSessionFailure('Could not start language client: ', err.message);
-
+          logger.error(`[Puppet Lang Server Client] ` + err);
+          connectionManager.setConnectionStatus(
+            `Could not start language client: ${err.message}`,
+            ConnectionStatus.Failed
+          );
           return null;
         });
       });
     };
+    return serverOptions;
+  }
+
+  private startLangClientTCP(): LanguageClient {
+    this.logger.debug('Configuring language server options');
+
+    let serverOptions: ServerOptions = this.TCPServerOptions(
+      this.connectionConfiguration.host,
+      this.connectionConfiguration.port,
+      this.logger,
+      this
+    );
 
     this.logger.debug('Configuring language server client options');
     let clientOptions: LanguageClientOptions = {
