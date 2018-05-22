@@ -180,23 +180,27 @@ export class ConnectionManager implements IConnectionManager {
 
     let connMgr: ConnectionManager = this;
     if(this.connectionConfiguration.protocol === ProtocolType.TCP){
-      // Start a server to get a random port
-      this.logger.debug(logPrefix + 'Creating server process to identify random port');
-      const server = net
-        .createServer()
-        .on('close', () => {
-          this.logger.debug(logPrefix + 'Server process to identify random port disconnected');
-          connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
-        })
-        .on('error', err => {
-          throw err;
-        });
+      if(this.connectionConfiguration.port){
+        connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+      }else{
+        // Start a server to get a random port
+        this.logger.debug(logPrefix + 'Creating server process to identify random port');
+        const server = net
+          .createServer()
+          .on('close', () => {
+            this.logger.debug(logPrefix + 'Server process to identify random port disconnected');
+            connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+          })
+          .on('error', err => {
+            throw err;
+          });
 
-      // Listen on random port
-      server.listen(0);
-      this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
-      connMgr.connectionConfiguration.port = server.address().port;
-      server.close();
+        // Listen on random port
+        server.listen(0);
+        this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
+        connMgr.connectionConfiguration.port = server.address().port;
+        server.close();
+      }
     }else{
       this.logger.debug(logPrefix + 'STDIO Server process starting');
       connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
