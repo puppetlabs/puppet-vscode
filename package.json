@@ -300,7 +300,6 @@
         },
         "puppet.languageserver.port": {
           "type": "integer",
-          "default": 8081,
           "description": "The TCP Port of the Puppet Language Server to connect to"
         },
         "puppet.languageserver.timeout": {
