@@ -11,14 +11,14 @@
     "color": "#000000",
     "theme": "dark"
   },
-  "homepage": "https://github.com/jpogran/puppet-vscode",
+  "homepage": "https://github.com/lingua-pupuli/puppet-vscode",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jpogran/puppet-vscode"
+    "url": "https://github.com/lingua-pupuli/puppet-vscode"
   },
   "bugs": {
     "type": "git",
-    "url": "https://github.com/jpogran/puppet-vscode/issues"
+    "url": "https://github.com/lingua-pupuli/puppet-vscode/issues"
   },
   "engines": {
     "vscode": "^1.15.0"
