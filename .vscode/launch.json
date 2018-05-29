@@ -19,6 +19,15 @@
       "preLaunchTask": "npm: watch"
     },
     {
+      "type": "node",
+      "request": "launch",
+      "name": "DebugAdapter",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/src/debugAdapter.ts",
+      "args": [ "--server=4711" ],
+      "outFiles": [ "${workspaceFolder}/out/**/*.js" ]
+    },
+    {
       "name": "Extension Tests",
       "type": "extensionHost",
       "request": "launch",
@@ -31,6 +40,12 @@
         "${workspaceFolder}/out/test/**/*.js"
       ],
       "preLaunchTask": "npm: watch"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Extension + DebugAdapter",
+      "configurations": [ "Extension", "DebugAdapter" ]
     }
   ]
 }
