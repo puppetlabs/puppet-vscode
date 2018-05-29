@@ -15,13 +15,3 @@ export enum ConnectionType {
   Local,
   Remote
 }
-
-export interface IConnectionConfiguration {
-  type: ConnectionType;
-  host: string;
-  port: number;
-  timeout: number;
-  enableFileCache: boolean;
-  debugFilePath: string;
-  puppetAgentDir: string;
-}

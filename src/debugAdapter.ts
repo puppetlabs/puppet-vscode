@@ -1,14 +1,15 @@
 'use strict';
 
+import * as path from 'path';
 import fs = require('fs');
-import path = require('path');
 import net = require('net');
 import { DebugProtocol } from 'vscode-debugprotocol';
 import cp = require('child_process');
 import { NullLogger } from './logging/null';
 import { ILogger } from './logging';
 import { RubyHelper } from './rubyHelper';
-import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { ConnectionType } from './interfaces';
+import { IConnectionConfiguration, ProtocolType } from './configuration';
 
 // This code just marshalls the STDIN/STDOUT to a socket
 
@@ -45,14 +46,40 @@ function sendErrorMessage(message: string) {
 }
 
 class DebugConfiguration implements IConnectionConfiguration {
-  public type: ConnectionType = ConnectionType.Local ;
-  public host: string = "127.0.0.1";
-  public port: number = 8082;
-  public timeout: number = 10;
+  protocol: ProtocolType;
+  puppetAgentDir: string;
+  languageServerPath: string;
+  rubydir: string;
+  rubylib: string;
+  environmentPath: string;
+  sslCertFile: string;
+  sslCertDir: string;
+  pdkDir: string;
+  languageServerCommandLine: string[];
+  public type: ConnectionType;
+  public host: string;
+  public port: number;
+  public timeout: number;
   public enableFileCache!: boolean;// tslint:disable-line:semicolon
   public debugFilePath!: string; // tslint:disable-line:semicolon
 
-  public puppetAgentDir!: string;// tslint:disable-line:semicolon
+  constructor() {
+    this.type = ConnectionType.Local;
+    this.host = '127.0.0.1';
+    this.port = 8082;
+    this.timeout = 10;
+    
+    this.puppetAgentDir = '';
+    this.languageServerPath = '';
+    this.rubydir ='';
+    this.rubylib ='';
+    this.environmentPath ='';
+    this.sslCertFile ='';
+    this.sslCertDir ='';
+    this.pdkDir ='';
+    this.languageServerCommandLine =[''];
+    this.protocol = ProtocolType.STDIO;
+  }
 }
 
 function startDebuggingProxy(config:DebugConfiguration, logger:ILogger, exitOnClose:boolean = false) {
