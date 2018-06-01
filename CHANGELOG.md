@@ -6,7 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-- Update Puppet Editor Services to 0.11.0
+- Update Puppet Editor Services to 0.12.0
 
 ## 0.10.0 - 2018-03-29
 
