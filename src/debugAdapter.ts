@@ -16,21 +16,14 @@ import { IConnectionConfiguration, ConnectionType } from './interfaces';
 process.stdin.pause();
 
 class DebugErrorResponse implements DebugProtocol.ErrorResponse {
-  
-  // tslint:disable-next-line:semicolon
-  public body!: {
-    // tslint:disable-next-line:no-unused-expression
-    error?: DebugProtocol.Message | undefined;
-  }
+  public body: { error?: DebugProtocol.Message };
   public request_seq: number = 1;
-  // tslint:disable-next-line:no-unused-expression
   public message?: string;
   public success: boolean = false;
   public command: string = "initialize";
   public seq: number = 1;
   public type: string = "response";
 
-  // tslint:disable-next-line:semicolon
   constructor(errorMessage: string) {
     this.message = errorMessage;
   }
@@ -45,21 +38,47 @@ function sendErrorMessage(message: string) {
 }
 
 class DebugConfiguration implements IConnectionConfiguration {
+  puppetAgentDir: string;
+  languageServerPath: string;
+  rubydir: string;
+  rubylib: string;
+  environmentPath: string;
+  sslCertFile: string;
+  sslCertDir: string;
+  pdkDir: string;
+  languageServerCommandLine: string[];
   public type: ConnectionType = ConnectionType.Local ;
   public host: string = "127.0.0.1";
   public port: number = 8082;
   public timeout: number = 10;
-  public enableFileCache!: boolean;// tslint:disable-line:semicolon
-  public debugFilePath!: string; // tslint:disable-line:semicolon
+  public enableFileCache: boolean;// tslint:disable-line:semicolon
+  public debugFilePath: string; // tslint:disable-line:semicolon
 
-  public puppetAgentDir!: string;// tslint:disable-line:semicolon
+  constructor() {
+    this.type = ConnectionType.Local;
+    this.host = '127.0.0.1';
+    this.port = 8082;
+    this.timeout = 10;
+    
+    this.puppetAgentDir = '';
+    this.languageServerPath = '';
+    this.rubydir ='';
+    this.rubylib ='';
+    this.environmentPath ='';
+    this.sslCertFile ='';
+    this.sslCertDir ='';
+    this.pdkDir ='';
+    this.languageServerCommandLine =[''];
+    this.enableFileCache = false;
+    this.debugFilePath = '';
+  }
 }
 
 function startDebuggingProxy(config:DebugConfiguration, logger:ILogger, exitOnClose:boolean = false) {
   // Establish connection before setting up the session
   logger.debug("Connecting to " + config.host + ":" + config.port);
 
-  // let isConnected = false;
+  let isConnected = false;
   let debugServiceSocket = net.connect(config.port, config.host);
 
   // Write any errors to the log file
@@ -73,7 +92,7 @@ function startDebuggingProxy(config:DebugConfiguration, logger:ILogger, exitOnCl
 
   // Wait for the connection to complete
   debugServiceSocket.on('connect', () => {
-      // isConnected = true;
+      isConnected = true;
       logger.debug("Connected to Debug Server");
 
       // When data comes on stdin, route it through the socket
@@ -87,7 +106,7 @@ function startDebuggingProxy(config:DebugConfiguration, logger:ILogger, exitOnCl
   debugServiceSocket.on('close',() => {
     logger.debug("Socket closed, shutting down.");
     debugServiceSocket.destroy();
-    // isConnected = false;
+    isConnected = false;
     if (exitOnClose) { process.exit(0); }
   });
 }

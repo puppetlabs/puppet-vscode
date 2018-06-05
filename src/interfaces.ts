@@ -24,4 +24,12 @@ export interface IConnectionConfiguration {
   enableFileCache: boolean;
   debugFilePath: string;
   puppetAgentDir: string;
+  languageServerPath:string;
+  rubydir:string;
+  rubylib:string;
+  environmentPath:string;
+  sslCertFile:string;
+  sslCertDir:string;
+  pdkDir:string;
+  languageServerCommandLine:Array<string>;
 }

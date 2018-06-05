@@ -6,8 +6,14 @@ import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
+import { setupPuppetCommands } from './commands/puppetcommands';
+import { setupPDKCommands } from './commands/pdkcommands';
+import { PuppetStatusBar } from './PuppetStatusBar';
 
 var connManager: ConnectionManager;
+var commandsRegistered = false;
+var terminal: vscode.Terminal;
+const langID = 'puppet'; // don't change this
 
 export function activate(context: vscode.ExtensionContext) {
   const puppetExtension = vscode.extensions.getExtension('jpogran.puppet-vscode')!;
@@ -17,9 +23,28 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger();
-  connManager = new ConnectionManager(context, logger);
-
+  var statusBar = new PuppetStatusBar(langID);
   var configSettings = new ConnectionConfiguration(context);
+  
+  connManager = new ConnectionManager(context, logger, statusBar, configSettings);
+
+
+  if (!commandsRegistered) {
+    logger.debug('Configuring commands');
+
+    setupPuppetCommands(langID, connManager, context, logger);
+
+    terminal = vscode.window.createTerminal('Puppet PDK');
+    terminal.processId.then(
+      pid => {
+        logger.debug("pdk shell started, pid: " + pid);
+      });
+    setupPDKCommands(langID, connManager, context, logger, terminal);
+    context.subscriptions.push(terminal);
+
+    commandsRegistered = true;
+  }
+
   connManager.start(configSettings);
 }
 
