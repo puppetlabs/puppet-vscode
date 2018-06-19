@@ -2,12 +2,12 @@ import net = require('net');
 import vscode = require('vscode');
 import cp = require('child_process');
 import { ILogger } from '../src/logging';
-import { IConnectionConfiguration, ConnectionStatus, ConnectionType } from './interfaces'
+import { IConnectionConfiguration, ConnectionStatus, ConnectionType, ProtocolType } from './interfaces'
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
-import { ConnectionConfiguration } from './configuration';
 import { RubyHelper } from './rubyHelper';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { PuppetLanguageClient } from './PuppetLanguageClient';
+import { ConnectionConfiguration } from './configuration';
 
 const langID = 'puppet'; // don't change this
 
@@ -28,7 +28,12 @@ export class ConnectionManager implements IConnectionManager {
   private languageServerProcess: cp.ChildProcess;
   private puppetLanguageClient: PuppetLanguageClient;
 
-  constructor(context: vscode.ExtensionContext, logger: ILogger, statusBar: PuppetStatusBar, connectionConfiguration:IConnectionConfiguration) {
+  constructor(
+    context: vscode.ExtensionContext,
+    logger: ILogger,
+    statusBar: PuppetStatusBar,
+    connectionConfiguration: IConnectionConfiguration
+  ) {
     this.logger = logger;
     this.extensionContext = context;
     this.connectionStatus = ConnectionStatus.NotStarted;
@@ -60,7 +65,7 @@ export class ConnectionManager implements IConnectionManager {
         this.onLanguageServerStart.bind(this)
       );
     } else {
-      this.languageServerClient = this.startLangClientTCP();
+      this.languageServerClient = this.createLanguageClient();
       this.extensionContext.subscriptions.push(this.languageServerClient.start());
       this.logStart();
     }
@@ -106,7 +111,7 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   private onLanguageServerStart(proc: cp.ChildProcess) {
-    this.logger.debug('LanguageServer Process Started: ' + proc);
+    this.logger.debug('LanguageServer Process Started: ' + proc.pid);
     this.languageServerProcess = proc;
     if (this.languageServerProcess === undefined) {
       if (this.connectionStatus === ConnectionStatus.Failed) {
@@ -116,15 +121,24 @@ export class ConnectionManager implements IConnectionManager {
       throw new Error('Unable to start the Language Server Process');
     }
 
-    this.languageServerProcess.stdout.on('data', data => {
-      this.logger.debug('OUTPUT: ' + data.toString());
+    switch (this.connectionConfiguration.protocol) {
+      case ProtocolType.TCP:
+        this.languageServerProcess.stdout.on('data', data => {
+          this.logger.debug('OUTPUT: ' + data.toString());
 
-      // If the language client isn't already running and it's sent the trigger text, start up a client
-      if (this.languageServerClient === undefined && data.toString().match('LANGUAGE SERVER RUNNING') !== null) {
-        this.languageServerClient = this.startLangClientTCP();
+          // If the language client isn't already running and it's sent the trigger text, start up a client
+          if (this.languageServerClient === undefined && data.toString().match('LANGUAGE SERVER RUNNING') !== null) {
+            this.languageServerClient = this.createLanguageClient();
+            this.extensionContext.subscriptions.push(this.languageServerClient.start());
+          }
+        });
+        break;
+      case ProtocolType.STDIO:
+        this.logger.debug('Starting STDIO client: ');
+        this.languageServerClient = this.createLanguageClient();
         this.extensionContext.subscriptions.push(this.languageServerClient.start());
-      }
-    });
+        break;
+    }
 
     this.languageServerProcess.on('close', exitCode => {
       this.logger.debug('SERVER terminated with exit code: ' + exitCode);
@@ -134,12 +148,13 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   public startLanguageServerProcess(cmd: string, args: Array<string>, options: cp.SpawnOptions, callback: Function) {
+    let logPrefix: string = '[startLanguageServerProcess] ';
     var parsed = this.connectionConfiguration.languageServerCommandLine;
     args = args.concat(parsed);
 
-    this.logger.debug('Starting the language server with ' + cmd + ' ' + args.join(' '));
+    this.logger.debug(logPrefix + 'Starting the language server with ' + cmd + ' ' + args.join(' '));
     var proc = cp.spawn(cmd, args, options);
-    this.logger.debug('Language server PID:' + proc.pid);
+    this.logger.debug(logPrefix + 'Language server PID:' + proc.pid);
 
     callback(proc);
   }
@@ -166,36 +181,41 @@ export class ConnectionManager implements IConnectionManager {
     }
 
     let connMgr: ConnectionManager = this;
-    let logger = this.logger;
-    // Start a server to get a random port
-    this.logger.debug(logPrefix + 'Creating server process to identify random port');
-    const server = net
-      .createServer()
-      .on('close', () => {
-        logger.debug(logPrefix + 'Server process to identify random port disconnected');
-        connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
-      })
-      .on('error', err => {
-        throw err;
-      });
+    if(this.connectionConfiguration.protocol === ProtocolType.TCP){
+      // Start a server to get a random port
+      this.logger.debug(logPrefix + 'Creating server process to identify random port');
+      const server = net
+        .createServer()
+        .on('close', () => {
+          this.logger.debug(logPrefix + 'Server process to identify random port disconnected');
+          connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+        })
+        .on('error', err => {
+          throw err;
+        });
 
-    // Listen on random port
-    server.listen(0);
-    this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
-    connMgr.connectionConfiguration.port = server.address().port;
-    server.close();
+      // Listen on random port
+      server.listen(0);
+      this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
+      connMgr.connectionConfiguration.port = server.address().port;
+      server.close();
+    }else{
+      this.logger.debug(logPrefix + 'STDIO Server process starting');
+      connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+    }
   }
 
-  private STDIOServerOptions(serverProcess: cp.ChildProcess): ServerOptions {
+  private STDIOServerOptions(serverProcess: cp.ChildProcess, logger:ILogger): ServerOptions {
     let serverOptions: ServerOptions = function() {
       return new Promise((resolve, reject) => {
+        logger.debug(`[Puppet Lang Server Client] stdio connected`);
         resolve(serverProcess);
       });
     };
     return serverOptions;
   }
 
-  private TCPServerOptions(
+  private createTCPServerOptions(
     address: string,
     port: number,
     logger: ILogger,
@@ -205,6 +225,7 @@ export class ConnectionManager implements IConnectionManager {
       return new Promise((resolve, reject) => {
         var client = new net.Socket();
         client.connect(port, address, function() {
+          logger.error(`[Puppet Lang Server Client] tcp connected`);
           resolve({ reader: client, writer: client });
         });
         client.on('error', function(err) {
@@ -220,26 +241,36 @@ export class ConnectionManager implements IConnectionManager {
     return serverOptions;
   }
 
-  private startLangClientTCP(): LanguageClient {
+  private createLanguageClient(): LanguageClient {
     this.logger.debug('Configuring language server options');
 
-    let serverOptions: ServerOptions = this.TCPServerOptions(
-      this.connectionConfiguration.host,
-      this.connectionConfiguration.port,
-      this.logger,
-      this
-    );
+    let serverOptions: ServerOptions;
+    switch (this.connectionConfiguration.protocol) {
+      case ProtocolType.STDIO:
+      this.logger.debug(
+        `Starting language server client (stdio)`
+      );
+        serverOptions = this.STDIOServerOptions(this.languageServerProcess, this.logger);
+        break;
+      case ProtocolType.TCP:
+        serverOptions =  this.createTCPServerOptions(
+          this.connectionConfiguration.host,
+          this.connectionConfiguration.port,
+          this.logger,
+          this
+        );
+        this.logger.debug(
+          `Starting language server client (host ${this.connectionConfiguration.host} port ${
+            this.connectionConfiguration.port
+          })`
+        );
+        break;
+    }
 
     this.logger.debug('Configuring language server client options');
     let clientOptions: LanguageClientOptions = {
       documentSelector: [langID]
     };
-
-    this.logger.debug(
-      `Starting language server client (host ${this.connectionConfiguration.host} port ${
-        this.connectionConfiguration.port
-      })`
-    );
 
     this.puppetLanguageClient = new PuppetLanguageClient(
       this.connectionConfiguration.host,

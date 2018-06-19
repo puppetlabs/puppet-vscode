@@ -16,20 +16,27 @@ export enum ConnectionType {
   Remote
 }
 
+export enum ProtocolType {
+  UNKNOWN,
+  STDIO,
+  TCP
+}
+
 export interface IConnectionConfiguration {
   type: ConnectionType;
+  protocol: ProtocolType;
   host: string;
   port: number;
   timeout: number;
   enableFileCache: boolean;
   debugFilePath: string;
   puppetAgentDir: string;
-  languageServerPath:string;
-  rubydir:string;
-  rubylib:string;
-  environmentPath:string;
-  sslCertFile:string;
-  sslCertDir:string;
-  pdkDir:string;
-  languageServerCommandLine:Array<string>;
+  languageServerPath: string;
+  rubydir: string;
+  rubylib: string;
+  environmentPath: string;
+  sslCertFile: string;
+  sslCertDir: string;
+  pdkDir: string;
+  languageServerCommandLine: Array<string>;
 }

@@ -8,7 +8,7 @@ import cp = require('child_process');
 import { NullLogger } from './logging/null';
 import { ILogger } from './logging';
 import { RubyHelper } from './rubyHelper';
-import { IConnectionConfiguration, ConnectionType } from './interfaces';
+import { IConnectionConfiguration, ConnectionType, ProtocolType } from './interfaces';
 
 // This code just marshalls the STDIN/STDOUT to a socket
 
@@ -38,6 +38,7 @@ function sendErrorMessage(message: string) {
 }
 
 class DebugConfiguration implements IConnectionConfiguration {
+  protocol: ProtocolType;
   puppetAgentDir: string;
   languageServerPath: string;
   rubydir: string;
@@ -56,6 +57,7 @@ class DebugConfiguration implements IConnectionConfiguration {
 
   constructor() {
     this.type = ConnectionType.Local;
+    this.protocol = ProtocolType.TCP;
     this.host = '127.0.0.1';
     this.port = 8082;
     this.timeout = 10;
