@@ -1,4 +1,5 @@
 // Include gulp
+var es = require('event-stream');
 var gulp = require('gulp');
 var del = require('del');
 var runSequence = require('run-sequence');
@@ -38,9 +39,23 @@ function getEditorServicesReleaseURL(config) {
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', ['build']);
 
+gulp.task('initial', function (callback) {
+  var fs = require('fs');
+  var sequence = [];
+
+  editorServicesPath = path.join(__dirname, 'vendor', 'languageserver');
+  if (!fs.existsSync(editorServicesPath)) { sequence.push('vendor_editor_services'); }
+
+  if (sequence.length > 0) {
+    return runSequence(sequence, callback);
+  } else {
+    return es.merge([]);
+  }
+});
+
 gulp.task('clean', function () {
   return del(['vendor'])
-})
+});
 
 gulp.task('vendor_editor_services', function (callback) {
   var config = getEditorServicesConfig();
