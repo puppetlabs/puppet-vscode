@@ -7,6 +7,20 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## Unreleased
 
 - Update Puppet Editor Services to 0.12.0
+- ([GH-250](https://github.com/lingua-pupuli/puppet-vscode/issues/250)) Move client folder to root
+- ([GH-253](https://github.com/lingua-pupuli/puppet-vscode/issues/253)) Remove languageserver
+- ([GH-252](https://github.com/lingua-pupuli/puppet-vscode/issues/252)) Update readme for org move
+- ([GH-258](https://github.com/lingua-pupuli/puppet-vscode/issues/258)) Vendoring process for editor services
+- (maint) Fix tslint errors
+- ([GH-275](https://github.com/lingua-pupuli/puppet-vscode/issues/275)) Update Marketplace Categories
+- (maint) Update github links for org change
+- (maint) Refactor client connection code
+- ([GH-284](https://github.com/lingua-pupuli/puppet-vscode/issues/284)) Add support for region folding
+- (maint) Update Puppet grammer file
+- ([GH-238](https://github.com/lingua-pupuli/puppet-vscode/issues/238)) Add stdio support to client extension
+- (maint) Automatically download languageserver on build and watch
+- (maint) Improve issue templates
+- ([GH-241](https://github.com/lingua-pupuli/puppet-vscode/issues/241)) Honor specified tcp port
 
 ## 0.10.0 - 2018-03-29
 
