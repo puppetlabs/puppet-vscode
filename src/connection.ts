@@ -127,8 +127,14 @@ export class ConnectionManager implements IConnectionManager {
           this.logger.debug('OUTPUT: ' + data.toString());
 
           // If the language client isn't already running and it's sent the trigger text, start up a client
-          if (this.languageServerClient === undefined && data.toString().match('LANGUAGE SERVER RUNNING') !== null) {
-            this.languageServerClient = this.createLanguageClient();
+          if (this.languageServerClient === undefined && /LANGUAGE SERVER RUNNING/.test(data.toString())) {
+            if(this.connectionConfiguration.port){            
+              this.languageServerClient = this.createLanguageClient();
+            }else{
+              var p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
+              this.connectionConfiguration.port = +p[1];
+              this.languageServerClient = this.createLanguageClient();
+            }
             this.extensionContext.subscriptions.push(this.languageServerClient.start());
           }
         });
@@ -184,26 +190,8 @@ export class ConnectionManager implements IConnectionManager {
     if(this.connectionConfiguration.protocol === ProtocolType.TCP){
       if(this.connectionConfiguration.port){
         this.logger.debug(logPrefix + 'Selected port for local language server: ' + this.connectionConfiguration.port);
-        connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
-      }else{
-        // Start a server to get a random port
-        this.logger.debug(logPrefix + 'Creating server process to identify random port');
-        const server = net
-          .createServer()
-          .on('close', () => {
-            this.logger.debug(logPrefix + 'Server process to identify random port disconnected');
-            connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
-          })
-          .on('error', err => {
-            throw err;
-          });
-
-        // Listen on random port
-        server.listen(0);
-        this.logger.debug(logPrefix + 'Selected port for local language server: ' + server.address().port);
-        connMgr.connectionConfiguration.port = server.address().port;
-        server.close();
       }
+      connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
     }else{
       this.logger.debug(logPrefix + 'STDIO Server process starting');
       connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);

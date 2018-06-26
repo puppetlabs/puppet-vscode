@@ -161,7 +161,9 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
         } else {
           args.push('--ip=' + this.host);
         }
-        args.push('--port=' + this.port);
+        if (this.port !== 0) {
+          args.push('--port=' + this.port);
+        }
         break;
       default:
         break;
