@@ -171,6 +171,7 @@ Restart Visual Studio Code and try to reproduce the problem, then examine the lo
 
 - [James Pogran](https://github.com/jpogran) - [@ender2025](http://twitter.com/ender2025)
 - [Glenn Sarti](https://github.com/glennsarti) - [@glennsarti](http://twitter.com/glennsarti)
+- [Michael T Lombardi](https://github.com/michaeltlombardi) - [@barbariankb](http://twitter.com/barbariankb)
 - [Austin Blatt](https://github.com/austb)
 
 ## Telemetry
