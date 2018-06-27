@@ -21,6 +21,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - (maint) Automatically download languageserver on build and watch
 - (maint) Improve issue templates
 - ([GH-241](https://github.com/lingua-pupuli/puppet-vscode/issues/241)) Honor specified tcp port
+- ([GH-240](https://github.com/lingua-pupuli/puppet-vscode/issues/240)) Add TCP retry functionality
 
 ## 0.10.0 - 2018-03-29
 

@@ -216,19 +216,65 @@ export class ConnectionManager implements IConnectionManager {
   ): ServerOptions {
     let serverOptions: ServerOptions = function() {
       return new Promise((resolve, reject) => {
+        const retries = 5;
+        var attempt = 0;
         var client = new net.Socket();
+
+        const rconnect = () => { client.connect(port, address) };
+
         client.connect(port, address, function() {
-          logger.error(`[Puppet Lang Server Client] tcp connected`);
+          logger.debug(`[Puppet Lang Server Client] tcp connected`);
           resolve({ reader: client, writer: client });
         });
+
         client.on('error', function(err) {
-          logger.error(`[Puppet Lang Server Client] ` + err);
-          connectionManager.setConnectionStatus(
-            `Could not start language client: ${err.message}`,
-            ConnectionStatus.Failed
-          );
-          return null;
+          
+          if(attempt === retries){
+            logger.error(`[Puppet Lang Server Client] ` + `Could not start language client: ${err.message}`);
+            connectionManager.setConnectionStatus(
+              `Could not start language client: ${err.message}`,
+              ConnectionStatus.Failed
+            );
+
+            vscode.window.showErrorMessage(
+              `Could not start language client: ${err.message}. Please click 'Troubleshooting Information' for resolution steps`,
+              { modal: false },
+              { title: 'Troubleshooting Information' }
+            ).then((item)=>{
+                if (item === undefined){
+                  return;
+                }
+                if(item.title === 'Troubleshooting Information'){
+                  vscode.commands.executeCommand(
+                    'vscode.open',
+                    vscode.Uri.parse('https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem')
+                  );
+                }
+              }
+            );
+
+            return null;
+          }else{
+            attempt = attempt + 1;
+            var message = `Timed out connecting to language server. Is the server running at ${address}:${port} ? Will wait timeout value before trying again`;
+            switch(err.code){
+              case 'ETIMEDOUT':
+                message = `Timed out connecting to language server. Is the server running at ${address}:${port} ? Will wait timeout value before trying again`;
+                break;
+              case 'ECONNREFUSED':
+                message = `Connect refused to language server. Is the server running at ${address}:${port} ? Will wait for 5 seconds before trying again`;
+                break;
+              default:
+                message = `Connect refused to language server. Is the server running at ${address}:${port} ? Will wait for 5 seconds before trying again`;
+                break;
+            }
+            vscode.window.showWarningMessage(message);
+            logger.warning(message);
+            setTimeout(rconnect, 5000);
+          }
+
         });
+
       });
     };
     return serverOptions;
