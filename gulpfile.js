@@ -36,6 +36,22 @@ function getEditorServicesReleaseURL(config) {
   return `https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet_editor_services_${releasenumber}.zip`;
 };
 
+function getEditorServicesGithubURL(config) {
+  var githubuser = (config.githubuser == undefined) ? 'lingua-pupuli' : config.githubuser
+  var githubrepo = (config.githubrepo == undefined) ? 'puppet-editor-services' : config.githubrepo
+  var githubref = config.githubref;
+
+  if (githubref == undefined) {
+    throw "The git reference must be specified"
+  };
+
+  // Example URL - Branch
+  // https://github.com/<owner>/puppet-editor-services/archive/add-code-action-provider.zip
+  // Example URL - SHA ref
+  // https://github.com/<owner>/puppet-editor-services/archive/1a2623217dbd8e0deed11808bba4ef8de8f3880d.zip
+  return `https://github.com/${githubuser}/${githubrepo}/archive/${githubref}.zip`
+};
+
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', ['build']);
 
@@ -72,6 +88,18 @@ gulp.task('vendor_editor_services', function (callback) {
     .pipe(gulp.dest('./vendor/languageserver'));
   }
 
+  // Use a custom github download if a github reference is defined
+  if (config.githubref != undefined) {
+    return download({
+      fileName: 'editor_services.zip',
+      request: {
+        url: getEditorServicesGithubURL(config)
+      }
+    })
+    .pipe(decompress({strip: 1}))
+    .pipe(gulp.dest('./vendor/languageserver'));
+  }
+
   // Use a simple filecopy if 'directory' is defined
   if (config.directory != undefined) {
     return gulp.src([path.join(config.directory,'lib/**/*'),
@@ -82,7 +110,7 @@ gulp.task('vendor_editor_services', function (callback) {
               .pipe(gulp.dest('./vendor/languageserver'));
   }
 
-  throw "Unable to vendor Editor Serices.  Missing a release or directory configuration item"
+  throw "Unable to vendor Editor Serices.  Missing a release, directory, or git reference configuration item"
 });
 
 gulp.task('compile_typescript', function (callback) {

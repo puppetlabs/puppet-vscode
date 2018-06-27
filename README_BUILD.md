@@ -41,7 +41,21 @@ By default the extension will use the specified released version of the Puppet E
 }
 ```
 
-To use a local directory that contains the Puppet Editor services, use the directory configuration setting; for example if the the editor services was located in `C:\puppet-editor-services` use the following;
+To use a specific GitHub repository that contains the Puppet Editor services, use the `githubref` configuration setting; for example to use the `puppet-editing` repository, owned by `Alice` with the `testing` branch
+
+``` json
+{
+  "githubuser": "Alice",
+  "githubrepo": "puppet-editing",
+  "githubref": "testing"
+}
+```
+
+Note - By default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-services`
+
+Note - Use the full length commit SHA for `githubref`, not the abbreviated eight character SHA
+
+To use a local directory that contains the Puppet Editor services, use the `directory` configuration setting; for example if the the editor services was located in `C:\puppet-editor-services` use the following;
 
 ``` json
 {
