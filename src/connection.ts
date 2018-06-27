@@ -10,6 +10,7 @@ import { PuppetLanguageClient } from './PuppetLanguageClient';
 import { ConnectionConfiguration } from './configuration';
 
 const langID = 'puppet'; // don't change this
+const documentSelector = { scheme: 'file', language: langID };
 
 export interface IConnectionManager {
   status: ConnectionStatus;
@@ -308,7 +309,7 @@ export class ConnectionManager implements IConnectionManager {
 
     this.logger.debug('Configuring language server client options');
     let clientOptions: LanguageClientOptions = {
-      documentSelector: [langID]
+      documentSelector: [documentSelector]
     };
 
     this.puppetLanguageClient = new PuppetLanguageClient(
