@@ -22,6 +22,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - (maint) Improve issue templates
 - ([GH-241](https://github.com/lingua-pupuli/puppet-vscode/issues/241)) Honor specified tcp port
 - ([GH-240](https://github.com/lingua-pupuli/puppet-vscode/issues/240)) Add TCP retry functionality
+- ([GH-296](https://github.com/lingua-pupuli/puppet-vscode/issues/296)) Set document file scheme
 
 ## 0.10.0 - 2018-03-29
 
