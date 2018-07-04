@@ -65,7 +65,7 @@
           ".pp",
           ".epp"
         ],
-        "configuration": "./languages/puppet.configuration.json"
+        "configuration": "./languages/puppet-language-configuration.json"
       }
     ],
     "jsonValidation": [

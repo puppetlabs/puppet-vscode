@@ -3,7 +3,7 @@
     // symbol used for single line comment. Remove this entry if your language does not support line comments
     "lineComment": "#",
     // symbols used for start and end a block comment. Remove this entry if your language does not support block comments
-    "blockComment": "#"
+    "blockComment": ["/*","*/"]
   },
   // symbols used as brackets
   "brackets": [
@@ -29,10 +29,10 @@
   ],
   // support for region folding
   "folding": {
-		"offSide": true,
-		"markers": {
-			"start": "^\\s*#\\s*region\\b",
-			"end": "^\\s*#\\s*endregion\\b"
-		}
-	}
+    "offSide": true,
+    "markers": {
+      "start": "^\\s*#\\s*region\\b",
+      "end": "^\\s*#\\s*endregion\\b"
+    }
+  }
 }
