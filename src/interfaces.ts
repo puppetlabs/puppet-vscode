@@ -30,7 +30,7 @@ export interface IConnectionConfiguration {
   timeout: number;
   enableFileCache: boolean;
   debugFilePath: string;
-  puppetAgentDir: string;
+  puppetBaseDir: string;
   languageServerPath: string;
   rubydir: string;
   rubylib: string;

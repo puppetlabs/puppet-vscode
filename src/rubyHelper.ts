@@ -52,7 +52,7 @@ export class RubyHelper {
       result.options.env.RUBYLIB = '';
     }
     result.options.env.RUBY_DIR = connectionConfiguration.rubydir;
-    result.options.env.PATH =connectionConfiguration.environmentPath + result.options.env.PATH;
+    result.options.env.PATH =connectionConfiguration.environmentPath + this.pathEnvSeparator() + result.options.env.PATH;
     result.options.env.RUBYLIB = connectionConfiguration.rubylib + this.pathEnvSeparator() + result.options.env.RUBYLIB;
     result.options.env.RUBYOPT = 'rubygems';
     result.options.env.SSL_CERT_FILE = connectionConfiguration.sslCertFile;

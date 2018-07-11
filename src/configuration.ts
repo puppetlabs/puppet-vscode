@@ -26,7 +26,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     this.debugFilePath = this.config['languageserver']['debugFilePath'];
   }
 
-  get puppetAgentDir(): string {
+  get puppetBaseDir(): string {
     if (this.config['puppetAgentDir'] !== null) {
       return this.config['puppetAgentDir'];
     }
@@ -37,9 +37,12 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
         if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
           programFiles = process.env['ProgramW6432'] || 'C:\\Program Files';
         }
+        // On Windows we have a subfolder called 'Puppet' that has
+        // every product underneath
         return path.join(programFiles, 'Puppet Labs', 'Puppet');
       default:
-        return '/opt/puppetlabs/puppet';
+        // On *nix we don't have a sub folder called 'Puppet'
+        return '/opt/puppetlabs';
     }
   }
 
@@ -61,41 +64,28 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   }
 
   get puppetDir(): string {
-    return path.join(this.puppetAgentDir, 'puppet');
+    return path.join(this.puppetBaseDir, 'puppet');
   }
 
   get facterDir(): string {
-    return path.join(this.puppetAgentDir, 'facter');
+    return path.join(this.puppetBaseDir, 'facter');
   }
 
   get hieraDir(): string {
-    return path.join(this.puppetAgentDir, 'hiera');
+    return path.join(this.puppetBaseDir, 'hiera');
   }
 
   get mcoDir(): string {
-    return path.join(this.puppetAgentDir, 'mcollective');
+    return path.join(this.puppetBaseDir, 'mcollective');
   }
 
   get rubydir(): string {
-    return path.join(this.puppetAgentDir, 'sys', 'ruby');
-  }
-
-  get rubylib(): string {
-    var p =
-      path.join(this.puppetDir, 'lib') +
-      this.pathEnvSeparator() +
-      path.join(this.facterDir, 'lib') +
-      this.pathEnvSeparator() +
-      path.join(this.hieraDir, 'lib') +
-      this.pathEnvSeparator() +
-      path.join(this.mcoDir, 'lib');
-
-    if (process.platform === 'win32') {
-      // Translate all slashes to / style to avoid puppet/ruby issue #11930
-      p = p.replace(/\\/g, '/');
+    switch(process.platform){
+      case 'win32':
+        return path.join(this.puppetBaseDir, 'sys', 'ruby');
+      default:
+        return path.join(this.puppetBaseDir, 'lib', 'ruby');      
     }
-
-    return p;
   }
 
   get sslCertDir(): string {
@@ -106,23 +96,32 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     return path.join(this.puppetDir, 'ssl', 'cert.pem');
   }
 
+  // RUBYLIB=%PUPPET_DIR%\lib;%FACTERDIR%\lib;%HIERA_DIR%\lib;%RUBYLIB%
+  get rubylib(): string {
+    var p = new Array(
+      path.join(this.puppetDir, 'lib'),
+      path.join(this.facterDir, 'lib'),
+      // path.join(this.hieraDir, 'lib'),
+    ).join(this.pathEnvSeparator());
+
+    if (process.platform === 'win32') {
+      // Translate all slashes to / style to avoid puppet/ruby issue #11930
+      p = p.replace(/\\/g, '/');
+    }
+
+    return p;
+  }
+
+  // PATH=%PUPPET_DIR%\bin;%FACTERDIR%\bin;%HIERA_DIR%\bin;%PL_BASEDIR%\bin;%RUBY_DIR%\bin;%PL_BASEDIR%\sys\tools\bin;%PATH%
   get environmentPath(): string {
-    return (
-      path.join(this.puppetDir, 'bin') +
-      this.pathEnvSeparator() +
-      path.join(this.facterDir, 'bin') +
-      this.pathEnvSeparator() +
-      path.join(this.hieraDir, 'bin') +
-      this.pathEnvSeparator() +
-      path.join(this.mcoDir, 'bin') +
-      this.pathEnvSeparator() +
-      path.join(this.puppetAgentDir, 'bin') +
-      this.pathEnvSeparator() +
-      path.join(this.rubydir, 'bin') +
-      this.pathEnvSeparator() +
-      path.join(this.puppetAgentDir, 'sys', 'tools', 'bin') +
-      this.pathEnvSeparator()
-    );
+    return new Array(
+      path.join(this.puppetDir, 'bin'),
+      path.join(this.facterDir, 'bin'),
+      // path.join(this.hieraDir, 'bin'),
+      path.join(this.puppetBaseDir, 'bin'),
+      path.join(this.rubydir, 'bin'),
+      path.join(this.puppetBaseDir, 'sys', 'tools', 'bin')
+    ).join(this.pathEnvSeparator());
   }
 
   get languageServerPath(): string {
