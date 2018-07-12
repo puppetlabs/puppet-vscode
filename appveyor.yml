@@ -35,7 +35,7 @@ install:
        & npm install --silent
 
        Write-Host "Set the package.json version..."
-       & node node_modules\gulp\bin\gulp.js bump --version $ENV:APPVEYOR_BUILD_VERSION
+       & node node_modules\gulp\bin\gulp.js bump --specific $ENV:APPVEYOR_BUILD_VERSION
      }
 
 build_script:
