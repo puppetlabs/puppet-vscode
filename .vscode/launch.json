@@ -40,6 +40,17 @@
         "${workspaceFolder}/out/test/**/*.js"
       ],
       "preLaunchTask": "npm: watch"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Gulp task",
+      "program": "${workspaceFolder}/node_modules/gulp/bin/gulp.js",
+      "args": [
+        // Add arguments here to debug gulp tasks
+        // "bump", "--type", "minor"
+        // "bump", "--specific", "99.99.0-appv.127"
+      ]
     }
   ],
   "compounds": [
