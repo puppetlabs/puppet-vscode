@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## 0.11.0 - 2018-07-16
+
 - Update Puppet Editor Services to 0.12.0
 - ([GH-250](https://github.com/lingua-pupuli/puppet-vscode/issues/250)) Move client folder to root
 - ([GH-253](https://github.com/lingua-pupuli/puppet-vscode/issues/253)) Remove languageserver
@@ -22,9 +24,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - (maint) Improve issue templates
 - ([GH-241](https://github.com/lingua-pupuli/puppet-vscode/issues/241)) Honor specified tcp port
 - ([GH-240](https://github.com/lingua-pupuli/puppet-vscode/issues/240)) Add TCP retry functionality
+- ([GH-274](https://github.com/lingua-pupuli/puppet-vscode/issues/274)) Remove random tcp port resolution from client
 - ([GH-296](https://github.com/lingua-pupuli/puppet-vscode/issues/296)) Set document file scheme
 - ([GH-289](https://github.com/lingua-pupuli/puppet-vscode/issues/289)) Fix autoindenting for DSL
 - ([GH-301](https://github.com/lingua-pupuli/puppet-vscode/issues/301)) Fail fast if agent not installed
+- ([GH-310](https://github.com/lingua-pupuli/puppet-vscode/issues/310)) Fix gulp bump
+- ([GH-307](https://github.com/lingua-pupuli/puppet-vscode/issues/307)) Fix path resolution on mac and *nix
 
 ## 0.10.0 - 2018-03-29
 
