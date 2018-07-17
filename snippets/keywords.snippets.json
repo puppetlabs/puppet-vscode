@@ -6,7 +6,7 @@
       "\t${2:# when true}",
       "}",
       "else {",
-      "\t${2:# when false}",
+      "\t${3:# when false}",
       "}"
     ],
     "description": "Conditional statement"
