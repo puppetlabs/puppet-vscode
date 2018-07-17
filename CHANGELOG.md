@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Fixed
+
+- ([GH-320](https://github.com/lingua-pupuli/puppet-vscode/issues/320)) Fix if/else snippet
+
 ## 0.11.0 - 2018-07-16
 
 - Update Puppet Editor Services to 0.12.0
