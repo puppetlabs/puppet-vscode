@@ -52,7 +52,7 @@
     "onCommand:extension.pdkTestUnit",
     "onCommand:extension.pdkValidate"
   ],
-  "main": "./out/src/extension",
+  "main": "./out/extension",
   "contributes": {
     "languages": [
       {
