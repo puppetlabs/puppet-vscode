@@ -46,6 +46,7 @@ install:
     fi
 
 script:
+  - npm test --silent
   - if [ "$VSCE_TASK" != "" ]; then
       vsce $VSCE_TASK;
     fi
