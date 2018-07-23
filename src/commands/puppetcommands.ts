@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
-import * as messages from '../../src/messages';
-import { IConnectionManager } from '../../src/connection';
-import { ILogger } from '../../src/logging';
+import { PuppetCommandStrings } from '../messages';
+import { IConnectionManager } from '../connection';
+import { ILogger } from '../logging';
 import {
   PuppetNodeGraphContentProvider, isNodeGraphFile,
   getNodeGraphUri, showNodeGraph
-} from '../../src/providers/previewNodeGraphProvider';
+} from '../providers/previewNodeGraphProvider';
 import { PuppetResourceCommand } from '../commands/puppet/puppetResourceCommand';
 import { PuppetFormatDocumentProvider } from '../providers/puppetFormatDocumentProvider';
 import { PuppetStatusBar } from '../PuppetStatusBar';
@@ -14,7 +14,7 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
 
   let resourceCommand = new PuppetResourceCommand(connManager, logger);
   ctx.subscriptions.push(resourceCommand);
-  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetResourceCommandId, () => {
+  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetResourceCommandId, () => {
     resourceCommand.run();
   }));
 
@@ -28,19 +28,19 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
     }
   }));
 
-  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId,
+  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId,
     uri => showNodeGraph(uri, true))
   );
 
-  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
+  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
     () => { PuppetStatusBar.showConnectionMenu(); }
   ));
 
-  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
+  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
     () => { connManager.showLogger(); }
   ));
 
-  ctx.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetRestartSessionCommandId,
+  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetRestartSessionCommandId,
     () => { connManager.restartConnection(); }
   ));
 

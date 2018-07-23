@@ -39,7 +39,7 @@ function sendErrorMessage(message: string) {
 
 class DebugConfiguration implements IConnectionConfiguration {
   protocol: ProtocolType;
-  puppetAgentDir: string;
+  puppetBaseDir: string;
   languageServerPath: string;
   rubydir: string;
   rubylib: string;
@@ -62,7 +62,7 @@ class DebugConfiguration implements IConnectionConfiguration {
     this.port = 8082;
     this.timeout = 10;
     
-    this.puppetAgentDir = '';
+    this.puppetBaseDir = '';
     this.languageServerPath = '';
     this.rubydir ='';
     this.rubylib ='';
