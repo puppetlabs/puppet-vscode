@@ -5,15 +5,18 @@ import * as assert from 'assert';
 import { getDocUri, activate } from './helper';
 
 describe('Should do completion', () => {
+  
   const docUri = getDocUri('foo.pp');
 
-  it('Completes JS/TS in txt file', async () => {
+  it('Completes Puppet in txt file', async () => {
     await activate(docUri);
-    // await testCompletion(docUri, new vscode.Position(0, 0), {
-    //   items: [
-    //     { label: 'Puppet', kind: vscode.CompletionItemKind.Text }
-    //   ]
-    // });
+    await testCompletion(docUri, new vscode.Position(0, 0), {
+      items: [
+        { label: 'case', kind: vscode.CompletionItemKind.Snippet },
+        { label: 'if', kind: vscode.CompletionItemKind.Snippet },
+        { label: 'unless', kind: vscode.CompletionItemKind.Snippet }
+      ]
+    });
   });
 });
 
@@ -34,7 +37,7 @@ async function testCompletion(
   // assert.equal(actualCompletionList.items.length, expectedCompletionList.items.length);
   expectedCompletionList.items.forEach((expectedItem, i) => {
     const actualItem = actualCompletionList.items[i];
-    // assert.equal(actualItem.label, expectedItem.label);
-    // assert.equal(actualItem.kind, expectedItem.kind);
+    assert.equal(actualItem.label, expectedItem.label);
+    assert.equal(actualItem.kind, expectedItem.kind);
   });
 }

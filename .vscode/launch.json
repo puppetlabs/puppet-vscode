@@ -38,8 +38,8 @@
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": [
-        "--extensionDevelopmentPath=${workspaceRoot}",
-        "--extensionTestsPath=${workspaceRoot}/out/src/test",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionTestsPath=${workspaceFolder}/out/test",
         "${workspaceRoot}/src/test/fixtures"
       ],
       "stopOnEntry": false,

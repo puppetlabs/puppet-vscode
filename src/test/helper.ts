@@ -30,7 +30,7 @@ async function sleep(ms: number) {
 }
 
 export const getDocPath = (p: string) => {
-  return path.resolve(__dirname, '../../../src/test/fixtures', p);
+  return path.resolve(__dirname, '../../src/test/fixtures', p);
 };
 export const getDocUri = (p: string) => {
   return vscode.Uri.file(getDocPath(p));
@@ -43,3 +43,7 @@ export async function setTestContent(content: string): Promise<boolean> {
   );
   return editor.edit(eb => eb.replace(all, content));
 }
+
+
+// C:\Users\jpogran\src\lingua-pupuli\puppet-vscode\src\test\fixtures
+// c:/Users/jpogran/src/lingua-pupuli/src/test/fixtures/foo.pp
