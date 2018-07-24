@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Changed
+
+- ([GH-327](https://github.com/lingua-pupuli/puppet-vscode/issues/327)) Updated Puppet Editor Services to version 0.13.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0)
+
 ### Fixed
 
 - ([GH-320](https://github.com/lingua-pupuli/puppet-vscode/issues/320)) Fix `if/else` snippet.
