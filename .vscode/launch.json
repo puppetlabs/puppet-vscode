@@ -46,7 +46,7 @@
       "sourceMaps": true,
       "outFiles": ["${workspaceRoot}/out/test/**/*.js"],
       "preLaunchTask": "npm: watch"
-    }
+    },
     {
       "type": "node",
       "request": "launch",
