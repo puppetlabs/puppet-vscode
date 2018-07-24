@@ -258,7 +258,7 @@ export class ConnectionManager implements IConnectionManager {
           }else{
             attempt = attempt + 1;
             var message = `Timed out connecting to language server. Is the server running at ${address}:${port} ? Will wait timeout value before trying again`;
-            switch(err.code){
+            switch(err['code']){
               case 'ETIMEDOUT':
                 message = `Timed out connecting to language server. Is the server running at ${address}:${port} ? Will wait timeout value before trying again`;
                 break;

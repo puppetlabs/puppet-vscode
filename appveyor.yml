@@ -39,6 +39,7 @@ install:
      }
 
 build_script:
+- cmd: npm test --silent
 - cmd: IF NOT [%GULP_BUILD_TASK%] == [] node node_modules\gulp\bin\gulp.js %GULP_BUILD_TASK%
 - cmd: IF NOT [%VSCE_TASK%] == [] vsce %VSCE_TASK%
 

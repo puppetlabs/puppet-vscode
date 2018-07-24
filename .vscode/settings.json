@@ -20,5 +20,8 @@
   
     "prettier.printWidth": 120,
     "prettier.singleQuote": true,
-    "prettier.tabWidth": 2
+    "prettier.tabWidth": 2,
+
+    // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+    "typescript.tsc.autoDetect": "off"
   }
