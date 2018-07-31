@@ -1,11 +1,67 @@
+# [Puppet](https://www.puppet.com) extension for Visual Studio Code
 
-[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) [![Build status](https://ci.appveyor.com/api/projects/status/kwt06e0lgs70us4c/branch/master?svg=true)](https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode) [![Build Status](https://travis-ci.org/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.org/lingua-pupuli/puppet-vscode)
+[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
+[![Appveyor](https://ci.appveyor.com/api/projects/status/8ke8fhdt9a7j688m/branch/master?svg=true)](https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode/branch/master)
+[![Travis Ci](https://travis-ci.org/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.org/lingua-pupuli/puppet-vscode)
 
-# Puppet Language Support for Visual Studio Code
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Platform Support](#platform-support)
+- [Usage](#usage) 
+  - [Syntax highlighting](#syntax-highlighting)
+  - [Auto completion](#auto-completion)
+  - [Hover Support](#hover-support)
+  - [Code Snippets](#code-snippets)
+  - [Linting](#linting)
+  - [Puppet Commands](#puppet-commands)
+    - [Puppet Resource](#puppet-resource)
+    - [Puppet Node Graph](#puppet-node-graph)
+  - [Puppet Development Kit Support](#puppet-development-kit-support)
+    - [PDK New Module](#pdk-new-module)
+    - [PDK New Class](#pdk-new-class)
+    - [PDK Validate](#pdk-validate)
+    - [PDK Test Unit](#pdk-test-unit)
+  - [Debugging Puppet manifests](#debugging-puppet-manifests)
+- [Installing the Extension](#installing-the-extension)
+- [Configuration](#configuration)
+- [Experience a Problem?](#experience-a-problem)
+  - [Puppet Agent Install](#puppet-agent-install)
+  - [Reloading the Puppet VSCode extension](#reloading-the-puppet-vscode-extension)
+- [Reporting Problems](#reporting-problems)
+- [Maintainers](#maintainers)
+- [Telemetry](#telemetry)
+- [License](#license)
+
+## Quick start
+
+- Step 1: Install a supported version of Puppet on your system (see [Requirements](#requirements) for more information).
+- Step 2: Install the Puppet [extension](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) for Visual Studio Code.
+- Step 3: Open or create a Puppet manifest file (a file with a `.pp` or `.epp` extension or named `Puppetfile`) and start automating!
+
+## Features
+
+A [Visual Studio Code](https://code.visualstudio.com/) [extension](https://marketplace.visualstudio.com/VSCode) that provides rich support for the [Puppet](https://www.puppet.com) language, including features such as syntax highlighting, linting, debugging, IntelliSense and more.
 
 This extension provides full Puppet Language support for [Visual Studio Code](https://code.visualstudio.com/).
 
+- Syntax highlighting
+- IntelliSense for resources, parameters and more
+- Linting
+- Code snippets
+- Go to Definition of functions, types and classes
+- Validation of `metadata.json` files
+- Import from `puppet resource` directly into manifests
+- Node graph preview
+- Puppet Development Kit integration
+- (Experimental) Local debugging of Puppet manifests
+
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
+
+![Example of features](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/language_server.gif)
 
 ## Requirements
 
@@ -15,36 +71,13 @@ You will need to have Puppet Agent installed in order to fully use this extensio
 * [MacOSX](https://docs.puppet.com/puppet/latest/install_osx.html)
 * [Linux](https://docs.puppet.com/puppet/latest/install_linux.html)
 
-## Quick start
-
-Create or open any Puppet manifest with the extension `.pp` or `.epp` and the extension will load automatically. Once loaded the extension will be available for the duration of the session.
-
-![Example of features](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/language_server.gif)
-
 ## Platform support
 
 - Microsoft Windows
 - MacOSX
 - Linux
 
-## Features
-
-- Syntax highlighting
-- Code snippets
-- Linting
-- IntelliSense for resources, parameters and more
-- Go to Definition of functions, types and classes
-- Validation of `metadata.json` files
-- Import from `puppet resource` directly into manifests
-- Node graph preview
-- Puppet Development Kit integration
-- (Experimental) Local debugging of Puppet manifests
-
-## Feature information
-
-### Hover Support
-
-Hovering over any resource, class declaration or other Puppet symbol provides instant contextual information. For example, hovering over the resource declaration lists the type name and parameter list, with all relevant help text.
+## Usage 
 
 ### Syntax Highlighting
 
@@ -54,6 +87,14 @@ Syntax highlighting recognizes all versions of Puppet and displays as you type.
 - Puppet Grammar
 - Module metadata files
 
+### Auto Completion
+
+Auto complete Puppet types and classes and their parameter sets as you type. Tab completion works as you would expect.
+
+### Hover Support
+
+Hovering over any resource, class declaration or other Puppet symbol provides instant contextual information. For example, hovering over the resource declaration lists the type name and parameter list, with all relevant help text.
+
 ### Code Snippets
 
 As part of IntelliSense and Snippets, you can quickly create templates to automate repetitive series of code.
@@ -62,7 +103,9 @@ As part of IntelliSense and Snippets, you can quickly create templates to automa
 
 Linting is automatically applied to the document as you edit, without having to save the file first. The validation uses [puppet-lint](https://github.com/rodjek/puppet-lint) to validate the Puppet syntax in all open puppet files. Errors and warnings appear in the Problems window in VSCode.
 
-### Puppet Resource
+### Puppet Commands
+
+#### Puppet Resource
 
 You can import existing resources directly using `puppet resource`
 
@@ -74,7 +117,7 @@ You can import existing resources directly using `puppet resource`
 
 The information returned will be pasted into the open editor window where your cursor is resting, or at the begining of an empty file.
 
-### Node Graph preview
+#### Puppet Node Graph preview
 
 You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastructure-models) of a manifest while you edit your Puppet Code.
 
@@ -84,30 +127,35 @@ You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastr
 
 The node graph will appear next to the manifest
 
-### Puppet Development Kit
+### Puppet Development Kit Support
 
-You can use the [Puppet Development Kit](https://puppet.com/blog/develop-modules-faster-new-puppet-development-kit) inside VS Code from the command palette.
+You can use the [Puppet Development Kit](https://puppet.com/blog/develop-modules-faster-new-puppet-development-kit) inside VS Code from the command palette. To use any of the above commands, open the command palette and start typing a command. You can also use the right-click context menu or the editor menu to reach these commands.
 
 ** Note: The PDK must be installed prior to using these commands
 
-The following commands are supported:
+** Note: `pdk convert` is not available in the command palette as it is a complicated command that requires user input to succeed. It is better to use it from the builtin terminal.
 
-- pdk new module
-- pdk new class
-- pdk validate
-- pdk test unit
-
-To use any of the above commands, open the command palette and start typing a command. You can also use the right-click context menu or the editor menu to reach these commands.
+#### PDK new module
 
 `PDK New Module` is available even if the extension isn't loaded, the rest of the commands are only available when the extension is loaded.
 
-`pdk convert` is not available in the command palette as it is a complicated command that requires user input to succeed. It is better to use it from the builtin terminal.
+#### PDK new class
 
-### Locally debugging Puppet manifests
+You can create new classes using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
+
+#### PDK validate
+
+You can initiate a valiadtion of your module using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
+
+#### PDK test unit
+
+You can run the test suite of your module using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
+
+### Debugging Puppet manifests
 
 **Note - This is an experimental feature**
 
-The Puppet extension is able to debug the compilation of a Puppet manifest, much like the Go, PowerShell, and C# languages.  The debugger supports:
+The Puppet extension is able to debug the compilation of a Puppet manifest; much like the Go, PowerShell, and C# languages. The debugger supports:
 
 * Line breakpoints but not conditions on those breakpoints
 * Function breakpoints
@@ -117,7 +165,7 @@ The Puppet extension is able to debug the compilation of a Puppet manifest, much
 * Limited interactive debug console.  For example, you can assign a variable a value, but just as in regular Puppet you can't change its value later
 * Step In, Out, Over
 
-You may be presented with a Launch Configuration on first use.  Please see the [VSCode Debugging link](https://code.visualstudio.com/docs/editor/debugging) for instructions on how to set this up.
+You may be presented with a Launch Configuration on first use. Please see the [VSCode Debugging link](https://code.visualstudio.com/docs/editor/debugging) for instructions on how to set this up.
 
 The debugging features in the extension are based on the excellent ideas in [puppet-debugger](https://www.puppet-debugger.com/) by [Corey Osman](https://github.com/nwops).
 
@@ -133,10 +181,9 @@ Settings:
 
 ## Installing the Extension
 
-You can install the official release of the Puppet extension by following the steps
-in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery).
-In the Extensions pane, search for "jpogran-puppet" extension and install it there.  You will
-get notified automatically about any future extension updates!
+You can install the official release of the Puppet extension by following the steps in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery). In the Extensions pane, search for "puppet-vscode" extension and install it there. You will get notified automatically about any future extension updates!
+
+You can also install the extension without access to the internet byw following these [instructions](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix.)
 
 ## Experience a Problem?
 
@@ -183,6 +230,7 @@ Restart Visual Studio Code and try to reproduce the problem, then examine the lo
 - [Austin Blatt](https://github.com/austb)
 
 ## Telemetry
+
 This extension collects telemetry data to help us build a better experience for writing manifest and modules with Puppet and VS Code. We only collect data on which commands are executed. We do not collect any information about files, paths, etc. The extension respects the `telemetry.enableTelemetry` setting which you can learn more about in our [FAQ](https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting).
 
 ## License
