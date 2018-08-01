@@ -7,7 +7,7 @@ environment:
   matrix:
   # Extension testing
   # Package it up to a VSIX
-  - nodejs_version: "7.4.0"
+  - nodejs_version: "8.11.3"
     nodejs_arch: "x64"
     VSCE_TASK: package
 
