@@ -42,16 +42,33 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
       return this.config['installDirectory'];
     }
 
-    switch (process.platform) {
-      case 'win32':
-        let programFiles = PathResolver.getprogramFiles();
-        // On Windows we have a subfolder called 'Puppet' that has
-        // every product underneath
-        return path.join(programFiles, 'Puppet Labs', 'Puppet');
-      default:
-        // On *nix we don't have a sub folder called 'Puppet'
-        return '/opt/puppetlabs';
-    }
+    let programFiles = PathResolver.getprogramFiles(); 
+    switch(this.puppetInstallType){ 
+      case PuppetInstallType.PDK: 
+        switch (process.platform) { 
+          case 'win32': 
+            return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit'); 
+          default: 
+            return path.join(programFiles, 'puppetlabs', 'pdk'); 
+        }
+      case PuppetInstallType.PUPPET: 
+        switch (process.platform) { 
+          case 'win32': 
+            // On Windows we have a subfolder called 'Puppet' that has 
+            // every product underneath 
+            return path.join(programFiles, 'Puppet Labs', 'Puppet'); 
+          default: 
+            // On *nix we don't have a sub folder called 'Puppet' 
+            return path.join(programFiles, 'puppetlabs'); 
+        } 
+      default:         
+        switch (process.platform) { 
+          case 'win32': 
+            return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit'); 
+          default: 
+            return path.join(programFiles, 'puppetlabs', 'pdk'); 
+        } 
+    } 
   }
 
   get pdkDir(): string {

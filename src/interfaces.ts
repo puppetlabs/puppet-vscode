@@ -38,7 +38,15 @@ export interface IConnectionConfiguration {
   sslCertFile: string;
   sslCertDir: string;
   pdkDir: string;
-  languageServerCommandLine: Array<string>;
+  languageServerCommandLine: Array<string>; puppetInstallType:PuppetInstallType; 
+
+  pdkBinDir:string;
+  pdkRubyLib:string;
+  pdkRubyVerDir:string;
+  pdkGemDir:string;
+  pdkRubyDir:string;
+  pdkRubyBinDir:string;
+  pdkGemVerDir:string; 
 }
 
 export enum PuppetInstallType{
