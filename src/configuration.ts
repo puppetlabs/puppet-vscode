@@ -27,8 +27,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   }
 
   get puppetBaseDir(): string {
-    if (this.config['puppetAgentDir'] !== null) {
-      return this.config['puppetAgentDir'];
+    if (this.config['installDirectory'] !== null) {
+      return this.config['installDirectory'];
     }
 
     switch (process.platform) {
