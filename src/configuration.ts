@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 import { IConnectionConfiguration, ConnectionType, ProtocolType, PuppetInstallType } from './interfaces';
+import { PathResolver } from './configuration/pathResolver';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
   public host: string;
@@ -43,10 +44,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 
     switch (process.platform) {
       case 'win32':
-        let programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
-        if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
-          programFiles = process.env['ProgramW6432'] || 'C:\\Program Files';
-        }
+        let programFiles = PathResolver.getprogramFiles();
         // On Windows we have a subfolder called 'Puppet' that has
         // every product underneath
         return path.join(programFiles, 'Puppet Labs', 'Puppet');
@@ -112,7 +110,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
       path.join(this.puppetDir, 'lib'),
       path.join(this.facterDir, 'lib'),
       // path.join(this.hieraDir, 'lib'),
-    ).join(this.pathEnvSeparator());
+    ).join(PathResolver.pathEnvSeparator());
 
     if (process.platform === 'win32') {
       // Translate all slashes to / style to avoid puppet/ruby issue #11930
@@ -131,7 +129,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
       path.join(this.puppetBaseDir, 'bin'),
       path.join(this.rubydir, 'bin'),
       path.join(this.puppetBaseDir, 'sys', 'tools', 'bin')
-    ).join(this.pathEnvSeparator());
+    ).join(PathResolver.pathEnvSeparator());
   }
 
   get languageServerPath(): string {
@@ -193,13 +191,5 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     }
 
     return args;
-  }
-
-  pathEnvSeparator() {
-    if (process.platform === 'win32') {
-      return ';';
-    } else {
-      return ':';
-    }
   }
 }
