@@ -37,9 +37,9 @@ export interface IConnectionConfiguration {
   environmentPath: string;
   sslCertFile: string;
   sslCertDir: string;
-  pdkDir: string;
-  languageServerCommandLine: Array<string>; puppetInstallType:PuppetInstallType; 
+  languageServerCommandLine: Array<string>;
 
+  puppetInstallType:PuppetInstallType; 
   pdkBinDir:string;
   pdkRubyLib:string;
   pdkRubyVerDir:string;

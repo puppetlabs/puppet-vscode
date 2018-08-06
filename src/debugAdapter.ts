@@ -8,7 +8,7 @@ import cp = require('child_process');
 import { NullLogger } from './logging/null';
 import { ILogger } from './logging';
 import { RubyHelper } from './rubyHelper';
-import { IConnectionConfiguration, ConnectionType, ProtocolType } from './interfaces';
+import { IConnectionConfiguration, ConnectionType, ProtocolType, PuppetInstallType } from './interfaces';
 
 // This code just marshalls the STDIN/STDOUT to a socket
 
@@ -46,7 +46,6 @@ class DebugConfiguration implements IConnectionConfiguration {
   environmentPath: string;
   sslCertFile: string;
   sslCertDir: string;
-  pdkDir: string;
   languageServerCommandLine: string[];
   public type: ConnectionType = ConnectionType.Local ;
   public host: string = "127.0.0.1";
@@ -54,6 +53,15 @@ class DebugConfiguration implements IConnectionConfiguration {
   public timeout: number = 10;
   public enableFileCache: boolean;// tslint:disable-line:semicolon
   public debugFilePath: string; // tslint:disable-line:semicolon
+
+  puppetInstallType:PuppetInstallType; 
+  pdkBinDir:string;
+  pdkRubyLib:string;
+  pdkRubyVerDir:string;
+  pdkGemDir:string;
+  pdkRubyDir:string;
+  pdkRubyBinDir:string;
+  pdkGemVerDir:string; 
 
   constructor() {
     this.type = ConnectionType.Local;
@@ -69,7 +77,6 @@ class DebugConfiguration implements IConnectionConfiguration {
     this.environmentPath ='';
     this.sslCertFile ='';
     this.sslCertDir ='';
-    this.pdkDir ='';
     this.languageServerCommandLine =[''];
     this.enableFileCache = false;
     this.debugFilePath = '';
