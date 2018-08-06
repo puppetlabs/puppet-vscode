@@ -267,6 +267,15 @@
       "type": "object",
       "title": "puppet",
       "properties": {
+        "puppet.installType": { 
+          "type": "string",
+          "default": "pdk",
+          "description": "The Puppet Install Type",
+          "enum": [
+            "pdk",
+            "puppet"
+          ]
+        },
         "puppet.installDirectory": {
           "type": "string",
           "default": null,

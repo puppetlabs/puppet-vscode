@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { IConnectionConfiguration, ConnectionType, ProtocolType } from './interfaces';
+import { IConnectionConfiguration, ConnectionType, ProtocolType, PuppetInstallType } from './interfaces';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
   public host: string;
@@ -24,8 +24,18 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     this.timeout = this.config['languageserver']['timeout'];
     this.enableFileCache = this.config['languageserver']['filecache']['enable'];
     this.debugFilePath = this.config['languageserver']['debugFilePath'];
+
+    this._puppetInstallType = this.config['installType']
   }
 
+  private _puppetInstallType : PuppetInstallType;
+  public get puppetInstallType() : PuppetInstallType {
+    return this._puppetInstallType;
+  }
+  public set puppetInstallType(v : PuppetInstallType) {
+    this._puppetInstallType = v;
+  }
+  
   get puppetBaseDir(): string {
     if (this.config['installDirectory'] !== null) {
       return this.config['installDirectory'];

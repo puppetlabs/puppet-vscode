@@ -40,3 +40,8 @@ export interface IConnectionConfiguration {
   pdkDir: string;
   languageServerCommandLine: Array<string>;
 }
+
+export enum PuppetInstallType{
+  PDK    = "pdk",
+  PUPPET = "puppet",
+}
