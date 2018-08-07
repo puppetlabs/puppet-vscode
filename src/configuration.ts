@@ -15,10 +15,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public langID: string = 'puppet'; // don't change this
 
   config: vscode.WorkspaceConfiguration;
-  context: vscode.ExtensionContext;
 
-  constructor(context: vscode.ExtensionContext) {
-    this.context = context;
+  constructor() {
     this.config = vscode.workspace.getConfiguration('puppet');
 
     this.host = this.config['languageserver']['address'];
@@ -134,7 +132,7 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   }
 
   get languageServerPath(): string {
-    return this.context.asAbsolutePath(path.join('vendor', 'languageserver', 'puppet-languageserver'));
+    return path.join('vendor', 'languageserver', 'puppet-languageserver');
   }
 
   get type(): ConnectionType {

@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger();
   var statusBar = new PuppetStatusBar(langID);
-  var configSettings = new ConnectionConfiguration(context);
+  var configSettings = new ConnectionConfiguration();
 
   if (!fs.existsSync(configSettings.puppetBaseDir)) {
     logger.error('Could not find a valid Puppet installation at ' + configSettings.puppetBaseDir);

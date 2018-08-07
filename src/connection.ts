@@ -62,7 +62,7 @@ export class ConnectionManager implements IConnectionManager {
 
     if (this.connectionConfiguration.type === ConnectionType.Local) {
       this.createLanguageServerProcess(
-        this.connectionConfiguration.languageServerPath,
+        this.extensionContext.asAbsolutePath(this.connectionConfiguration.languageServerPath),
         this.onLanguageServerStart.bind(this)
       );
     } else {
@@ -316,7 +316,7 @@ export class ConnectionManager implements IConnectionManager {
 
   public restartConnection(connectionConfig?: IConnectionConfiguration) {
     if (connectionConfig === undefined) {
-      connectionConfig = new ConnectionConfiguration(this.extensionContext);
+      connectionConfig = new ConnectionConfiguration();
     }
     this.stop();
     this.start(connectionConfig);
