@@ -174,9 +174,7 @@ export class ConnectionManager implements IConnectionManager {
       command: string;
       args: string[];
       options: cp.SpawnOptions;
-    } = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger);
-    // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
-    //if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(serverExe, this.connectionConfiguration, this.logger); }
+    } = RubyHelper.getRubyEnvFromConfiguration(serverExe, this.connectionConfiguration, this.logger);
 
     if (localServer === null) {
       this.logger.warning(logPrefix + 'Could not find a valid Puppet Agent installation');

@@ -149,9 +149,7 @@ function startDebugServer(config:DebugConfiguration, debugLogger: ILogger) {
   }
 
   // TODO use argv to pass in stuff?
-  if (localServer === null) { localServer = RubyHelper.getRubyEnvFromPuppetAgent(rubyfile, config, debugLogger); }
-  // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
-  // if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(rubyfile, config, debugLogger); }
+  localServer = RubyHelper.getRubyEnvFromConfiguration(rubyfile, config, debugLogger);
 
   if (localServer === null) {
     sendErrorMessage("Unable to find a valid ruby environment");
