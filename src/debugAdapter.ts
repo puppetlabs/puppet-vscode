@@ -151,7 +151,7 @@ function startDebugServer(config:DebugConfiguration, debugLogger: ILogger) {
   // TODO use argv to pass in stuff?
   localServer = RubyHelper.getRubyEnvFromConfiguration(rubyfile, config, debugLogger);
 
-  if (localServer === null) {
+  if (!fs.existsSync(config.puppetBaseDir)) {
     sendErrorMessage("Unable to find a valid ruby environment");
     process.exit(255);
   }

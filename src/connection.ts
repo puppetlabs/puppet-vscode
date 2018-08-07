@@ -176,15 +176,6 @@ export class ConnectionManager implements IConnectionManager {
       options: cp.SpawnOptions;
     } = RubyHelper.getRubyEnvFromConfiguration(serverExe, this.connectionConfiguration, this.logger);
 
-    if (localServer === null) {
-      this.logger.warning(logPrefix + 'Could not find a valid Puppet Agent installation');
-      this.setSessionFailure('Could not find a valid Puppet Agent installation');
-      vscode.window.showWarningMessage(
-        'Could not find a valid Puppet Agent installation. Functionality will be limited to syntax highlighting'
-      );
-      return;
-    }
-
     let connMgr: ConnectionManager = this;
     if(this.connectionConfiguration.protocol === ProtocolType.TCP){
       if(this.connectionConfiguration.port){
