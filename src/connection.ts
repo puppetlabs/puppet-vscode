@@ -62,7 +62,7 @@ export class ConnectionManager implements IConnectionManager {
 
     if (this.connectionConfiguration.type === ConnectionType.Local) {
       this.createLanguageServerProcess(
-        this.connectionConfiguration.languageServerPath,
+        this.extensionContext.asAbsolutePath(this.connectionConfiguration.languageServerPath),
         this.onLanguageServerStart.bind(this)
       );
     } else {
@@ -174,18 +174,7 @@ export class ConnectionManager implements IConnectionManager {
       command: string;
       args: string[];
       options: cp.SpawnOptions;
-    } = RubyHelper.getRubyEnvFromPuppetAgent(serverExe, this.connectionConfiguration, this.logger);
-    // Commented out for the moment.  This will be enabled once the configuration and exact user story is figured out.
-    //if (localServer == null) { localServer = RubyHelper.getRubyEnvFromPDK(serverExe, this.connectionConfiguration, this.logger); }
-
-    if (localServer === null) {
-      this.logger.warning(logPrefix + 'Could not find a valid Puppet Agent installation');
-      this.setSessionFailure('Could not find a valid Puppet Agent installation');
-      vscode.window.showWarningMessage(
-        'Could not find a valid Puppet Agent installation. Functionality will be limited to syntax highlighting'
-      );
-      return;
-    }
+    } = RubyHelper.getRubyEnvFromConfiguration(serverExe, this.connectionConfiguration, this.logger);
 
     let connMgr: ConnectionManager = this;
     if(this.connectionConfiguration.protocol === ProtocolType.TCP){
@@ -327,7 +316,7 @@ export class ConnectionManager implements IConnectionManager {
 
   public restartConnection(connectionConfig?: IConnectionConfiguration) {
     if (connectionConfig === undefined) {
-      connectionConfig = new ConnectionConfiguration(this.extensionContext);
+      connectionConfig = new ConnectionConfiguration();
     }
     this.stop();
     this.start(connectionConfig);

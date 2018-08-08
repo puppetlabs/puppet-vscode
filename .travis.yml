@@ -4,9 +4,7 @@ language: cpp
 
 os:
   - linux
-# Do we actually need to run this on OSX?
-# OSX is REALLY slow to test
-#  - osx
+  - osx
 
 matrix:
   fast_finish: true
