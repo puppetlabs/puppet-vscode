@@ -19,7 +19,7 @@ export class RubyHelper {
 
     // setup defaults
     let spawn_options: cp.SpawnOptions = {};
-        spawn_options.env              = process.env;
+        spawn_options.env              = this.shallowCloneObject(process.env);
         spawn_options.stdio            = 'pipe';
 
     switch (process.platform) {
@@ -76,5 +76,15 @@ export class RubyHelper {
 
     return result;
 
+  }
+
+  private static shallowCloneObject(value:Object): Object {
+    const clone: Object = {};
+    for (const propertyName in value){
+      if (value.hasOwnProperty(propertyName)){
+        clone[propertyName] = value[propertyName];
+      }
+    }
+    return clone;
   }
 }
