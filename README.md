@@ -38,7 +38,7 @@
 
 ## Quick start
 
-- Step 1: Install a supported version of Puppet on your system (see [Requirements](#requirements) for more information).
+- Step 1: Install a supported version of the Puppet Development Kit on your system (see [Requirements](#requirements) for more information).
 - Step 2: Install the Puppet [extension](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) for Visual Studio Code.
 - Step 3: Open or create a Puppet manifest file (a file with a `.pp` or `.epp` extension or named `Puppetfile`) and start automating!
 
@@ -65,7 +65,17 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 ## Requirements
 
-You will need to have Puppet Agent installed in order to fully use this extension. You can find instructions and installation links here:
+You will need to have the [Puppet Agent](https://puppet.com/docs/puppet/4.10/about_agent.html)  or [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) installed in order to fully use this extension.
+
+**Note:** PDK version 1.5.0 or higher is required.
+
+You can find instructions and installation links here:
+
+### PDK
+
+* [Download page](https://puppet.com/download-puppet-development-kit)
+
+### Puppet-Agent
 
 * [Windows](https://docs.puppet.com/puppet/latest/install_windows.html)
 * [MacOSX](https://docs.puppet.com/puppet/latest/install_osx.html)
@@ -183,15 +193,91 @@ Settings:
 
 You can install the official release of the Puppet extension by following the steps in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery). In the Extensions pane, search for "puppet-vscode" extension and install it there. You will get notified automatically about any future extension updates!
 
-You can also install the extension without access to the internet byw following these [instructions](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix.)
+You can also install the extension without access to the internet by following these [instructions](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix.)
+
+## Configuration
+
+The Puppet VSCode extension can use the PDK or the Puppet Agent to provide advanced features, which can be set using two configuration options: `puppet.installType` and `puppet.puppetAgentDir`.
+
+- By default the `puppet.installType` is set to `agent`, and allows you to choose to use `pdk` or `agent`.
+- The `puppet.puppetAgentDir` allows you to choose a custom path to either a PDK install or a Puppet-Agent install, and must match the correct setting in `puppet.installType`.
+
+If no settings are chosen, the extension will attempt to use the Puppet Agent, to force it to use the PDK you have to select `pdk` for `puppet.installType`.
+
+
+**Note**: The `puppet.puppetAgentDir` setting name will be changed in the `0.12.0` release to `puppet.installDirectory`
+
+**Note**: Only PDK v1.5.0 and above are supported.
+
+### Configure extension to use PDK
+
+To ensure that the extension uses the PDK, set the `puppet.installType` setting to the `pdk` value like so:
+
+```json
+{
+  "puppet.installType":"pdk"
+}
+```
+
+The default installation paths stored in the extension are:
+
+```json
+{
+  // Windows
+  "puppet.puppetAgentDir":"C:\\Program Files\\Puppet Labs\\DevelopmentKit",
+  // Mac
+  "puppet.puppetAgentDir":"/opt/puppetlabs/pdk",
+  // Linux
+  "puppet.puppetAgentDir":"/opt/puppetlabs/pdk"
+}
+```
+
+To use a custom install path for the PDK, set the `puppet.puppetAgentDir` setting to the path you installed the PDK to:
+
+```json
+{
+  "puppet.puppetAgentDir":"D:/programs/pdk"
+}
+```
+
+### Configure extension to use Puppet-Agent
+
+To ensure that the extension uses the Puppet-Agent, set the `puppet.installType` setting to the `puppet` value like so:
+
+```json
+{
+  "puppet.installType":"puppet"
+}
+```
+
+The default installation paths stored in the extension are:
+
+```json
+{
+  // Windows
+  "puppet.puppetAgentDir":"C:\\Program Files\\Puppet Labs\\Puppet",
+  // Mac
+  "puppet.puppetAgentDir":"/opt/puppetlabs",
+  //Linux
+  "puppet.puppetAgentDir":"/opt/puppetlabs"
+}
+```
+
+To use a custom install path for the Puppet-Agent, set the `puppet.puppetAgentDir` setting to the path you installed the Puppet-Agent to:
+
+```json
+{
+  "puppet.puppetAgentDir":"D:/programs/puppet"
+}
+```
 
 ## Experience a Problem?
 
 ### Puppet Agent Install
 
-A commonly encountered problem is not having Puppet Agent installed on the computer you are running VSCode on. As noted in the [Requirements section](https://github.com/lingua-pupuli/puppet-vscode/blob/master/README.md#requirements), you will need to have Puppet Agent installed in order to fully use this extension, as the extension uses the Puppet binaries and the Ruby language bundled into the agent install in order to function.
+A commonly encountered problem is not having the PDK or Puppet Agent installed on the computer you are running VSCode on. As noted in the [Requirements section](https://github.com/lingua-pupuli/puppet-vscode/blob/master/README.md#requirements), you will need to have the PDK or Puppet Agent installed in order to fully use this extension, as the extension uses the Puppet binaries and the Ruby language bundled into the PDK or agent install in order to function.
 
-If you are receiving an error right after opening a Puppet file saying that a Puppet Agent install could not be found, ensure that Puppet is installed on the system. The VSCode extension attempts to find a valid Puppet install if a path is not configured in `puppet.puppetAgentDir` in `User Settings`, so if Puppet is installed but not in a default path please check that your setting points to the correct path.
+If you are receiving an error right after opening a Puppet file saying that a Puppet Agent install could not be found, ensure that Puppet is installed on the system. The VSCode extension attempts to find a valid Puppet install if a path is not configured in `puppet.installDirectory` in `User Settings`, so if Puppet is installed but not in a default path please check that your setting points to the correct path.
 
 ### Reloading the Puppet VSCode extension
 
