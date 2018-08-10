@@ -267,7 +267,7 @@
       "type": "object",
       "title": "puppet",
       "properties": {
-        "puppet.installType": { 
+        "puppet.installType": {
           "type": "string",
           "default": "pdk",
           "description": "The Puppet Install Type",
