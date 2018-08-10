@@ -365,8 +365,7 @@
       {
         "type": "Puppet",
         "label": "Puppet Debugger",
-        "program": "./out/src/debugAdapter.js",
-        "runtime": "node",
+        "adapterExecutableCommand": "extension.puppetAdapterExecutableCommand",
         "languages": [
           "puppet"
         ],
@@ -380,7 +379,7 @@
               "name": "Puppet Apply current file",
               "manifest": "^\"\\${file}\"",
               "args": [],
-              "noop": false,
+              "noop": true,
               "cwd": "^\"\\${file}\""
             }
           }
