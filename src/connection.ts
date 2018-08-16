@@ -8,6 +8,8 @@ import { RubyHelper } from './rubyHelper';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { PuppetLanguageClient } from './PuppetLanguageClient';
 import { ConnectionConfiguration } from './configuration';
+import { reporter } from './telemetry/telemetry';
+import { PuppetVersionRequest } from './messages';
 
 const langID = 'puppet'; // don't change this
 const documentSelector = { scheme: 'file', language: langID };
@@ -28,6 +30,7 @@ export class ConnectionManager implements IConnectionManager {
   private languageServerClient: LanguageClient;
   private languageServerProcess: cp.ChildProcess;
   private puppetLanguageClient: PuppetLanguageClient;
+  private timeSpent:number;
 
   constructor(
     context: vscode.ExtensionContext,
@@ -35,6 +38,7 @@ export class ConnectionManager implements IConnectionManager {
     statusBar: PuppetStatusBar,
     connectionConfiguration: IConnectionConfiguration
   ) {
+    this.timeSpent = Date.now();
     this.logger = logger;
     this.extensionContext = context;
     this.connectionStatus = ConnectionStatus.NotStarted;
@@ -76,6 +80,18 @@ export class ConnectionManager implements IConnectionManager {
     this.logger.debug('Stopping...');
 
     this.connectionStatus = ConnectionStatus.Stopping;
+
+    if (this.languageServerClient !== undefined) {
+      this.timeSpent = Date.now() - this.timeSpent;
+      this.languageServerClient.sendRequest(PuppetVersionRequest.type).then(versionDetails => {
+        reporter.sendTelemetryEvent('data', {
+          'timeSpent'            : this.timeSpent.toString(),
+          'puppetVersion'        : versionDetails.puppetVersion,
+          'facterVersion'        : versionDetails.facterVersion,
+          'languageServerVersion': versionDetails.languageServerVersion,
+        });
+      });
+    }
 
     // Close the language server client
     if (this.languageServerClient !== undefined) {
