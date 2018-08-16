@@ -269,11 +269,11 @@
       "properties": {
         "puppet.installType": {
           "type": "string",
-          "default": "pdk",
+          "default": "agent",
           "description": "The Puppet Install Type",
           "enum": [
             "pdk",
-            "puppet"
+            "agent"
           ]
         },
         "puppet.installDirectory": {

@@ -51,5 +51,5 @@ export interface IConnectionConfiguration {
 
 export enum PuppetInstallType{
   PDK    = "pdk",
-  PUPPET = "puppet",
+  PUPPET = "agent",
 }
