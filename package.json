@@ -269,14 +269,14 @@
       "properties": {
         "puppet.installType": {
           "type": "string",
-          "default": "pdk",
+          "default": "agent",
           "description": "The Puppet Install Type",
           "enum": [
             "pdk",
-            "puppet"
+            "agent"
           ]
         },
-        "puppet.installDirectory": {
+        "puppet.puppetAgentDir": {
           "type": "string",
           "default": null,
           "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"

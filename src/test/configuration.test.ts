@@ -24,12 +24,12 @@ suite("Configuration Tests", () => {
 
   test("correct install type", () => {
     var config = new ConnectionConfiguration();
-    assert.equal(PuppetInstallType.PDK, config.puppetInstallType);
+    assert.equal(PuppetInstallType.PUPPET, config.puppetInstallType);
   });
 
-  test("resolves puppetBaseDir as pdk with default installtype", () => {
+  test("resolves puppetBaseDir as puppet with default installtype", () => {
     var config = new ConnectionConfiguration();
-    assert.equal(config.puppetBaseDir, pdkPuppetBaseDir);
+    assert.equal(config.puppetBaseDir, puppetBaseDir);
   });
 
   test("resolves puppetBaseDir as puppet with installtype eq puppet", () => {
