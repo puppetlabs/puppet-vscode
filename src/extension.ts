@@ -10,6 +10,7 @@ import { Reporter } from './telemetry/telemetry';
 import { setupPuppetCommands } from './commands/puppetcommands';
 import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
+import { ISettings, settingsFromWorkspace } from './settings';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -22,8 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
 
   notifyOnNewExtensionVersion(context, puppetExtensionVersion);
 
+  const settings: ISettings = settingsFromWorkspace();
+
   context.subscriptions.push(new Reporter(context));
-  var logger = new OutputChannelLogger();
+  var logger = new OutputChannelLogger(settings);
   var statusBar = new PuppetStatusBar(langID);
   var configSettings = new ConnectionConfiguration();
 
@@ -58,7 +61,7 @@ export function activate(context: vscode.ExtensionContext) {
   if (!commandsRegistered) {
     logger.debug('Configuring commands');
 
-    setupPuppetCommands(langID, connManager, context, logger);
+    setupPuppetCommands(langID, connManager, settings, context, logger);
 
     terminal = vscode.window.createTerminal('Puppet PDK');
     terminal.processId.then(pid => {

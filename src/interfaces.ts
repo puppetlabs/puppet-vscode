@@ -17,9 +17,9 @@ export enum ConnectionType {
 }
 
 export enum ProtocolType {
-  UNKNOWN,
-  STDIO,
-  TCP
+  UNKNOWN = '<unknown>',
+  STDIO = 'stdio',
+  TCP = 'tcp',
 }
 
 export interface IConnectionConfiguration {

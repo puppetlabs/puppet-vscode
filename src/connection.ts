@@ -2,7 +2,7 @@ import net = require('net');
 import vscode = require('vscode');
 import cp = require('child_process');
 import { ILogger } from '../src/logging';
-import { IConnectionConfiguration, ConnectionStatus, ConnectionType, ProtocolType } from './interfaces'
+import { IConnectionConfiguration, ConnectionStatus, ConnectionType, ProtocolType } from './interfaces';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 import { RubyHelper } from './rubyHelper';
 import { PuppetStatusBar } from './PuppetStatusBar';
@@ -226,7 +226,7 @@ export class ConnectionManager implements IConnectionManager {
         var attempt = 0;
         var client = new net.Socket();
 
-        const rconnect = () => { client.connect(port, address) };
+        const rconnect = () => { client.connect(port, address); };
 
         client.connect(port, address, function() {
           logger.debug(`[Puppet Lang Server Client] tcp connected`);
@@ -291,12 +291,6 @@ export class ConnectionManager implements IConnectionManager {
 
     let serverOptions: ServerOptions;
     switch (this.connectionConfiguration.protocol) {
-      case ProtocolType.STDIO:
-      this.logger.debug(
-        `Starting language server client (stdio)`
-      );
-        serverOptions = this.STDIOServerOptions(this.languageServerProcess, this.logger);
-        break;
       case ProtocolType.TCP:
         serverOptions =  this.createTCPServerOptions(
           this.connectionConfiguration.host,
@@ -309,6 +303,13 @@ export class ConnectionManager implements IConnectionManager {
             this.connectionConfiguration.port
           })`
         );
+        break;
+      // Default is STDIO if the protocol is unknown, or STDIO
+      default:
+        this.logger.debug(
+          `Starting language server client (stdio)`
+        );
+        serverOptions = this.STDIOServerOptions(this.languageServerProcess, this.logger);
         break;
     }
 
