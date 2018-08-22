@@ -6,13 +6,23 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [0.11.1] - 2018-08-24
+
+### Added
+
+- ([GH-317](https://github.com/lingua-pupuli/puppet-vscode/issues/317)) Add PDK as source in addition to Puppet-Agent
+- ([GH-355](https://github.com/lingua-pupuli/puppet-vscode/issues/355)) Re-add base telemetry
+
 ### Changed
 
 - ([GH-327](https://github.com/lingua-pupuli/puppet-vscode/issues/327)) Updated Puppet Editor Services to version 0.13.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0)
+- ([GH-316](https://github.com/lingua-pupuli/puppet-vscode/issues/316)) Conform to Keep-A-Changelog format in CHANGELOG
 
 ### Fixed
 
 - ([GH-320](https://github.com/lingua-pupuli/puppet-vscode/issues/320)) Fix `if/else` snippet.
+- ([GH-343](https://github.com/lingua-pupuli/puppet-vscode/issues/343)) Fix process environment builder for LanguageServer
+- ([GH-317](https://github.com/lingua-pupuli/puppet-vscode/issues/317)) Fix extension test harness and add Windows, Linux, and Mac tests
 
 ## [0.11.0] - 2018-07-16
 
