@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { ConnectionConfiguration } from '../configuration';
 import { PuppetInstallType } from '../interfaces';
 
-suite("Configuration Tests", () => {
+describe("Configuration Tests", () => {
   var pdkBinDir = '';
   var pdkPuppetBaseDir = '';
   var puppetBaseDir = '';
@@ -22,23 +22,23 @@ suite("Configuration Tests", () => {
       break;
   }
 
-  test("correct install type", () => {
+  it("correct install type", () => {
     var config = new ConnectionConfiguration();
     assert.equal(PuppetInstallType.PUPPET, config.puppetInstallType);
   });
 
-  test("resolves puppetBaseDir as puppet with default installtype", () => {
+  it("resolves puppetBaseDir as puppet with default installtype", () => {
     var config = new ConnectionConfiguration();
     assert.equal(config.puppetBaseDir, puppetBaseDir);
   });
 
-  test("resolves puppetBaseDir as puppet with installtype eq puppet", () => {
+  it("resolves puppetBaseDir as puppet with installtype eq puppet", () => {
     var config = new ConnectionConfiguration();
     config.puppetInstallType = PuppetInstallType.PUPPET;
     assert.equal(config.puppetBaseDir, puppetBaseDir);
   });
 
-  test("resolves pdkBinDir with installtype eq pdk", () => {
+  it("resolves pdkBinDir with installtype eq pdk", () => {
     var config = new ConnectionConfiguration();
     config.puppetInstallType = PuppetInstallType.PDK;
     assert.equal(config.pdkBinDir, pdkBinDir);
