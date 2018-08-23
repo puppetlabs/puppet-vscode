@@ -10,7 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Added
 
-- ([GH-317](https://github.com/lingua-pupuli/puppet-vscode/issues/317)) Add PDK as source in addition to Puppet-Agent
+- ([GH-315](https://github.com/lingua-pupuli/puppet-vscode/issues/315)) Add PDK as source in addition to Puppet-Agent
 - ([GH-355](https://github.com/lingua-pupuli/puppet-vscode/issues/355)) Re-add base telemetry
 
 ### Changed
