@@ -10,7 +10,7 @@ import { Reporter } from './telemetry/telemetry';
 import { setupPuppetCommands } from './commands/puppetcommands';
 import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
-import { ISettings, settingsFromWorkspace } from './settings';
+import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -29,6 +29,14 @@ export function activate(context: vscode.ExtensionContext) {
   var logger = new OutputChannelLogger(settings);
   var statusBar = new PuppetStatusBar(langID);
   var configSettings = new ConnectionConfiguration();
+
+  // Raise a warning if we detect any legacy settings
+  const legacySettingValues: Map<string, Object> = legacySettings();
+  if (legacySettingValues.size > 0) {
+    let settingNames: string[] = [];
+    for (const [settingName, _value] of legacySettingValues) { settingNames.push(settingName); }
+    vscode.window.showWarningMessage("Deprecated Puppet settings have been detected. Please either remove them or, convert them to the correct settings names. (" + settingNames.join(", ") + ")", { modal: false});
+  }
 
   if (!fs.existsSync(configSettings.puppetBaseDir)) {
     logger.error('Could not find a valid Puppet installation at ' + configSettings.puppetBaseDir);
