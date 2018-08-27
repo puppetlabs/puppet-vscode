@@ -267,10 +267,60 @@
       "type": "object",
       "title": "puppet",
       "properties": {
+        "puppet.editorService.debugFilePath": {
+          "type": "string",
+          "default": "",
+          "description": "The absolute filepath where the Puppet Editor Service will output the debugging log. By default no logfile is generated"
+        },
+        "puppet.editorService.featureFlags": {
+          "type": "array",
+          "default": [],
+          "description": "An array of strings of experimental features to enable in the Puppet Editor Service"
+        },
+        "puppet.editorService.loglevel": {
+          "type": "string",
+          "default": "normal",
+          "description": "Set the logging verbosity level for the Puppet Editor Service, with Debug producing the most output and Error producing the least",
+          "enum": [
+            "debug",
+            "error",
+            "normal",
+            "warning",
+            "verbose"
+          ]
+        },
+        "puppet.editorService.protocol": {
+          "type": "string",
+          "default": "stdio",
+          "description": "The protocol used to communicate with the Puppet Editor Service.  By default the local STDIO protocol is used",
+          "enum": [
+            "stdio",
+            "tcp"
+          ]
+        },
+        "puppet.editorService.tcp.address": {
+          "type": "string",
+          "description": "The IP address or hostname of the remote Puppet Editor Service to connect to, for example 'computer.domain' or '192.168.0.1'. Only applicable when the editorService.protocol is set to tcp"
+        },
+        "puppet.editorService.tcp.port": {
+          "type": "integer",
+          "description": "The TCP Port of the remote Puppet Editor Service to connect to. Only applicable when the editorService.protocol is set to tcp"
+        },
+        "puppet.editorService.timeout": {
+          "type": "integer",
+          "default": 10,
+          "description": "The timeout to connect to the Puppet Editor Service"
+        },
+        "puppet.format.enable": {
+          "type": "boolean",
+          "scope": "window",
+          "default": true,
+          "description": "Enable/disable the Puppet document formatter"
+        },
         "puppet.installType": {
           "type": "string",
           "default": "agent",
-          "description": "The Puppet Install Type",
+          "description": "The type of Puppet installation. Either the Puppet Development Kit (pdk) or the Puppet Agent (agent)",
           "enum": [
             "pdk",
             "agent"
@@ -279,58 +329,30 @@
         "puppet.puppetAgentDir": {
           "type": "string",
           "default": null,
-          "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'"
+          "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'.  If this is not set the extension will attempt to detect the installation directory"
         },
+
+
         "puppet.languageclient.protocol": {
-          "type": "string",
-          "default": "stdio",
-          "description": "protocol",
-          "enum": [
-            "stdio",
-            "tcp"
-          ]
+          "description": "**DEPRECATED** Please use puppet.editorService.protocol instead"
         },
         "puppet.languageclient.minimumUserLogLevel": {
-          "type": "string",
-          "default": "normal",
-          "description": "Set the minimum log level that the user will see on the Puppet connection logs",
-          "enum": [
-            "verbose",
-            "debug",
-            "normal",
-            "warning",
-            "error"
-          ]
+          "description": "**DEPRECATED** Please use puppet.editorService.loglevel instead"
         },
         "puppet.languageserver.address": {
-          "type": "string",
-          "default": "127.0.0.1",
-          "description": "The IP address or hostname of the Puppet Language Server to connect to"
+          "description":  "**DEPRECATED** Please use puppet.editorService.tcp.address instead"
         },
         "puppet.languageserver.port": {
-          "type": "integer",
-          "description": "The TCP Port of the Puppet Language Server to connect to"
+          "description": "**DEPRECATED** Please use puppet.editorService.tcp.port instead"
         },
         "puppet.languageserver.timeout": {
-          "type": "integer",
-          "default": 10,
-          "description": "The timeout to connect to the local Puppet Language Server"
+          "description": "**DEPRECATED** Please use puppet.editorService.timeout instead"
         },
         "puppet.languageserver.filecache.enable": {
-          "type": "boolean",
-          "default": false,
-          "description": "(Experimental) Enable a persistent file cache for Puppet objects in the Language Server"
+          "description": "**DEPRECATED** Please use puppet.editorService.featureFlags with 'filecache' instead"
         },
         "puppet.languageserver.debugFilePath": {
-          "type": "string",
-          "default": "",
-          "description": "Set the local Puppet Language Server to send debug information to a file"
-        },
-        "puppet.format.enable": {
-          "type": "boolean",
-          "scope": "window",
-          "default": true,
-          "description": "Enable/disable the Puppet formatter"
+          "description": "**DEPRECATED** Please use puppet.editorService.debugFilePath instead"
         }
       }
     },
