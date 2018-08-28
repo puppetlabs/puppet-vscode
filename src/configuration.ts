@@ -5,6 +5,7 @@ import * as path from 'path';
 
 import { IConnectionConfiguration, ConnectionType, ProtocolType, PuppetInstallType } from './interfaces';
 import { PathResolver } from './configuration/pathResolver';
+import { ISettings, settingsFromWorkspace } from './settings';
 
 export class ConnectionConfiguration implements IConnectionConfiguration {
   public host: string;
@@ -12,20 +13,18 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public timeout: number;
   public enableFileCache: boolean;
   public debugFilePath: string;
-  public langID: string = 'puppet'; // don't change this
-
-  config: vscode.WorkspaceConfiguration;
+  private settings: ISettings;
 
   constructor() {
-    this.config = vscode.workspace.getConfiguration('puppet');
+    this.settings = settingsFromWorkspace();
 
-    this.host = this.config['languageserver']['address'];
-    this.port = this.config['languageserver']['port'];
-    this.timeout = this.config['languageserver']['timeout'];
-    this.enableFileCache = this.config['languageserver']['filecache']['enable'];
-    this.debugFilePath = this.config['languageserver']['debugFilePath'];
+    this.host = this.settings.editorService.tcp.address;
+    this.port = this.settings.editorService.tcp.port;
+    this.timeout = this.settings.editorService.timeout;
+    this.enableFileCache = (this.settings.editorService.featureflags.indexOf('filecache') !== -1);
+    this.debugFilePath = this.settings.editorService.debugFilePath;
 
-    this._puppetInstallType = this.config['installType']
+    this._puppetInstallType = this.settings.installType;
   }
 
   private _puppetInstallType: PuppetInstallType;
@@ -37,8 +36,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   }
 
   get puppetBaseDir(): string {
-    if (this.config['puppetAgentDir'] !== null) {
-      return this.config['puppetAgentDir'];
+    if ( (this.settings.puppetAgentDir !== null) && (this.settings.puppetAgentDir !== undefined) && (this.settings.puppetAgentDir.trim() !== "") ) {
+      return this.settings.puppetAgentDir;
     }
 
     let programFiles = PathResolver.getprogramFiles();
@@ -136,18 +135,25 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   }
 
   get type(): ConnectionType {
-    if (this.host === '127.0.0.1' || this.host === 'localhost' || this.host === '') {
-      return ConnectionType.Local;
-    } else {
-      return ConnectionType.Remote;
+    switch (this.settings.editorService.protocol) {
+      case ProtocolType.TCP:
+        if (this.host === '127.0.0.1' || this.host === 'localhost' || this.host === '') {
+          return ConnectionType.Local;
+        } else {
+          return ConnectionType.Remote;
+        }
+      case ProtocolType.STDIO:
+        // STDIO can only ever be local
+        return ConnectionType.Local;
+      default:
+        // In this case we have no idea what the type is
+        return undefined;
     }
   }
 
   get protocol(): ProtocolType {
-    switch (this.config['languageclient']['protocol']) {
-      case 'stdio':
-        return ProtocolType.STDIO;
-      case 'tcp':
+    switch (this.settings.editorService.protocol) {
+      case ProtocolType.TCP:
         return ProtocolType.TCP;
       default:
         return ProtocolType.STDIO;

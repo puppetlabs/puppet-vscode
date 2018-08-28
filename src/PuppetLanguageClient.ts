@@ -35,7 +35,7 @@ export class PuppetLanguageClient {
     this.statusBarItem = statusBarItem;
     this.logger = logger;
 
-    var title = `tcp lang server (host ${this.host} port ${this.port})`;
+    const title:string = 'Puppet Editor Service';
 
     this.languageServerClient = new LanguageClient(title, this.serverOptions, this.clientOptions);
     this.languageServerClient.onReady().then(
