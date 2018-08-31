@@ -36,8 +36,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   }
 
   get puppetBaseDir(): string {
-    if ( (this.settings.puppetAgentDir !== null) && (this.settings.puppetAgentDir !== undefined) && (this.settings.puppetAgentDir.trim() !== "") ) {
-      return this.settings.puppetAgentDir;
+    if ( (this.settings.installDirectory !== null) && (this.settings.installDirectory !== undefined) && (this.settings.installDirectory.trim() !== "") ) {
+      return this.settings.installDirectory;
     }
 
     let programFiles = PathResolver.getprogramFiles();

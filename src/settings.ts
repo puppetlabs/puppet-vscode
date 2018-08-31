@@ -39,10 +39,10 @@ export interface IPDKSettings {
 export interface ISettings {
   editorService?: IEditorServiceSettings;
   format?: IFormatSettings;
+  installDirectory?: string;
   installType?: PuppetInstallType;
   lint?: ILintSettings;
   pdk?: IPDKSettings;
-  puppetAgentDir?: string;
 }
 
 const workspaceSectionName = "puppet";
@@ -106,6 +106,10 @@ export function legacySettings(): Map<string, Object> {
   value = getSafeWorkspaceConfig(workspaceConfig, ['languageserver','timeout']);
   if (value !== undefined) { settings.set("puppet.languageserver.timeout", value); }
 
+  // puppet.puppetAgentDir
+  value = getSafeWorkspaceConfig(workspaceConfig, ['puppetAgentDir']);
+  if (value !== undefined) { settings.set("puppet.puppetAgentDir", value); }
+
   return settings;
 }
 
@@ -135,10 +139,10 @@ export function settingsFromWorkspace(): ISettings {
   let settings = {
     editorService: workspaceConfig.get<IEditorServiceSettings>("editorService", defaultEditorServiceSettings),
     format: workspaceConfig.get<IFormatSettings>("format", defaultFormatSettings),
+    installDirectory: workspaceConfig.get<string>("installDirectory", undefined),
     installType: workspaceConfig.get<PuppetInstallType>("installType", PuppetInstallType.PUPPET),
     lint: workspaceConfig.get<ILintSettings>("lint", defaultLintSettings),
-    pdk: workspaceConfig.get<IPDKSettings>("pdk", defaultPDKSettings),
-    puppetAgentDir: workspaceConfig.get<string>("puppetAgentDir", undefined)
+    pdk: workspaceConfig.get<IPDKSettings>("pdk", defaultPDKSettings)
   };
 
   /**
@@ -187,7 +191,11 @@ export function settingsFromWorkspace(): ISettings {
       case "puppet.languageserver.timeout": // --> puppet.editorService.timeout
         settings.editorService.timeout = <number>value;
         break;
-    }
+
+      case "puppet.puppetAgentDir": // --> puppet.installDirectory
+        settings.installDirectory = <string>value;
+        break;
+      }
   }
 
   return settings;

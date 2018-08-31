@@ -317,6 +317,11 @@
           "default": true,
           "description": "Enable/disable the Puppet document formatter"
         },
+        "puppet.installDirectory": {
+          "type": "string",
+          "default": null,
+          "description": "The fully qualified path to the Puppet install directory. This can be a PDK or Puppet Agent installation. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'. If this is not set the extension will attempt to detect the installation directory"
+        },
         "puppet.installType": {
           "type": "string",
           "default": "agent",
@@ -325,11 +330,6 @@
             "pdk",
             "agent"
           ]
-        },
-        "puppet.puppetAgentDir": {
-          "type": "string",
-          "default": null,
-          "description": "The fully qualified path to the Puppet agent install directory. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'.  If this is not set the extension will attempt to detect the installation directory"
         },
 
 
@@ -353,6 +353,9 @@
         },
         "puppet.languageserver.debugFilePath": {
           "description": "**DEPRECATED** Please use puppet.editorService.debugFilePath instead"
+        },
+        "puppet.puppetAgentDir": {
+          "description": "**DEPRECATED** Please use puppet.installDirectory instead"
         }
       }
     },
