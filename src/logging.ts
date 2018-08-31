@@ -1,8 +1,8 @@
 'use strict';
 
 export enum LogLevel {
-  Verbose,
   Debug,
+  Verbose,
   Normal,
   Warning,
   Error
