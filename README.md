@@ -173,13 +173,17 @@ The Puppet extension is able to debug the compilation of a Puppet manifest; much
 * Call stack
 * Variables, but only at the top stack frame
 * Limited interactive debug console.  For example, you can assign a variable a value, but just as in regular Puppet you can't change its value later
-* Step In, Out, Over
-
-You may be presented with a Launch Configuration on first use. Please see the [VSCode Debugging link](https://code.visualstudio.com/docs/editor/debugging) for instructions on how to set this up.
+* Step In, Out, and Over
 
 The debugging features in the extension are based on the excellent ideas in [puppet-debugger](https://www.puppet-debugger.com/) by [Corey Osman](https://github.com/nwops).
 
-Settings:
+#### Configuring the debug session
+
+To debug a simple manifest in VS Code, press `F5` and VS Code will try to debug your currently active manifest by running the equivalent of `puppet apply`. Note that by default No Operation (`--noop`) is enabled so that your local computer will not be modified.
+
+The [VSCode Debugging - Launch Configurations](https://code.visualstudio.com/docs/editor/debugging#_launch-configurations) website has instructions on how to configure the debug session with more advanced options.
+
+#### Settings
 
 `manifest` - The manifest to apply.  By default this is the currently open file in the editor
 

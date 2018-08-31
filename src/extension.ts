@@ -7,15 +7,18 @@ import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
+import { IFeature } from "./feature";
 import { setupPuppetCommands } from './commands/puppetcommands';
 import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
+import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
 var terminal: vscode.Terminal;
 const langID = 'puppet'; // don't change this
+let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
   const puppetExtension = vscode.extensions.getExtension('jpogran.puppet-vscode')!;
@@ -66,6 +69,10 @@ export function activate(context: vscode.ExtensionContext) {
 
   connManager = new ConnectionManager(context, logger, statusBar, configSettings);
 
+  extensionFeatures = [
+    new DebugConfigurationFeature(logger, context)
+  ];
+
   if (!commandsRegistered) {
     logger.debug('Configuring commands');
 
@@ -86,6 +93,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+  // Dispose all extension features
+  extensionFeatures.forEach((feature) => {
+    feature.dispose();
+  });
+
   if (connManager !== undefined) {
     connManager.stop();
     connManager.dispose();
