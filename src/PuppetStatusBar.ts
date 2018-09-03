@@ -2,11 +2,14 @@ import * as vscode from 'vscode';
 import { PuppetCommandStrings } from './messages';
 import { ConnectionStatus } from './interfaces';
 import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
+import { ILogger } from "./logging";
 
 export class PuppetStatusBar {
   statusBarItem: vscode.StatusBarItem;
+  private logger: ILogger;
 
-  constructor(langID: string) {
+  constructor(langID: string, logger: ILogger) {
+    this.logger = logger;
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
     this.statusBarItem.command = PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
     this.statusBarItem.show();
@@ -20,7 +23,7 @@ export class PuppetStatusBar {
   }
 
   public setConnectionStatus(statusText: string, status: ConnectionStatus): void {
-    console.log(statusText);
+    this.logger.debug(`Setting status bar to ${statusText}`);
     // Set color and icon for 'Running' by default
     var statusIconText = '$(terminal) ';
     var statusColor = '#affc74';
