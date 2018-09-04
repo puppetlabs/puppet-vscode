@@ -13,7 +13,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- ([GH-397](https://github.com/lingua-pupuli/puppet-vscode/issues/397)) Updated Puppet Editor Services to version 0.15.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
 - ([GH-373](https://github.com/lingua-pupuli/puppet-vscode/issues/373)) Refactor commands and providers to features
+- ([GH-351](https://github.com/lingua-pupuli/puppet-vscode/issues/351)) Updated Puppet Editor Services to version 0.14.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.14.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
 - ([GH-323](https://github.com/lingua-pupuli/puppet-vscode/issues/323)) Update readme with gif examples
 
 ### Deprecated
