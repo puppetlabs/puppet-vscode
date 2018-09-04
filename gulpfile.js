@@ -105,7 +105,8 @@ gulp.task('vendor_editor_services', function (callback) {
     return gulp.src([path.join(config.directory,'lib/**/*'),
                      path.join(config.directory,'vendor/**/*'),
                      path.join(config.directory,'puppet-debugserver'),
-                     path.join(config.directory,'puppet-languageserver')
+                     path.join(config.directory,'puppet-languageserver'),
+                     path.join(config.directory,'puppet-languageserver-sidecar')
                     ], { base: path.join(config.directory) })
               .pipe(gulp.dest('./vendor/languageserver'));
   }
