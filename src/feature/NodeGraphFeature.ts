@@ -1,72 +1,53 @@
 'use strict';
 
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 import * as path from 'path';
-import { CompileNodeGraphRequest } from '../messages';
-import { ConnectionStatus } from '../interfaces';
+
+import { IFeature } from "../feature";
+import { ILogger } from "../logging";
 import { IConnectionManager } from '../connection';
+import { ConnectionStatus } from '../interfaces';
+import { CompileNodeGraphRequest } from '../messages';
 import { reporter } from '../telemetry/telemetry';
-import * as messages from '../messages';
 import * as viz from 'viz.js';
 
-export function isNodeGraphFile(document: vscode.TextDocument) {
-  return document.languageId === 'puppet'
-    && document.uri.scheme !== 'puppet'; // prevent processing of own documents
-}
+const PuppetNodeGraphToTheSideCommandId: string = 'extension.puppetShowNodeGraphToSide';
 
-export function getNodeGraphUri(uri: vscode.Uri) {
-  if (uri.scheme === 'puppet') {
-    return uri;
-  }
+class NodeGraphContentProvider implements vscode.TextDocumentContentProvider {
+  private onDidChangeEvent = new vscode.EventEmitter<vscode.Uri>();
+  private waiting: boolean = false;
+  private connectionManager: IConnectionManager = undefined;
+  private shownLanguageServerNotAvailable = false;
 
-  return uri.with({
-    scheme: 'puppet',
-    path: uri.fsPath + '.rendered',
-    query: uri.toString()
-  });
-}
-
-export class PuppetNodeGraphContentProvider implements vscode.TextDocumentContentProvider {
-  private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
-  private _waiting: boolean = false;
-  private _connectionManager: IConnectionManager = undefined;
-  private _shownLanguageServerNotAvailable = false;
-  
-  constructor(
-    private context: vscode.ExtensionContext,
-    private connMgr: IConnectionManager
-  ) {
-    this._connectionManager = connMgr;
+  constructor(connectionManager:IConnectionManager) {
+    this.connectionManager = connectionManager;
   }
 
   public provideTextDocumentContent(uri: vscode.Uri): Thenable<string> {
     const sourceUri = vscode.Uri.parse(uri.query);
-    var thisProvider = this
 
     return vscode.workspace.openTextDocument(sourceUri).then(document => {
       const initialData = {
         previewUri: uri.toString(),
-        source: sourceUri.toString(),
+        source: sourceUri.toString()
       };
 
-      if (thisProvider._connectionManager.status != ConnectionStatus.Running ) {
-        if (!thisProvider._shownLanguageServerNotAvailable) {
-          vscode.window.showInformationMessage("Puppet Node Graph Preview is not available as the Language Server is not ready");
-          thisProvider._shownLanguageServerNotAvailable = true;
+      if ((this.connectionManager.status !== ConnectionStatus.Running) && (this.connectionManager.status !== ConnectionStatus.Starting)) {
+        if (this.shownLanguageServerNotAvailable) {
+          vscode.window.showInformationMessage("The Puppet Node Graph Preview is not available as the Editor Service is not ready");
+          this.shownLanguageServerNotAvailable = true;
         }
-        return "Puppet Node Graph Preview is not available as the Language Server is not ready";
+        return "The Puppet Node Graph Preview is not available as the Editor Service is not ready";
       }
 
-      // Content Security Policy
-      const nonce = new Date().getTime() + '' + new Date().getMilliseconds();
       // Use the language server to render the document
-      return thisProvider._connectionManager.languageClient
+      return this.connectionManager.languageClient
         .sendRequest(CompileNodeGraphRequest.type, sourceUri)
         .then(
           (compileResult) => {
 
           var svgContent = '';
-          if (compileResult.dotContent != null) {
+          if (compileResult.dotContent !== null) {
             var styling = `
             bgcolor = "transparent"
             color = "white"
@@ -86,9 +67,10 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
           }
 
           var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`
-          if (compileResult.error == null) { errorContent = ''; }
+          if ((compileResult.error === undefined) || (compileResult.error === null)) { errorContent = ''; }
+
           if (reporter) {
-            reporter.sendTelemetryEvent(messages.PuppetCommandStrings.PuppetNodeGraphToTheSideCommandId);
+            reporter.sendTelemetryEvent(PuppetNodeGraphToTheSideCommandId);
           }
 
           return `
@@ -96,59 +78,106 @@ export class PuppetNodeGraphContentProvider implements vscode.TextDocumentConten
             <div id="graphviz_svg_div">
               ${svgContent}
             </div>`;
-      })
+      });
     });
   }
 
   get onDidChange(): vscode.Event<vscode.Uri> {
-    return this._onDidChange.event;
+    return this.onDidChangeEvent.event;
   }
 
   public update(uri: vscode.Uri) {
-    if (!this._waiting) {
-      this._waiting = true;
+    if (!this.waiting) {
+      this.waiting = true;
       setTimeout(() => {
-        this._waiting = false;
-        this._onDidChange.fire(uri);
+        this.waiting = false;
+        this.onDidChangeEvent.fire(uri);
       }, 300);
     }
   }
 }
 
-export function showNodeGraph(uri?: vscode.Uri, sideBySide: boolean = false) {
-  let resource = uri;
-  if (!(resource instanceof vscode.Uri)) {
-    if (vscode.window.activeTextEditor) {
-      // we are relaxed and don't check for puppet files
-      // TODO: Should we? Probably
-      resource = vscode.window.activeTextEditor.document.uri;
+export class NodeGraphFeature implements IFeature {
+  private provider: NodeGraphContentProvider;
+
+  constructor(
+    langID: string,
+    connectionManager: IConnectionManager,
+    logger: ILogger,
+    context: vscode.ExtensionContext
+  ) {
+    context.subscriptions.push(vscode.commands.registerCommand(PuppetNodeGraphToTheSideCommandId,
+      uri => this.showNodeGraph(uri, true))
+    );
+    logger.debug("Registered " + PuppetNodeGraphToTheSideCommandId + " command");
+
+    this.provider = new NodeGraphContentProvider(connectionManager);
+    vscode.workspace.registerTextDocumentContentProvider(langID, this.provider);
+    logger.debug("Registered Node Graph Text Document provider");
+  
+    context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(document => {
+      if (this.isNodeGraphFile(document)) {
+        const uri = this.getNodeGraphUri(document.uri);
+        this.provider.update(uri);
+      }
+    }));
+    logger.debug("Registered onDidSaveTextDocument for node graph event handler");
+  }
+
+  private isNodeGraphFile(document: vscode.TextDocument) {
+    return document.languageId === 'puppet'
+      && document.uri.scheme !== 'puppet'; // prevent processing of own documents
+  }
+  
+  private getNodeGraphUri(uri: vscode.Uri) {
+    if (uri.scheme === 'puppet') {
+      return uri;
     }
+  
+    return uri.with({
+      scheme: 'puppet',
+      path: uri.fsPath + '.rendered',
+      query: uri.toString()
+    });
   }
-
-  const thenable = vscode.commands.executeCommand('vscode.previewHtml',
-    getNodeGraphUri(resource),
-    getViewColumn(sideBySide),
-    `Node Graph '${path.basename(resource.fsPath)}'`);
-
-  return thenable;
-}
-
-export function getViewColumn(sideBySide: boolean): vscode.ViewColumn | undefined {
-  const active = vscode.window.activeTextEditor;
-  if (!active) {
-    return vscode.ViewColumn.One;
-  }
-
-  if (!sideBySide) {
+  
+  private getViewColumn(sideBySide: boolean): vscode.ViewColumn | undefined {
+    const active = vscode.window.activeTextEditor;
+    if (!active) {
+      return vscode.ViewColumn.One;
+    }
+  
+    if (!sideBySide) {
+      return active.viewColumn;
+    }
+  
+    switch (active.viewColumn) {
+      case vscode.ViewColumn.One:
+        return vscode.ViewColumn.Two;
+      case vscode.ViewColumn.Two:
+        return vscode.ViewColumn.Three;
+    }
+  
     return active.viewColumn;
   }
 
-  switch (active.viewColumn) {
-    case vscode.ViewColumn.One:
-      return vscode.ViewColumn.Two;
-    case vscode.ViewColumn.Two:
-      return vscode.ViewColumn.Three;
+  private showNodeGraph(uri?: vscode.Uri, sideBySide: boolean = false) {
+    let resource = uri;
+    if (!(resource instanceof vscode.Uri)) {
+      if (vscode.window.activeTextEditor) {
+        // we are relaxed and don't check for puppet files
+        // TODO: Should we? Probably
+        resource = vscode.window.activeTextEditor.document.uri;
+      }
+    }
+  
+    const thenable = vscode.commands.executeCommand('vscode.previewHtml',
+      this.getNodeGraphUri(resource),
+      this.getViewColumn(sideBySide),
+      `Node Graph '${path.basename(resource.fsPath)}'`);
+  
+    return thenable;
   }
 
-  return active.viewColumn;
+  public dispose(): any { return undefined; }
 }

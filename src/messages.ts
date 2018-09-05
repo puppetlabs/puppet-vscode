@@ -59,7 +59,6 @@ export interface CompileNodeGraphResponse {
 
 export class PuppetCommandStrings {
   static PuppetResourceCommandId: string = 'extension.puppetResource';
-  static PuppetNodeGraphToTheSideCommandId = 'extension.puppetShowNodeGraphToSide';
   static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
   static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
   static PuppetRestartSessionCommandId = 'extension.puppetRestartSession';

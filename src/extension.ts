@@ -13,6 +13,7 @@ import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
+import { NodeGraphFeature } from './feature/NodeGraphFeature';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -70,7 +71,8 @@ export function activate(context: vscode.ExtensionContext) {
   connManager = new ConnectionManager(context, logger, statusBar, configSettings);
 
   extensionFeatures = [
-    new DebugConfigurationFeature(logger, context)
+    new DebugConfigurationFeature(logger, context),
+    new NodeGraphFeature(langID, connManager, logger, context)
   ];
 
   if (!commandsRegistered) {
