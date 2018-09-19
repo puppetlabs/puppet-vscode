@@ -40,6 +40,7 @@ install:
       npm --version;
       npm install -g vsce --silent;
       npm install --silent;
+      node node_modules/gulp/bin/gulp.js build
       node node_modules/gulp/bin/gulp.js bump --version $BUILD_VERSION;
     fi
 
