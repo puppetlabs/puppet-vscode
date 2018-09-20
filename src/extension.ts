@@ -17,6 +17,7 @@ import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKNewClassCommand } from './commands/pdk/pdkNewClassCommand';
 import { PDKNewModuleCommand } from './commands/pdk/pdkNewModuleCommand';
 import { PDKNewTaskCommand } from './commands/pdk/pdkNewTaskCommand';
+import { PDKTestUnitCommand } from './commands/pdk/pdkTestCommand';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -68,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
     new PDKNewModuleCommand(context, logger, terminal),
     new PDKNewClassCommand(context, logger, terminal),
     new PDKNewTaskCommand(context, logger, terminal),
+    new PDKTestUnitCommand(context, logger, terminal),
   ];
 
   if (!commandsRegistered) {
