@@ -8,7 +8,6 @@ import { ConnectionConfiguration } from './configuration';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 import { IFeature } from "./feature";
-import { setupPuppetCommands } from './commands/puppetcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
@@ -19,6 +18,7 @@ import { PDKNewTaskCommand } from './commands/pdk/pdkNewTaskCommand';
 import { PDKTestUnitCommand } from './commands/pdk/pdkTestCommand';
 import { PDKValidateCommand } from './commands/pdk/pdkValidateCommand';
 import { PuppetResourceCommand } from './commands/puppet/puppetResourceCommand';
+import { PuppetFormatFeature } from './providers/puppetFormatDocumentProvider';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -81,12 +81,8 @@ export function activate(context: vscode.ExtensionContext) {
     new PDKValidateCommand(context, logger, terminal),
   ];
 
-  if (!commandsRegistered) {
-    logger.debug('Configuring commands');
-
-    setupPuppetCommands(langID, connManager, settings, context, logger);
-
-    commandsRegistered = true;
+  if (settings.format.enable === true) {
+    extensionFeatures.push(new PuppetFormatFeature(langID, context, connManager, logger));
   }
 
   connManager.start(configSettings);
