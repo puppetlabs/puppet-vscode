@@ -18,6 +18,7 @@ import { PDKNewClassCommand } from './commands/pdk/pdkNewClassCommand';
 import { PDKNewModuleCommand } from './commands/pdk/pdkNewModuleCommand';
 import { PDKNewTaskCommand } from './commands/pdk/pdkNewTaskCommand';
 import { PDKTestUnitCommand } from './commands/pdk/pdkTestCommand';
+import { PDKValidateCommand } from './commands/pdk/pdkValidateCommand';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -70,6 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
     new PDKNewClassCommand(context, logger, terminal),
     new PDKNewTaskCommand(context, logger, terminal),
     new PDKTestUnitCommand(context, logger, terminal),
+    new PDKValidateCommand(context, logger, terminal),
   ];
 
   if (!commandsRegistered) {

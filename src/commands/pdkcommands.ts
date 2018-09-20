@@ -6,9 +6,4 @@ import { PDKValidateCommand } from './pdk/pdkValidateCommand';
 
 export function setupPDKCommands(langID: string, connManager: IConnectionManager, ctx: vscode.ExtensionContext, logger: ILogger, terminal: vscode.Terminal) {
 
-  let validateCommand = new PDKValidateCommand(logger, terminal);
-  ctx.subscriptions.push(validateCommand);
-  ctx.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkValidateCommandId, () => {
-    validateCommand.run();
-  }));
 }
