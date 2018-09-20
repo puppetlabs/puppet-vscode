@@ -6,6 +6,7 @@ import { IConnectionManager } from '../../connection';
 import { ILogger } from '../../logging';
 import { reporter } from '../../telemetry/telemetry';
 import * as messages from '../../messages';
+import { IFeature } from '../../feature';
 
 class RequestParams implements messages.PuppetResourceRequestParams {
   // tslint complains that these properties have 'no initializer and is not definitely assigned in the constructor.'
@@ -15,13 +16,16 @@ class RequestParams implements messages.PuppetResourceRequestParams {
   title: string; // tslint:disable-line
 }
 
-export class PuppetResourceCommand {
+export class PuppetResourceCommand implements IFeature {
   private _connectionManager: IConnectionManager;
   private logger: ILogger;
 
-  constructor(connMgr: IConnectionManager, logger: ILogger) {
+  constructor(context:vscode.ExtensionContext, connMgr: IConnectionManager, logger: ILogger) {
     this._connectionManager = connMgr;
     this.logger = logger;
+    context.subscriptions.push(vscode.commands.registerCommand(messages.PuppetCommandStrings.PuppetResourceCommandId, () => {
+      this.run();
+    }));
   }
 
   private pickPuppetResource(): Thenable<string | undefined> {

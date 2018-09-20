@@ -18,6 +18,7 @@ import { PDKNewModuleCommand } from './commands/pdk/pdkNewModuleCommand';
 import { PDKNewTaskCommand } from './commands/pdk/pdkNewTaskCommand';
 import { PDKTestUnitCommand } from './commands/pdk/pdkTestCommand';
 import { PDKValidateCommand } from './commands/pdk/pdkValidateCommand';
+import { PuppetResourceCommand } from './commands/puppet/puppetResourceCommand';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -71,6 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
     new NodeGraphFeature(langID, connManager, logger, context),
+    new PuppetResourceCommand(context, connManager, logger),
 
     new PDKNewModuleCommand(context, logger, terminal),
     new PDKNewClassCommand(context, logger, terminal),
