@@ -15,6 +15,7 @@ import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKNewClassCommand } from './commands/pdk/pdkNewClassCommand';
+import { PDKNewModuleCommand } from './commands/pdk/pdkNewModuleCommand';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -63,6 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
     new DebugConfigurationFeature(logger, context),
     new NodeGraphFeature(langID, connManager, logger, context),
 
+    new PDKNewModuleCommand(context, logger, terminal),
     new PDKNewClassCommand(context, logger, terminal),
   ];
 
