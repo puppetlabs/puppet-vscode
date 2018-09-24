@@ -21,7 +21,7 @@
     "url": "https://github.com/lingua-pupuli/puppet-vscode/issues"
   },
   "engines": {
-    "vscode": "^1.24.0"
+    "vscode": "^1.27.0"
   },
   "categories": [
     "Linters",
@@ -331,8 +331,6 @@
             "agent"
           ]
         },
-
-
         "puppet.languageclient.protocol": {
           "description": "**DEPRECATED** Please use puppet.editorService.protocol instead"
         },
@@ -340,7 +338,7 @@
           "description": "**DEPRECATED** Please use puppet.editorService.loglevel instead"
         },
         "puppet.languageserver.address": {
-          "description":  "**DEPRECATED** Please use puppet.editorService.tcp.address instead"
+          "description": "**DEPRECATED** Please use puppet.editorService.tcp.address instead"
         },
         "puppet.languageserver.port": {
           "description": "**DEPRECATED** Please use puppet.editorService.tcp.port instead"

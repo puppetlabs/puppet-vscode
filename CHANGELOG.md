@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+- ([GH-314](https://github.com/lingua-pupuli/puppet-vscode/issues/314)) Update to VSCode Engine 1.27
+
 ## [0.11.1] - 2018-08-24
 
 ### Added
