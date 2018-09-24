@@ -61,8 +61,6 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
-![Example of features](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/language_server.gif)
-
 ## Requirements
 
 You will need to have the [Puppet Agent](https://puppet.com/docs/puppet/4.10/about_agent.html)  or [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) installed in order to fully use this extension.
@@ -97,13 +95,19 @@ Syntax highlighting recognizes all versions of Puppet and displays as you type.
 - Puppet Grammar
 - Module metadata files
 
+![syntax_highlighting](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/syntax_highlighting.png)
+
 ### Auto Completion
 
 Auto complete Puppet types and classes and their parameter sets as you type. Tab completion works as you would expect.
 
+![auto_complete](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/auto_complete.gif)
+
 ### Hover Support
 
 Hovering over any resource, class declaration or other Puppet symbol provides instant contextual information. For example, hovering over the resource declaration lists the type name and parameter list, with all relevant help text.
+
+![hover_support](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/hover_support.gif)
 
 ### Code Snippets
 
@@ -127,6 +131,8 @@ You can import existing resources directly using `puppet resource`
 
 The information returned will be pasted into the open editor window where your cursor is resting, or at the begining of an empty file.
 
+![puppet_resource](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_resource.gif)
+
 #### Puppet Node Graph preview
 
 You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastructure-models) of a manifest while you edit your Puppet Code.
@@ -136,6 +142,8 @@ You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastr
 2. Type `puppet open node`.. and press enter
 
 The node graph will appear next to the manifest
+
+![puppet_node_graph](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_node_graph.gif)
 
 ### Puppet Development Kit Support
 
@@ -149,17 +157,25 @@ You can use the [Puppet Development Kit](https://puppet.com/blog/develop-modules
 
 `PDK New Module` is available even if the extension isn't loaded, the rest of the commands are only available when the extension is loaded.
 
+![pdk_new_module](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/pdk_new_module.gif)
+
 #### PDK new class
 
 You can create new classes using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
+
+![pdk_new_class](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/pdk_new_class.gif)
 
 #### PDK validate
 
 You can initiate a valiadtion of your module using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
 
+![pdk_validate](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/pdk_validate.gif)
+
 #### PDK test unit
 
 You can run the test suite of your module using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
+
+![pdk_test_unit](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/pdk_test_unit.gif)
 
 ### Debugging Puppet manifests
 
@@ -175,6 +191,9 @@ The Puppet extension is able to debug the compilation of a Puppet manifest; much
 * Limited interactive debug console.  For example, you can assign a variable a value, but just as in regular Puppet you can't change its value later
 * Step In, Out, and Over
 
+
+![Puppet Debug Adapter](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_debug.gif)
+
 The debugging features in the extension are based on the excellent ideas in [puppet-debugger](https://www.puppet-debugger.com/) by [Corey Osman](https://github.com/nwops).
 
 #### Configuring the debug session
@@ -185,17 +204,17 @@ The [VSCode Debugging - Launch Configurations](https://code.visualstudio.com/doc
 
 #### Settings
 
-`manifest` - The manifest to apply.  By default this is the currently open file in the editor
+- `manifest` - The manifest to apply.  By default this is the currently open file in the editor
 
-`noop` - Whether the `puppet apply` sets No Operation (Noop) mode.  By default, this is set to true.  This means when running the debugger it will not make changes to your system. The [documentation about the puppet agent](https://puppet.com/docs/puppet/5.3/man/apply.html#OPTIONS) has more information about `puppet apply` and and the `noop` option.
+- `noop` - Whether the `puppet apply` sets No Operation (Noop) mode.  By default, this is set to true.  This means when running the debugger it will not make changes to your system. The [documentation about the puppet agent](https://puppet.com/docs/puppet/5.3/man/apply.html#OPTIONS) has more information about `puppet apply` and and the `noop` option.
 
-`args` - Additional arguements to pass to `puppet apply`, for example `['--debug']` will output debug information
-
-![Puppet Debug Adapter](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_debug.gif)
+- `args` - Additional arguements to pass to `puppet apply`, for example `['--debug']` will output debug information
 
 ## Installing the Extension
 
 You can install the official release of the Puppet extension by following the steps in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery). In the Extensions pane, search for "puppet-vscode" extension and install it there. You will get notified automatically about any future extension updates!
+
+![extension_install](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/extension_install.gif)
 
 You can also install the extension without access to the internet by following these [instructions](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix.)
 
