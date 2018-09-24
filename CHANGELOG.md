@@ -6,7 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-- ([GH-314](https://github.com/lingua-pupuli/puppet-vscode/issues/314)) Update to VSCode Engine 1.27
+### Added
+
+- ([GH-366](https://github.com/lingua-pupuli/puppet-vscode/issues/366)) New Debug Adapter
+- ([GH-354](https://github.com/lingua-pupuli/puppet-vscode/issues/354)) Document PDK as source information
+
+### Changed
+
+- ([GH-373](https://github.com/lingua-pupuli/puppet-vscode/issues/373)) Refactor commands and providers to features
+- ([GH-323](https://github.com/lingua-pupuli/puppet-vscode/issues/323)) Update readme with gif examples
+
+### Deprecated
+
+- ([GH-315](https://github.com/lingua-pupuli/puppet-vscode/issues/315)) Deprecate puppetAgentDir setting
 
 ## [0.11.1] - 2018-08-24
 
