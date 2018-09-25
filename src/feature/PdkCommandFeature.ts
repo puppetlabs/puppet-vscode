@@ -28,6 +28,11 @@ export class PdkCommandFeature implements IFeature {
       this.pdkNewTask();
     }));
     this.logger.debug("Registered " + PDKCommandStrings.PdkNewTaskCommandId + " command");
+
+    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkTestUnitCommandId, () => {
+      this.pdkTestUnit();
+    }));
+    this.logger.debug("Registered " + PDKCommandStrings.PdkTestUnitCommandId + " command");
   }
 
   public dispose(): any {
@@ -90,5 +95,13 @@ export class PdkCommandFeature implements IFeature {
         reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewTaskCommandId);
       }
     });
+  }
+
+  public pdkTestUnit() {
+    this.terminal.sendText(`pdk test unit`);
+    this.terminal.show();
+    if (reporter) {
+      reporter.sendTelemetryEvent(PDKCommandStrings.PdkTestUnitCommandId);
+    }
   }
 }
