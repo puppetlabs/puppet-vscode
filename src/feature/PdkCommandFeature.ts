@@ -10,9 +10,13 @@ export class PdkCommandFeature implements IFeature {
   private logger: ILogger;
   private terminal: vscode.Terminal;
 
-  constructor(context:vscode.ExtensionContext, logger: ILogger, terminal: vscode.Terminal) {
+  constructor(context:vscode.ExtensionContext, logger: ILogger) {
     this.logger = logger;
-    this.terminal = terminal;
+    this.terminal = vscode.window.createTerminal('Puppet PDK');
+    this.terminal.processId.then(pid => {
+      logger.debug('pdk shell started, pid: ' + pid);
+    });
+    context.subscriptions.push(this.terminal);
 
     context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkNewModuleCommandId, () => {
       this.pdkNewModule();
