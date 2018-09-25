@@ -9,7 +9,6 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 import { IFeature } from "./feature";
 import { setupPuppetCommands } from './commands/puppetcommands';
-import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
@@ -75,7 +74,6 @@ export function activate(context: vscode.ExtensionContext) {
     logger.debug('Configuring commands');
 
     setupPuppetCommands(langID, connManager, settings, context, logger);
-    setupPDKCommands(langID, connManager, context, logger, terminal);
 
     commandsRegistered = true;
   }
