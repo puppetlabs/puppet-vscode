@@ -23,6 +23,11 @@ export class PdkCommandFeature implements IFeature {
       this.pdkNewClass();
     }));
     this.logger.debug("Registered " + PDKCommandStrings.PdkNewClassCommandId + " command");
+
+    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkNewTaskCommandId, () => {
+      this.pdkNewTask();
+    }));
+    this.logger.debug("Registered " + PDKCommandStrings.PdkNewTaskCommandId + " command");
   }
 
   public dispose(): any {
@@ -68,6 +73,21 @@ export class PdkCommandFeature implements IFeature {
       this.terminal.show();
       if (reporter) {
         reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewClassCommandId);
+      }
+    });
+  }
+
+  public pdkNewTask() {
+    let nameOpts: vscode.QuickPickOptions = {
+      placeHolder: "Enter a name for the new Puppet Task",
+      matchOnDescription: true,
+      matchOnDetail: true
+    };
+    vscode.window.showInputBox(nameOpts).then(taskName => {
+      this.terminal.sendText(`pdk new task ${taskName}`);
+      this.terminal.show();
+      if (reporter) {
+        reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewTaskCommandId);
       }
     });
   }
