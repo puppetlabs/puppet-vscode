@@ -9,11 +9,11 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 import { IFeature } from "./feature";
 import { setupPuppetCommands } from './commands/puppetcommands';
-import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
+import { PdkCommandFeature } from './feature/PdkCommandFeature';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -43,26 +43,14 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   if (!fs.existsSync(configSettings.puppetBaseDir)) {
-    logger.error('Could not find a valid Puppet installation at ' + configSettings.puppetBaseDir);
-    vscode.window
-      .showErrorMessage(
-        `Could not find a valid Puppet installation at '${
-          configSettings.puppetBaseDir
-        }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
-        { modal: false },
-        { title: 'Troubleshooting Information' }
-      )
-      .then(item => {
-        if (item === undefined) {
-          return;
-        }
-        if (item.title === 'Troubleshooting Information') {
-          vscode.commands.executeCommand(
-            'vscode.open',
-            vscode.Uri.parse('https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem')
-          );
-        }
-      });
+    var message = `Could not find a valid Puppet installation at '${
+      configSettings.puppetBaseDir
+    }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`;
+    var title = 'Troubleshooting Information';
+    var url = 'https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem';
+
+    logger.error(message);
+    notifyErrorPuppetNotFound(message, title, url);
     return null;
   } else {
     logger.debug('Found a valid Puppet installation at ' + configSettings.puppetDir);
@@ -72,20 +60,14 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
-    new NodeGraphFeature(langID, connManager, logger, context)
+    new NodeGraphFeature(langID, connManager, logger, context),
+    new PdkCommandFeature(context, logger),
   ];
 
   if (!commandsRegistered) {
     logger.debug('Configuring commands');
 
     setupPuppetCommands(langID, connManager, settings, context, logger);
-
-    terminal = vscode.window.createTerminal('Puppet PDK');
-    terminal.processId.then(pid => {
-      logger.debug('pdk shell started, pid: ' + pid);
-    });
-    setupPDKCommands(langID, connManager, context, logger, terminal);
-    context.subscriptions.push(terminal);
 
     commandsRegistered = true;
   }
@@ -104,6 +86,19 @@ export function deactivate() {
     connManager.stop();
     connManager.dispose();
   }
+}
+
+async function notifyErrorPuppetNotFound(message:string, title:string, url:string){
+  vscode.window.showErrorMessage(
+    message, { modal: false }, { title: title }
+  ).then(item => {
+    if (item === undefined) { return; }
+    if (item.title === title) {
+      vscode.commands.executeCommand(
+        'vscode.open', vscode.Uri.parse(url)
+      );
+    }
+  });
 }
 
 async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext, version: string) {
