@@ -18,30 +18,18 @@ export class PdkCommandFeature implements IFeature {
     });
     context.subscriptions.push(this.terminal);
 
-    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkNewModuleCommandId, () => {
-      this.pdkNewModule();
-    }));
-    this.logger.debug("Registered " + PDKCommandStrings.PdkNewModuleCommandId + " command");
-
-    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkNewClassCommandId, () => {
-      this.pdkNewClass();
-    }));
-    this.logger.debug("Registered " + PDKCommandStrings.PdkNewClassCommandId + " command");
-
-    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkNewTaskCommandId, () => {
-      this.pdkNewTask();
-    }));
-    this.logger.debug("Registered " + PDKCommandStrings.PdkNewTaskCommandId + " command");
-
-    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkTestUnitCommandId, () => {
-      this.pdkTestUnit();
-    }));
-    this.logger.debug("Registered " + PDKCommandStrings.PdkTestUnitCommandId + " command");
-
-    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkValidateCommandId, () => {
-      this.pdkValidate();
-    }));
-    this.logger.debug("Registered " + PDKCommandStrings.PdkValidateCommandId + " command");
+    [
+      PDKCommandStrings.PdkNewModuleCommandId,
+      PDKCommandStrings.PdkNewClassCommandId,
+      PDKCommandStrings.PdkNewTaskCommandId,
+      PDKCommandStrings.PdkTestUnitCommandId,
+      PDKCommandStrings.PdkValidateCommandId
+    ].forEach((id)=>{
+      context.subscriptions.push(vscode.commands.registerCommand(id, () => {
+        this.pdkNewModule();
+      }));
+      this.logger.debug("Registered " + id + " command");
+    });
   }
 
   public dispose(): any {
