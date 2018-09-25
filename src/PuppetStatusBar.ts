@@ -8,7 +8,7 @@ export class PuppetStatusBar {
   statusBarItem: vscode.StatusBarItem;
   private logger: ILogger;
 
-  constructor(langID: string, logger: ILogger) {
+  constructor(context:vscode.ExtensionContext, langID: string, logger: ILogger) {
     this.logger = logger;
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
     this.statusBarItem.command = PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
@@ -20,6 +20,9 @@ export class PuppetStatusBar {
         this.statusBarItem.show();
       }
     });
+    context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
+      () => { PuppetStatusBar.showConnectionMenu(); }
+    ));
   }
 
   public setConnectionStatus(statusText: string, status: ConnectionStatus): void {
