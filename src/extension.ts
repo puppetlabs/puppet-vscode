@@ -59,6 +59,12 @@ export function activate(context: vscode.ExtensionContext) {
 
   connManager = new ConnectionManager(context, logger, statusBar, configSettings);
 
+  terminal = vscode.window.createTerminal('Puppet PDK');
+  terminal.processId.then(pid => {
+    logger.debug('pdk shell started, pid: ' + pid);
+  });
+  context.subscriptions.push(terminal);
+
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
     new NodeGraphFeature(langID, connManager, logger, context),
@@ -69,13 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
     logger.debug('Configuring commands');
 
     setupPuppetCommands(langID, connManager, settings, context, logger);
-
-    terminal = vscode.window.createTerminal('Puppet PDK');
-    terminal.processId.then(pid => {
-      logger.debug('pdk shell started, pid: ' + pid);
-    });
     setupPDKCommands(langID, connManager, context, logger, terminal);
-    context.subscriptions.push(terminal);
 
     commandsRegistered = true;
   }
