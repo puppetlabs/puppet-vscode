@@ -21,15 +21,4 @@ export function setupPuppetCommands(langID:string, connManager:IConnectionManage
     ));
   }
 
-  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
-    () => { PuppetStatusBar.showConnectionMenu(); }
-  ));
-
-  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
-    () => { connManager.showLogger(); }
-  ));
-
-  ctx.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetRestartSessionCommandId,
-    () => { connManager.restartConnection(); }
-  ));
 }
