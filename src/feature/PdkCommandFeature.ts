@@ -18,6 +18,11 @@ export class PdkCommandFeature implements IFeature {
       this.pdkNewModule();
     }));
     this.logger.debug("Registered " + PDKCommandStrings.PdkNewModuleCommandId + " command");
+
+    context.subscriptions.push(vscode.commands.registerCommand(PDKCommandStrings.PdkNewClassCommandId, () => {
+      this.pdkNewClass();
+    }));
+    this.logger.debug("Registered " + PDKCommandStrings.PdkNewClassCommandId + " command");
   }
 
   public dispose(): any {
@@ -49,6 +54,21 @@ export class PdkCommandFeature implements IFeature {
           reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
         }
       });
+    });
+  }
+
+  public pdkNewClass() {
+    let nameOpts: vscode.QuickPickOptions = {
+      placeHolder: "Enter a name for the new Puppet class",
+      matchOnDescription: true,
+      matchOnDetail: true
+    };
+    vscode.window.showInputBox(nameOpts).then(moduleName => {
+      this.terminal.sendText(`pdk new class ${moduleName}`);
+      this.terminal.show();
+      if (reporter) {
+        reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewClassCommandId);
+      }
     });
   }
 }
