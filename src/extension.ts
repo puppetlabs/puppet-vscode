@@ -14,6 +14,7 @@ import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
+import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -72,7 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
-    new NodeGraphFeature(langID, connManager, logger, context)
+    new NodeGraphFeature(langID, connManager, logger, context),
+    new PuppetResourceFeature(context, connManager, logger),
   ];
 
   if (!commandsRegistered) {
