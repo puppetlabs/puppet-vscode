@@ -13,6 +13,7 @@ import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
+import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 
 var connManager: ConnectionManager;
@@ -72,13 +73,14 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
+    new FormatDocumentFeature(langID, connManager, settings, logger, context),
     new NodeGraphFeature(langID, connManager, logger, context)
   ];
 
   if (!commandsRegistered) {
     logger.debug('Configuring commands');
 
-    setupPuppetCommands(langID, connManager, settings, context, logger);
+    setupPuppetCommands(connManager, context, logger);
 
     terminal = vscode.window.createTerminal('Puppet PDK');
     terminal.processId.then(pid => {
