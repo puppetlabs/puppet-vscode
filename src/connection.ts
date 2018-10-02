@@ -31,6 +31,7 @@ export class ConnectionManager implements IConnectionManager {
   private languageServerProcess: cp.ChildProcess;
   private puppetLanguageClient: PuppetLanguageClient;
   private timeSpent:number;
+  private dockerName: string = undefined;
 
   constructor(
     context: vscode.ExtensionContext,
@@ -98,6 +99,9 @@ export class ConnectionManager implements IConnectionManager {
       this.languageServerClient.stop();
     }
 
+    // Kill the docker container
+    this.stopLanguageServerDockerProcess();
+
     // The language server process we spawn will close once the
     // client disconnects.  No need to forcibly kill the process here. Also the language
     // client will try and send a shutdown event, which will throw errors if the language
@@ -145,7 +149,7 @@ export class ConnectionManager implements IConnectionManager {
 
           // If the language client isn't already running and it's sent the trigger text, start up a client
           if (this.languageServerClient === undefined && /LANGUAGE SERVER RUNNING/.test(data.toString())) {
-            if(this.connectionConfiguration.port){            
+            if(this.connectionConfiguration.port){
               this.languageServerClient = this.createLanguageClient();
             }else{
               var p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
@@ -156,6 +160,17 @@ export class ConnectionManager implements IConnectionManager {
           }
         });
         break;
+        case ProtocolType.DOCKER:
+          this.languageServerProcess.stdout.on('data', data => {
+            this.logger.debug('OUTPUT: ' + data.toString());
+
+            // If the language client isn't already running and it's sent the trigger text, start up a client
+            if (this.languageServerClient === undefined && /LANGUAGE SERVER RUNNING/.test(data.toString())) {
+              this.languageServerClient = this.createLanguageClient();
+              this.extensionContext.subscriptions.push(this.languageServerClient.start());
+            }
+          });
+          break;
       case ProtocolType.STDIO:
         this.logger.debug('Starting STDIO client: ');
         this.languageServerClient = this.createLanguageClient();
@@ -182,6 +197,74 @@ export class ConnectionManager implements IConnectionManager {
     callback(proc);
   }
 
+  private createUniqueDockerName() {
+    return 'puppet-vscode-xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0, v = c === 'x' ? r : ( r & 0x3 | 0x8 );
+      return v.toString(16);
+    });
+  }
+
+  private getDockerPort(name: string) {
+    let cmd: string = 'docker.exe';
+    let args: Array<string> = [
+      "port",
+      this.dockerName,
+      '8082'
+    ];
+    var proc = cp.spawnSync(cmd, args);
+    // docker port {id} {port} returns output like 0.0.0.0:1234
+    // We want to retrieve that port for use in the TCP connection.
+    let regex = /:(\d+)$/m;
+    return Number(regex.exec(proc.stdout.toString())[1]);
+  }
+
+  public startLanguageServerDockerProcess( options: cp.SpawnOptions, callback: Function) {
+    let logPrefix: string = '[startLanguageServerProcessAsContainer] ';
+    this.dockerName = this.createUniqueDockerName();
+    // TODO: get settings to specify image name and tag
+    let cmd: string = 'docker.exe';
+    let args: Array<string> = [
+      "run",
+      '--rm',
+      '-i',
+      '-P',
+      '--name',
+      this.dockerName,
+      `${this.connectionConfiguration.dockerImageName}:${this.connectionConfiguration.dockerImageTag}`
+    ];
+    console.log(vscode.CompletionItemKind.Class);
+    // Is this windows only? When run on windows PATH is just the ruby paths, Path has everything else.
+    options.env.PATH = process.env.PATH;
+    this.logger.debug(logPrefix + 'Starting the language server as a container with ' + cmd + ' ' + args.join(' '));
+    var proc = cp.spawn(cmd, args, options);
+    this.logger.debug(logPrefix + 'Language server PID:' + proc.pid);
+    callback(proc);
+  }
+
+  // TODO: Should this return anything? /shrug
+  private stopLanguageServerDockerProcess(): void {
+    let logPrefix: string = '[stopLanguageServerProcessAsContainer] ';
+    let cmd: string = 'docker.exe';
+    let args: Array<string> = [
+      "rm",
+      '--force',
+      this.dockerName,
+    ];
+    //TODO: Is this necessary?
+    let spawn_options: cp.SpawnOptions = {};
+        spawn_options.stdio            = 'pipe';
+
+    // TODO: Is this necessary?
+    switch (process.platform) {
+      case 'win32':
+        break;
+      default:
+        spawn_options.shell = true;
+        break;
+    }
+    var proc = cp.spawn(cmd, args, spawn_options);
+  }
+
   private createLanguageServerProcess(serverExe: string, callback: Function) {
     let logPrefix: string = '[createLanguageServerProcess] ';
     this.logger.debug(logPrefix + 'Language server found at: ' + serverExe);
@@ -198,6 +281,9 @@ export class ConnectionManager implements IConnectionManager {
         this.logger.debug(logPrefix + 'Selected port for local language server: ' + this.connectionConfiguration.port);
       }
       connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
+    }else if(this.connectionConfiguration.protocol === ProtocolType.DOCKER){
+      this.logger.debug(logPrefix + 'DOCKER Server process starting');
+      connMgr.startLanguageServerDockerProcess(localServer.options, callback);
     }else{
       this.logger.debug(logPrefix + 'STDIO Server process starting');
       connMgr.startLanguageServerProcess(localServer.command, localServer.args, localServer.options, callback);
@@ -302,6 +388,14 @@ export class ConnectionManager implements IConnectionManager {
           `Starting language server client (host ${this.connectionConfiguration.host} port ${
             this.connectionConfiguration.port
           })`
+        );
+        break;
+      case ProtocolType.DOCKER:
+        serverOptions =  this.createTCPServerOptions(
+          'localhost',
+          this.getDockerPort(this.dockerName),
+          this.logger,
+          this
         );
         break;
       // Default is STDIO if the protocol is unknown, or STDIO

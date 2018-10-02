@@ -13,6 +13,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public timeout: number;
   public enableFileCache: boolean;
   public debugFilePath: string;
+  public dockerImageName: string;
+  public dockerImageTag: string;
   private settings: ISettings;
 
   constructor() {
@@ -23,6 +25,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     this.timeout = this.settings.editorService.timeout;
     this.enableFileCache = (this.settings.editorService.featureflags.indexOf('filecache') !== -1);
     this.debugFilePath = this.settings.editorService.debugFilePath;
+    this.dockerImageName = this.settings.editorService.docker.imageName;
+    this.dockerImageTag = this.settings.editorService.docker.tag;
 
     this._puppetInstallType = this.settings.installType;
   }
@@ -142,6 +146,9 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
         } else {
           return ConnectionType.Remote;
         }
+      case ProtocolType.DOCKER:
+        // DOCKER containers are always managed locally
+        return ConnectionType.Local;
       case ProtocolType.STDIO:
         // STDIO can only ever be local
         return ConnectionType.Local;
@@ -155,6 +162,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     switch (this.settings.editorService.protocol) {
       case ProtocolType.TCP:
         return ProtocolType.TCP;
+      case ProtocolType.DOCKER:
+        return ProtocolType.DOCKER;
       default:
         return ProtocolType.STDIO;
     }

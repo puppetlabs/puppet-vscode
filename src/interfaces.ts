@@ -20,6 +20,7 @@ export enum ProtocolType {
   UNKNOWN = '<unknown>',
   STDIO = 'stdio',
   TCP = 'tcp',
+  DOCKER = 'docker'
 }
 
 export interface IConnectionConfiguration {
@@ -38,6 +39,9 @@ export interface IConnectionConfiguration {
   sslCertFile: string;
   sslCertDir: string;
   languageServerCommandLine: Array<string>;
+
+  dockerImageName: string;
+  dockerImageTag: string;
 
   puppetInstallType:PuppetInstallType; 
   pdkBinDir:string;

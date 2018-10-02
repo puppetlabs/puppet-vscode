@@ -4,7 +4,8 @@ import vscode = require("vscode");
 import { ProtocolType, PuppetInstallType } from './interfaces';
 
 export interface IEditorServiceDockerSettings {
-  // Future Use
+  imageName ?: string;
+  tag ?: string;
 }
 
 export interface IEditorServiceTCPSettings {
@@ -131,6 +132,11 @@ export function settingsFromWorkspace(): ISettings {
     enable: true,
   };
 
+  const defaultDockerSettings: IEditorServiceDockerSettings = {
+    imageName: "linguapupuli/puppet-langauge-server",
+    tag: "latest"
+  };
+
   const defaultPDKSettings: IPDKSettings = {};
 
   const workspaceConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(workspaceSectionName);
@@ -142,6 +148,7 @@ export function settingsFromWorkspace(): ISettings {
     installDirectory: workspaceConfig.get<string>("installDirectory", undefined),
     installType: workspaceConfig.get<PuppetInstallType>("installType", PuppetInstallType.PUPPET),
     lint: workspaceConfig.get<ILintSettings>("lint", defaultLintSettings),
+    docker: workspaceConfig.get<IEditorServiceDockerSettings>("docker", defaultDockerSettings),
     pdk: workspaceConfig.get<IPDKSettings>("pdk", defaultPDKSettings)
   };
 
