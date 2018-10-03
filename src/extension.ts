@@ -9,16 +9,15 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
 import { IFeature } from "./feature";
 import { setupPuppetCommands } from './commands/puppetcommands';
-import { setupPDKCommands } from './commands/pdkcommands';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
+import { PDKFeature } from './feature/PDKFeature';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
-var terminal: vscode.Terminal;
 const langID = 'puppet'; // don't change this
 let extensionFeatures: IFeature[] = [];
 
@@ -74,20 +73,14 @@ export function activate(context: vscode.ExtensionContext) {
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
     new FormatDocumentFeature(langID, connManager, settings, logger, context),
-    new NodeGraphFeature(langID, connManager, logger, context)
+    new NodeGraphFeature(langID, connManager, logger, context),
+    new PDKFeature(context, logger),
   ];
 
   if (!commandsRegistered) {
     logger.debug('Configuring commands');
 
     setupPuppetCommands(connManager, context, logger);
-
-    terminal = vscode.window.createTerminal('Puppet PDK');
-    terminal.processId.then(pid => {
-      logger.debug('pdk shell started, pid: ' + pid);
-    });
-    setupPDKCommands(langID, connManager, context, logger, terminal);
-    context.subscriptions.push(terminal);
 
     commandsRegistered = true;
   }
