@@ -2,7 +2,8 @@ import { ConnectionStatus } from "./interfaces";
 import { LanguageClient } from "vscode-languageclient/lib/main";
 import { PuppetStatusBar } from "./PuppetStatusBar";
 import { ILogger } from "./logging";
-import { ServerOptions, LanguageClientOptions } from "vscode-languageclient/lib/client";
+import { LanguageClientOptions } from "vscode-languageclient/lib/client";
+import { ServerOptions } from "vscode-languageclient";
 import { PuppetVersionDetails, PuppetVersionRequest } from "./messages";
 import { ConnectionManager } from "./connection";
 
