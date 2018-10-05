@@ -55,9 +55,10 @@ class NodeGraphContentProvider implements vscode.TextDocumentContentProvider {
             node [ shape="box" penwidth="2" color="#e0e0e0" style="rounded,filled" fontname="Courier New" fillcolor=black, fontcolor="white"]
             edge [ style="bold" color="#f0f0f0" penwith="2" ]
 
-            label = ""`
+            label = ""`;
 
             var graphContent = compileResult.dotContent;
+            if (graphContent === undefined) { graphContent = ''; }
             // vis.jz sees backslashes as escape characters, however they are not in the DOT language.  Instead
             // we should escape any backslash coming from a valid DOT file in preparation to be rendered
             graphContent = graphContent.replace(/\\/g,"\\\\");
@@ -66,7 +67,7 @@ class NodeGraphContentProvider implements vscode.TextDocumentContentProvider {
             svgContent = viz(graphContent,"svg");
           }
 
-          var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`
+          var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`;
           if ((compileResult.error === undefined) || (compileResult.error === null)) { errorContent = ''; }
 
           if (reporter) {
