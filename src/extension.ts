@@ -32,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(new Reporter(context));
   var logger = new OutputChannelLogger(settings);
-  var statusBar = new PuppetStatusBar(langID, logger);
+  var statusBar = new PuppetStatusBar(langID, context, logger);
   var configSettings = new ConnectionConfiguration();
 
   // Raise a warning if we detect any legacy settings
