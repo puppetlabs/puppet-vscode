@@ -9,7 +9,7 @@ import { PuppetStatusBar } from './PuppetStatusBar';
 import { PuppetLanguageClient } from './PuppetLanguageClient';
 import { ConnectionConfiguration } from './configuration';
 import { reporter } from './telemetry/telemetry';
-import { PuppetVersionRequest } from './messages';
+import { PuppetVersionRequest, PuppetCommandStrings } from './messages';
 
 const langID = 'puppet'; // don't change this
 const documentSelector = { scheme: 'file', language: langID };
@@ -44,6 +44,13 @@ export class ConnectionManager implements IConnectionManager {
     this.connectionStatus = ConnectionStatus.NotStarted;
     this.statusBarItem = statusBar;
     this.connectionConfiguration = connectionConfiguration;
+    context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
+      () => { this.showLogger(); }
+    ));
+  
+    context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetRestartSessionCommandId,
+      () => { this.restartConnection(); }
+    ));
   }
 
   public get status(): ConnectionStatus {
