@@ -15,6 +15,7 @@ import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
+import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 
 var connManager: ConnectionManager;
 var commandsRegistered = false;
@@ -75,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
     new FormatDocumentFeature(langID, connManager, settings, logger, context),
     new NodeGraphFeature(langID, connManager, logger, context),
     new PDKFeature(context, logger),
+    new PuppetResourceFeature(context, connManager, logger),
   ];
 
   if (!commandsRegistered) {
