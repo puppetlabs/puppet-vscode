@@ -7,98 +7,47 @@ import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { Reporter } from './telemetry/telemetry';
-import { IFeature } from "./feature";
-import { setupPuppetCommands } from './commands/puppetcommands';
-import { setupPDKCommands } from './commands/pdkcommands';
+import { IFeature } from './feature';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
+import { PDKFeature } from './feature/PDKFeature';
+import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
+import { ILogger } from './logging';
 
 var connManager: ConnectionManager;
-var commandsRegistered = false;
-var terminal: vscode.Terminal;
 const langID = 'puppet'; // don't change this
 let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
-  const puppetExtension = vscode.extensions.getExtension('jpogran.puppet-vscode')!;
-  const puppetExtensionVersion = puppetExtension.packageJSON.version;
-
-  notifyOnNewExtensionVersion(context, puppetExtensionVersion);
-
-  const settings: ISettings = settingsFromWorkspace();
+  notifyOnNewExtensionVersion(context);
+  checkForLegacySettings();
 
   context.subscriptions.push(new Reporter(context));
-  var logger = new OutputChannelLogger(settings);
-  var statusBar = new PuppetStatusBar(langID, logger);
-  var configSettings = new ConnectionConfiguration();
+  const settings: ISettings = settingsFromWorkspace();
+  var   logger              = new OutputChannelLogger(settings),
+        statusBar           = new PuppetStatusBar(langID, context, logger),
+        configSettings      = new ConnectionConfiguration(),
+        connManager         = new ConnectionManager(context, logger, statusBar, configSettings);
 
-  // Raise a warning if we detect any legacy settings
-  const legacySettingValues: Map<string, Object> = legacySettings();
-  if (legacySettingValues.size > 0) {
-    let settingNames: string[] = [];
-    for (const [settingName, _value] of legacySettingValues) { settingNames.push(settingName); }
-    vscode.window.showWarningMessage("Deprecated Puppet settings have been detected. Please either remove them or, convert them to the correct settings names. (" + settingNames.join(", ") + ")", { modal: false});
-  }
-
-  if (!fs.existsSync(configSettings.puppetBaseDir)) {
-    logger.error('Could not find a valid Puppet installation at ' + configSettings.puppetBaseDir);
-    vscode.window
-      .showErrorMessage(
-        `Could not find a valid Puppet installation at '${
-          configSettings.puppetBaseDir
-        }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
-        { modal: false },
-        { title: 'Troubleshooting Information' }
-      )
-      .then(item => {
-        if (item === undefined) {
-          return;
-        }
-        if (item.title === 'Troubleshooting Information') {
-          vscode.commands.executeCommand(
-            'vscode.open',
-            vscode.Uri.parse('https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem')
-          );
-        }
-      });
-    return null;
-  } else {
-    logger.debug('Found a valid Puppet installation at ' + configSettings.puppetDir);
-  }
-
-  connManager = new ConnectionManager(context, logger, statusBar, configSettings);
+  checkInstallDirectory(configSettings, logger);
 
   extensionFeatures = [
     new DebugConfigurationFeature(logger, context),
     new FormatDocumentFeature(langID, connManager, settings, logger, context),
-    new NodeGraphFeature(langID, connManager, logger, context)
+    new NodeGraphFeature(langID, connManager, logger, context),
+    new PDKFeature(context, logger),
+    new PuppetResourceFeature(context, connManager, logger)
   ];
-
-  if (!commandsRegistered) {
-    logger.debug('Configuring commands');
-
-    setupPuppetCommands(connManager, context, logger);
-
-    terminal = vscode.window.createTerminal('Puppet PDK');
-    terminal.processId.then(pid => {
-      logger.debug('pdk shell started, pid: ' + pid);
-    });
-    setupPDKCommands(langID, connManager, context, logger, terminal);
-    context.subscriptions.push(terminal);
-
-    commandsRegistered = true;
-  }
 
   connManager.start(configSettings);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {
   // Dispose all extension features
-  extensionFeatures.forEach((feature) => {
+  extensionFeatures.forEach(feature => {
     feature.dispose();
   });
 
@@ -108,7 +57,55 @@ export function deactivate() {
   }
 }
 
-async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext, version: string) {
+function checkForLegacySettings() {
+  // Raise a warning if we detect any legacy settings
+  const legacySettingValues: Map<string, Object> = legacySettings();
+  if (legacySettingValues.size > 0) {
+    let settingNames: string[] = [];
+    for (const [settingName, _value] of legacySettingValues) {
+      settingNames.push(settingName);
+    }
+    vscode.window.showWarningMessage(
+      'Deprecated Puppet settings have been detected. Please either remove them or, convert them to the correct settings names. (' +
+        settingNames.join(', ') +
+        ')',
+      { modal: false }
+    );
+  }
+}
+
+function checkInstallDirectory(configSettings: ConnectionConfiguration, logger: ILogger) {
+  if (!fs.existsSync(configSettings.puppetBaseDir)) {
+    showErrorMessage(
+      `Could not find a valid Puppet installation at '${
+        configSettings.puppetBaseDir
+      }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
+      'Troubleshooting Information',
+      'https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem',
+      logger
+    );
+    return null;
+  } else {
+    logger.debug('Found a valid Puppet installation at ' + configSettings.puppetDir);
+  }
+}
+
+function showErrorMessage(message: string, title: string, helpLink: string, logger: ILogger) {
+  logger.error(message);
+  vscode.window.showErrorMessage(message, { modal: false }, { title: title }).then(item => {
+    if (item === undefined) {
+      return;
+    }
+    if (item.title === title) {
+      vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(helpLink));
+    }
+  });
+}
+
+async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
+  const puppetExtension = vscode.extensions.getExtension('jpogran.puppet-vscode')!;
+  const version = puppetExtension.packageJSON.version;
+
   const viewReleaseNotes = 'View Release Notes';
   const suppressUpdateNotice = 'SuppressUpdateNotice';
   const dontShowAgainNotice = "Don't show again";
