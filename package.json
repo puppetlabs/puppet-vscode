@@ -265,7 +265,7 @@
     },
     "configuration": {
       "type": "object",
-      "title": "puppet",
+      "title": "Puppet",
       "properties": {
         "puppet.editorService.debugFilePath": {
           "type": "string",
