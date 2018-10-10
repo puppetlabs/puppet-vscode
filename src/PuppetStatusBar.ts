@@ -25,22 +25,43 @@ export class PuppetStatusBar {
     });
   }
 
-  public setConnectionStatus(statusText: string, status: ConnectionStatus): void {
+  public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
     this.logger.debug(`Setting status bar to ${statusText}`);
-    // Set color and icon for 'Running' by default
-    var statusIconText = '$(terminal) ';
-    var statusColor = '#affc74';
+    // Icons are from https://octicons.github.com/
+    var statusIconText: string;
+    var statusColor: string;
 
-    if (status === ConnectionStatus.Starting) {
-      statusIconText = '$(sync) ';
-      statusColor = '#f3fc74';
-    } else if (status === ConnectionStatus.Failed) {
-      statusIconText = '$(alert) ';
-      statusColor = '#fcc174';
+    switch (status) {
+      case ConnectionStatus.RunningLoaded:
+        statusIconText = '$(terminal) ';
+        statusColor = '#affc74';
+        break;
+      case ConnectionStatus.RunningLoading:
+        // When the editor service is starting, it's functional but it may be missing
+        // type/class/function/fact info.  But language only features like format document
+        // or document symbol, are available
+        statusIconText = '$(sync~spin) ';
+        statusColor = '#affc74';
+        break;
+      case ConnectionStatus.Failed:
+        statusIconText = '$(alert) ';
+        statusColor = '#fcc174';
+        break;
+      default:
+        // ConnectionStatus.NotStarted
+        // ConnectionStatus.Starting
+        // ConnectionStatus.Stopping
+        statusIconText = '$(gear) ';
+        statusColor = '#f3fc74';
+        break;
     }
 
+    statusIconText = (statusIconText + statusText).trim();
     this.statusBarItem.color = statusColor;
-    this.statusBarItem.text = statusIconText + statusText;
+    // Using a conditional here because resetting a $(sync~spin) will cause the animation to restart. Instead
+    // Only change the status bar text if it has actually changed.
+    if (this.statusBarItem.text !== statusIconText) { this.statusBarItem.text = statusIconText; }
+    this.statusBarItem.tooltip = toolTip; // TODO: killme (new Date()).getUTCDate().toString() + "\nNewline\nWee!";
   }
 
   public static showConnectionMenu() {
