@@ -437,13 +437,13 @@
     "typescript": "2.9.x",
     "tslint": "^5.11.0",
     "vsce": "^1.18.0",
-    "vscode": "^1.1.13",
+    "vscode": "^1.0",
     "yargs": "^11.0.0",
     "gulp-downloader": "^1.0.4",
     "gulp-decompress": "^2.0.2"
   },
   "dependencies": {
-    "vscode-languageclient": "3.3.0",
+    "vscode-languageclient": "5.1.0",
     "vscode-extension-telemetry": "^0.0.15",
     "viz.js": "~1.7.0",
     "vscode-debugprotocol": "^1.19.0",
