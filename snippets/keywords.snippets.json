@@ -32,5 +32,21 @@
       "}"
     ],
     "description": "Conditional case statement"
+  },
+  "mod-name":{
+    "prefix":"mod",
+    "body":[
+      "mod '${1:name}',"
+    ],
+    "description": "Adds a module to a Puppetfile"
+  },
+  "mod-gitref":{
+    "prefix":"mod",
+    "body":[
+      "mod '${1:name}',",
+      "\t:git => '${2:giturl}',",
+      "\t:ref => '${3:gitref}',"
+    ],
+    "description": "Adds a module to a Puppetfile"
   }
 }

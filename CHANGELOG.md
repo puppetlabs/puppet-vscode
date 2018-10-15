@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+- ([GH-288](https://github.com/lingua-pupuli/puppet-vscode/issues/288)) Puppetfile module snippet
+
 ## [0.13.0] - 2018-10-23
 
 ### Added
