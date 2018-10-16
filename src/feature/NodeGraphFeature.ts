@@ -32,7 +32,7 @@ class NodeGraphContentProvider implements vscode.TextDocumentContentProvider {
         source: sourceUri.toString()
       };
 
-      if ((this.connectionManager.status !== ConnectionStatus.Running) && (this.connectionManager.status !== ConnectionStatus.Starting)) {
+      if ((this.connectionManager.status !== ConnectionStatus.RunningLoaded) && (this.connectionManager.status !== ConnectionStatus.RunningLoading)) {
         if (this.shownLanguageServerNotAvailable) {
           vscode.window.showInformationMessage("The Puppet Node Graph Preview is not available as the Editor Service is not ready");
           this.shownLanguageServerNotAvailable = true;

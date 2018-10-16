@@ -21,7 +21,7 @@ class FormatDocumentProvider {
   }
 
   public async formatTextEdits(document: vscode.TextDocument, options: vscode.FormattingOptions): Promise<vscode.TextEdit[]> {
-    if (this.connectionManager.status !== ConnectionStatus.Running) {
+    if ((this.connectionManager.status !== ConnectionStatus.RunningLoaded) && (this.connectionManager.status !== ConnectionStatus.RunningLoading)) {
       vscode.window.showInformationMessage("Please wait and try again. The Puppet extension is still loading...");
       return [];
     }

@@ -5,7 +5,8 @@
 export enum ConnectionStatus {
   NotStarted,
   Starting,
-  Running,
+  RunningLoading,
+  RunningLoaded,
   Stopping,
   Failed
 }

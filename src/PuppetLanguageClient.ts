@@ -42,20 +42,20 @@ export class PuppetLanguageClient {
     this.languageServerClient.onReady().then(
       () => {
         logger.debug('Language server client started, setting puppet version');
-        this.setConnectionStatus('Loading Puppet', ConnectionStatus.Starting);
+        this.setConnectionStatus('Loading Puppet', ConnectionStatus.Starting, '');
         this.queryLanguageServerStatus();
       },
       reason => {
-        this.setConnectionStatus('Starting Error', ConnectionStatus.Failed);
+        this.setConnectionStatus('Starting Error', ConnectionStatus.Failed, '');
       }
     );
 
   }
 
-  public setConnectionStatus(statusText: string, status: ConnectionStatus): void {
+  public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
     this.connectionStatus = status;
     this.connectionManager.status = status;
-    this.statusBarItem.setConnectionStatus(statusText, status);
+    this.statusBarItem.setConnectionStatus(statusText, status, toolTip);
   }
 
   private queryLanguageServerStatus() {
@@ -69,7 +69,7 @@ export class PuppetLanguageClient {
         // After 30 seonds timeout the progress
         if (count >= 30 || this.languageServerClient === undefined) {
           clearInterval(handle);
-          this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+          this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.RunningLoaded, '');
           resolve();
           return;
         }
@@ -83,19 +83,17 @@ export class PuppetLanguageClient {
             versionDetails.classesLoaded
           ) {
             clearInterval(handle);
-            this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.Running);
+            this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.RunningLoaded, '');
             resolve();
           } else {
-            let progress = 0;
+            let toolTip: string = "";
 
-            if (versionDetails.factsLoaded) { progress++; }
-            if (versionDetails.functionsLoaded) { progress++; }
-            if (versionDetails.typesLoaded) { progress++; }
-            if (versionDetails.classesLoaded) { progress++; }
+            toolTip += (versionDetails.classesLoaded ? "✔ Classes: Loaded\n" : "⏳ Classes: Loading...\n");
+            toolTip += (versionDetails.factsLoaded ? "✔ Facts: Loaded\n" : "⏳ Facts: Loading...\n");
+            toolTip += (versionDetails.functionsLoaded ? "✔ Functions: Loaded\n" : "⏳ Functions: Loading...\n");
+            toolTip += (versionDetails.typesLoaded ? "✔ Types: Loaded" : "⏳ Types: Loading...");
 
-            progress = Math.round(progress / 4.0 * 100);
-
-            this.setConnectionStatus('Loading Puppet (' + progress.toString() + '%)', ConnectionStatus.Starting);
+            this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.RunningLoading, toolTip);
           }
         });
 

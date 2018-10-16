@@ -69,7 +69,7 @@ export class ConnectionManager implements IConnectionManager {
     // Setup the configuration
     this.connectionConfiguration = connectionConfig;
 
-    this.setConnectionStatus('Starting Puppet...', ConnectionStatus.Starting);
+    this.setConnectionStatus('Starting Puppet...', ConnectionStatus.Starting, '');
 
     if (this.connectionConfiguration.type === ConnectionType.Local) {
       this.createLanguageServerProcess(
@@ -246,7 +246,8 @@ export class ConnectionManager implements IConnectionManager {
             logger.error(`[Puppet Lang Server Client] ` + `Could not start language client: ${err.message}`);
             connectionManager.setConnectionStatus(
               `Could not start language client: ${err.message}`,
-              ConnectionStatus.Failed
+              ConnectionStatus.Failed,
+              ''
             );
 
             vscode.window.showErrorMessage(
@@ -346,12 +347,12 @@ export class ConnectionManager implements IConnectionManager {
     this.start(connectionConfig);
   }
 
-  private setConnectionStatus(statusText: string, status: ConnectionStatus): void {
+  private setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
     this.connectionStatus = status;
-    this.statusBarItem.setConnectionStatus(statusText, status);
+    this.statusBarItem.setConnectionStatus(statusText, status, toolTip);
   }
 
   private setSessionFailure(message: string, ...additionalMessages: string[]) {
-    this.setConnectionStatus('Starting Error', ConnectionStatus.Failed);
+    this.setConnectionStatus('Starting Error', ConnectionStatus.Failed, '');
   }
 }

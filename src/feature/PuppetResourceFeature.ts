@@ -26,7 +26,7 @@ export class PuppetResourceFeature implements IFeature {
   public run() {
     var thisCommand = this;
 
-    if (thisCommand._connectionManager.status !== ConnectionStatus.Running) {
+    if (thisCommand._connectionManager.status !== ConnectionStatus.RunningLoaded) {
       vscode.window.showInformationMessage('Puppet Resource is not available as the Language Server is not ready');
       return;
     }
