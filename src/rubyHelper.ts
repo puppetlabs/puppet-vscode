@@ -30,7 +30,20 @@ export class RubyHelper {
         break;
     }
 
-    if (spawn_options.env.PATH === undefined) { spawn_options.env.PATH = ''; }
+    if (spawn_options.env.PATH === undefined) {
+      // It's possible that there is no PATH set but unlikely. Due to Object property names being
+      // case sensitive it could simply be that it's called Path or path, particularly on Windows
+      // not so much on Linux etc.. Look through all of the environment names looking for PATH in a
+      // case insensitive way and remove the conflicting env var.
+      let envPath: string = '';
+      Object.keys(spawn_options.env).forEach(function(keyname) {
+        if (keyname.match(/^PATH$/i)) {
+          envPath = spawn_options.env[keyname];
+          spawn_options.env[keyname] = undefined;
+        }
+      });
+      spawn_options.env.PATH = envPath;
+    }
     if (spawn_options.env.RUBYLIB === undefined) { spawn_options.env.RUBYLIB = ''; }
 
     let command = '';
@@ -68,6 +81,10 @@ export class RubyHelper {
     logger.debug(logPrefix + 'Using environment variable GEM_PATH='      + spawn_options.env.GEM_PATH);
     logger.debug(logPrefix + 'Using environment variable GEM_HOME='      + spawn_options.env.GEM_HOME);
 
+    // undefined or null values still appear in the child spawn environment variables
+    // In this case these elements should be removed from the Object
+    this.removeEmptyElements(spawn_options.env);
+
     let result = {
       command: command,
       args   : [rubyFile],
@@ -75,7 +92,16 @@ export class RubyHelper {
     };
 
     return result;
+  }
 
+  private static removeEmptyElements(obj: Object) {
+    const propNames = Object.getOwnPropertyNames(obj);
+    for (var i = 0; i < propNames.length; i++) {
+      const propName = propNames[i];
+      if (obj[propName] === null || obj[propName] === undefined) {
+        delete obj[propName];
+      }
+    }
   }
 
   private static shallowCloneObject(value:Object): Object {
