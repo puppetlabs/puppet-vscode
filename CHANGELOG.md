@@ -10,6 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - ([GH-366](https://github.com/lingua-pupuli/puppet-vscode/issues/366)) New Debug Adapter
 - ([GH-354](https://github.com/lingua-pupuli/puppet-vscode/issues/354)) Document PDK as source information
+- ([GH-385](https://github.com/lingua-pupuli/puppet-vscode/issues/385)) New Outline View, Breadcrumb, and Go to Symbol Features
 
 ### Changed
 
@@ -17,6 +18,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-373](https://github.com/lingua-pupuli/puppet-vscode/issues/373)) Refactor commands and providers to features
 - ([GH-351](https://github.com/lingua-pupuli/puppet-vscode/issues/351)) Updated Puppet Editor Services to version 0.14.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.14.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
 - ([GH-323](https://github.com/lingua-pupuli/puppet-vscode/issues/323)) Update readme with gif examples
+- ([GH-399](https://github.com/lingua-pupuli/puppet-vscode/issues/399)) Update Puppet loading UI to be more user friendly
 
 ### Deprecated
 

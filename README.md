@@ -15,6 +15,9 @@
   - [Syntax highlighting](#syntax-highlighting)
   - [Auto completion](#auto-completion)
   - [Hover Support](#hover-support)
+  - [Outline View](#outline-view)
+  - [Breadcrumbs](#breadcrumbs)
+  - [Go to Symbol](#go-to-symbol)
   - [Code Snippets](#code-snippets)
   - [Linting](#linting)
   - [Puppet Commands](#puppet-commands)
@@ -50,6 +53,9 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 - Syntax highlighting
 - IntelliSense for resources, parameters and more
+- Outline View
+- Breadcrumbs
+- Go to Symbol
 - Linting
 - Code snippets
 - Go to Definition of functions, types and classes
@@ -85,7 +91,14 @@ You can find instructions and installation links here:
 - MacOSX
 - Linux
 
-## Usage 
+## Usage
+
+### Loading indicator
+
+The Puppet extension includes additional information in the form of a tooltip which describes the features that are loaded and still loading during startup.
+
+![loading_status](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/loading_status.gif)
+
 
 ### Syntax Highlighting
 
@@ -108,6 +121,35 @@ Auto complete Puppet types and classes and their parameter sets as you type. Tab
 Hovering over any resource, class declaration or other Puppet symbol provides instant contextual information. For example, hovering over the resource declaration lists the type name and parameter list, with all relevant help text.
 
 ![hover_support](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/hover_support.gif)
+
+### Outline View
+
+The new `Outline View` shows the symbol tree of the currently selected Puppet manifest. 
+
+Supported symbols:
+
+Symbol | Puppet Class
+ -- | --
+Class |  `Puppet::Pops::Model::HostClassDefinition`
+Defined Type | `Puppet::Pops::Model::ResourceTypeDefinition`
+Attribute | `Puppet::Pops::Model::AttributeOperation`
+Variable | `Puppet::Pops::Model::AssignmentExpression`
+
+More symbols are planned to be added.
+
+![outline_view](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/outline_view.gif)
+
+### Breadcrumbs
+
+When the `breadcrumbs.enabled` setting is set to true, both the file path and the symbol tree hierarchy are shown in the Breadcrumb view.
+
+![breadcrumbs](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/breadcrumbs.gif)
+
+### Go to Symbol
+
+Opening the `Command Palette` and typing the `@` symbol initiates the `Go to Symbol` view which allows you to navigate around inside a Puppet manifest more quickly.
+
+![go_to_symbol](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/go_to_symbol.gif)
 
 ### Code Snippets
 
