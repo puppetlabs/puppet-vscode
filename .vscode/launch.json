@@ -38,13 +38,15 @@
       "request"          : "launch",
       "runtimeExecutable": "${execPath}",
       "args"             : [
+        "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test",
         "${workspaceRoot}/src/test/fixtures"
       ],
       "stopOnEntry": false,
       "sourceMaps" : true,
-      "outFiles"   : ["${workspaceRoot}/client/out/test/**/*.js"]
+      "outFiles"   : ["${workspaceRoot}/client/out/test/**/*.js"],
+      "preLaunchTask": "npm: watch"
     },
     {
       "type": "node",

@@ -16,6 +16,7 @@ import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { ILogger } from './logging';
+import { ConnectionStatus } from './interfaces';
 
 var connManager: ConnectionManager;
 const langID = 'puppet'; // don't change this
@@ -44,6 +45,10 @@ export function activate(context: vscode.ExtensionContext) {
   ];
 
   connManager.start(configSettings);
+}
+
+export function status():ConnectionStatus{
+  return connManager.status;
 }
 
 export function deactivate() {
