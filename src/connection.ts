@@ -38,6 +38,7 @@ export class ConnectionManager implements IConnectionManager {
     statusBar: PuppetStatusBar,
     connectionConfiguration: IConnectionConfiguration
   ) {
+    this.status = ConnectionStatus.NotStarted;
     this.timeSpent = Date.now();
     this.logger = logger;
     this.extensionContext = context;
