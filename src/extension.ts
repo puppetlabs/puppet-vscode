@@ -29,8 +29,9 @@ export function activate(context: vscode.ExtensionContext) {
   const settings: ISettings = settingsFromWorkspace();
   var   logger              = new OutputChannelLogger(settings),
         statusBar           = new PuppetStatusBar(langID, context, logger),
-        configSettings      = new ConnectionConfiguration(),
-        connManager         = new ConnectionManager(context, logger, statusBar, configSettings);
+        configSettings      = new ConnectionConfiguration();
+
+  connManager = new ConnectionManager(context, logger, statusBar, configSettings);
 
   checkInstallDirectory(configSettings, logger);
 
