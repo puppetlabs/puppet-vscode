@@ -24,7 +24,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - ([GH-315](https://github.com/lingua-pupuli/puppet-vscode/issues/315)) Deprecate puppetAgentDir setting
 
-## [0.11.1] - 2018-08-24
+## [0.12.0] - 2018-08-24
 
 ### Added
 
