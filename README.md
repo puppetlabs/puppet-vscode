@@ -137,17 +137,23 @@ Variable | `Puppet::Pops::Model::AssignmentExpression`
 
 More symbols are planned to be added.
 
+> Note: Puppet 4 is not supported for symbols
+
 ![outline_view](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/outline_view.gif)
 
 ### Breadcrumbs
 
 When the `breadcrumbs.enabled` setting is set to true, both the file path and the symbol tree hierarchy are shown in the Breadcrumb view.
 
+> Note: Puppet 4 is not supported for symbols
+
 ![breadcrumbs](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/breadcrumbs.gif)
 
 ### Go to Symbol
 
 Opening the `Command Palette` and typing the `@` symbol initiates the `Go to Symbol` view which allows you to navigate around inside a Puppet manifest more quickly.
+
+> Note: Puppet 4 is not supported for symbols
 
 ![go_to_symbol](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/go_to_symbol.gif)
 
