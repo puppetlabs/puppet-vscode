@@ -368,7 +368,7 @@ If you're having an issue with crashing or other erratic behavior, add the follo
 line to your User Settings in Visual Studio Code:
 
 ```json
-    "puppet.languageserver.debugFilePath": "C:\\Some\\file\\path.txt"
+    "puppet.editorService.debugFilePath": "C:\\Some\\file\\path.txt"
 ```
 
 Restart Visual Studio Code and try to reproduce the problem, then examine the log. If the issue persists please open an issue.
