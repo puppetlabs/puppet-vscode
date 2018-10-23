@@ -2,7 +2,6 @@
 var es = require('event-stream');
 var gulp = require('gulp');
 var del = require('del');
-var runSequence = require('run-sequence');
 var exec = require('child_process').exec;
 var bump = require('gulp-bump');
 var args = require('yargs').argv;
@@ -52,28 +51,21 @@ function getEditorServicesGithubURL(config) {
   return `https://github.com/${githubuser}/${githubrepo}/archive/${githubref}.zip`
 };
 
-// The default task (called when you run `gulp` from cli)
-gulp.task('default', ['build']);
-
-gulp.task('initial', function (callback) {
-  var fs = require('fs');
-  var sequence = [];
-
-  editorServicesPath = path.join(__dirname, 'vendor', 'languageserver');
-  if (!fs.existsSync(editorServicesPath)) { sequence.push('vendor_editor_services'); }
-
-  if (sequence.length > 0) {
-    return runSequence(sequence, callback);
-  } else {
-    return es.merge([]);
-  }
-});
-
 gulp.task('clean', function () {
   return del(['vendor'])
 });
 
 gulp.task('vendor_editor_services', function (callback) {
+  var fs = require('fs');
+  var sequence = [];
+
+  vendorPath = path.join(__dirname, 'vendor');
+  if (fs.existsSync(vendorPath)) {
+    return new Promise(function(resolve, reject) {
+      resolve();
+    });
+  }
+
   var config = getEditorServicesConfig();
 
   // Use the github releases url if 'release' is defined
@@ -119,12 +111,8 @@ gulp.task('compile_typescript', function (callback) {
     function (err, stdout, stderr) {
       console.log(stdout);
       console.log(stderr);
-      callback;
+      callback(err);
     });
-})
-
-gulp.task('build', function (callback) {
-  runSequence('clean','vendor_editor_services','compile_typescript',callback);
 })
 
 gulp.task('bump', function () {
@@ -155,3 +143,19 @@ gulp.task('bump', function () {
         .pipe(bump(options))
         .pipe(gulp.dest('.'));
 });
+
+// The default task (called when you run `gulp` from cli)
+gulp.task('build',
+  gulp.series('clean',
+    gulp.series('vendor_editor_services',
+      gulp.series('compile_typescript',
+      )
+    )
+  )
+);
+
+// The default task (called when you run `gulp` from cli)
+gulp.task('initial', gulp.series('vendor_editor_services'));
+
+// The default task (called when you run `gulp` from cli)
+gulp.task('default', gulp.series('build'));
