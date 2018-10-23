@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [0.13.0] - 2018-10-23
+
 ### Added
 
 - ([GH-366](https://github.com/lingua-pupuli/puppet-vscode/issues/366)) New Debug Adapter
@@ -19,12 +21,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-351](https://github.com/lingua-pupuli/puppet-vscode/issues/351)) Updated Puppet Editor Services to version 0.14.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.14.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
 - ([GH-323](https://github.com/lingua-pupuli/puppet-vscode/issues/323)) Update readme with gif examples
 - ([GH-399](https://github.com/lingua-pupuli/puppet-vscode/issues/399)) Update Puppet loading UI to be more user friendly
+- ([GH-405](https://github.com/lingua-pupuli/puppet-vscode/issues/405)) Update readme with correct links into the readme
 
 ### Deprecated
 
 - ([GH-315](https://github.com/lingua-pupuli/puppet-vscode/issues/315)) Deprecate puppetAgentDir setting
 
-## [0.11.1] - 2018-08-24
+## [0.12.0] - 2018-08-24
 
 ### Added
 
