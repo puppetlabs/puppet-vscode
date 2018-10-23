@@ -29,5 +29,5 @@ PDK Version (if applicable):
 ### Output Log
 
 <!-- 
-For information how to capture verbose logs, look [here](https://github.com/lingua-pupuli/puppet-vscode/tree/master/client#2-capture-verbose-logs-and-send-them-to-us)
+For information how to capture verbose logs, look [here](https://github.com/lingua-pupuli/puppet-vscode#2-capture-verbose-logs-and-send-them-to-us)
 -->
