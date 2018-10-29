@@ -128,12 +128,10 @@ The new `Outline View` shows the symbol tree of the currently selected Puppet ma
 
 Supported symbols:
 
-Symbol | Puppet Class
- -- | --
-Class |  `Puppet::Pops::Model::HostClassDefinition`
-Defined Type | `Puppet::Pops::Model::ResourceTypeDefinition`
-Attribute | `Puppet::Pops::Model::AttributeOperation`
-Variable | `Puppet::Pops::Model::AssignmentExpression`
+- Class
+- Defined Type
+- Attribute
+- Variable
 
 More symbols are planned to be added.
 
