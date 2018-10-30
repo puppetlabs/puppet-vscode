@@ -34,7 +34,7 @@
     </dict>
     <dict>
       <key>begin</key>
-      <string>^\s*(node|class)\s+((?:[-_A-Za-z0-9"\'.]+::)*[-_A-Za-z0-9"\'.]+)\s*</string>
+      <string>\b(node|class)\s+((?:[-_A-Za-z0-9"\'.]+::)*[-_A-Za-z0-9"\'.]+)\s*</string>
       <key>captures</key>
       <dict>
         <key>1</key>
@@ -430,6 +430,22 @@
       <string>=></string>
       <key>name</key>
       <string>punctuation.separator.key-value.puppet</string>
+    </dict>
+    <dict>
+      <key>match</key>
+      <string>-></string>
+      <key>name</key>
+      <string>keyword.control.orderarrow.puppet</string>
+    </dict>
+    <dict>
+      <key>match</key>
+      <string>~></string>
+      <key>name</key>
+      <string>keyword.control.notifyarrow.puppet</string>
+    </dict>
+    <dict>
+      <key>include</key>
+      <string>#regex-literal</string>
     </dict>
   </array>
   <key>repository</key>
@@ -959,11 +975,20 @@
           <key>comment</key>
           <string>Puppet Data type</string>
           <key>match</key>
-          <string>(?&lt;![a-zA-Z\$])([A-Z][a-zA-Z]*)(?![a-zA-Z])</string>
+          <string>(?&lt;![a-zA-Z\$])([A-Z][a-zA-Z0-9]*)(?![a-zA-Z0-9])</string>
           <key>name</key>
           <string>storage.type.puppet</string>
         </dict>
       </array>
+    </dict>
+    <key>regex-literal</key>
+    <dict>
+      <key>match</key>
+      <string>(\/)(.+)(?:\/)</string>
+      <key>name</key>
+      <string>string.regexp.literal.puppet</string>
+      <key>comment</key>
+      <string>Puppet Regular expression literal without interpolation</string>
     </dict>
   </dict>
 </dict>
