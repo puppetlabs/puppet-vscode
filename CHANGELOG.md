@@ -6,6 +6,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [0.13.1] - 2018-10-30
+
+### Added
+
+- ([GH-416](https://github.com/lingua-pupuli/puppet-vscode/issues/416)) Update syntax file with 0.1.0 puppet-editor-syntax 0.1.0 release
+
+### Fixed
+
+- ([GH-331](https://github.com/lingua-pupuli/puppet-vscode/issues/331)) Go to definition not working
+
 ## [0.13.0] - 2018-10-23
 
 ### Added
