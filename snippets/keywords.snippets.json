@@ -32,5 +32,14 @@
       "}"
     ],
     "description": "Conditional case statement"
-  }
+  },
+  "node": {
+		"prefix": "node",
+		"body": [
+			"node '${1:certname}' {",
+			"\t$0",
+			"}"
+		],
+		"description": "Node definition in your main manifest"
+	}
 }
