@@ -5,13 +5,17 @@ import * as logging from '../logging';
 import { ISettings } from '../settings';
 
 export class OutputChannelLogger implements logging.ILogger {
-  private logChannel: vscode.OutputChannel;
+  
+  private _logChannel : vscode.OutputChannel;
+  public get logChannel() : vscode.OutputChannel {
+    return this._logChannel;
+  }
 
   // Minimum log level that is shown to users on logChannel
   private minimumUserLogLevel: logging.LogLevel;
 
   constructor(settings: ISettings) {
-    this.logChannel = vscode.window.createOutputChannel('Puppet');
+    this._logChannel = vscode.window.createOutputChannel('Puppet');
 
     let logLevel = settings.editorService.loglevel;
 
@@ -23,7 +27,7 @@ export class OutputChannelLogger implements logging.ILogger {
   }
 
   public show() {
-    this.logChannel.show();
+    this._logChannel.show();
   }
 
   public verbose(message: string) {
@@ -50,7 +54,7 @@ export class OutputChannelLogger implements logging.ILogger {
     let logMessage = this.logLevelPrefixAsString(level) + new Date().toISOString() + ' ' + message;
 
     if (level >= this.minimumUserLogLevel) {
-      this.logChannel.appendLine(logMessage);
+      this._logChannel.appendLine(logMessage);
     }
   }
 
