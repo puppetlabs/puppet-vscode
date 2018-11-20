@@ -16,6 +16,7 @@ import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { ILogger } from './logging';
+import { ProtocolType, ConnectionType } from './interfaces';
 
 var connManager: ConnectionManager;
 const langID = 'puppet'; // don't change this
@@ -76,6 +77,14 @@ function checkForLegacySettings() {
 }
 
 function checkInstallDirectory(configSettings: ConnectionConfiguration, logger: ILogger) {
+  if(configSettings.protocol === ProtocolType.TCP){
+    if(configSettings.type === ConnectionType.Remote){
+      // Return if we are connecting to a remote TCP LangServer
+      return;
+    }
+  }
+
+  // we want to check directory if STDIO or Local TCP
   if (!fs.existsSync(configSettings.puppetBaseDir)) {
     showErrorMessage(
       `Could not find a valid Puppet installation at '${
