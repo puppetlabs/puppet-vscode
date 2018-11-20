@@ -98,7 +98,7 @@ function startDebuggingProxy(config: DebugAdapterConfiguration, logger:ILogger, 
   return debugServiceSocket;
 }
 
-function shallowCloneObject(value:Object): Object {
+function shallowCloneObject(value:Object): any {
   const clone: Object = {};
   for (const propertyName in value){
     if (value.hasOwnProperty(propertyName)){
