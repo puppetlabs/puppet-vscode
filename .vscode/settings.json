@@ -11,10 +11,12 @@
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": false,
     "files.exclude": {
+      "node_modules": true,
       "out": true, // set this to true to hide the "out" folder with the compiled JS files
       ".vscode-test": true
     },
     "search.exclude": {
+      "node_modules": true,
       "out": true // set this to false to include "out" folder in search results
     },
   
