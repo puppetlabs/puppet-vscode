@@ -105,6 +105,23 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    g.node path {
+      fill: var(--vscode-button-background);
+      stroke: var(--vscode-button-hoverBackground);
+    }
+    g.node text {
+      fill: var(--vscode-button-foreground);
+    }
+    g.edge path {
+      fill: none;
+      stroke: var(--vscode-foreground);
+    }
+    g.edge polygon {
+      fill: var(--vscode-foreground);
+      stroke: var(--vscode-foreground);
+    }
+  </style>
 </head>
 <body>
 ${errorContent}
