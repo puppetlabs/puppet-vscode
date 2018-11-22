@@ -6,6 +6,10 @@ import * as path from 'path';
 import { IFeature } from "../feature";
 import { ILogger } from "../logging";
 import { IConnectionManager } from '../connection';
+import { ConnectionStatus } from '../interfaces';
+import { CompileNodeGraphRequest } from '../messages';
+import { reporter } from '../telemetry/telemetry';
+import * as viz from 'viz.js';
 
 const PuppetNodeGraphToTheSideCommandId: string = 'extension.puppetShowNodeGraphToSide';
 
@@ -14,6 +18,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
   private docUri: vscode.Uri = undefined;
   private webPanel: vscode.WebviewPanel = undefined;
   private parentFeature: NodeGraphFeature = undefined;
+  private shownLanguageServerNotAvailable = false;
 
   constructor(
     documentUri:vscode.Uri,
@@ -35,22 +40,81 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
       'nodeGraph',                                         // Identifies the type of the webview. Used internally
       `Node Graph '${path.basename(this.docUri.fsPath)}'`, // Title of the panel displayed to the user
       vscode.ViewColumn.Beside,                            // Editor column to show the new webview panel in.
-      { }
+      { enableScripts: true }
     );
 
     this.webPanel.onDidDispose( () => {
       this.parentFeature.onProviderWebPanelDisposed(this);
     });
 
-    this.update();
+    this.updateAsync();
   }
 
-  public update(): void {
-    this.webPanel.webview.html = this.getHTMLContent();
+  public async updateAsync(): Promise<void> {
+    this.webPanel.webview.html = await this.getHTMLContent();
   }
 
-  public getHTMLContent(): string {
-    return '<html><body>Node Graph Preview - ' + (new Date().toUTCString()) + '</body></html>';
+  public async getHTMLContent(): Promise<string> {
+    if ((this.connectionManager.status !== ConnectionStatus.RunningLoaded) && (this.connectionManager.status !== ConnectionStatus.RunningLoading)) {
+      if (this.shownLanguageServerNotAvailable) {
+        vscode.window.showInformationMessage("The Puppet Node Graph Preview is not available as the Editor Service is not ready");
+        this.shownLanguageServerNotAvailable = true;
+      }
+      return "The Puppet Node Graph Preview is not available as the Editor Service is not ready";
+    }
+
+    // Use the language server to render the document
+    const requestData = {
+      external: this.docUri.toString()
+    };
+    return this.connectionManager.languageClient
+      .sendRequest(CompileNodeGraphRequest.type, requestData)
+      .then(
+        (compileResult) => {
+
+        var svgContent = '';
+        if (compileResult.dotContent !== null) {
+          var styling = `
+          bgcolor = "transparent"
+          color = "white"
+          rankdir = "TB"
+          node [ shape="box" penwidth="2" color="#e0e0e0" style="rounded,filled" fontname="Courier New" fillcolor=black, fontcolor="white"]
+          edge [ style="bold" color="#f0f0f0" penwith="2" ]
+
+          label = ""`;
+
+          var graphContent = compileResult.dotContent;
+          if (graphContent === undefined) { graphContent = ''; }
+          // vis.jz sees backslashes as escape characters, however they are not in the DOT language.  Instead
+          // we should escape any backslash coming from a valid DOT file in preparation to be rendered
+          graphContent = graphContent.replace(/\\/g,"\\\\");
+          graphContent = graphContent.replace(`label = "editorservices"`,styling);
+
+          svgContent = viz(graphContent,"svg");
+        }
+
+        var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`;
+        if ((compileResult.error === undefined) || (compileResult.error === null)) { errorContent = ''; }
+
+        if (reporter) {
+          reporter.sendTelemetryEvent(PuppetNodeGraphToTheSideCommandId);
+        }
+
+        const html: string = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+${errorContent}
+<div id="graphviz_svg_div">
+${svgContent}
+</div>
+</body></html>`;
+
+        return html;
+    });
   }
 
   public dispose(): any {
@@ -100,7 +164,7 @@ export class NodeGraphFeature implements IFeature {
     // Subscribe to save events and fire updates
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(document => {
       this.providers.forEach( (item) => {
-        if (item.isSameUri(document.uri)) { item.update(); }
+        if (item.isSameUri(document.uri)) { item.updateAsync(); }
       });
     }));
     logger.debug("Registered onDidSaveTextDocument for node graph event handler");
