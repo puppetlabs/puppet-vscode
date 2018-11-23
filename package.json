@@ -431,16 +431,17 @@
     "@types/mocha": "^2.2.32",
     "@types/node": "^9.4.7",
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-bump": "^3.1.0",
-    "run-sequence": "^2.2.1",
     "typescript": "2.9.x",
     "tslint": "^5.11.0",
     "vsce": "^1.18.0",
     "vscode": "^1.0",
     "yargs": "^11.0.0",
     "gulp-downloader": "^1.0.4",
-    "gulp-decompress": "^2.0.2"
+    "gulp-decompress": "^2.0.2",
+    "lodash": ">=4.17.5",
+    "cryptiles": ">=4.1.2"
   },
   "dependencies": {
     "vscode-languageclient": "5.1.0",
