@@ -485,7 +485,7 @@
         </dict>
       </dict>
       <key>name</key>
-      <string>string.quoted.double.puppet</string>
+      <string>string.quoted.double.interpolated.puppet</string>
       <key>patterns</key>
       <array>
         <dict>
@@ -494,7 +494,127 @@
         </dict>
         <dict>
           <key>include</key>
-          <string>#variable</string>
+          <string>#interpolated_puppet</string>
+        </dict>
+      </array>
+    </dict>
+    <!-- Ref: https://puppet.com/docs/puppet/latest/lang_data_string.html#short-forms-for-variable-interpolation -->
+    <key>interpolated_puppet</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <!-- These definitions are the #variable matches but expressed as an interpolated string sequence e.g. ${var::foo .... } -->
+        <!-- Short variable names can start with underscore e.g. "${_foo1}", "${_foo2.split(..)}" -->
+        <dict>
+          <key>begin</key>
+          <string>(\${)(_[a-zA-Z0-9_]*)</string>
+          <key>beginCaptures</key>
+          <dict>
+            <key>1</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.section.embedded.begin.puppet</string>
+            </dict>
+            <key>2</key>
+            <dict>
+              <key>name</key>
+              <string>source.puppet variable.other.readwrite.global.puppet</string>
+            </dict>
+          </dict>
+          <key>end</key>
+          <string>}</string>
+          <key>endCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.section.embedded.end.puppet</string>
+            </dict>
+          </dict>
+          <key>contentName</key>
+          <string>source.puppet</string>
+          <key>name</key>
+          <string>meta.embedded.line.puppet</string>
+          <key>patterns</key>
+          <array>
+            <dict>
+              <key>include</key>
+              <string>$self</string>
+            </dict>
+          </array>
+        </dict>
+        <!-- Qualified variable names (Can't start with underscore) -->
+        <dict>
+          <key>begin</key>
+          <string>(\${)(([a-z][a-z0-9_]*)?(?:::[a-z][a-z0-9_]*)*)</string>
+          <key>beginCaptures</key>
+          <dict>
+            <key>1</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.section.embedded.begin.puppet</string>
+            </dict>
+            <key>2</key>
+            <dict>
+              <key>name</key>
+              <string>source.puppet variable.other.readwrite.global.puppet</string>
+            </dict>
+          </dict>
+          <key>end</key>
+          <string>}</string>
+          <key>endCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.section.embedded.end.puppet</string>
+            </dict>
+          </dict>
+          <key>contentName</key>
+          <string>source.puppet</string>
+          <key>name</key>
+          <string>meta.embedded.line.puppet</string>
+          <key>patterns</key>
+          <array>
+            <dict>
+              <key>include</key>
+              <string>$self</string>
+            </dict>
+          </array>
+        </dict>
+        <!-- Catchall. Includes variables with leading $ -->
+        <dict>
+          <key>begin</key>
+          <string>\${</string>
+          <key>beginCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.section.embedded.begin.puppet</string>
+            </dict>
+          </dict>
+          <key>end</key>
+          <string>}</string>
+          <key>endCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.section.embedded.end.puppet</string>
+            </dict>
+          </dict>
+          <key>contentName</key>
+          <string>source.puppet</string>
+          <key>name</key>
+          <string>meta.embedded.line.puppet</string>
+          <key>patterns</key>
+          <array>
+            <dict>
+              <key>include</key>
+              <string>$self</string>
+            </dict>
+          </array>
         </dict>
       </array>
     </dict>
@@ -905,11 +1025,17 @@
         </dict>
       </array>
     </dict>
+    <!-- Ref: https://puppet.com/docs/puppet/latest/lang_variables.html#regular-expressions-for-variable-names -->
     <key>variable</key>
     <dict>
       <key>patterns</key>
       <array>
+        <!--Short variable names can start with underscore -->
         <dict>
+          <key>match</key>
+          <string>(\$)_[a-zA-Z0-9_]*</string>
+          <key>name</key>
+          <string>variable.other.readwrite.global.puppet</string>
           <key>captures</key>
           <dict>
             <key>1</key>
@@ -918,12 +1044,13 @@
               <string>punctuation.definition.variable.puppet</string>
             </dict>
           </dict>
-          <key>match</key>
-          <string>(\$)((::)?[a-z]\w*)*((::)?[a-z_]\w*)\b</string>
-          <key>name</key>
-          <string>variable.other.readwrite.global.puppet</string>
         </dict>
+        <!-- Qualified variable names (Can't start with underscore) -->
         <dict>
+          <key>match</key>
+          <string>(\$)(([a-z][a-z0-9_]*)?(?:::[a-z][a-z0-9_]*)*)</string>
+          <key>name</key>
+          <string>variable.other.readwrite.global.puppet</string>
           <key>captures</key>
           <dict>
             <key>1</key>
@@ -931,16 +1058,7 @@
               <key>name</key>
               <string>punctuation.definition.variable.puppet</string>
             </dict>
-            <key>2</key>
-            <dict>
-              <key>name</key>
-              <string>punctuation.definition.variable.puppet</string>
-            </dict>
           </dict>
-          <key>match</key>
-          <string>(\$\{)(?:[a-zA-Zx7f-xff\$]|::)(?:[a-zA-Z0-9_x7f-xff\$]|::)*(\})</string>
-          <key>name</key>
-          <string>variable.other.readwrite.global.puppet</string>
         </dict>
       </array>
     </dict>
