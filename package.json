@@ -441,7 +441,8 @@
     "gulp-downloader": "^1.0.4",
     "gulp-decompress": "^2.0.2",
     "lodash": ">=4.17.5",
-    "cryptiles": ">=4.1.2"
+    "cryptiles": ">=4.1.2",
+    "event-stream": "< 3.3.4"
   },
   "dependencies": {
     "vscode-languageclient": "5.1.0",
