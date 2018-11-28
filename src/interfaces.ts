@@ -42,6 +42,7 @@ export interface IConnectionConfiguration {
   enableFileCache: boolean;
   debugFilePath: string;
   puppetBaseDir: string;
+  puppetDir: string;
   languageServerPath: string;
   rubydir: string;
   rubylib: string;
