@@ -3,48 +3,76 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-import { ConnectionManager } from './connection';
 import { ConnectionConfiguration } from './configuration';
-import { OutputChannelLogger } from './logging/outputchannel';
-import { Reporter } from './telemetry/telemetry';
+import { ConnectionHandler } from './handler';
+import { StdioConnectionHandler } from './handlers/stdio';
+import { TcpConnectionHandler } from './handlers/tcp';
 import { IFeature } from './feature';
-import { PuppetStatusBar } from './PuppetStatusBar';
-import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
+import { ProtocolType, ConnectionType, IConnectionConfiguration } from './interfaces';
 import { ILogger } from './logging';
-import { ProtocolType, ConnectionType } from './interfaces';
+import { OutputChannelLogger } from './logging/outputchannel';
+import { PuppetCommandStrings } from './messages';
+import { PuppetStatusBar } from './PuppetStatusBar';
+import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
+import { Reporter } from './telemetry/telemetry';
 
-var connManager: ConnectionManager;
 const langID = 'puppet'; // don't change this
+let extContext: vscode.ExtensionContext;
+let connectionHandler: ConnectionHandler;
+let settings: ISettings;
+let logger: OutputChannelLogger;
+let statusBar: PuppetStatusBar;
+let configSettings: IConnectionConfiguration;
 let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
-  notifyOnNewExtensionVersion(context);
+  extContext = context;
+
+  notifyOnNewExtensionVersion(extContext);
   checkForLegacySettings();
 
-  context.subscriptions.push(new Reporter(context));
-  const settings: ISettings = settingsFromWorkspace();
-  var   logger              = new OutputChannelLogger(settings),
-        statusBar           = new PuppetStatusBar(langID, context, logger),
-        configSettings      = new ConnectionConfiguration();
+  context.subscriptions.push(new Reporter(extContext));
 
-  connManager = new ConnectionManager(context, logger, statusBar, configSettings);
+  settings       = settingsFromWorkspace();
+  logger         = new OutputChannelLogger(settings);
+  statusBar      = new PuppetStatusBar(langID, context, logger);
+  configSettings = new ConnectionConfiguration();
 
-  checkInstallDirectory(configSettings, logger);
+  if(checkInstallDirectory(configSettings, logger) === false){
+    // If this returns false, then we needed a local directory
+    // but did not find it, so we should abort here
+    // If we return true, we can continue
+    // This can be revisited to enable disabling language server portion
+    return;
+  }
+
+  switch (configSettings.protocol) {
+    case ProtocolType.STDIO:
+      connectionHandler = new StdioConnectionHandler(extContext, settings, statusBar, logger, configSettings);
+      break;
+    case ProtocolType.TCP:
+      connectionHandler = new TcpConnectionHandler(extContext, settings, statusBar, logger, configSettings);
+      break;
+  }
 
   extensionFeatures = [
-    new DebugConfigurationFeature(logger, context),
-    new FormatDocumentFeature(langID, connManager, settings, logger, context),
-    new NodeGraphFeature(langID, connManager, logger, context),
-    new PDKFeature(context, logger),
-    new PuppetResourceFeature(context, connManager, logger)
+    new DebugConfigurationFeature(logger, extContext),
+    new FormatDocumentFeature(langID, connectionHandler, settings, logger, extContext),
+    new NodeGraphFeature(langID, connectionHandler, logger, extContext),
+    new PDKFeature(extContext, logger),
+    new PuppetResourceFeature(extContext, connectionHandler, logger)
   ];
 
-  connManager.start(configSettings);
+  extContext.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetRestartSessionCommandId,
+    () => {
+      
+    }
+  ));
 }
 
 export function deactivate() {
@@ -53,9 +81,8 @@ export function deactivate() {
     feature.dispose();
   });
 
-  if (connManager !== undefined) {
-    connManager.stop();
-    connManager.dispose();
+  if (connectionHandler !== undefined) {
+    connectionHandler.stop();
   }
 }
 
@@ -76,11 +103,11 @@ function checkForLegacySettings() {
   }
 }
 
-function checkInstallDirectory(configSettings: ConnectionConfiguration, logger: ILogger) {
+function checkInstallDirectory(configSettings: IConnectionConfiguration, logger: ILogger) : boolean {
   if(configSettings.protocol === ProtocolType.TCP){
     if(configSettings.type === ConnectionType.Remote){
       // Return if we are connecting to a remote TCP LangServer
-      return;
+      return true;
     }
   }
 
@@ -94,9 +121,10 @@ function checkInstallDirectory(configSettings: ConnectionConfiguration, logger: 
       'https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem',
       logger
     );
-    return null;
+    return false;
   } else {
     logger.debug('Found a valid Puppet installation at ' + configSettings.puppetDir);
+    return true;
   }
 }
 

@@ -5,18 +5,18 @@ import { IFeature } from '../feature';
 import { ILogger } from '../logging';
 import { PuppetCommandStrings, PuppetResourceRequestParams, PuppetResourceRequest } from '../messages';
 import { reporter } from '../telemetry/telemetry';
-import { IConnectionManager } from '../connection';
 import { ConnectionStatus } from '../interfaces';
+import { ConnectionHandler } from '../handler';
 
 export class PuppetResourceFeature implements IFeature {
-  private _connectionManager: IConnectionManager;
+  private _connectionHandler: ConnectionHandler;
   private logger: ILogger;
 
   dispose() {}
 
-  constructor(context: vscode.ExtensionContext, connMgr: IConnectionManager, logger: ILogger) {
+  constructor(context: vscode.ExtensionContext, connMgr: ConnectionHandler, logger: ILogger) {
     this.logger = logger;
-    this._connectionManager = connMgr;
+    this._connectionHandler = connMgr;
     context.subscriptions.push(
       vscode.commands.registerCommand(PuppetCommandStrings.PuppetResourceCommandId, () => {
         this.run();
@@ -26,7 +26,7 @@ export class PuppetResourceFeature implements IFeature {
   public run() {
     var thisCommand = this;
 
-    if (thisCommand._connectionManager.status !== ConnectionStatus.RunningLoaded) {
+    if (thisCommand._connectionHandler.status !== ConnectionStatus.RunningLoaded) {
       vscode.window.showInformationMessage('Puppet Resource is not available as the Language Server is not ready');
       return;
     }
@@ -42,7 +42,7 @@ export class PuppetResourceFeature implements IFeature {
         let requestParams = new RequestParams();
         requestParams.typename = moduleName;
 
-        thisCommand._connectionManager.languageClient
+        thisCommand._connectionHandler.languageClient
           .sendRequest(PuppetResourceRequest.type, requestParams)
           .then(resourceResult => {
             if (resourceResult.error !== undefined && resourceResult.error.length > 0) {
