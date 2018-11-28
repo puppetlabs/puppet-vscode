@@ -2,13 +2,23 @@
 
 // Only add simple interfaces here. No import's allowed
 
+// Only add simple interfaces here. No import's allowed
+// Only add simple interfaces here. No import's allowed
+// Only add simple interfaces here. No import's allowed
+// Only add simple interfaces here. No import's allowed
+// Only add simple interfaces here. No import's allowed
+// Only add simple interfaces here. No import's allowed
+// Only add simple interfaces here. No import's allowed
 export enum ConnectionStatus {
   NotStarted,
   Starting,
   RunningLoading,
   RunningLoaded,
   Stopping,
-  Failed
+  Failed,
+  Stopped,
+  Initializing,
+  InitializationComplete
 }
 
 export enum ConnectionType {
