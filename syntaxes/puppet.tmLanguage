@@ -367,11 +367,15 @@
     </dict>
     <dict>
       <key>include</key>
-      <string>#puppet-datatypes</string>
+      <string>#heredoc</string>
     </dict>
     <dict>
       <key>include</key>
       <string>#strings</string>
+    </dict>
+    <dict>
+      <key>include</key>
+      <string>#puppet-datatypes</string>
     </dict>
     <dict>
       <key>include</key>
@@ -1107,6 +1111,74 @@
       <string>string.regexp.literal.puppet</string>
       <key>comment</key>
       <string>Puppet Regular expression literal without interpolation</string>
+    </dict>
+    <!-- Ref: https://puppet.com/docs/puppet/latest/lang_variables.html#regular-expressions-for-variable-names -->
+    <key>heredoc</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <!-- Heredoc with interpolation e.g. @( END : abc / ts ) -->
+        <dict>
+          <key>begin</key>
+          <string>@\([[:blank:]]*"([^:\/) \t]+)"[[:blank:]]*(:[[:blank:]]*[a-z][a-zA-Z0-9_+]*[[:blank:]]*)?(\/[[:blank:]]*[tsrnL$]*)?[[:blank:]]*\)</string>
+          <key>beginCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.definition.string.begin.puppet</string>
+            </dict>
+          </dict>
+          <key>end</key>
+          <string>^[[:blank:]]*(\|-|\||-)?[[:blank:]]*\1</string>
+          <key>endCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.definition.string.end.puppet</string>
+            </dict>
+          </dict>
+          <key>name</key>
+          <string>string.interpolated.heredoc.puppet</string>
+          <key>patterns</key>
+          <array>
+            <dict>
+              <key>include</key>
+              <string>#escaped_char</string>
+            </dict>
+            <dict>
+              <key>include</key>
+              <string>#interpolated_puppet</string>
+            </dict>
+          </array>
+        </dict>
+        <!-- Heredoc without interpolation e.g. @( END : abc / ts ) -->
+        <dict>
+          <key>begin</key>
+          <string>@\([[:blank:]]*([^:\/) \t]+)[[:blank:]]*(:[[:blank:]]*[a-z][a-zA-Z0-9_+]*[[:blank:]]*)?(\/[[:blank:]]*[tsrnL$]*)?[[:blank:]]*\)</string>
+          <key>beginCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.definition.string.begin.puppet</string>
+            </dict>
+          </dict>
+          <key>end</key>
+          <string>^[[:blank:]]*(\|-|\||-)?[[:blank:]]*\1</string>
+          <key>endCaptures</key>
+          <dict>
+            <key>0</key>
+            <dict>
+              <key>name</key>
+              <string>punctuation.definition.string.end.puppet</string>
+            </dict>
+          </dict>
+          <key>name</key>
+          <string>string.unquoted.heredoc.puppet</string>
+        </dict>
+      </array>
     </dict>
   </dict>
 </dict>
