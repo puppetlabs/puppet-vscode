@@ -20,6 +20,7 @@
   - [Go to Symbol](#go-to-symbol)
   - [Code Snippets](#code-snippets)
   - [Linting](#linting)
+  - [Live Workspace Intellisense](#live-workspace-intellisense)
   - [Puppet Commands](#puppet-commands)
     - [Puppet Resource](#puppet-resource)
     - [Puppet Node Graph](#puppet-node-graph)
@@ -71,7 +72,7 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 You will need to have the [Puppet Agent](https://puppet.com/docs/puppet/4.10/about_agent.html)  or [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) installed in order to fully use this extension.
 
-**Note:** PDK version 1.5.0 or higher is required.
+> Note: PDK version 1.5.0 or higher is required.
 
 You can find instructions and installation links here:
 
@@ -163,6 +164,14 @@ As part of IntelliSense and Snippets, you can quickly create templates to automa
 
 Linting is automatically applied to the document as you edit, without having to save the file first. The validation uses [puppet-lint](https://github.com/rodjek/puppet-lint) to validate the Puppet syntax in all open puppet files. Errors and warnings appear in the Problems window in VSCode.
 
+### Live Workspace Intellisense
+
+If you are editing a module you will now get live intellisense of the [Puppet Custom Types](https://puppet.com/docs/puppet/latest/custom_types.html), [Functions](https://puppet.com/docs/puppet/latest/lang_write_functions_in_puppet.html), [Classes](https://puppet.com/docs/puppet/latest/lang_classes.html) and [Defined Types](https://puppet.com/docs/puppet/latest/lang_defined_types.html). For example if you are editing the [puppetlabs-apache module](https://github.com/puppetlabs/puppetlabs-apache) you will be able to get auto-complete for resources like `apache::vhost` or `apache::mod::php`.
+
+Support for [Control Repositories](https://puppet.com/docs/pe/latest/control_repo.html) is _coming soon!_
+
+> Note: Workspace Intellisense is only updated when you save a file, instead of features like linting which update as you type
+
 ### Puppet Commands
 
 #### Puppet Resource
@@ -195,9 +204,9 @@ The node graph will appear next to the manifest
 
 You can use the [Puppet Development Kit](https://puppet.com/blog/develop-modules-faster-new-puppet-development-kit) inside VS Code from the command palette. To use any of the above commands, open the command palette and start typing a command. You can also use the right-click context menu or the editor menu to reach these commands.
 
-** Note: The PDK must be installed prior to using these commands
+> Note: The PDK must be installed prior to using these commands
 
-** Note: `pdk convert` is not available in the command palette as it is a complicated command that requires user input to succeed. It is better to use it from the builtin terminal.
+> Note: `pdk convert` is not available in the command palette as it is a complicated command that requires user input to succeed. It is better to use it from the builtin terminal.
 
 #### PDK new module
 
@@ -274,9 +283,9 @@ The Puppet VSCode extension can use the PDK or the Puppet Agent to provide advan
 If no settings are chosen, the extension will attempt to use the Puppet Agent, to force it to use the PDK you have to select `pdk` for `puppet.installType`.
 
 
-**Note**: The `puppet.puppetAgentDir` setting name will be changed in the `0.12.0` release to `puppet.installDirectory`
+> Note: The `puppet.puppetAgentDir` setting name will be changed in the `0.12.0` release to `puppet.installDirectory`
 
-**Note**: Only PDK v1.5.0 and above are supported.
+> Note: Only PDK v1.5.0 and above are supported.
 
 ### Configure extension to use PDK
 
