@@ -6,6 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+### Changed
+
+- ([GH-431](https://github.com/lingua-pupuli/puppet-vscode/issues/431)) Update Editor Syntax to [1.3.0](https://github.com/lingua-pupuli/puppet-editor-syntax/blob/master/CHANGELOG.md#130---2018-11-29)
+- ([GH-427](https://github.com/lingua-pupuli/puppet-vscode/issues/427)) Update Editor Syntax to [1.2.0](https://github.com/lingua-pupuli/puppet-editor-syntax/blob/master/CHANGELOG.md#120---2018-11-27)
+- ([GH-434](https://github.com/lingua-pupuli/puppet-vscode/issues/434)) Update puppet-editor-services to [0.16.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0160---2018-11-30)
+- ([GH-422](https://github.com/lingua-pupuli/puppet-vscode/issues/422)) Upgrade to VS Code's webview API
+
 ## [0.13.2] - 2018-10-31
 
 ### Added
