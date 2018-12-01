@@ -10,3 +10,4 @@ tmp/**
 logs/**
 sessions/**
 gulpfile.js
+docs
