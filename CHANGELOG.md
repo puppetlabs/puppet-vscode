@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [0.14.0] - 2018-12-03
+
 ### Changed
 
 - ([GH-431](https://github.com/lingua-pupuli/puppet-vscode/issues/431)) Update Editor Syntax to [1.3.0](https://github.com/lingua-pupuli/puppet-editor-syntax/blob/master/CHANGELOG.md#130---2018-11-29)
