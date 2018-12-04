@@ -11,3 +11,6 @@ logs/**
 sessions/**
 gulpfile.js
 docs
+.github
+.travis.yml
+appveyor.yml
