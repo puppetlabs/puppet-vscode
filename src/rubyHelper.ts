@@ -104,7 +104,7 @@ export class RubyHelper {
     }
   }
 
-  private static shallowCloneObject(value:Object): Object {
+  private static shallowCloneObject(value:Object): any {
     const clone: Object = {};
     for (const propertyName in value){
       if (value.hasOwnProperty(propertyName)){

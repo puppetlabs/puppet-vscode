@@ -3,10 +3,10 @@
 import * as vscode from "vscode";
 import { IFeature } from "../feature";
 import { ILogger } from "../logging";
-import { IConnectionManager } from '../connection';
 import { ConnectionStatus } from '../interfaces';
 import { ISettings } from '../settings';
 import * as messages from '../messages';
+import { ConnectionHandler } from "../handler";
 
 class RequestParams implements messages.PuppetFixDiagnosticErrorsRequestParams {
   documentUri: string;
@@ -14,14 +14,14 @@ class RequestParams implements messages.PuppetFixDiagnosticErrorsRequestParams {
 }
 
 class FormatDocumentProvider {
-  private connectionManager: IConnectionManager = undefined;
+  private connectionHandler: ConnectionHandler = undefined;
 
-  constructor(connectionManager: IConnectionManager) {
-    this.connectionManager = connectionManager;
+  constructor(connectionManager: ConnectionHandler) {
+    this.connectionHandler = connectionManager;
   }
 
   public async formatTextEdits(document: vscode.TextDocument, options: vscode.FormattingOptions): Promise<vscode.TextEdit[]> {
-    if ((this.connectionManager.status !== ConnectionStatus.RunningLoaded) && (this.connectionManager.status !== ConnectionStatus.RunningLoading)) {
+    if ((this.connectionHandler.status !== ConnectionStatus.RunningLoaded) && (this.connectionHandler.status !== ConnectionStatus.RunningLoading)) {
       vscode.window.showInformationMessage("Please wait and try again. The Puppet extension is still loading...");
       return [];
     }
@@ -30,7 +30,7 @@ class FormatDocumentProvider {
     requestParams.documentUri = document.uri.toString(false);
     requestParams.alwaysReturnContent = false;
 
-    const result = await this.connectionManager
+    const result = await this.connectionHandler
                              .languageClient
                              .sendRequest(messages.PuppetFixDiagnosticErrorsRequest.type, requestParams) as messages.PuppetFixDiagnosticErrorsResponse;
     if (result.fixesApplied > 0 && result.newContent !== undefined) {
@@ -45,7 +45,7 @@ export class FormatDocumentFeature implements IFeature {
 
   constructor(
     langID: string,
-    connectionManager: IConnectionManager,
+    connectionManager: ConnectionHandler,
     settings: ISettings,
     logger: ILogger,
     context: vscode.ExtensionContext

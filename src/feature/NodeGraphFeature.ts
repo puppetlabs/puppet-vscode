@@ -5,16 +5,16 @@ import * as path from 'path';
 
 import { IFeature } from "../feature";
 import { ILogger } from "../logging";
-import { IConnectionManager } from '../connection';
 import { ConnectionStatus } from '../interfaces';
 import { CompileNodeGraphRequest } from '../messages';
 import { reporter } from '../telemetry/telemetry';
 import * as viz from 'viz.js';
+import { ConnectionHandler } from "../handler";
 
 const PuppetNodeGraphToTheSideCommandId: string = 'extension.puppetShowNodeGraphToSide';
 
 class NodeGraphWebViewProvider implements vscode.Disposable {
-  private connectionManager: IConnectionManager = undefined;
+  private connectionHandler: ConnectionHandler = undefined;
   private docUri: vscode.Uri = undefined;
   private webPanel: vscode.WebviewPanel = undefined;
   private parentFeature: NodeGraphFeature = undefined;
@@ -22,11 +22,11 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
 
   constructor(
     documentUri:vscode.Uri,
-    connectionManager:IConnectionManager,
+    connectionManager:ConnectionHandler,
     parent: NodeGraphFeature)
   {
     this.docUri = documentUri;
-    this.connectionManager = connectionManager;
+    this.connectionHandler = connectionManager;
     this.parentFeature = parent;
   }
 
@@ -55,7 +55,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
   }
 
   public async getHTMLContent(): Promise<string> {
-    if ((this.connectionManager.status !== ConnectionStatus.RunningLoaded) && (this.connectionManager.status !== ConnectionStatus.RunningLoading)) {
+    if ((this.connectionHandler.status !== ConnectionStatus.RunningLoaded) && (this.connectionHandler.status !== ConnectionStatus.RunningLoading)) {
       if (this.shownLanguageServerNotAvailable) {
         vscode.window.showInformationMessage("The Puppet Node Graph Preview is not available as the Editor Service is not ready");
         this.shownLanguageServerNotAvailable = true;
@@ -67,7 +67,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     const requestData = {
       external: this.docUri.toString()
     };
-    return this.connectionManager.languageClient
+    return this.connectionHandler.languageClient
       .sendRequest(CompileNodeGraphRequest.type, requestData)
       .then(
         (compileResult) => {
@@ -143,7 +143,7 @@ ${svgContent}
 export class NodeGraphFeature implements IFeature {
   private acceptedLangId: string = undefined;
   private providers: NodeGraphWebViewProvider[] = undefined;
-  private connectionManager: IConnectionManager = undefined;
+  private connectionHandler: ConnectionHandler = undefined;
 
   public onProviderWebPanelDisposed(provider: NodeGraphWebViewProvider): void {
     // If the panel gets disposed then the user closed the tab.
@@ -157,13 +157,13 @@ export class NodeGraphFeature implements IFeature {
 
   constructor(
     langID: string,
-    connectionManager: IConnectionManager,
+    connectionHandler: ConnectionHandler,
     logger: ILogger,
     context: vscode.ExtensionContext
   ) {
     this.acceptedLangId = langID;
     this.providers = [];
-    this.connectionManager = connectionManager;
+    this.connectionHandler = connectionHandler;
 
     context.subscriptions.push(vscode.commands.registerCommand(PuppetNodeGraphToTheSideCommandId,
       () => {
@@ -171,7 +171,7 @@ export class NodeGraphFeature implements IFeature {
         if (vscode.window.activeTextEditor.document.languageId !== this.acceptedLangId) { return; }
 
         let resource = vscode.window.activeTextEditor.document.uri;
-        let provider = new NodeGraphWebViewProvider(resource, this.connectionManager, this);
+        let provider = new NodeGraphWebViewProvider(resource, this.connectionHandler, this);
         this.providers.push(provider);
         provider.show();
       }

@@ -18,7 +18,7 @@ export interface IEditorServiceSettings {
   enable?: boolean;
   featureflags?: string[];
   loglevel?: string;
-  protocol?: string;
+  protocol?: ProtocolType;
   tcp?: IEditorServiceTCPSettings;
   timeout?: number;
 }
