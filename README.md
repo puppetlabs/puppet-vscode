@@ -275,15 +275,15 @@ You can also install the extension without access to the internet by following t
 
 ## Configuration
 
-The Puppet VSCode extension can use the PDK or the Puppet Agent to provide advanced features, which can be set using two configuration options: `puppet.installType` and `puppet.puppetAgentDir`.
+The Puppet VSCode extension can use the PDK or the Puppet Agent to provide advanced features, which can be set using two configuration options: `puppet.installType` and `puppet.installDirectory`.
 
 - By default the `puppet.installType` is set to `agent`, and allows you to choose to use `pdk` or `agent`.
-- The `puppet.puppetAgentDir` allows you to choose a custom path to either a PDK install or a Puppet-Agent install, and must match the correct setting in `puppet.installType`.
+- The `puppet.installDirectory` allows you to choose a custom path to either a PDK install or a Puppet-Agent install, and must match the correct setting in `puppet.installType`.
 
 If no settings are chosen, the extension will attempt to use the Puppet Agent, to force it to use the PDK you have to select `pdk` for `puppet.installType`.
 
 
-> Note: The `puppet.puppetAgentDir` setting name will be changed in the `0.12.0` release to `puppet.installDirectory`
+> Note: The `puppet.installDirectory` setting name will be changed in the `0.12.0` release to `puppet.installDirectory`
 
 > Note: Only PDK v1.5.0 and above are supported.
 
@@ -299,22 +299,35 @@ To ensure that the extension uses the PDK, set the `puppet.installType` setting 
 
 The default installation paths stored in the extension are:
 
+Windows:
+
 ```json
 {
-  // Windows
-  "puppet.puppetAgentDir":"C:\\Program Files\\Puppet Labs\\DevelopmentKit",
-  // Mac
-  "puppet.puppetAgentDir":"/opt/puppetlabs/pdk",
-  // Linux
-  "puppet.puppetAgentDir":"/opt/puppetlabs/pdk"
+  "puppet.installDirectory":"C:\\Program Files\\Puppet Labs\\DevelopmentKit"
 }
 ```
 
-To use a custom install path for the PDK, set the `puppet.puppetAgentDir` setting to the path you installed the PDK to:
+OSX:
 
 ```json
 {
-  "puppet.puppetAgentDir":"D:/programs/pdk"
+  "puppet.installDirectory":"/opt/puppetlabs/pdk"
+}
+```
+
+Linux:
+
+```json
+{
+  "puppet.installDirectory":"/opt/puppetlabs/pdk"
+}
+```
+
+To use a custom install path for the PDK, set the `puppet.installDirectory` setting to the path you installed the PDK to:
+
+```json
+{
+  "puppet.installDirectory":"D:/programs/pdk"
 }
 ```
 
@@ -330,22 +343,35 @@ To ensure that the extension uses the Puppet-Agent, set the `puppet.installType`
 
 The default installation paths stored in the extension are:
 
+Windows:
+
 ```json
 {
-  // Windows
-  "puppet.puppetAgentDir":"C:\\Program Files\\Puppet Labs\\Puppet",
-  // Mac
-  "puppet.puppetAgentDir":"/opt/puppetlabs",
-  //Linux
-  "puppet.puppetAgentDir":"/opt/puppetlabs"
+  "puppet.installDirectory":"C:\\Program Files\\Puppet Labs\\Puppet",
 }
 ```
 
-To use a custom install path for the Puppet-Agent, set the `puppet.puppetAgentDir` setting to the path you installed the Puppet-Agent to:
+OSX
 
 ```json
 {
-  "puppet.puppetAgentDir":"D:/programs/puppet"
+  "puppet.installDirectory":"/opt/puppetlabs"
+}
+```
+
+Linux:
+
+```json
+{
+  "puppet.installDirectory":"/opt/puppetlabs"
+}
+```
+
+To use a custom install path for the Puppet-Agent, set the `puppet.installDirectory` setting to the path you installed the Puppet-Agent to:
+
+```json
+{
+  "puppet.installDirectory":"D:/programs/puppet"
 }
 ```
 
