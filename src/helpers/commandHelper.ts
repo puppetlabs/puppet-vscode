@@ -90,6 +90,9 @@ export class CommandEnvironmentHelper {
     if (vscode.workspace.workspaceFolders !== undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
+    if (settings.editorService.modulePath !== undefined && settings.editorService.modulePath !== '') {
+      args.push('--puppet-settings=--modulepath,' + settings.editorService.modulePath);
+    }
     if (config.enableFileCache) {
       args.push('--enable-file-cache');
     }
