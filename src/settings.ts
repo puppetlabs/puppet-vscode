@@ -4,7 +4,7 @@ import vscode = require("vscode");
 import { ProtocolType, PuppetInstallType } from './interfaces';
 
 export interface IEditorServiceDockerSettings {
-  // Future Use
+  imageName?: string;
 }
 
 export interface IEditorServiceTCPSettings {

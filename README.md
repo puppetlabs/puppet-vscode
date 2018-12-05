@@ -32,6 +32,7 @@
     - [PDK Validate](#pdk-validate)
     - [PDK Test Unit](#pdk-test-unit)
   - [Debugging Puppet manifests](#debugging-puppet-manifests)
+  - [Docker Language Server Support](#docker-language-server-support)
 - [Installing the Extension](#installing-the-extension)
 - [Configuration](#configuration)
 - [Experience a Problem?](#experience-a-problem)
@@ -69,6 +70,7 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 - Node graph preview
 - Puppet Development Kit integration
 - (Experimental) Local debugging of Puppet manifests
+- (Experimental) Docker Language Server support
 
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
@@ -274,6 +276,23 @@ The [VSCode Debugging - Launch Configurations](https://code.visualstudio.com/doc
 - `noop` - Whether the `puppet apply` sets No Operation (Noop) mode.  By default, this is set to true.  This means when running the debugger it will not make changes to your system. The [documentation about the puppet agent](https://puppet.com/docs/puppet/5.3/man/apply.html#OPTIONS) has more information about `puppet apply` and and the `noop` option.
 
 - `args` - Additional arguements to pass to `puppet apply`, for example `['--debug']` will output debug information
+
+### Docker Language Server Support
+
+**Note - This is an experimental feature**
+
+The Puppet VSCode extension bundles the Puppet Language Server inside the extension, and loads the language server on demaned and communicates it with either STDIO or TCP. Another option is to communicate via TCP pointed towards a docker container running the Puppet Language Server. The Lingua-Pupuli organization maintains a Puppet Language Server docker container here: https://github.com/lingua-pupuli/images. Using this docker image, we can run the Puppet Language Server without having Puppet Agent or the Puppet Development Kit installed locally, all that is needed is a working docker installation.
+
+Enable using docker by adding the following configuration:
+
+```json
+{
+  "puppet.editorService.protocol":"docker",
+  "puppet.editorService.docker.imageName":"linguapupuli/puppet-language-server:latest"
+}
+```
+
+This will cause the Puppet Extension to instruct docker to start the linguapupuli/puppet-language-server container, then wait for it to start. After starting, the Puppet Extension will use the docker container to perform the same functionality as if it was running locally.
 
 ## Installing the Extension
 
