@@ -19,7 +19,7 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { PuppetCommandStrings } from './messages';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
-import { Reporter } from './telemetry/telemetry';
+import { Reporter, reporter } from './telemetry/telemetry';
 
 const langID = 'puppet'; // don't change this
 let extContext: vscode.ExtensionContext;
@@ -42,6 +42,12 @@ export function activate(context: vscode.ExtensionContext) {
   logger         = new OutputChannelLogger(settings);
   statusBar      = new PuppetStatusBar(langID, context, logger);
   configSettings = new ConnectionConfiguration();
+
+  if(settings.editorService.enable === false){
+    notifyEditorServiceDisabled(extContext);
+    reporter.sendTelemetryEvent('editorServiceDisabled');
+    return;
+  }
 
   if(checkInstallDirectory(configSettings, logger) === false){
     // If this returns false, then we needed a local directory
@@ -170,5 +176,28 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
     );
   } else {
     context.globalState.update(suppressUpdateNotice, true);
+  }
+}
+
+async function notifyEditorServiceDisabled(context: vscode.ExtensionContext) {
+  const suppressEditorServicesDisabled = 'suppressEditorServicesDisabled';
+  const dontShowAgainNotice = "Don't show again";
+
+  if (context.globalState.get(suppressEditorServicesDisabled, false)) {
+    return;
+  }
+
+  const result = await vscode.window.showInformationMessage(
+    `Puppet Editor Services has been disabled. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
+    { modal: false },
+    { title: dontShowAgainNotice }
+  );
+
+  if (result === undefined) {
+    return;
+  }
+
+  if (result.title === dontShowAgainNotice) {
+    context.globalState.update(suppressEditorServicesDisabled, true);
   }
 }
