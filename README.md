@@ -361,9 +361,7 @@ If you are receiving an error right after opening a Puppet file saying that a Pu
 
 If you haven't see the Problems Pane update in awhile, or hover and intellisense doesn't seem to showing up, and you might not know what to do. Sometimes the Puppet extension can experience problems which cause the language server to crash or not respond. The extension has a way of logging the crash, but there is something you can do to get right back to working: reload the Puppet Language Server.
 
-You can reload the Puppet Lanuguage Server by opening the command palette and starting to type `Puppet`. A list of Puppet commands will appear, select `Puppet: Restart Current Session`. This will restart the Puppet Language Server without reloading VSCode or losing any work currently open in the editor.
-
-![Reload Puppet Language Server](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/reload_language_server.gif)
+You can reload the Puppet Lanuguage Server by opening the command palette and starting to type `Reload`. A list of commands will appear, select `Reload Window`. This will reload the Visual Studio Code window without closing down the enitre edtior, and without losing any work currently open in the editor.
 
 ## Reporting Problems
 

@@ -39,7 +39,6 @@
   ],
   "activationEvents": [
     "onLanguage:puppet",
-    "onCommand:extension.puppetRestartSession",
     "onCommand:extension.puppetShowConnectionLogs",
     "onCommand:extension.puppetShowConnectionMenu",
     "onCommand:extension.puppetLint",
@@ -97,11 +96,6 @@
     ],
     "commands": [
       {
-        "command": "extension.puppetRestartSession",
-        "category": "Puppet",
-        "title": "Restart Current Session"
-      },
-      {
         "command": "extension.puppetShowConnectionLogs",
         "category": "Puppet",
         "title": "Show Connection Logs"
@@ -152,9 +146,6 @@
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "extension.puppetRestartSession"
-        },
         {
           "command": "extension.puppetShowConnectionLogs"
         },

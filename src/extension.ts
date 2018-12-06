@@ -67,12 +67,6 @@ export function activate(context: vscode.ExtensionContext) {
     new PDKFeature(extContext, logger),
     new PuppetResourceFeature(extContext, connectionHandler, logger)
   ];
-
-  extContext.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetRestartSessionCommandId,
-    () => {
-      
-    }
-  ));
 }
 
 export function deactivate() {
