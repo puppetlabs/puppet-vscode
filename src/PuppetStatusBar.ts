@@ -66,13 +66,7 @@ export class PuppetStatusBar {
 
   public static showConnectionMenu() {
     var menuItems: PuppetConnectionMenuItem[] = [];
-  
-    menuItems.push(
-      new PuppetConnectionMenuItem(
-        "Restart Current Puppet Session",
-        () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetRestartSessionCommandId); }),
-    );
-  
+
     menuItems.push(
       new PuppetConnectionMenuItem(
         "Show Puppet Session Logs",
