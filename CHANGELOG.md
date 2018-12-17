@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+- ([GH-447](https://github.com/lingua-pupuli/puppet-vscode/issues/447)) Update puppet-editor-services to [0.17.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0170---2018-12-14)
+
 ## [0.14.0] - 2018-12-03
 
 ### Changed
