@@ -31,6 +31,7 @@ export interface IConnectionConfiguration {
   puppetBaseDir: string;
   puppetDir: string;
   languageServerPath: string;
+  debugServerPath: string;
   rubydir: string;
   rubylib: string;
   environmentPath: string;

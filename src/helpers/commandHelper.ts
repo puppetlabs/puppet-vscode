@@ -21,6 +21,20 @@ export class CommandEnvironmentHelper {
     return exe;
   }
 
+  public static getDebugServerRubyEnvFromConfiguration(
+    debugServerpath: string,
+    settings: ISettings,
+    config: IConnectionConfiguration,
+  ): Executable {
+    let exe: Executable = {
+      command: this.buildExecutableCommand(settings, config),
+      args: this.buildDebugServerArguments(debugServerpath),
+      options: {},
+    };
+    this.applyRubyEnvFromConfiguration(exe, settings, config);
+    return exe;
+  }
+
   private static applyRubyEnvFromConfiguration(
     exe: Executable,
     settings: ISettings,
@@ -104,6 +118,22 @@ export class CommandEnvironmentHelper {
     if (settings.editorService.debugFilePath !== undefined && settings.editorService.debugFilePath !== '') {
       args.push('--debug=' + settings.editorService.debugFilePath);
     }
+    return args;
+  }
+
+  private static buildDebugServerArguments(
+    serverPath: string
+  ): string[] {
+    let args = [serverPath];
+
+    // The Debug Adapter always runs on TCP and IPv4 loopback
+    // Using localhost can have issues due to ruby and node differing on what address
+    // to use for localhost e.g Ruby may prefer 127.0.0.1 (IP4) and Node may prefer ::1 (IP6)
+    // and therefore won't connect.
+    args.push('--ip=127.0.0.1');
+
+    // TODO: Add additional command line args e.g. --debuglogfie
+
     return args;
   }
 
