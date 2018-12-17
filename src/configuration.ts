@@ -11,7 +11,6 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public host: string;
   public port: number;
   public timeout: number;
-  public enableFileCache: boolean;
   public debugFilePath: string;
   private settings: ISettings;
 
@@ -21,7 +20,6 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     this.host = this.settings.editorService.tcp.address;
     this.port = this.settings.editorService.tcp.port;
     this.timeout = this.settings.editorService.timeout;
-    this.enableFileCache = (this.settings.editorService.featureflags.indexOf('filecache') !== -1);
     this.debugFilePath = this.settings.editorService.debugFilePath;
 
     this._puppetInstallType = this.settings.installType;
@@ -185,10 +183,6 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 
     if (vscode.workspace.workspaceFolders !== undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
-    }
-
-    if (this.enableFileCache) {
-      args.push('--enable-file-cache');
     }
 
     if (this.debugFilePath !== undefined && this.debugFilePath !== '') {

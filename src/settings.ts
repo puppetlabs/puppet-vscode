@@ -17,6 +17,7 @@ export interface IEditorServiceSettings {
   docker?: IEditorServiceDockerSettings;
   enable?: boolean;
   featureflags?: string[];
+  modulePath?: string;
   loglevel?: string;
   protocol?: ProtocolType;
   tcp?: IEditorServiceTCPSettings;
@@ -119,6 +120,7 @@ export function settingsFromWorkspace(): ISettings {
     enable: true,
     featureflags: [],
     loglevel: "normal",
+    modulePath: "",
     protocol: ProtocolType.STDIO,
     timeout: 10,
   };

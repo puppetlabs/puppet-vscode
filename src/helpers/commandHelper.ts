@@ -14,7 +14,7 @@ export class CommandEnvironmentHelper {
   ): Executable {
     let exe: Executable = {
       command: this.buildExecutableCommand(settings, config),
-      args: this.buildLanguageServerArguments(languageServerpath, settings, config),
+      args: this.buildLanguageServerArguments(languageServerpath, settings),
       options: {},
     };
 
@@ -64,7 +64,6 @@ export class CommandEnvironmentHelper {
   private static buildLanguageServerArguments(
     serverPath: string,
     settings: ISettings,
-    config: IConnectionConfiguration,
   ): string[] {
     let args = [serverPath];
 
@@ -90,8 +89,8 @@ export class CommandEnvironmentHelper {
     if (vscode.workspace.workspaceFolders !== undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
-    if (config.enableFileCache) {
-      args.push('--enable-file-cache');
+    if (settings.editorService.modulePath !== undefined && settings.editorService.modulePath !== '') {
+      args.push('--puppet-settings=--modulepath,' + settings.editorService.modulePath);
     }
     if (settings.editorService.debugFilePath !== undefined && settings.editorService.debugFilePath !== '') {
       args.push('--debug=' + settings.editorService.debugFilePath);

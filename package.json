@@ -280,6 +280,11 @@
             "verbose"
           ]
         },
+        "puppet.editorService.modulePath": {
+          "type": "string",
+          "default": "",
+          "description": "Additional module paths to use when starting the Editor Services. On Windows this is delimited with a semicolon, and on all other platforms, with a colon. For example C:\\Path1;C:\\Path2"
+        },
         "puppet.editorService.protocol": {
           "type": "string",
           "default": "stdio",
