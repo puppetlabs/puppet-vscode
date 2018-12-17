@@ -6,6 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+- ([GH-446](https://github.com/lingua-pupuli/puppet-vscode/issues/446)) Remove deprecated --enable-file-cache option for Editor Services
 - ([GH-440](https://github.com/lingua-pupuli/puppet-vscode/issues/440)) Add a setting for additional modulepath
 - ([GH-447](https://github.com/lingua-pupuli/puppet-vscode/issues/447)) Update puppet-editor-services to [0.17.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0170---2018-12-14)
 
