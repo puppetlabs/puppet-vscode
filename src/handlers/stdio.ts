@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 
 import { ServerOptions, Executable } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';

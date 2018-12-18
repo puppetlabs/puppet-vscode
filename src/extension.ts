@@ -16,7 +16,6 @@ import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { ProtocolType, ConnectionType, IConnectionConfiguration } from './interfaces';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { PuppetCommandStrings } from './messages';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';

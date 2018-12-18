@@ -1,14 +1,6 @@
 'use strict';
 
 // Only add simple interfaces here. No import's allowed
-
-// Only add simple interfaces here. No import's allowed
-// Only add simple interfaces here. No import's allowed
-// Only add simple interfaces here. No import's allowed
-// Only add simple interfaces here. No import's allowed
-// Only add simple interfaces here. No import's allowed
-// Only add simple interfaces here. No import's allowed
-// Only add simple interfaces here. No import's allowed
 export enum ConnectionStatus {
   NotStarted,
   Starting,
@@ -36,10 +28,6 @@ export enum ProtocolType {
 export interface IConnectionConfiguration {
   type: ConnectionType;
   protocol: ProtocolType;
-  host: string;
-  port: number;
-  timeout: number;
-  debugFilePath: string;
   puppetBaseDir: string;
   puppetDir: string;
   languageServerPath: string;
@@ -48,9 +36,7 @@ export interface IConnectionConfiguration {
   environmentPath: string;
   sslCertFile: string;
   sslCertDir: string;
-  languageServerCommandLine: Array<string>;
 
-  puppetInstallType:PuppetInstallType; 
   pdkBinDir:string;
   pdkRubyLib:string;
   pdkRubyVerDir:string;
