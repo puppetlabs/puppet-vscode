@@ -7,7 +7,7 @@ import { PuppetInstallType, ProtocolType, IConnectionConfiguration } from '../in
 import { PathResolver } from '../configuration/pathResolver';
 
 export class CommandEnvironmentHelper {
-  public static getRubyEnvFromConfiguration(
+  public static getLanguageServerRubyEnvFromConfiguration(
     languageServerpath: string,
     settings: ISettings,
     config: IConnectionConfiguration,
@@ -17,6 +17,15 @@ export class CommandEnvironmentHelper {
       args: this.buildLanguageServerArguments(languageServerpath, settings),
       options: {},
     };
+    this.applyRubyEnvFromConfiguration(exe, settings, config);
+    return exe;
+  }
+
+  private static applyRubyEnvFromConfiguration(
+    exe: Executable,
+    settings: ISettings,
+    config: IConnectionConfiguration
+  ): Executable {
 
     // setup defaults
     exe.options.env = this.shallowCloneObject(process.env);

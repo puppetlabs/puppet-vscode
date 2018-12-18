@@ -26,7 +26,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
   }
 
   createServerOptions(): ServerOptions {
-    let exe: Executable = CommandEnvironmentHelper.getRubyEnvFromConfiguration(
+    let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
       this.context.asAbsolutePath(this.config.languageServerPath),
       this.settings,
       this.config,
