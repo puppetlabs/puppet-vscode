@@ -94,8 +94,50 @@ export class DebugAdapterDescriptorFactory implements vscode.DebugAdapterDescrip
   }
 }
 
+export class DebugConfigurationProvider implements vscode.DebugConfigurationProvider {
+  private debugType: string;
+  private logger: ILogger;
+  private context: vscode.ExtensionContext;
+
+  constructor(debugType:string, logger: ILogger, context: vscode.ExtensionContext) {
+    this.debugType = debugType;
+    this.logger = logger;
+    this.context = context;
+  }
+
+  public provideDebugConfigurations(
+    folder: vscode.WorkspaceFolder | undefined,
+    token?: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.DebugConfiguration[]> {
+    return [ this.createLaunchConfigFromContext(folder) ];
+  }
+
+  public resolveDebugConfiguration(
+    folder: vscode.WorkspaceFolder | undefined,
+    debugConfiguration: vscode.DebugConfiguration,
+    token?: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.DebugConfiguration> {
+    return debugConfiguration;
+  }
+
+  private createLaunchConfigFromContext(folder: vscode.WorkspaceFolder | undefined): vscode.DebugConfiguration {
+    let config = {
+      type: this.debugType,
+      request: 'launch',
+      name: 'Puppet Apply current file',
+      manifest: "${file}",
+      args: [],
+      noop: true,
+      cwd: "${file}",
+    };
+
+    return config;
+  }
+}
+
 export class DebuggingFeature implements IFeature {
   private factory: DebugAdapterDescriptorFactory;
+  private provider: DebugConfigurationProvider;
 
   constructor(
     debugType: string,
@@ -105,9 +147,13 @@ export class DebuggingFeature implements IFeature {
     logger: ILogger
   ) {
     this.factory = new DebugAdapterDescriptorFactory(context, settings, config, logger);
+    this.provider = new DebugConfigurationProvider(debugType, logger, context);
 
     logger.debug("Registered DebugAdapterDescriptorFactory for " + debugType);
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory(debugType, this.factory));
+
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider(debugType, this.provider));
+    logger.debug("Registered DebugConfigurationProvider for " + debugType);
   }
 
   public dispose(): any {

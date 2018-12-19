@@ -9,7 +9,6 @@ import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
 import { IFeature } from './feature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
-import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
@@ -70,7 +69,6 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   extensionFeatures = [
-    new DebugConfigurationFeature(logger, extContext),
     new FormatDocumentFeature(puppetLangID, connectionHandler, settings, logger, extContext),
     new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext),
     new PDKFeature(extContext, logger),
