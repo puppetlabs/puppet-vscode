@@ -10,6 +10,6 @@ action "install-deps" {
 
 action "test" {
   uses = "actions/npm@c555744"
-  args = "install"
+  args = "test"
   needs = ["install-deps"]
 }
