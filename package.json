@@ -21,7 +21,7 @@
     "url": "https://github.com/lingua-pupuli/puppet-vscode/issues"
   },
   "engines": {
-    "vscode": "^1.27.0"
+    "vscode": "^1.30.0"
   },
   "categories": [
     "Linters",
@@ -383,7 +383,6 @@
       {
         "type": "Puppet",
         "label": "Puppet Debugger",
-        "adapterExecutableCommand": "extension.puppetAdapterExecutableCommand",
         "languages": [
           "puppet"
         ],
