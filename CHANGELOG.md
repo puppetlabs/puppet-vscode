@@ -6,9 +6,22 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-- ([GH-446](https://github.com/lingua-pupuli/puppet-vscode/issues/446)) Remove deprecated --enable-file-cache option for Editor Services
+## [0.15.0] - 2018-12-21
+
+### Added
+
 - ([GH-440](https://github.com/lingua-pupuli/puppet-vscode/issues/440)) Add a setting for additional modulepath
+- ([GH-335](https://github.com/lingua-pupuli/puppet-vscode/issues/335)) Add a setting to disable the language server
+
+### Changed
+
 - ([GH-447](https://github.com/lingua-pupuli/puppet-vscode/issues/447)) Update puppet-editor-services to [0.17.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0170---2018-12-14)
+- ([GH-412](https://github.com/lingua-pupuli/puppet-vscode/issues/412)) Refactored the Language Server Connection Handler
+
+### Removed
+
+- ([GH-446](https://github.com/lingua-pupuli/puppet-vscode/issues/446)) Remove deprecated --enable-file-cache option for Editor Services
+- ([GH-439](https://github.com/lingua-pupuli/puppet-vscode/issues/439)) Remove RestartSession Command
 
 ## [0.14.0] - 2018-12-03
 

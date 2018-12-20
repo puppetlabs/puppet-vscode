@@ -18,6 +18,7 @@
   - [Outline View](#outline-view)
   - [Breadcrumbs](#breadcrumbs)
   - [Go to Symbol](#go-to-symbol)
+    [Open Symbol by Name](#open-symbol-by-name)
   - [Code Snippets](#code-snippets)
   - [Linting](#linting)
   - [Live Workspace Intellisense](#live-workspace-intellisense)
@@ -57,7 +58,9 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 - Outline View
 - Breadcrumbs
 - Go to Symbol
+- Open Symbol by Name
 - Linting
+- Live Workspace Intellisense
 - Code snippets
 - Go to Definition of functions, types and classes
 - Validation of `metadata.json` files
@@ -156,6 +159,10 @@ Opening the `Command Palette` and typing the `@` symbol initiates the `Go to Sym
 
 ![go_to_symbol](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/go_to_symbol.gif)
 
+### Open Symbol by Name
+
+Pressing `Ctrl+T` (or ⌘T on OSX) will list all [Puppet Custom Types](https://puppet.com/docs/puppet/latest/custom_types.html), [Functions](https://puppet.com/docs/puppet/latest/lang_write_functions_in_puppet.html), [Classes](https://puppet.com/docs/puppet/latest/lang_classes.html) and [Defined Types](https://puppet.com/docs/puppet/latest/lang_defined_types.html) in the workspace. You can then [navigate to the symbol](https://code.visualstudio.com/docs/editor/editingevolved#_open-symbol-by-name) by pressing `Enter`.
+
 ### Code Snippets
 
 As part of IntelliSense and Snippets, you can quickly create templates to automate repetitive series of code.
@@ -166,9 +173,7 @@ Linting is automatically applied to the document as you edit, without having to 
 
 ### Live Workspace Intellisense
 
-If you are editing a module you will now get live intellisense of the [Puppet Custom Types](https://puppet.com/docs/puppet/latest/custom_types.html), [Functions](https://puppet.com/docs/puppet/latest/lang_write_functions_in_puppet.html), [Classes](https://puppet.com/docs/puppet/latest/lang_classes.html) and [Defined Types](https://puppet.com/docs/puppet/latest/lang_defined_types.html). For example if you are editing the [puppetlabs-apache module](https://github.com/puppetlabs/puppetlabs-apache) you will be able to get auto-complete for resources like `apache::vhost` or `apache::mod::php`.
-
-Support for [Control Repositories](https://puppet.com/docs/pe/latest/control_repo.html) is _coming soon!_
+If you are editing a module, or a [Control Repository](https://puppet.com/docs/pe/latest/control_repo.html), you will now get live intellisense of the [Puppet Custom Types](https://puppet.com/docs/puppet/latest/custom_types.html), [Functions](https://puppet.com/docs/puppet/latest/lang_write_functions_in_puppet.html), [Classes](https://puppet.com/docs/puppet/latest/lang_classes.html) and [Defined Types](https://puppet.com/docs/puppet/latest/lang_defined_types.html). For example if you are editing the [puppetlabs-apache module](https://github.com/puppetlabs/puppetlabs-apache) you will be able to get auto-complete for resources like `apache::vhost` or `apache::mod::php`.
 
 > Note: Workspace Intellisense is only updated when you save a file, instead of features like linting which update as you type
 
