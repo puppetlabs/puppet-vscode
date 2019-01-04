@@ -1106,7 +1106,7 @@
     <key>regex-literal</key>
     <dict>
       <key>match</key>
-      <string>(\/)(.+)(?:\/)</string>
+      <string>(\/)(.+?)(?:\/)</string>
       <key>name</key>
       <string>string.regexp.literal.puppet</string>
       <key>comment</key>
