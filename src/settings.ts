@@ -34,7 +34,7 @@ export interface ILintSettings {
 }
 
 export interface IPDKSettings {
-  // Future Use
+  puppetVersion:string;
 }
 
 export interface ISettings {
@@ -133,7 +133,9 @@ export function settingsFromWorkspace(): ISettings {
     enable: true,
   };
 
-  const defaultPDKSettings: IPDKSettings = {};
+  const defaultPDKSettings: IPDKSettings = {
+    puppetVersion: '2.5.1',
+  };
 
   const workspaceConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(workspaceSectionName);
 

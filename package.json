@@ -327,6 +327,16 @@
             "agent"
           ]
         },
+        "puppet.pdk.puppetVersion": {
+          "type": "string",
+          "default": "2.5.1",
+          "description": "Specify the puppet version from the PDK installation",
+          "enum": [
+            "2.5.1",
+            "2.4.4",
+            "2.1.9"
+          ]
+        },
         "puppet.languageclient.protocol": {
           "description": "**DEPRECATED** Please use puppet.editorService.protocol instead"
         },

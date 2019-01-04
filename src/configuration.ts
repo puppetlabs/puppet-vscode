@@ -13,6 +13,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public timeout: number;
   public debugFilePath: string;
   private settings: ISettings;
+  private gemRubyVersionDir: string;
+  private rubyVersionDir: string;
 
   constructor() {
     this.settings = settingsFromWorkspace();
@@ -23,6 +25,24 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     this.debugFilePath = this.settings.editorService.debugFilePath;
 
     this._puppetInstallType = this.settings.installType;
+
+    // should this be here?
+    switch (this.settings.pdk.puppetVersion) {
+      case '2.5.1':
+        this.rubyVersionDir    = '2.5.1';
+        this.gemRubyVersionDir = '2.5.0';
+        break;
+      case '2.4.4':
+        this.rubyVersionDir    = '2.4.4';
+        this.gemRubyVersionDir = '2.4.0';
+        break;
+      case '2.1.9':
+        this.rubyVersionDir    = '2.1.9';
+        this.gemRubyVersionDir = '2.1.0';
+        break;
+      default:
+        break;
+    }
   }
 
   private _puppetInstallType: PuppetInstallType;
@@ -207,16 +227,14 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 
   get pdkRubyVerDir(): string {
     var rootDir = path.join(this.puppetBaseDir, 'private', 'puppet', 'ruby');
-    var versionDir = '2.4.0';
 
-    return PathResolver.resolveSubDirectory(rootDir, versionDir);
+    return PathResolver.resolveSubDirectory(rootDir, this.gemRubyVersionDir);
   }
 
   get pdkGemDir(): string {
     // GEM_HOME=C:\Users\user\AppData\Local/PDK/cache/ruby/2.4.0
     var rootDir = path.join(this.puppetBaseDir, 'share', 'cache', 'ruby');
-    var versionDir = '2.4.0';
-    var directory = PathResolver.resolveSubDirectory(rootDir, versionDir);
+    var directory = PathResolver.resolveSubDirectory(rootDir, this.gemRubyVersionDir);
 
     if (process.platform === 'win32') {
       // Translate all slashes to / style to avoid puppet/ruby issue #11930
@@ -227,9 +245,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 
   get pdkRubyDir(): string {
     var rootDir = path.join(this.puppetBaseDir, 'private', 'ruby');
-    var versionDir = '2.4.4';
 
-    return PathResolver.resolveSubDirectory(rootDir, versionDir);
+    return PathResolver.resolveSubDirectory(rootDir, this.rubyVersionDir);
   }
 
   get pdkRubyBinDir(): string {
@@ -238,9 +255,8 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 
   get pdkGemVerDir(): string {
     var rootDir = path.join(this.pdkRubyDir, 'lib', 'ruby', 'gems');
-    var versionDir = '2.4.0';
 
-    return PathResolver.resolveSubDirectory(rootDir, versionDir);
+    return PathResolver.resolveSubDirectory(rootDir, this.gemRubyVersionDir);
   }
 
   // GEM_PATH=C:/Program Files/Puppet Labs/DevelopmentKit/private/ruby/2.4.4/lib/ruby/gems/2.4.0;C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/ruby/2.4.0;C:/Program Files/Puppet Labs/DevelopmentKit/private/puppet/ruby/2.4.0
