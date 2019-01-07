@@ -1,5 +1,8 @@
 {
   "editor-services": {
     "release": "0.17.0"
+  },
+  "editor-syntax": {
+    "release": "1.3.0"
   }
 }

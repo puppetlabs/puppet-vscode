@@ -37,9 +37,13 @@ The following resources are vendored into the extension;
 
 * Puppet Editor Services (`editor-services`)
 
+* Puppet Editor Syntax (`editor-syntax`)
+
 By default the extension will use the specified versions in the `editor-components.json` file when vendoring resources.
 
 #### Example configuration
+
+The following examples use `editor-services`, however the configuration settings can be used on any resource.
 
 ##### By release tag
 
@@ -69,6 +73,8 @@ To use a specific GitHub repository that contains the Puppet Editor services, us
 
 Note - For `editor-services` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-services`
 
+Note - For `editor-syntax` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-syntax`
+
 Note - Use the full length commit SHA for `githubref`, not the abbreviated eight character SHA
 
 ##### Using a local directory
@@ -91,13 +97,15 @@ Note - Backslashes in the path must be escaped.
 
 ```bash
 > node node_modules/gulp/bin/gulp.js --series clean vendor
-[14:23:44] Using gulpfile C:\Source\puppet-vscode\gulpfile.js
-[14:23:44] Starting 'clean'...
-[14:23:44] Finished 'clean' after 50 ms
-[14:23:44] Starting 'vendor'...
-[14:23:44] Starting 'vendor_editor_services'...
-[14:23:48] Finished 'vendor_editor_services' after 3.82 s
-[14:23:48] Finished 'vendor' after 3.83 s
+[15:00:21] Using gulpfile C:\Source\puppet-vscode\gulpfile.js
+[15:00:21] Starting 'clean'...
+[15:00:21] Finished 'clean' after 7.9 ms
+[15:00:21] Starting 'vendor'...
+[15:00:21] Starting 'vendor_editor_services'...
+[15:00:25] Finished 'vendor_editor_services' after 3.88 s
+[15:00:25] Starting 'vendor_editor_syntax'...
+[15:00:27] Finished 'vendor_editor_syntax' after 2.24 s
+[15:00:27] Finished 'vendor' after 6.13 s
 ```
 
 * Start VS Code
