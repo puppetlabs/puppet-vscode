@@ -21,7 +21,9 @@ import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
 
-const langID = 'puppet'; // don't change this
+export const puppetLangID = 'puppet'; // don't change this
+export const puppetFileLangID = 'puppetfile'; // don't change this
+
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
 let settings: ISettings;
@@ -40,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   settings       = settingsFromWorkspace();
   logger         = new OutputChannelLogger(settings);
-  statusBar      = new PuppetStatusBar(langID, context, logger);
+  statusBar      = new PuppetStatusBar([puppetLangID, puppetFileLangID], context, logger);
   configSettings = new ConnectionConfiguration();
 
   if(settings.editorService.enable === false){
@@ -68,8 +70,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new DebugConfigurationFeature(logger, extContext),
-    new FormatDocumentFeature(langID, connectionHandler, settings, logger, extContext),
-    new NodeGraphFeature(langID, connectionHandler, logger, extContext),
+    new FormatDocumentFeature(puppetLangID, connectionHandler, settings, logger, extContext),
+    new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext),
     new PDKFeature(extContext, logger),
     new PuppetResourceFeature(extContext, connectionHandler, logger)
   ];
