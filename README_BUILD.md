@@ -31,49 +31,73 @@ Fetching vscode.d.ts from: https://raw.githubusercontent.com/Microsoft/vscode/1.
 vscode.d.ts successfully installed!
 ```
 
-### Vendor the Puppet Editor Services files
+### Vendoring other resources
 
-By default the extension will use the specified released version of the Puppet Editor Services.  The version is set in the `editor-services.json` file; for example, to use version `0.10.0` of the Editor Services;
+The following resources are vendored into the extension;
+
+* Puppet Editor Services (`editor-services`)
+
+By default the extension will use the specified versions in the `editor-components.json` file when vendoring resources.
+
+#### Example configuration
+
+##### By release tag
+
+To use version `0.10.0` of the Editor Services;
 
 ``` json
 {
-  "release": "0.10.0"
+  "editor-services": {
+    "release": "0.10.0"
+  }
 }
 ```
+
+##### Specific github repository or branch
 
 To use a specific GitHub repository that contains the Puppet Editor services, use the `githubref` configuration setting; for example to use the `puppet-editing` repository, owned by `Alice` with the `testing` branch
 
 ``` json
 {
-  "githubuser": "Alice",
-  "githubrepo": "puppet-editing",
-  "githubref": "testing"
+  "editor-services": {
+    "githubuser": "Alice",
+    "githubrepo": "puppet-editing",
+    "githubref": "testing"
+  }
 }
 ```
 
-Note - By default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-services`
+Note - For `editor-services` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-services`
 
 Note - Use the full length commit SHA for `githubref`, not the abbreviated eight character SHA
+
+##### Using a local directory
 
 To use a local directory that contains the Puppet Editor services, use the `directory` configuration setting; for example if the the editor services was located in `C:\puppet-editor-services` use the following;
 
 ``` json
 {
-  "directory": "C:\\puppet-editor-services"
+  "editor-services": {
+    "directory": "C:\\puppet-editor-services"
+  }
 }
 ```
 
-Note that backslashes in the path must be escaped.
+Note - Backslashes in the path must be escaped.
 
-* Vendor the Editor Services for vendoring into the extension
+### Vendoring the resources into the extension
+
+* Use gulp to vendor the resources
 
 ```bash
-> node node_modules/gulp/bin/gulp.js clean vendor_editor_services
-[20:44:22] Using gulpfile C:\Source\puppet-vscode\gulpfile.js
-[20:44:22] Starting 'clean'...
-[20:44:22] Starting 'vendor_editor_services'...
-[20:44:22] Finished 'clean' after 92 ms
-[20:44:26] Finished 'vendor_editor_services' after 4.35 s
+> node node_modules/gulp/bin/gulp.js --series clean vendor
+[14:23:44] Using gulpfile C:\Source\puppet-vscode\gulpfile.js
+[14:23:44] Starting 'clean'...
+[14:23:44] Finished 'clean' after 50 ms
+[14:23:44] Starting 'vendor'...
+[14:23:44] Starting 'vendor_editor_services'...
+[14:23:48] Finished 'vendor_editor_services' after 3.82 s
+[14:23:48] Finished 'vendor' after 3.83 s
 ```
 
 * Start VS Code

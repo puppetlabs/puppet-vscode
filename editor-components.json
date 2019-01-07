@@ -1,3 +1,5 @@
 {
-  "release": "0.17.0"
+  "editor-services": {
+    "release": "0.17.0"
+  }
 }

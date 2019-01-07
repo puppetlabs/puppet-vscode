@@ -9,17 +9,17 @@ var download = require('gulp-downloader');
 var decompress = require('gulp-decompress');
 var path = require('path');
 
-var editorServicesConfig = undefined
-function getEditorServicesConfig() {
-  if (editorServicesConfig != undefined) { return editorServicesConfig }
+var vendoringConfig = undefined
+function getVendoringConfiguration(sectionName) {
+  if (vendoringConfig != undefined) { return vendoringConfig[sectionName]; }
   // Read the file and parse its contents.
   var fs = require('fs');
 
-  filename = path.join(__dirname, 'editor-services.json');
+  filename = path.join(__dirname, 'editor-components.json');
   content = fs.readFileSync(filename, 'utf8');
-  editorServicesConfig = JSON.parse(content);
+  vendoringConfig = JSON.parse(content);
 
-  return editorServicesConfig;
+  return vendoringConfig[sectionName];
 }
 
 function getEditorServicesReleaseURL(config) {
@@ -57,7 +57,6 @@ gulp.task('clean', function () {
 
 gulp.task('vendor_editor_services', function (callback) {
   var fs = require('fs');
-  var sequence = [];
 
   vendorPath = path.join(__dirname, 'vendor');
   if (fs.existsSync(vendorPath)) {
@@ -66,7 +65,7 @@ gulp.task('vendor_editor_services', function (callback) {
     });
   }
 
-  var config = getEditorServicesConfig();
+  var config = getVendoringConfiguration("editor-services");
 
   // Use the github releases url if 'release' is defined
   if (config.release != undefined) {
@@ -144,18 +143,21 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('.'));
 });
 
-// The default task (called when you run `gulp` from cli)
+// Vendor external resources into the extension
+gulp.task('vendor', gulp.series('vendor_editor_services'));
+
+// Build the extension
 gulp.task('build',
   gulp.series('clean',
-    gulp.series('vendor_editor_services',
+    gulp.series('vendor',
       gulp.series('compile_typescript',
       )
     )
   )
 );
 
-// The default task (called when you run `gulp` from cli)
-gulp.task('initial', gulp.series('vendor_editor_services'));
+// The task called by VSCode editor before typescript is compiled)
+gulp.task('initial', gulp.series('vendor'));
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', gulp.series('build'));
