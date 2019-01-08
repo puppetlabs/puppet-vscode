@@ -26,6 +26,7 @@
     - [Puppet Resource](#puppet-resource)
     - [Puppet Node Graph](#puppet-node-graph)
   - [Puppet Development Kit Support](#puppet-development-kit-support)
+    - [PDK Supported Versions](#pdk-supported-versions)
     - [PDK New Module](#pdk-new-module)
     - [PDK New Class](#pdk-new-class)
     - [PDK Validate](#pdk-validate)
@@ -212,6 +213,10 @@ You can use the [Puppet Development Kit](https://puppet.com/blog/develop-modules
 > Note: The PDK must be installed prior to using these commands
 
 > Note: `pdk convert` is not available in the command palette as it is a complicated command that requires user input to succeed. It is better to use it from the builtin terminal.
+
+#### PDK Supported Versions
+
+The Puppet VSCode Extension supports the current PDK version, and one older version. This is currently 1.8.0 and 1.7.1.
 
 #### PDK new module
 
