@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [0.15.1] - 2018-01-09
+
+### Fixed
+
+- ([GH-454](https://github.com/lingua-pupuli/puppet-vscode/issues/454)) Fix Ruby path for PDK 1.8.0
+
 ## [0.15.0] - 2018-12-21
 
 ### Added
