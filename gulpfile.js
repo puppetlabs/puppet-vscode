@@ -9,17 +9,17 @@ var download = require('gulp-downloader');
 var decompress = require('gulp-decompress');
 var path = require('path');
 
-var editorServicesConfig = undefined
-function getEditorServicesConfig() {
-  if (editorServicesConfig != undefined) { return editorServicesConfig }
+var vendoringConfig = undefined
+function getVendoringConfiguration(sectionName) {
+  if (vendoringConfig != undefined) { return vendoringConfig[sectionName]; }
   // Read the file and parse its contents.
   var fs = require('fs');
 
-  filename = path.join(__dirname, 'editor-services.json');
+  filename = path.join(__dirname, 'editor-components.json');
   content = fs.readFileSync(filename, 'utf8');
-  editorServicesConfig = JSON.parse(content);
+  vendoringConfig = JSON.parse(content);
 
-  return editorServicesConfig;
+  return vendoringConfig[sectionName];
 }
 
 function getEditorServicesReleaseURL(config) {
@@ -51,13 +51,42 @@ function getEditorServicesGithubURL(config) {
   return `https://github.com/${githubuser}/${githubrepo}/archive/${githubref}.zip`
 };
 
+function getEditorSyntaxReleaseURL(config) {
+  var githubuser = (config.githubuser == undefined) ? 'lingua-pupuli' : config.githubuser
+  var githubrepo = (config.githubrepo == undefined) ? 'puppet-editor-syntax' : config.githubrepo
+  var releasenumber = config.release;
+
+  if (releasenumber == undefined) {
+    throw "The name/number of the release must be set"
+  };
+
+  // Example URL https://github.com/lingua-pupuli/puppet-editor-syntax/releases/download/1.3.0/puppet.tmLanguage
+  return `https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet.tmLanguage`;
+};
+
+function getEditorSyntaxGithubURL(config) {
+  var githubuser = (config.githubuser == undefined) ? 'lingua-pupuli' : config.githubuser
+  var githubrepo = (config.githubrepo == undefined) ? 'puppet-editor-syntax' : config.githubrepo
+  var githubref = config.githubref;
+
+  if (githubref == undefined) {
+    throw "The git reference must be specified"
+  };
+
+  // Example URL - Branch
+  // https://raw.githubusercontent.com/lingua-pupuli/puppet-editor-syntax/master/syntaxes/puppet.tmLanguage
+  // Example URL - SHA ref
+  // https://raw.githubusercontent.com/lingua-pupuli/puppet-editor-syntax/ed18062cc9d904492f02d63b6553e1cadc95664e/syntaxes/puppet.tmLanguage
+  return `https://raw.githubusercontent.com/${githubuser}/${githubrepo}/${githubref}/syntaxes/puppet.tmLanguage`
+};
+
+
 gulp.task('clean', function () {
-  return del(['vendor'])
+  return del(['vendor', 'syntaxes/puppet.tmLanguage'])
 });
 
 gulp.task('vendor_editor_services', function (callback) {
   var fs = require('fs');
-  var sequence = [];
 
   vendorPath = path.join(__dirname, 'vendor');
   if (fs.existsSync(vendorPath)) {
@@ -66,7 +95,7 @@ gulp.task('vendor_editor_services', function (callback) {
     });
   }
 
-  var config = getEditorServicesConfig();
+  var config = getVendoringConfiguration("editor-services");
 
   // Use the github releases url if 'release' is defined
   if (config.release != undefined) {
@@ -104,6 +133,50 @@ gulp.task('vendor_editor_services', function (callback) {
   }
 
   throw "Unable to vendor Editor Serices.  Missing a release, directory, or git reference configuration item"
+});
+
+gulp.task('vendor_editor_syntax', function (callback) {
+  var fs = require('fs');
+
+  vendorPath = path.join(__dirname, 'syntaxes', 'puppet.tmLanguage');
+  if (fs.existsSync(vendorPath)) {
+    return new Promise(function(resolve, reject) {
+      resolve();
+    });
+  }
+
+  var config = getVendoringConfiguration("editor-syntax");
+
+    // Use the github releases url if 'release' is defined
+    if (config.release != undefined) {
+      return download({
+        fileName: 'puppet.tmLanguage',
+        request: {
+          url: getEditorSyntaxReleaseURL(config)
+        }
+      })
+      .pipe(gulp.dest('./syntaxes'));
+    }
+  
+    // Use a custom github download if a github reference is defined
+    if (config.githubref != undefined) {
+      return download({
+        fileName: 'puppet.tmLanguage',
+        request: {
+          url: getEditorSyntaxGithubURL(config)
+        }
+      })
+      .pipe(gulp.dest('./syntaxes'));
+    }
+  
+    // Use a simple filecopy if 'directory' is defined
+    if (config.directory != undefined) {
+      return gulp.src(path.join(config.directory, 'syntaxes', 'puppet.tmLanguage')
+                      , { base: path.join(config.directory, 'syntaxes') })
+                .pipe(gulp.dest('./syntaxes'));
+    }
+  
+    throw "Unable to vendor Editor Syntax.  Missing a release, directory, or git reference configuration item"
 });
 
 gulp.task('compile_typescript', function (callback) {
@@ -144,18 +217,25 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('.'));
 });
 
-// The default task (called when you run `gulp` from cli)
+// Vendor external resources into the extension
+gulp.task('vendor',
+  gulp.series('vendor_editor_services',
+    gulp.series('vendor_editor_syntax')
+  )
+);
+
+// Build the extension
 gulp.task('build',
   gulp.series('clean',
-    gulp.series('vendor_editor_services',
+    gulp.series('vendor',
       gulp.series('compile_typescript',
       )
     )
   )
 );
 
-// The default task (called when you run `gulp` from cli)
-gulp.task('initial', gulp.series('vendor_editor_services'));
+// The task called by VSCode editor before typescript is compiled)
+gulp.task('initial', gulp.series('vendor'));
 
 // The default task (called when you run `gulp` from cli)
 gulp.task('default', gulp.series('build'));
