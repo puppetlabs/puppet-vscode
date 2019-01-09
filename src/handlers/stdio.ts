@@ -39,7 +39,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
         logPrefix = '[getRubyEnvFromPDK] ';
         this.logger.debug(logPrefix + 'Using environment variable DEVKIT_BASEDIR=' + exe.options.env.DEVKIT_BASEDIR);
         this.logger.debug(logPrefix + 'Using environment variable GEM_HOME=' + exe.options.env.GEM_HOME);
-        this.logger.debug(logPrefix + 'Using environment variable GEM_HOME=' + exe.options.env.GEM_HOME);
+        this.logger.debug(logPrefix + 'Using environment variable GEM_PATH=' + exe.options.env.GEM_PATH);
         break;
       case PuppetInstallType.PUPPET:
         logPrefix = '[getRubyExecFromPuppetAgent] ';
