@@ -1,0 +1,62 @@
+{
+  "Forge_module1": {
+    "prefix": "Forge Module",
+    "body": ["mod '${1:author}-${2:name}', '${3:version}'"],
+    "description": "Install from the forge"
+  },
+  "Forge_module2": {
+    "prefix": "Latest Forge Module",
+    "body": ["mod '${1:author}-${2:name}', :latest"],
+    "description": "Install the latest version from the forge"
+  },
+  "Git_module1": {
+    "prefix": "Git Module by ref",
+    "body": [
+      "mod '${1:name}',",
+      "\t:git => '${2:repository}',",
+      "\t:ref => '${3:reference}'"
+    ],
+    "description": "Install from a git repository specified by a git reference e.g. master"
+  },
+  "Git_module2": {
+    "prefix": "Git Module by commit",
+    "body": [
+      "mod '${1:name}',",
+      "\t:git    => '${2:repository}',",
+      "\t:commit => '${3:commit}'"
+    ],
+    "description": "Install from a git repository specified by a git commit e.g. 1c40e29"
+  },
+  "Git_module3": {
+    "prefix": "Git Module by tag",
+    "body": [
+      "mod '${1:name}',",
+      "\t:git => '${2:repository}',",
+      "\t:tag => '${3:tag}'"
+    ],
+    "description": "Install from a git repository specified by a git tag e.g. v1.0.0"
+  },
+  "Git_module4": {
+    "prefix": "Git Module by branch",
+    "body": [
+      "mod '${1:name}',",
+      "\t:git    => '${2:repository}',",
+      "\t:branch => '${3:branch}'"
+    ],
+    "description": "Install from a git repository specified by a git branch e.g. release"
+  },
+  "Svn_module1": {
+    "prefix": "Svn Module by revision",
+    "body": [
+      "mod '${1:name}',",
+      "\t:svn      => '${2:repository}',",
+      "\t:revision => '${3:revision}'"
+    ],
+    "description": "Install from a SVN repository specified by a revision e.g. 154"
+  },
+  "Local_module1": {
+    "prefix": "Local Module",
+    "body": ["mod '${1:name}', :local => true"],
+    "description": "Install from the local Puppetfile module path"
+  }
+}

@@ -109,6 +109,10 @@
       {
         "language": "json",
         "path": "./snippets/metadata.snippets.json"
+      },
+      {
+        "language": "puppetfile",
+        "path": "./snippets/puppetfile.snippets.json"
       }
     ],
     "commands": [
