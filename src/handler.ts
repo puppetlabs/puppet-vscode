@@ -7,6 +7,7 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { ISettings } from './settings';
 import { PuppetVersionDetails, PuppetVersionRequest, PuppetCommandStrings } from './messages';
 import { reporter } from './telemetry/telemetry';
+import { puppetFileLangID, puppetLangID} from './extension';
 
 export abstract class ConnectionHandler {
   private timeSpent:number;
@@ -37,7 +38,7 @@ export abstract class ConnectionHandler {
     this.timeSpent = Date.now();
     this.setConnectionStatus('Initializing', ConnectionStatus.Initializing);
 
-    let documents = [{ scheme: 'file', language: 'puppet' }];
+    let documents = [{ scheme: 'file', language: puppetLangID }, { scheme: 'file', language: puppetFileLangID }];
 
     this.logger.debug('Configuring language client options');
     let clientOptions: LanguageClientOptions = {

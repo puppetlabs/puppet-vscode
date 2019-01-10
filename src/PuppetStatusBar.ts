@@ -8,7 +8,7 @@ export class PuppetStatusBar {
   statusBarItem: vscode.StatusBarItem;
   private logger: ILogger;
 
-  constructor(langID: string, context:vscode.ExtensionContext, logger: ILogger) {
+  constructor(langIDs: string[], context:vscode.ExtensionContext, logger: ILogger) {
     this.logger = logger;
     context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
       () => { PuppetStatusBar.showConnectionMenu(); }
@@ -17,7 +17,7 @@ export class PuppetStatusBar {
     this.statusBarItem.command = PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
     this.statusBarItem.show();
     vscode.window.onDidChangeActiveTextEditor(textEditor => {
-      if (textEditor === undefined || textEditor.document.languageId !== langID) {
+      if (textEditor === undefined || langIDs.indexOf(textEditor.document.languageId) === -1) {
         this.statusBarItem.hide();
       } else {
         this.statusBarItem.show();
