@@ -52,6 +52,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
     this.logger.debug(logPrefix + 'Using environment variable RUBYLIB=' + exe.options.env.RUBYLIB);
     this.logger.debug(logPrefix + 'Using environment variable PATH=' + exe.options.env.PATH);
     this.logger.debug(logPrefix + 'Using environment variable RUBYOPT=' + exe.options.env.RUBYOPT);
+    this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
 
     let serverOptions: ServerOptions = {
       run: exe,
