@@ -12,14 +12,21 @@ export interface IEditorServiceTCPSettings {
   port?: number;
 }
 
+export interface IEditorServicePuppetSettings {
+  confdir?: string;
+  environment?: string;
+  modulePath?: string;
+  vardir?: string;
+}
+
 export interface IEditorServiceSettings {
   debugFilePath?: string;
   docker?: IEditorServiceDockerSettings;
   enable?: boolean;
   featureflags?: string[];
-  modulePath?: string;
   loglevel?: string;
   protocol?: ProtocolType;
+  puppet?: IEditorServicePuppetSettings;
   tcp?: IEditorServiceTCPSettings;
   timeout?: number;
 }
@@ -79,6 +86,10 @@ export function legacySettings(): Map<string, Object> {
   let settings: Map<string, Object> = new Map<string, Object>();
   let value: Object = undefined;
 
+  // puppet.editorService.modulePath
+  value = getSafeWorkspaceConfig(workspaceConfig, ['editorService','modulePath']);
+  if (value !== undefined) { settings.set("puppet.editorService.modulePath", value); }
+
   // puppet.languageclient.minimumUserLogLevel
   value = getSafeWorkspaceConfig(workspaceConfig, ['languageclient','minimumUserLogLevel']);
   if (value !== undefined) { settings.set("puppet.languageclient.minimumUserLogLevel", value); }
@@ -120,7 +131,6 @@ export function settingsFromWorkspace(): ISettings {
     enable: true,
     featureflags: [],
     loglevel: "normal",
-    modulePath: "",
     protocol: ProtocolType.STDIO,
     timeout: 10,
   };
@@ -157,6 +167,7 @@ export function settingsFromWorkspace(): ISettings {
    // Ensure that object types needed for legacy settings exists
   if (settings.editorService === undefined) { settings.editorService = {}; }
   if (settings.editorService.featureflags === undefined) { settings.editorService.featureflags = []; }
+  if (settings.editorService.puppet === undefined) { settings.editorService.puppet = {}; }
   if (settings.editorService.tcp === undefined) { settings.editorService.tcp = {}; }
 
   // Retrieve the legacy settings
@@ -165,6 +176,10 @@ export function settingsFromWorkspace(): ISettings {
   // Translate the legacy settings into the new setting names
   for (const [settingName, value] of oldSettings) {
     switch (settingName) {
+
+      case "puppet.editorService.modulePath": // --> puppet.editorService.puppet.modulePath
+        settings.editorService.puppet.modulePath = <string>value;
+        break;
 
       case "puppet.languageclient.minimumUserLogLevel": // --> puppet.editorService.loglevel
         settings.editorService.loglevel = <string>value;

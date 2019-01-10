@@ -89,9 +89,24 @@ export class CommandEnvironmentHelper {
     if (vscode.workspace.workspaceFolders !== undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
-    if (settings.editorService.modulePath !== undefined && settings.editorService.modulePath !== '') {
-      args.push('--puppet-settings=--modulepath,' + settings.editorService.modulePath);
+
+    // Convert the individual puppet settings into the --puppet-settings
+    // command line argument
+    let puppetSettings: string[] = [];
+    [
+      { name: 'confdir', value: settings.editorService.puppet.confdir },
+      { name: 'environment', value: settings.editorService.puppet.environment },
+      { name: 'modulePath', value: settings.editorService.puppet.modulePath },
+      { name: 'vardir', value: settings.editorService.puppet.vardir }
+    ].forEach(function (item) {
+      if (item.value !== undefined && item.value !== '') {
+        puppetSettings.push('--' + item.name + ',' + item.value);
+      }
+    });
+    if (puppetSettings.length > 0) {
+      args.push('--puppet-settings=' + puppetSettings.join(','));
     }
+
     if (settings.editorService.debugFilePath !== undefined && settings.editorService.debugFilePath !== '') {
       args.push('--debug=' + settings.editorService.debugFilePath);
     }

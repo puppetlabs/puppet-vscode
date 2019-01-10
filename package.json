@@ -301,11 +301,6 @@
             "verbose"
           ]
         },
-        "puppet.editorService.modulePath": {
-          "type": "string",
-          "default": "",
-          "description": "Additional module paths to use when starting the Editor Services. On Windows this is delimited with a semicolon, and on all other platforms, with a colon. For example C:\\Path1;C:\\Path2"
-        },
         "puppet.editorService.protocol": {
           "type": "string",
           "default": "stdio",
@@ -314,6 +309,26 @@
             "stdio",
             "tcp"
           ]
+        },
+        "puppet.editorService.puppet.confdir": {
+          "type": "string",
+          "default": "",
+          "description": "The Puppet configuration directory. See https://puppet.com/docs/puppet/latest/dirs_confdir.html for more information"
+        },
+        "puppet.editorService.puppet.environment": {
+          "type": "string",
+          "default": "",
+          "description": "The Puppet environment to use. See https://puppet.com/docs/puppet/latest/config_print.html#environments for more information"
+        },
+        "puppet.editorService.puppet.modulePath": {
+          "type": "string",
+          "default": "",
+          "description": "Additional module paths to use when starting the Editor Services. On Windows this is delimited with a semicolon, and on all other platforms, with a colon. For example C:\\Path1;C:\\Path2"
+        },
+        "puppet.editorService.puppet.vardir": {
+          "type": "string",
+          "default": "",
+          "description": "The Puppet cache directory. See https://puppet.com/docs/puppet/latest/dirs_vardir.html for more information"
         },
         "puppet.editorService.tcp.address": {
           "type": "string",
@@ -347,6 +362,9 @@
             "pdk",
             "agent"
           ]
+        },
+        "puppet.editorService.modulePath": {
+          "description": "**DEPRECATED** Please use puppet.editorService.puppet.modulePath instead"
         },
         "puppet.languageclient.protocol": {
           "description": "**DEPRECATED** Please use puppet.editorService.protocol instead"
