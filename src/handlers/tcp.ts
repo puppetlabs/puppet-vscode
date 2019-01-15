@@ -50,6 +50,7 @@ export class TcpConnectionHandler extends ConnectionHandler {
       let spawn_options: cp.SpawnOptions = {};
       let convertedOptions = Object.assign(spawn_options, exe.options);
 
+      this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
       var proc = cp.spawn(exe.command, exe.args, convertedOptions);
       proc.stdout.on('data', data => {
         if (/LANGUAGE SERVER RUNNING/.test(data.toString())) {
