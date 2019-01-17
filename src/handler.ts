@@ -102,7 +102,7 @@ export abstract class ConnectionHandler {
     this.setConnectionStatus('Stopped languageserver', ConnectionStatus.Stopped, '');
   }
 
-  private setConnectionStatus(message: string, status: ConnectionStatus, toolTip?: string) {
+  public setConnectionStatus(message: string, status: ConnectionStatus, toolTip?: string) {
     this._status = status;
     this.statusBar.setConnectionStatus(message, status, toolTip);
   }

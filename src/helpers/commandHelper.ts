@@ -48,6 +48,47 @@ export class CommandEnvironmentHelper {
     return exe;
   }
 
+  public static shallowCloneObject(value: Object): Object {
+    const clone: Object = {};
+    for (const propertyName in value) {
+      if (value.hasOwnProperty(propertyName)) {
+        clone[propertyName] = value[propertyName];
+      }
+    }
+    return clone;
+  }
+
+  public static removeEmptyElements(obj: Object) {
+    const propNames = Object.getOwnPropertyNames(obj);
+    for (var i = 0; i < propNames.length; i++) {
+      const propName = propNames[i];
+      if (obj[propName] === null || obj[propName] === undefined) {
+        delete obj[propName];
+      }
+    }
+  }
+
+  public static cleanEnvironmentPath(exe: Executable) {
+    if (exe.options.env.PATH === undefined) {
+      // It's possible that there is no PATH set but unlikely. Due to Object property names being
+      // case sensitive it could simply be that it's called Path or path, particularly on Windows
+      // not so much on Linux etc.. Look through all of the environment names looking for PATH in a
+      // case insensitive way and remove the conflicting env var.
+      let envPath: string = '';
+      Object.keys(exe.options.env).forEach(function(keyname) {
+        if (keyname.match(/^PATH$/i)) {
+          envPath = exe.options.env[keyname];
+          exe.options.env[keyname] = undefined;
+        }
+      });
+      exe.options.env.PATH = envPath;
+    }
+    if (exe.options.env.RUBYLIB === undefined) {
+      exe.options.env.RUBYLIB = '';
+    }
+  }
+
+
   private static buildExecutableCommand(settings: ISettings, config: IConnectionConfiguration) {
     let command: string = '';
     switch (settings.installType) {
@@ -136,43 +177,4 @@ export class CommandEnvironmentHelper {
     return items.join(PathResolver.pathEnvSeparator());
   }
 
-  private static shallowCloneObject(value: Object): Object {
-    const clone: Object = {};
-    for (const propertyName in value) {
-      if (value.hasOwnProperty(propertyName)) {
-        clone[propertyName] = value[propertyName];
-      }
-    }
-    return clone;
-  }
-
-  private static removeEmptyElements(obj: Object) {
-    const propNames = Object.getOwnPropertyNames(obj);
-    for (var i = 0; i < propNames.length; i++) {
-      const propName = propNames[i];
-      if (obj[propName] === null || obj[propName] === undefined) {
-        delete obj[propName];
-      }
-    }
-  }
-
-  private static cleanEnvironmentPath(exe: Executable) {
-    if (exe.options.env.PATH === undefined) {
-      // It's possible that there is no PATH set but unlikely. Due to Object property names being
-      // case sensitive it could simply be that it's called Path or path, particularly on Windows
-      // not so much on Linux etc.. Look through all of the environment names looking for PATH in a
-      // case insensitive way and remove the conflicting env var.
-      let envPath: string = '';
-      Object.keys(exe.options.env).forEach(function (keyname) {
-        if (keyname.match(/^PATH$/i)) {
-          envPath = exe.options.env[keyname];
-          exe.options.env[keyname] = undefined;
-        }
-      });
-      exe.options.env.PATH = envPath;
-    }
-    if (exe.options.env.RUBYLIB === undefined) {
-      exe.options.env.RUBYLIB = '';
-    }
-  }
 }

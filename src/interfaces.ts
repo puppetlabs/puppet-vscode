@@ -31,6 +31,7 @@ export enum ProtocolType {
   UNKNOWN = '<unknown>',
   STDIO = 'stdio',
   TCP = 'tcp',
+  DOCKER = "docker"
 }
 
 export interface IConnectionConfiguration {

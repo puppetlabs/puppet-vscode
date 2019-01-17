@@ -16,10 +16,10 @@ import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { ProtocolType, ConnectionType, IConnectionConfiguration } from './interfaces';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { PuppetCommandStrings } from './messages';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
+import { DockerConnectionHandler } from './handlers/docker';
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  if(checkInstallDirectory(configSettings, logger) === false){
+  if(checkInstallDirectory(settings, configSettings, logger) === false){
     // If this returns false, then we needed a local directory
     // but did not find it, so we should abort here
     // If we return true, we can continue
@@ -59,12 +59,15 @@ export function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  switch (configSettings.protocol) {
+  switch (settings.editorService.protocol) {
     case ProtocolType.STDIO:
       connectionHandler = new StdioConnectionHandler(extContext, settings, statusBar, logger, configSettings);
       break;
     case ProtocolType.TCP:
       connectionHandler = new TcpConnectionHandler(extContext, settings, statusBar, logger, configSettings);
+      break;
+    case ProtocolType.DOCKER:
+      connectionHandler = new DockerConnectionHandler(extContext, settings, statusBar, logger, configSettings);
       break;
   }
 
@@ -105,8 +108,11 @@ function checkForLegacySettings() {
   }
 }
 
-function checkInstallDirectory(configSettings: IConnectionConfiguration, logger: ILogger) : boolean {
-  if(configSettings.protocol === ProtocolType.TCP){
+function checkInstallDirectory(settings: ISettings, configSettings: IConnectionConfiguration, logger: ILogger) : boolean {
+  if(settings.editorService.protocol === ProtocolType.DOCKER){
+    return true;
+  }
+  if(settings.editorService.protocol === ProtocolType.TCP){
     if(configSettings.type === ConnectionType.Remote){
       // Return if we are connecting to a remote TCP LangServer
       return true;

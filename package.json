@@ -284,6 +284,11 @@
           "default": "",
           "description": "The absolute filepath where the Puppet Editor Service will output the debugging log. By default no logfile is generated"
         },
+        "puppet.editorService.docker.imageName": {
+          "type": "string",
+          "default": "linguapupuli/puppet-language-server:latest",
+          "description": "The name of the image with tag that contains the Puppet Language server. For example: linguapupuli/puppet-language-server:latest"
+        },
         "puppet.editorService.featureFlags": {
           "type": "array",
           "default": [],
@@ -307,7 +312,8 @@
           "description": "The protocol used to communicate with the Puppet Editor Service.  By default the local STDIO protocol is used",
           "enum": [
             "stdio",
-            "tcp"
+            "tcp",
+            "docker"
           ]
         },
         "puppet.editorService.puppet.confdir": {
