@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 
 import { ServerOptions, Executable } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
@@ -27,7 +26,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
   }
 
   createServerOptions(): ServerOptions {
-    let exe: Executable = CommandEnvironmentHelper.getRubyEnvFromConfiguration(
+    let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
       this.context.asAbsolutePath(this.config.languageServerPath),
       this.settings,
       this.config,

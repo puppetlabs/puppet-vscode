@@ -22,7 +22,7 @@ export class TcpConnectionHandler extends ConnectionHandler {
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
 
     if (this.connectionType === ConnectionType.Local) {
-      let exe: Executable = CommandEnvironmentHelper.getRubyEnvFromConfiguration(
+      let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
         this.context.asAbsolutePath(this.config.languageServerPath),
         this.settings,
         this.config,

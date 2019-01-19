@@ -8,7 +8,7 @@ import { ConnectionHandler } from './handler';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
 import { IFeature } from './feature';
-import { DebugConfigurationFeature } from './feature/DebugConfigurationFeature';
+import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
@@ -23,6 +23,7 @@ import { DockerConnectionHandler } from './handlers/docker';
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
+const debugType = 'Puppet';  // don't change this
 
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
@@ -72,11 +73,11 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   extensionFeatures = [
-    new DebugConfigurationFeature(logger, extContext),
     new FormatDocumentFeature(puppetLangID, connectionHandler, settings, logger, extContext),
     new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext),
     new PDKFeature(extContext, logger),
-    new PuppetResourceFeature(extContext, connectionHandler, logger)
+    new PuppetResourceFeature(extContext, connectionHandler, logger),
+    new DebuggingFeature(debugType, settings, configSettings, extContext, logger)
   ];
 }
 

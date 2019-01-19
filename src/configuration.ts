@@ -137,6 +137,10 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     return path.join('vendor', 'languageserver', 'puppet-languageserver');
   }
 
+  get debugServerPath(): string {
+    return path.join('vendor', 'languageserver', 'puppet-debugserver');
+  }
+
   get type(): ConnectionType {
     switch (this.settings.editorService.protocol) {
       case ProtocolType.TCP:
