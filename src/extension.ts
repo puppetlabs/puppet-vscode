@@ -42,6 +42,12 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(new Reporter(extContext));
 
   settings       = settingsFromWorkspace();
+  reporter.sendTelemetryEvent('config', {
+    'installType'   : settings.installType,
+    'protocol'      : settings.editorService.protocol,
+    'imageName'     : settings.editorService.docker.imageName
+  });
+
   logger         = new OutputChannelLogger(settings);
   statusBar      = new PuppetStatusBar([puppetLangID, puppetFileLangID], context, logger);
   configSettings = new ConnectionConfiguration();

@@ -486,7 +486,7 @@
   },
   "dependencies": {
     "vscode-languageclient": "5.1.1",
-    "vscode-extension-telemetry": "0.0.22",
+    "vscode-extension-telemetry": "0.1.1",
     "viz.js": "~1.7.0",
     "vscode-debugprotocol": "^1.19.0",
     "vscode-debugadapter": "^1.19.0"
