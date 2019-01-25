@@ -6,7 +6,22 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
-## [0.15.1] - 2018-01-09
+## [0.16.0] - 2019-01-25
+
+### Added
+
+- ([GH-375](https://github.com/lingua-pupuli/puppet-vscode/issues/375)) Support starting Language Server in Docker container
+- ([GH-295](https://github.com/lingua-pupuli/puppet-vscode/issues/295)) Add Puppetfile as a contributing langauge
+
+### Changed
+
+- ([GH-459](https://github.com/lingua-pupuli/puppet-vscode/issues/459)) Update extension for new Debugging API
+
+### Fixed
+
+- ([GH-453](https://github.com/lingua-pupuli/puppet-vscode/issues/453)) Language Server will not start
+
+## [0.15.1] - 2019-01-09
 
 ### Fixed
 
@@ -290,3 +305,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 
 - Initial release of the puppet extension.
+
+[0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1..0.16.0
