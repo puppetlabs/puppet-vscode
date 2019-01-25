@@ -187,11 +187,11 @@
         },
         {
           "command": "extension.puppetResource",
-          "when": "resourceLangId == 'puppet'"
+          "when": "editorLangId == 'puppet'"
         },
         {
           "command": "extension.puppetShowNodeGraphToSide",
-          "when": "resourceLangId == 'puppet'"
+          "when": "editorLangId == 'puppet'"
         }
       ],
       "editor/title": [
@@ -200,64 +200,64 @@
           "group": "navigation@100"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkNewClass",
           "group": "pdk@2"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkNewTask",
           "group": "pdk@3"
         },
         {
-          "when": "resourceLangId == 'puppet' ",
+          "when": "editorLangId == 'puppet' ",
           "command": "extension.pdkValidate",
           "group": "pdk@4"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkTestUnit",
           "group": "pdk@5"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.puppetShowNodeGraphToSide",
           "group": "puppet"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.puppetResource",
           "group": "puppet"
         }
       ],
       "editor/context": [
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkNewClass",
           "group": "pdk@1"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkNewClass",
           "group": "pdk@2"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkValidate",
           "group": "pdk@3"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.pdkTestUnit",
           "group": "pdk@4"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.puppetShowNodeGraphToSide",
           "group": "puppet"
         },
         {
-          "when": "resourceLangId == 'puppet'",
+          "when": "editorLangId == 'puppet'",
           "command": "extension.puppetResource",
           "group": "puppet"
         }
