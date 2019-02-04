@@ -31,6 +31,7 @@
     - [PDK New Class](#pdk-new-class)
     - [PDK Validate](#pdk-validate)
     - [PDK Test Unit](#pdk-test-unit)
+  - [Puppet Bolt Support](#puppet-bolt-support)
   - [Debugging Puppet manifests](#debugging-puppet-manifests)
   - [Docker Language Server Support](#docker-language-server-support)
 - [Installing the Extension](#installing-the-extension)
@@ -243,6 +244,14 @@ You can initiate a valiadtion of your module using PDK using the VS Code command
 You can run the test suite of your module using PDK using the VS Code command palette. This functionality is only available when a Puppet file has already been opened, to trigger the extension.
 
 ![pdk_test_unit](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/pdk_test_unit.gif)
+
+### Puppet Bolt Support
+
+**Note - This is an experimental feature**
+
+In Puppet VSCode Extension v0.17.0 release support for Puppet Bolt was added. Fully supporting an end to end Puppet Bolt editing experience is a multi-step process, so this is experimental for now.
+
+The first step in this is enabling parsing Bolt Plans. This means when opening a Puppet module with Puppet Bolt plans or a folder with a Puppet Bolt plan file the Puppet VSCode Extension will no longer log an error in the Problems Pane for failing to parse Puppet Bolt Plan keywords. You will get symbol support (OutlineView and Breadcrumbs) as well as syntax highlighting. Subsequent releases will focus on adding intellisense, autocompletion, hover support and other advanced editor features. This work is tracked in the [Puppet Bolt Support Github project](https://github.com/orgs/lingua-pupuli/projects/20)
 
 ### Debugging Puppet manifests
 
