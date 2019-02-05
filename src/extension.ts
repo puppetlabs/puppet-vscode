@@ -20,6 +20,7 @@ import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
 import { DockerConnectionHandler } from './handlers/docker';
+import { BoltFeature } from './feature/BoltFeature';
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
@@ -83,7 +84,8 @@ export function activate(context: vscode.ExtensionContext) {
     new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext),
     new PDKFeature(extContext, logger),
     new PuppetResourceFeature(extContext, connectionHandler, logger),
-    new DebuggingFeature(debugType, settings, configSettings, extContext, logger)
+    new DebuggingFeature(debugType, settings, configSettings, extContext, logger),
+    new BoltFeature(extContext),
   ];
 }
 
