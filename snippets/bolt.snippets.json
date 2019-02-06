@@ -1,0 +1,67 @@
+{
+  "Bolt Config template": {
+    "prefix": "bolt-config",
+    "description": "A complete Bolt config template structure snippet",
+    "body": [
+      "modulepath: ${1:modulePath}",
+      "inventoryFile: ${2:inventoryFile}",
+      "concurrency: ${3:10}",
+      "format: ${4|human,json|}",
+      "color: ${6|true,false|}",
+      "\t${7|ssh,wirnm|}:${0}"
+    ]
+  },
+  "Bolt Inventory template": {
+    "prefix": "bolt-inventory",
+    "description": "A complete Bolt inventory template structure snippet",
+    "body": [
+      "groups:",
+      "- name: ${1:groupName}",
+      "\tgroups:",
+      "\t\t- name: ${2:nodeGroupName1}",
+      "\t\t\tnodes:",
+      "\t\t\t\t- ${3:node1}",
+      "\t\t- name: ${4:nodeGroupName2}",
+      "\t\t\tnodes:",
+      "\t\t\t\t- ${5:node2}",
+      "\tconfig:",
+      "\t\ttransport: ${6|ssh,wirnm|}",
+      "\t\t${6|ssh,wirnm|}:${0}"
+    ]
+  },
+  "Bolt Inventory groups": {
+    "prefix": "groups",
+    "description": "Adds new root group",
+    "body": [
+      "groups:",
+      " - name: ${1:groupName}"
+    ]
+  },
+  "Bolt Inventory node": {
+    "prefix": "node",
+    "description": "Adds new node",
+    "body": [
+      "- name: ${1:nodeName}",
+      " config:",
+      " transport: ${2|ssh,wirnm|}",
+      "  ${2|ssh,wirnm|}:${0}"
+    ]
+  },
+  "Bolt WinRM Transport template": {
+    "prefix": "winrm",
+    "description": "",
+    "body": [
+      "winrm:",
+      " user: ${1:userName}",
+      " password: ${2:passwd}",
+      " ssl: ${3|true,false|}${0}"
+    ]
+  },
+  "Bolt SSH Transport template": {
+    "prefix": "ssh",
+    "description": "",
+    "body": [
+      "ssh:${0}"
+    ]
+  }
+}
