@@ -253,6 +253,14 @@ In Puppet VSCode Extension v0.17.0 release support for Puppet Bolt was added. Fu
 
 The first step in this is enabling parsing Bolt Plans. This means when opening a Puppet module with Puppet Bolt plans or a folder with a Puppet Bolt plan file the Puppet VSCode Extension will no longer log an error in the Problems Pane for failing to parse Puppet Bolt Plan keywords. You will get symbol support (OutlineView and Breadcrumbs) as well as syntax highlighting. Subsequent releases will focus on adding intellisense, autocompletion, hover support and other advanced editor features. This work is tracked in the [Puppet Bolt Support Github project](https://github.com/orgs/lingua-pupuli/projects/20)
 
+#### Puppet Bolt Commands and Snippets
+
+We have added support for VSCode Command Palatte commands for opening Bolt user config and inventory yaml files. We have also added support for yaml snippets for common operations in Bolt yaml files.
+
+![bolt_command_palatte](docs/assets/bolt_config_command.gif)
+
+![bolt_command_palatte](docs/assets/bolt_inventory_command.gif)
+
 ### Debugging Puppet manifests
 
 **Note - This is an experimental feature**
