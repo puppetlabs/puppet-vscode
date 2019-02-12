@@ -1,25 +1,25 @@
 'use strict';
 
-import * as vscode from 'vscode';
 import * as fs from 'fs';
-
+import * as vscode from 'vscode';
 import { ConnectionConfiguration } from './configuration';
-import { ConnectionHandler } from './handler';
-import { StdioConnectionHandler } from './handlers/stdio';
-import { TcpConnectionHandler } from './handlers/tcp';
 import { IFeature } from './feature';
+import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
-import { ProtocolType, ConnectionType, IConnectionConfiguration } from './interfaces';
+import { ConnectionHandler } from './handler';
+import { DockerConnectionHandler } from './handlers/docker';
+import { StdioConnectionHandler } from './handlers/stdio';
+import { TcpConnectionHandler } from './handlers/tcp';
+import { ConnectionType, IConnectionConfiguration, ProtocolType } from './interfaces';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
-import { DockerConnectionHandler } from './handlers/docker';
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
@@ -52,6 +52,11 @@ export function activate(context: vscode.ExtensionContext) {
   statusBar      = new PuppetStatusBar([puppetLangID, puppetFileLangID], context, logger);
   configSettings = new ConnectionConfiguration();
 
+  extensionFeatures = [
+    new PDKFeature(extContext, logger),
+    new BoltFeature(extContext),
+  ];
+
   if(settings.editorService.enable === false){
     notifyEditorServiceDisabled(extContext);
     reporter.sendTelemetryEvent('editorServiceDisabled');
@@ -78,13 +83,10 @@ export function activate(context: vscode.ExtensionContext) {
       break;
   }
 
-  extensionFeatures = [
-    new FormatDocumentFeature(puppetLangID, connectionHandler, settings, logger, extContext),
-    new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext),
-    new PDKFeature(extContext, logger),
-    new PuppetResourceFeature(extContext, connectionHandler, logger),
-    new DebuggingFeature(debugType, settings, configSettings, extContext, logger)
-  ];
+  extensionFeatures.push(new FormatDocumentFeature(puppetLangID, connectionHandler, settings, logger, extContext));
+  extensionFeatures.push(new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
+  extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
+  extensionFeatures.push(new DebuggingFeature(debugType, settings, configSettings, extContext, logger));
 }
 
 export function deactivate() {
