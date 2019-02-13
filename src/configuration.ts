@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 
 import { IConnectionConfiguration, ConnectionType, ProtocolType, PuppetInstallType } from './interfaces';
 import { PathResolver } from './configuration/pathResolver';
@@ -13,8 +14,6 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   public timeout: number;
   public debugFilePath: string;
   private settings: ISettings;
-  private gemRubyVersionDir: string;
-  private rubyVersionDir: string;
 
   constructor() {
     this.settings = settingsFromWorkspace();
@@ -25,9 +24,6 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
     this.debugFilePath = this.settings.editorService.debugFilePath;
 
     this._puppetInstallType = this.settings.installType;
-
-    this.rubyVersionDir    = '2.5.1';
-    this.gemRubyVersionDir = '2.5.0';
   }
 
   private _puppetInstallType: PuppetInstallType;
@@ -207,35 +203,35 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
 
   get pdkRubyLib(): string {
     var lib = path.join(this.puppetBaseDir, 'lib');
-    if (process.platform === 'win32') {
-      // Translate all slashes to / style to avoid puppet/ruby issue #11930
-      lib = lib.replace(/\\/g, '/');
-    }
+    lib = this.replaceSlashes(lib);
     return lib;
   }
 
   get pdkRubyVerDir(): string {
     var rootDir = path.join(this.puppetBaseDir, 'private', 'puppet', 'ruby');
 
-    return path.join(rootDir, this.gemRubyVersionDir);
+    return this.findFirstDirectory(rootDir);
   }
 
   get pdkGemDir(): string {
-    // GEM_HOME=C:\Users\user\AppData\Local/PDK/cache/ruby/2.4.0
+    // bundler cache - C:\Users\user\AppData\Local/PDK/cache/ruby
+    // pdk source - C:\Program Files\Puppet Labs\DevelopmentKit\share\cache\ruby
     var rootDir = path.join(this.puppetBaseDir, 'share', 'cache', 'ruby');
-    var directory = path.join(rootDir, this.gemRubyVersionDir);
 
-    if (process.platform === 'win32') {
-      // Translate all slashes to / style to avoid puppet/ruby issue #11930
-      directory = directory.replace(/\\/g, '/');
-    }
+    // bundler cache - C:\Users\user\AppData\Local/PDK/cache/ruby/2.4.0
+    // pdk source - C:\Program Files\Puppet Labs\DevelopmentKit\share\cache\ruby\2.4.0
+    var directory = this.findFirstDirectory(rootDir);
+
+    directory = this.replaceSlashes(directory);
     return directory;
   }
 
   get pdkRubyDir(): string {
+    // /Puppet Labs/DevelopmentKit/private/ruby
     var rootDir = path.join(this.puppetBaseDir, 'private', 'ruby');
 
-    return path.join(rootDir, this.rubyVersionDir);;
+    // /Puppet Labs/DevelopmentKit/private/ruby/2.5.3
+    return this.findFirstDirectory(rootDir);
   }
 
   get pdkRubyBinDir(): string {
@@ -245,7 +241,21 @@ export class ConnectionConfiguration implements IConnectionConfiguration {
   get pdkGemVerDir(): string {
     var rootDir = path.join(this.pdkRubyDir, 'lib', 'ruby', 'gems');
 
-    return path.join(rootDir, this.gemRubyVersionDir);;
+    return this.findFirstDirectory(rootDir);
+  }
+
+  private findFirstDirectory(rootDir: string) {
+    var files = fs.readdirSync(rootDir);
+    let result = files.sort( (a, b) => a.localeCompare(b, undefined, { numeric:true }) ).reverse()[0];
+    return path.join(rootDir, result);
+  }
+
+  private replaceSlashes(path: string): string {
+    if (process.platform === 'win32') {
+      // Translate all slashes to / style to avoid puppet/ruby issue #11930
+      path = path.replace(/\\/g, '/');
+    }
+    return path;
   }
 
   // GEM_PATH=C:/Program Files/Puppet Labs/DevelopmentKit/private/ruby/2.4.4/lib/ruby/gems/2.4.0;C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/ruby/2.4.0;C:/Program Files/Puppet Labs/DevelopmentKit/private/puppet/ruby/2.4.0

@@ -11,6 +11,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-476](https://github.com/lingua-pupuli/puppet-vscode/issues/476)) Add Bolt commands
 - ([GH-477](https://github.com/lingua-pupuli/puppet-vscode/issues/477)) Add Bolt yaml snippets
 
+### Fixed
+
+- ([GH-480](https://github.com/lingua-pupuli/puppet-vscode/issues/480)) Automatically find Ruby version from PDK
+
 ## [0.16.0] - 2019-01-25
 
 ### Added
