@@ -257,9 +257,9 @@ The first step in this is enabling parsing Bolt Plans. This means when opening a
 
 We have added support for VSCode Command Palatte commands for opening Bolt user config and inventory yaml files. We have also added support for yaml snippets for common operations in Bolt yaml files.
 
-![bolt_command_palatte](docs/assets/bolt_config_command.gif)
+![bolt_command_palatte](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/bolt_config_command.gif)
 
-![bolt_command_palatte](docs/assets/bolt_inventory_command.gif)
+![bolt_command_palatte](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/bolt_inventory_command.gif)
 
 ### Debugging Puppet manifests
 

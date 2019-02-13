@@ -15,6 +15,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - ([GH-480](https://github.com/lingua-pupuli/puppet-vscode/issues/480)) Automatically find Ruby version from PDK
 
+### Changed
+
+- ([GH-478](https://github.com/lingua-pupuli/puppet-vscode/issues/478)) Update puppet-editor-services to [0.18.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0180---2019-02-05)
+
 ## [0.16.0] - 2019-01-25
 
 ### Added
