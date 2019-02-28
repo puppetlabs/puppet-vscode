@@ -398,6 +398,26 @@
             "agent"
           ]
         },
+        "puppet.notification.nodeGraph": {
+          "type": "string",
+          "default": "messagebox",
+          "description": "The type of notification used when a node graph is being generated. Default value of messagebox",
+          "enum": [
+            "messagebox",
+            "statusbar",
+            "none"
+          ]
+        },
+        "puppet.notification.puppetResource": {
+          "type": "string",
+          "default": "messagebox",
+          "description": "The type of notification used when a running Puppet Resouce. Default value of messagebox",
+          "enum": [
+            "messagebox",
+            "statusbar",
+            "none"
+          ]
+        },
         "puppet.editorService.modulePath": {
           "description": "**DEPRECATED** Please use puppet.editorService.puppet.modulePath instead"
         },

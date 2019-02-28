@@ -3,10 +3,11 @@
 import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
-import { PuppetCommandStrings, PuppetResourceRequestParams, PuppetResourceRequest } from '../messages';
+import { PuppetCommandStrings, PuppetResourceRequestParams, PuppetResourceRequest, PuppetResourceResponse } from '../messages';
 import { reporter } from '../telemetry/telemetry';
 import { ConnectionStatus } from '../interfaces';
 import { ConnectionHandler } from '../handler';
+import { ISettings, SettingsFromWorkspace } from '../settings';
 
 export class PuppetResourceFeature implements IFeature {
   private _connectionHandler: ConnectionHandler;
@@ -42,34 +43,67 @@ export class PuppetResourceFeature implements IFeature {
         let requestParams = new RequestParams();
         requestParams.typename = moduleName;
 
-        thisCommand._connectionHandler.languageClient
-          .sendRequest(PuppetResourceRequest.type, requestParams)
-          .then(resourceResult => {
-            if (resourceResult.error !== undefined && resourceResult.error.length > 0) {
-              this.logger.error(resourceResult.error);
-              return;
-            }
-            if (resourceResult.data === undefined || resourceResult.data.length === 0) {
-              return;
-            }
+        // Calculate where the progress message should go, if at all.
+        const currentSettings:ISettings = SettingsFromWorkspace();
+        var notificationType = vscode.ProgressLocation.Notification; 
+        if (currentSettings.notification !== undefined && currentSettings.notification.puppetResource !== undefined) {
+          switch (currentSettings.notification.puppetResource.toLowerCase()) {
+            case "messagebox": notificationType = vscode.ProgressLocation.Notification; break;
+            case "statusbar": notificationType = vscode.ProgressLocation.Window; break;
+            case "none": notificationType = undefined; break;
+            default: break; // Default is already set
+          }
+        }
 
-            if (!editor) {
-              return;
-            }
-
-            var newPosition = new vscode.Position(0, 0);
-            if (editor.selection.isEmpty) {
-              const position = editor.selection.active;
-              newPosition = position.with(position.line, 0);
-            }
-
-            this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
-            if (reporter) {
-              reporter.sendTelemetryEvent(PuppetCommandStrings.PuppetResourceCommandId);
-            }
+        if (notificationType !== undefined) {
+          vscode.window.withProgress({
+            location: notificationType,
+            title: "Puppet",
+            cancellable: false
+          }, (progress) => {
+            progress.report({message: `Gathering Puppet ${moduleName} Resources`});
+            return thisCommand._connectionHandler.languageClient
+              .sendRequest(PuppetResourceRequest.type, requestParams)
+              .then(resourceResult => {
+                this.respsonseToVSCodeEdit(resourceResult, editor, doc);
+              }
+            );
           });
+        } else {
+          thisCommand._connectionHandler.languageClient
+            .sendRequest(PuppetResourceRequest.type, requestParams)
+            .then(resourceResult => {
+              this.respsonseToVSCodeEdit(resourceResult, editor, doc);
+            }
+          );
+        }
       }
     });
+  }
+
+  private respsonseToVSCodeEdit(resourceResult: PuppetResourceResponse, editor: vscode.TextEditor, doc: vscode.TextDocument) {
+    if (resourceResult.error !== undefined && resourceResult.error.length > 0) {
+      this.logger.error(resourceResult.error);
+      return;
+    }
+    if (resourceResult.data === undefined || resourceResult.data.length === 0) {
+      return;
+    }
+
+    if (!editor) {
+      return;
+    }
+
+    var newPosition = new vscode.Position(0, 0);
+    if (editor.selection.isEmpty) {
+      const position = editor.selection.active;
+      newPosition = position.with(position.line, 0);
+    }
+
+    this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
+    if (reporter) {
+      reporter.sendTelemetryEvent(PuppetCommandStrings.PuppetResourceCommandId);
+    }
   }
 
   private pickPuppetResource(): Thenable<string | undefined> {

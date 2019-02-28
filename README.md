@@ -197,6 +197,8 @@ The information returned will be pasted into the open editor window where your c
 
 ![puppet_resource](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_resource.gif)
 
+You can change the notification message from the default message box, to a status bar notification or none at all, using the `puppet.notification.puppetResource` configuration setting.
+
 #### Puppet Node Graph preview
 
 You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastructure-models) of a manifest while you edit your Puppet Code.
@@ -208,6 +210,8 @@ You can preview the [node graph](https://puppet.com/blog/visualize-your-infrastr
 The node graph will appear next to the manifest
 
 ![puppet_node_graph](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_node_graph.gif)
+
+You can change the notification message from the default message box, to a status bar notification or none at all, using the `puppet.notification.nodeGraph` configuration setting.
 
 ### Puppet Development Kit Support
 

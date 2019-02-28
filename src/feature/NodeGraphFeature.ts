@@ -6,10 +6,11 @@ import * as path from 'path';
 import { IFeature } from "../feature";
 import { ILogger } from "../logging";
 import { ConnectionStatus } from '../interfaces';
-import { CompileNodeGraphRequest } from '../messages';
+import { CompileNodeGraphRequest, CompileNodeGraphResponse } from '../messages';
 import { reporter } from '../telemetry/telemetry';
 import * as viz from 'viz.js';
 import { ConnectionHandler } from "../handler";
+import { ISettings, SettingsFromWorkspace } from '../settings';
 
 const PuppetNodeGraphToTheSideCommandId: string = 'extension.puppetShowNodeGraphToSide';
 
@@ -47,6 +48,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
       this.parentFeature.onProviderWebPanelDisposed(this);
     });
 
+    this.webPanel.webview.html = "Generating...";
     this.updateAsync();
   }
 
@@ -67,40 +69,74 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     const requestData = {
       external: this.docUri.toString()
     };
-    return this.connectionHandler.languageClient
+
+    // Calculate where the progress message should go, if at all.
+    const currentSettings:ISettings = SettingsFromWorkspace();
+    var notificationType = vscode.ProgressLocation.Notification; 
+    if (currentSettings.notification !== undefined && currentSettings.notification.nodeGraph !== undefined) {
+      switch (currentSettings.notification.nodeGraph.toLowerCase()) {
+        case "messagebox": notificationType = vscode.ProgressLocation.Notification; break;
+        case "statusbar": notificationType = vscode.ProgressLocation.Window; break;
+        case "none": notificationType = undefined; break;
+        default: break; // Default is already set
+      }
+    }
+
+    if (notificationType !== undefined) {
+      return vscode.window.withProgress({
+        location: notificationType,
+        title: "Puppet",
+        cancellable: false
+      }, (progress) => {
+        progress.report({message: "Generating Node Graph"});
+        return this.connectionHandler.languageClient
+          .sendRequest(CompileNodeGraphRequest.type, requestData)
+          .then(
+            (compileResult) => {
+              return this.responseToHTMLString(compileResult);
+        });
+      });
+    }
+    else {
+      return this.connectionHandler.languageClient
       .sendRequest(CompileNodeGraphRequest.type, requestData)
       .then(
         (compileResult) => {
+          return this.responseToHTMLString(compileResult);
+      });
+    }
+  }
 
-        var svgContent = '';
-        if (compileResult.dotContent !== null) {
-          var styling = `
-          bgcolor = "transparent"
-          color = "white"
-          rankdir = "TB"
-          node [ shape="box" penwidth="2" color="#e0e0e0" style="rounded,filled" fontname="Courier New" fillcolor=black, fontcolor="white"]
-          edge [ style="bold" color="#f0f0f0" penwith="2" ]
+  private responseToHTMLString(compileResult: CompileNodeGraphResponse): string {
+    var svgContent = '';
+    if (compileResult.dotContent !== null) {
+      var styling = `
+      bgcolor = "transparent"
+      color = "white"
+      rankdir = "TB"
+      node [ shape="box" penwidth="2" color="#e0e0e0" style="rounded,filled" fontname="Courier New" fillcolor=black, fontcolor="white"]
+      edge [ style="bold" color="#f0f0f0" penwith="2" ]
 
-          label = ""`;
+      label = ""`;
 
-          var graphContent = compileResult.dotContent;
-          if (graphContent === undefined) { graphContent = ''; }
-          // vis.jz sees backslashes as escape characters, however they are not in the DOT language.  Instead
-          // we should escape any backslash coming from a valid DOT file in preparation to be rendered
-          graphContent = graphContent.replace(/\\/g,"\\\\");
-          graphContent = graphContent.replace(`label = "editorservices"`,styling);
+      var graphContent = compileResult.dotContent;
+      if (graphContent === undefined) { graphContent = ''; }
+      // vis.jz sees backslashes as escape characters, however they are not in the DOT language.  Instead
+      // we should escape any backslash coming from a valid DOT file in preparation to be rendered
+      graphContent = graphContent.replace(/\\/g,"\\\\");
+      graphContent = graphContent.replace(`label = "editorservices"`,styling);
 
-          svgContent = viz(graphContent,"svg");
-        }
+      svgContent = viz(graphContent,"svg");
+    }
 
-        var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`;
-        if ((compileResult.error === undefined) || (compileResult.error === null)) { errorContent = ''; }
+    var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`;
+    if ((compileResult.error === undefined) || (compileResult.error === null)) { errorContent = ''; }
 
-        if (reporter) {
-          reporter.sendTelemetryEvent(PuppetNodeGraphToTheSideCommandId);
-        }
+    if (reporter) {
+      reporter.sendTelemetryEvent(PuppetNodeGraphToTheSideCommandId);
+    }
 
-        const html: string = `<!DOCTYPE html>
+    const html: string = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -130,8 +166,7 @@ ${svgContent}
 </div>
 </body></html>`;
 
-        return html;
-    });
+    return html;
   }
 
   public dispose(): any {
