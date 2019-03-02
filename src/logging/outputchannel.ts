@@ -14,10 +14,8 @@ export class OutputChannelLogger implements logging.ILogger {
   // Minimum log level that is shown to users on logChannel
   private minimumUserLogLevel: logging.LogLevel;
 
-  constructor(settings: ISettings) {
+  constructor(logLevel: string) {
     this._logChannel = vscode.window.createOutputChannel('Puppet');
-
-    let logLevel = settings.editorService.loglevel;
 
     if (logLevel === undefined) {
       this.minimumUserLogLevel = logging.LogLevel.Normal;

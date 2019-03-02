@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { ConnectionConfiguration } from './configuration';
+import { CreateAggregrateConfiguration, IAggregateConfiguration } from './configuration';
 import { IFeature } from './feature';
 import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
@@ -14,11 +14,11 @@ import { ConnectionHandler } from './handler';
 import { DockerConnectionHandler } from './handlers/docker';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
-import { ConnectionType, IConnectionConfiguration, ProtocolType } from './interfaces';
+import { ConnectionType, ProtocolType } from './settings';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { PuppetStatusBar } from './PuppetStatusBar';
-import { ISettings, legacySettings, settingsFromWorkspace } from './settings';
+import { legacySettings, SettingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
 
 export const puppetLangID = 'puppet'; // don't change this
@@ -27,10 +27,9 @@ const debugType = 'Puppet';  // don't change this
 
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
-let settings: ISettings;
 let logger: OutputChannelLogger;
 let statusBar: PuppetStatusBar;
-let configSettings: IConnectionConfiguration;
+let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
@@ -41,29 +40,29 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(new Reporter(extContext));
 
-  settings       = settingsFromWorkspace();
+  const settings = SettingsFromWorkspace();
   reporter.sendTelemetryEvent('config', {
     'installType'   : settings.installType,
     'protocol'      : settings.editorService.protocol,
     'imageName'     : settings.editorService.docker.imageName
   });
+  configSettings = CreateAggregrateConfiguration(settings);
 
-  logger         = new OutputChannelLogger(settings);
+  logger         = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
   statusBar      = new PuppetStatusBar([puppetLangID, puppetFileLangID], context, logger);
-  configSettings = new ConnectionConfiguration();
 
   extensionFeatures = [
     new PDKFeature(extContext, logger),
     new BoltFeature(extContext),
   ];
 
-  if(settings.editorService.enable === false){
+  if (configSettings.workspace.editorService.enable === false){
     notifyEditorServiceDisabled(extContext);
     reporter.sendTelemetryEvent('editorServiceDisabled');
     return;
   }
 
-  if(checkInstallDirectory(settings, configSettings, logger) === false){
+  if (checkInstallDirectory(configSettings, logger) === false){
     // If this returns false, then we needed a local directory
     // but did not find it, so we should abort here
     // If we return true, we can continue
@@ -71,22 +70,22 @@ export function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  switch (settings.editorService.protocol) {
+  switch (configSettings.workspace.editorService.protocol) {
     case ProtocolType.STDIO:
-      connectionHandler = new StdioConnectionHandler(extContext, settings, statusBar, logger, configSettings);
+      connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings);
       break;
     case ProtocolType.TCP:
-      connectionHandler = new TcpConnectionHandler(extContext, settings, statusBar, logger, configSettings);
+      connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings);
       break;
     case ProtocolType.DOCKER:
-      connectionHandler = new DockerConnectionHandler(extContext, settings, statusBar, logger, configSettings);
+      connectionHandler = new DockerConnectionHandler(extContext, statusBar, logger, configSettings);
       break;
   }
 
-  extensionFeatures.push(new FormatDocumentFeature(puppetLangID, connectionHandler, settings, logger, extContext));
+  extensionFeatures.push(new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext));
   extensionFeatures.push(new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
-  extensionFeatures.push(new DebuggingFeature(debugType, settings, configSettings, extContext, logger));
+  extensionFeatures.push(new DebuggingFeature(debugType, configSettings, extContext, logger));
 }
 
 export function deactivate() {
@@ -117,22 +116,22 @@ function checkForLegacySettings() {
   }
 }
 
-function checkInstallDirectory(settings: ISettings, configSettings: IConnectionConfiguration, logger: ILogger) : boolean {
-  if(settings.editorService.protocol === ProtocolType.DOCKER){
+function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger) : boolean {
+  if (config.workspace.editorService.protocol === ProtocolType.DOCKER) {
     return true;
   }
-  if(settings.editorService.protocol === ProtocolType.TCP){
-    if(configSettings.type === ConnectionType.Remote){
+  if (config.workspace.editorService.protocol === ProtocolType.TCP) {
+    if (config.connection.type === ConnectionType.Remote) {
       // Return if we are connecting to a remote TCP LangServer
       return true;
     }
   }
 
   // we want to check directory if STDIO or Local TCP
-  if (!fs.existsSync(configSettings.puppetBaseDir)) {
+  if (!fs.existsSync(config.ruby.puppetBaseDir)) {
     showErrorMessage(
       `Could not find a valid Puppet installation at '${
-        configSettings.puppetBaseDir
+        config.ruby.puppetBaseDir
       }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
       'Troubleshooting Information',
       'https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem',
@@ -140,7 +139,7 @@ function checkInstallDirectory(settings: ISettings, configSettings: IConnectionC
     );
     return false;
   } else {
-    logger.debug('Found a valid Puppet installation at ' + configSettings.puppetDir);
+    logger.debug('Found a valid Puppet installation at ' + config.ruby.puppetDir);
     return true;
   }
 }

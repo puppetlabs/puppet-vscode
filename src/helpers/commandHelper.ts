@@ -1,44 +1,41 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { ISettings } from '../settings';
 import { Executable } from 'vscode-languageclient';
-import { PuppetInstallType, ProtocolType, IConnectionConfiguration } from '../interfaces';
+import { PuppetInstallType, ProtocolType } from '../settings';
 import { PathResolver } from '../configuration/pathResolver';
+import { IAggregateConfiguration } from '../configuration';
 
 export class CommandEnvironmentHelper {
   public static getLanguageServerRubyEnvFromConfiguration(
     languageServerpath: string,
-    settings: ISettings,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
   ): Executable {
     let exe: Executable = {
-      command: this.buildExecutableCommand(settings, config),
-      args: this.buildLanguageServerArguments(languageServerpath, settings),
+      command: this.buildExecutableCommand(config),
+      args: this.buildLanguageServerArguments(languageServerpath, config),
       options: {},
     };
-    this.applyRubyEnvFromConfiguration(exe, settings, config);
+    this.applyRubyEnvFromConfiguration(exe, config);
     return exe;
   }
 
   public static getDebugServerRubyEnvFromConfiguration(
     debugServerpath: string,
-    settings: ISettings,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
   ): Executable {
     let exe: Executable = {
-      command: this.buildExecutableCommand(settings, config),
+      command: this.buildExecutableCommand(config),
       args: this.buildDebugServerArguments(debugServerpath),
       options: {},
     };
-    this.applyRubyEnvFromConfiguration(exe, settings, config);
+    this.applyRubyEnvFromConfiguration(exe, config);
     return exe;
   }
 
   private static applyRubyEnvFromConfiguration(
     exe: Executable,
-    settings: ISettings,
-    config: IConnectionConfiguration
+    config: IAggregateConfiguration
   ): Executable {
 
     // setup defaults
@@ -55,7 +52,7 @@ export class CommandEnvironmentHelper {
 
     this.cleanEnvironmentPath(exe);
 
-    switch (settings.installType) {
+    switch (config.workspace.installType) {
       case PuppetInstallType.PDK:
         CommandEnvironmentHelper.buildPDKEnvironment(exe, config);
         break;
@@ -112,11 +109,11 @@ export class CommandEnvironmentHelper {
   }
 
 
-  private static buildExecutableCommand(settings: ISettings, config: IConnectionConfiguration) {
+  private static buildExecutableCommand(config: IAggregateConfiguration) {
     let command: string = '';
-    switch (settings.installType) {
+    switch (config.workspace.installType) {
       case PuppetInstallType.PDK:
-        command = path.join(config.pdkRubyDir, 'bin', 'ruby');
+        command = path.join(config.ruby.pdkRubyDir, 'bin', 'ruby');
         break;
       case PuppetInstallType.PUPPET:
         command = 'ruby';
@@ -127,29 +124,29 @@ export class CommandEnvironmentHelper {
 
   private static buildLanguageServerArguments(
     serverPath: string,
-    settings: ISettings,
+    settings: IAggregateConfiguration,
   ): string[] {
     let args = [serverPath];
 
-    switch (settings.editorService.protocol) {
+    switch (settings.workspace.editorService.protocol) {
       case ProtocolType.STDIO:
         args.push('--stdio');
         break;
       case ProtocolType.TCP:
-        if (settings.editorService.tcp.address === undefined || settings.editorService.tcp.address === '') {
+        if (settings.workspace.editorService.tcp.address === undefined || settings.workspace.editorService.tcp.address === '') {
           args.push('--ip=127.0.0.1');
         } else {
-          args.push('--ip=' + settings.editorService.tcp.address);
+          args.push('--ip=' + settings.workspace.editorService.tcp.address);
         }
-        if (settings.editorService.tcp.port !== 0) {
-          args.push('--port=' + settings.editorService.tcp.port);
+        if (settings.workspace.editorService.tcp.port !== 0) {
+          args.push('--port=' + settings.workspace.editorService.tcp.port);
         }
         break;
       default:
         break;
     }
 
-    args.push('--timeout=' + settings.editorService.timeout);
+    args.push('--timeout=' + settings.workspace.editorService.timeout);
     if (vscode.workspace.workspaceFolders !== undefined) {
       args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
     }
@@ -158,10 +155,10 @@ export class CommandEnvironmentHelper {
     // command line argument
     let puppetSettings: string[] = [];
     [
-      { name: 'confdir', value: settings.editorService.puppet.confdir },
-      { name: 'environment', value: settings.editorService.puppet.environment },
-      { name: 'modulePath', value: settings.editorService.puppet.modulePath },
-      { name: 'vardir', value: settings.editorService.puppet.vardir }
+      { name: 'confdir', value: settings.workspace.editorService.puppet.confdir },
+      { name: 'environment', value: settings.workspace.editorService.puppet.environment },
+      { name: 'modulePath', value: settings.workspace.editorService.puppet.modulePath },
+      { name: 'vardir', value: settings.workspace.editorService.puppet.vardir }
     ].forEach(function (item) {
       if (item.value !== undefined && item.value !== '') {
         puppetSettings.push('--' + item.name + ',' + item.value);
@@ -171,8 +168,8 @@ export class CommandEnvironmentHelper {
       args.push('--puppet-settings=' + puppetSettings.join(','));
     }
 
-    if (settings.editorService.debugFilePath !== undefined && settings.editorService.debugFilePath !== '') {
-      args.push('--debug=' + settings.editorService.debugFilePath);
+    if (settings.workspace.editorService.debugFilePath !== undefined && settings.workspace.editorService.debugFilePath !== '') {
+      args.push('--debug=' + settings.workspace.editorService.debugFilePath);
     }
     return args;
   }
@@ -193,27 +190,26 @@ export class CommandEnvironmentHelper {
     return args;
   }
 
-  private static buildPuppetEnvironment(exe: Executable, config: IConnectionConfiguration) {
+  private static buildPuppetEnvironment(exe: Executable, config: IAggregateConfiguration) {
     exe.options.env.RUBYOPT = 'rubygems';
-    exe.options.env.SSL_CERT_FILE = config.sslCertFile;
-    exe.options.env.SSL_CERT_DIR = config.sslCertDir;
-    exe.options.env.RUBY_DIR = config.rubydir;
-    exe.options.env.PATH = this.buildPathArray([config.environmentPath, exe.options.env.PATH]);
-    exe.options.env.RUBYLIB = this.buildPathArray([config.rubylib, exe.options.env.RUBYLIB]);
+    exe.options.env.SSL_CERT_FILE = config.ruby.sslCertFile;
+    exe.options.env.SSL_CERT_DIR = config.ruby.sslCertDir;
+    exe.options.env.RUBY_DIR = config.ruby.rubydir;
+    exe.options.env.PATH = this.buildPathArray([config.ruby.environmentPath, exe.options.env.PATH]);
+    exe.options.env.RUBYLIB = this.buildPathArray([config.ruby.rubylib, exe.options.env.RUBYLIB]);
   }
 
-  private static buildPDKEnvironment(exe: Executable, config: IConnectionConfiguration) {
+  private static buildPDKEnvironment(exe: Executable, config: IAggregateConfiguration) {
     exe.options.env.RUBYOPT = 'rubygems';
-    exe.options.env.DEVKIT_BASEDIR = config.puppetBaseDir;
-    exe.options.env.RUBY_DIR = config.pdkRubyDir;
-    exe.options.env.GEM_HOME = config.pdkGemDir;
-    exe.options.env.GEM_PATH = this.buildPathArray([config.pdkGemVerDir, config.pdkGemDir, config.pdkRubyVerDir]);
-    exe.options.env.RUBYLIB = this.buildPathArray([config.pdkRubyLib, exe.options.env.RUBYLIB]);
-    exe.options.env.PATH = this.buildPathArray([config.pdkBinDir, config.pdkRubyBinDir, exe.options.env.PATH]);
+    exe.options.env.DEVKIT_BASEDIR = config.ruby.puppetBaseDir;
+    exe.options.env.RUBY_DIR = config.ruby.pdkRubyDir;
+    exe.options.env.GEM_HOME = config.ruby.pdkGemDir;
+    exe.options.env.GEM_PATH = this.buildPathArray([config.ruby.pdkGemVerDir, config.ruby.pdkGemDir, config.ruby.pdkRubyVerDir]);
+    exe.options.env.RUBYLIB = this.buildPathArray([config.ruby.pdkRubyLib, exe.options.env.RUBYLIB]);
+    exe.options.env.PATH = this.buildPathArray([config.ruby.pdkBinDir, config.ruby.pdkRubyBinDir, exe.options.env.PATH]);
   }
 
   private static buildPathArray(items: any[]) {
     return items.join(PathResolver.pathEnvSeparator());
   }
-
 }

@@ -6,8 +6,7 @@ import * as cp from 'child_process';
 import { IFeature } from "../feature";
 import { ILogger } from "../logging";
 import { CommandEnvironmentHelper } from "../helpers/commandHelper";
-import { IConnectionConfiguration } from '../interfaces';
-import { ISettings } from '../settings';
+import { IAggregateConfiguration } from "../configuration";
 
 // Socket vs Exec DebugAdapter types
 // https://github.com/Microsoft/vscode/blob/2808feeaf6b24feaaa6ba49fb91ea165c4d5fb06/src/vs/workbench/parts/debug/node/debugger.ts#L58-L61
@@ -20,20 +19,17 @@ import { ISettings } from '../settings';
 
 export class DebugAdapterDescriptorFactory implements vscode.DebugAdapterDescriptorFactory, vscode.Disposable {
   readonly Context: vscode.ExtensionContext;
-  readonly Settings: ISettings;
-  readonly Config: IConnectionConfiguration;
+  readonly Config: IAggregateConfiguration;
   readonly Logger: ILogger;
 
   public ChildProcesses: cp.ChildProcess[] = [];
 
   constructor(
     context: vscode.ExtensionContext,
-    settings: ISettings,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
     logger: ILogger
   ) {
     this.Context = context;
-    this.Settings = settings;
     this.Config = config;
     this.Logger = logger;
   }
@@ -45,8 +41,7 @@ export class DebugAdapterDescriptorFactory implements vscode.DebugAdapterDescrip
 
     return new Promise<vscode.DebugAdapterDescriptor>( function(resolve, reject) {
       let debugServer = CommandEnvironmentHelper.getDebugServerRubyEnvFromConfiguration(
-        thisFactory.Context.asAbsolutePath(thisFactory.Config.debugServerPath),
-        thisFactory.Settings,
+        thisFactory.Context.asAbsolutePath(thisFactory.Config.ruby.debugServerPath),
         thisFactory.Config,
       );
   
@@ -141,12 +136,11 @@ export class DebuggingFeature implements IFeature {
 
   constructor(
     debugType: string,
-    settings: ISettings,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
     context: vscode.ExtensionContext,
     logger: ILogger
   ) {
-    this.factory = new DebugAdapterDescriptorFactory(context, settings, config, logger);
+    this.factory = new DebugAdapterDescriptorFactory(context, config, logger);
     this.provider = new DebugConfigurationProvider(debugType, logger, context);
 
     logger.debug("Registered DebugAdapterDescriptorFactory for " + debugType);
