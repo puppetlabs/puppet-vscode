@@ -72,7 +72,13 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     let puppetVersions: string[] = [];
     if (settings.installType === PuppetInstallType.PDK) {
       const pdkInfo = pdk.pdkInstances(puppetBaseDir);
-      const result = pdkInfo.latest;
+      let result: pdk.IPDKRubyInstance;
+      if (settings.editorService !== undefined && settings.editorService.puppet !== undefined && settings.editorService.puppet.version !== undefined) {
+        result = pdkInfo.InstanceForPuppetVersion(settings.editorService.puppet.version);
+      }
+      // If we can't find the PDK instance from the puppet version or it wasn't defined, assume the latest.
+      if (result === undefined) { result = pdkInfo.latest; }
+
       // An undefined instance means that either PDK isn't installed or that
       // the requested version doesn't exist.
       if (result !== undefined) { pdkInstance = result; }

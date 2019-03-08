@@ -168,6 +168,10 @@ export class CommandEnvironmentHelper {
       args.push('--puppet-settings=' + puppetSettings.join(','));
     }
 
+    if (settings.workspace.editorService.puppet.version !== undefined && settings.workspace.editorService.puppet.version.trim() !== "") {
+      args.push('--puppet-version=' + settings.workspace.editorService.puppet.version.trim());
+    }
+
     if (settings.workspace.editorService.debugFilePath !== undefined && settings.workspace.editorService.debugFilePath !== '') {
       args.push('--debug=' + settings.workspace.editorService.debugFilePath);
     }
