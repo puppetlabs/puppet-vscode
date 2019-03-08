@@ -80,6 +80,30 @@ class PuppetStatusBarProvider {
         () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
     );
 
+    if (this.config.ruby.pdkPuppetVersions !== undefined && this.config.ruby.pdkPuppetVersions.length > 0) {
+      // Add a static menu item to use the latest version
+      menuItems.push(
+        new PuppetConnectionMenuItem(
+          "Switch to latest Puppet version",
+          () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetUpdateConfigurationCommandId, {
+            "puppet.editorService.puppet.version": undefined
+          });
+        }),
+      );
+      this.config.ruby.pdkPuppetVersions
+        .sort( (a, b) => b.localeCompare(a, undefined, { numeric:true }) ) // Reverse sort
+        .forEach( (puppetVersion) => {
+          menuItems.push(
+            new PuppetConnectionMenuItem(
+              "Switch to Puppet " + puppetVersion.toString(),
+              () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetUpdateConfigurationCommandId, {
+                "puppet.editorService.puppet.version": puppetVersion
+              });
+            }),
+          );
+      });
+    }
+
     vscode
       .window
       .showQuickPick<PuppetConnectionMenuItem>(menuItems)
@@ -121,7 +145,6 @@ export class PuppetStatusBarFeature implements IFeature, IPuppetStatusBar {
   public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
     this.provider.setConnectionStatus(statusText, status, toolTip);
   }
-
 
   public dispose(): any { return undefined; }
 }

@@ -8,6 +8,7 @@ import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
+import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { PuppetStatusBarFeature } from './feature/PuppetStatusBarFeature';
@@ -55,6 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
   extensionFeatures = [
     new PDKFeature(extContext, logger),
     new BoltFeature(extContext),
+    new UpdateConfigurationFeature(logger, extContext),
     statusBar
   ];
 

@@ -61,6 +61,7 @@ export class PuppetCommandStrings {
   static PuppetResourceCommandId: string = 'extension.puppetResource';
   static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
   static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
+  static PuppetUpdateConfigurationCommandId = 'extension.puppetUpdateConfiguration';
 }
 
 export class PDKCommandStrings {
