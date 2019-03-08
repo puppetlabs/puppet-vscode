@@ -33,7 +33,8 @@ interface IRubyConfiguration {
   readonly pdkGemDir:string;
   readonly pdkRubyDir:string;
   readonly pdkRubyBinDir:string;
-  readonly pdkGemVerDir:string; 
+  readonly pdkGemVerDir:string;
+  readonly pdkPuppetVersions: string[];
 }
 
 /** The IConnectionConfiguration interface describes the connection used to
@@ -68,11 +69,14 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     const rubyDir = this.calculateRubyDir(puppetBaseDir);
 
     let pdkInstance: pdk.IPDKRubyInstance = pdk.emptyPDKInstance();
+    let puppetVersions: string[] = [];
     if (settings.installType === PuppetInstallType.PDK) {
-      const result = pdk.pdkInstances(puppetBaseDir).latest;
+      const pdkInfo = pdk.pdkInstances(puppetBaseDir);
+      const result = pdkInfo.latest;
       // An undefined instance means that either PDK isn't installed or that
       // the requested version doesn't exist.
       if (result !== undefined) { pdkInstance = result; }
+      puppetVersions = pdkInfo.allPuppetVersions;
     }
 
     this.ruby = {
@@ -91,7 +95,8 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       pdkGemDir: pdkInstance.gemDir,
       pdkRubyDir: pdkInstance.rubyDir,
       pdkRubyBinDir: pdkInstance.rubyBinDir,
-      pdkGemVerDir: pdkInstance.gemVerDir
+      pdkGemVerDir: pdkInstance.gemVerDir,
+      pdkPuppetVersions: puppetVersions,
     };
 
     this.connection = {

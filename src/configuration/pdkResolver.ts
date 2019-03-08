@@ -4,7 +4,15 @@ import * as path from 'path';
 export interface IPDKRubyInstances {
   pdkDirectory: string;
   instances: IPDKRubyInstance[];
+  allPuppetVersions: string[];
   latest: IPDKRubyInstance;
+
+  /**
+   * Finds the first PDK Instance that has Puppet version `puppetVersion`
+   * @param puppetVersion The puppet version string to search for
+   * @returns IPDKRubyInstance or undefined
+   */
+  InstanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance;
 }
 
 export interface IPDKRubyInstance {
@@ -58,6 +66,7 @@ export function emptyPDKInstance(): IPDKRubyInstance {
 class PDKRubyInstances implements IPDKRubyInstances {
   pdkDirectory: string;
   private rubyInstances: IPDKRubyInstance[] = undefined;
+  private puppetVersions: string[] = undefined;
 
   constructor(
     pdkRootDirectory: string
@@ -80,6 +89,25 @@ class PDKRubyInstances implements IPDKRubyInstances {
     });
 
     return this.rubyInstances;
+  }
+
+  get allPuppetVersions(): string[] {
+    if (this.puppetVersions !== undefined) { return this.puppetVersions; }
+    this.puppetVersions = [];
+    // This searching method isn't the most performant but as the list will probably
+    // be very small (< 20 items) it's not a big deal and is cached anyway
+    this.instances.forEach( (instance) => {
+      instance.puppetVersions.forEach ( (puppetVersion) => {
+        if (this.puppetVersions.indexOf(puppetVersion) === -1) { this.puppetVersions.push(puppetVersion); }
+      });
+    });
+    return this.puppetVersions;
+  }
+
+  public InstanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance {
+    return this.instances.find( (instance) => {
+      return instance.puppetVersions.includes(puppetVersion);
+    });
   }
 
   // Override toString to make it look pretty
