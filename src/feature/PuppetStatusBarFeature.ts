@@ -1,21 +1,28 @@
-import * as vscode from 'vscode';
-import { PuppetCommandStrings } from './messages';
-import { ConnectionStatus } from './interfaces';
-import { PuppetConnectionMenuItem } from './PuppetConnectionMenuItem';
-import { ILogger } from "./logging";
+'use strict';
 
-export class PuppetStatusBar {
-  statusBarItem: vscode.StatusBarItem;
+import * as vscode from "vscode";
+import { IFeature } from "../feature";
+import { ILogger } from "../logging";
+import { ConnectionStatus } from '../interfaces';
+import { PuppetCommandStrings } from '../messages';
+import { IAggregateConfiguration } from "../configuration";
+
+class PuppetStatusBarProvider {
+  private statusBarItem: vscode.StatusBarItem;
   private logger: ILogger;
+  private config: IAggregateConfiguration;
 
-  constructor(langIDs: string[], context:vscode.ExtensionContext, logger: ILogger) {
+  constructor(
+    langIDs: string[],
+    config: IAggregateConfiguration,
+    logger: ILogger
+  ) {
     this.logger = logger;
-    context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
-      () => { PuppetStatusBar.showConnectionMenu(); }
-    ));
+    this.config = config;
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
     this.statusBarItem.command = PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
     this.statusBarItem.show();
+
     vscode.window.onDidChangeActiveTextEditor(textEditor => {
       if (textEditor === undefined || langIDs.indexOf(textEditor.document.languageId) === -1) {
         this.statusBarItem.hide();
@@ -64,7 +71,7 @@ export class PuppetStatusBar {
     this.statusBarItem.tooltip = toolTip; // TODO: killme (new Date()).getUTCDate().toString() + "\nNewline\nWee!";
   }
 
-  public static showConnectionMenu() {
+  public showConnectionMenu() {
     var menuItems: PuppetConnectionMenuItem[] = [];
 
     menuItems.push(
@@ -72,7 +79,7 @@ export class PuppetStatusBar {
         "Show Puppet Session Logs",
         () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
     );
-  
+
     vscode
       .window
       .showQuickPick<PuppetConnectionMenuItem>(menuItems)
@@ -82,5 +89,39 @@ export class PuppetStatusBar {
         }
       });
   }
-  
+}
+
+class PuppetConnectionMenuItem implements vscode.QuickPickItem {
+  public description: string = '';
+
+  constructor(public readonly label: string, public readonly callback: () => void = () => { })
+  {
+  }
+}
+
+export interface IPuppetStatusBar {
+  setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string);
+}
+
+export class PuppetStatusBarFeature implements IFeature, IPuppetStatusBar {
+  private provider: PuppetStatusBarProvider;
+
+  constructor(
+    langIDs: string[],
+    config: IAggregateConfiguration,
+    logger: ILogger,
+    context: vscode.ExtensionContext
+  ) {
+    context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId,
+      () => { this.provider.showConnectionMenu(); }
+    ));
+    this.provider = new PuppetStatusBarProvider(langIDs, config, logger);
+  }
+
+  public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
+    this.provider.setConnectionStatus(statusText, status, toolTip);
+  }
+
+
+  public dispose(): any { return undefined; }
 }

@@ -10,6 +10,7 @@ import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
+import { PuppetStatusBarFeature } from './feature/PuppetStatusBarFeature';
 import { ConnectionHandler } from './handler';
 import { DockerConnectionHandler } from './handlers/docker';
 import { StdioConnectionHandler } from './handlers/stdio';
@@ -17,7 +18,7 @@ import { TcpConnectionHandler } from './handlers/tcp';
 import { ConnectionType, ProtocolType } from './settings';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { PuppetStatusBar } from './PuppetStatusBar';
+//import { PuppetStatusBar } from './PuppetStatusBar';
 import { legacySettings, SettingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
 
@@ -28,7 +29,7 @@ const debugType = 'Puppet';  // don't change this
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
 let logger: OutputChannelLogger;
-let statusBar: PuppetStatusBar;
+//let statusBar: PuppetStatusBar;
 let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
@@ -48,12 +49,13 @@ export function activate(context: vscode.ExtensionContext) {
   });
   configSettings = CreateAggregrateConfiguration(settings);
 
-  logger         = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
-  statusBar      = new PuppetStatusBar([puppetLangID, puppetFileLangID], context, logger);
+  logger          = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
+  const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
 
   extensionFeatures = [
     new PDKFeature(extContext, logger),
     new BoltFeature(extContext),
+    statusBar
   ];
 
   if (configSettings.workspace.editorService.enable === false){

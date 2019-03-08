@@ -6,7 +6,7 @@ import { ServerOptions, Executable, StreamInfo } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
 import { ConnectionType } from '../settings';
 import { ConnectionStatus } from '../interfaces';
-import { PuppetStatusBar } from '../PuppetStatusBar';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
 import { OutputChannelLogger } from '../logging/outputchannel';
 import { CommandEnvironmentHelper } from '../helpers/commandHelper';
 import { IAggregateConfiguration } from '../configuration';
@@ -16,7 +16,7 @@ export class DockerConnectionHandler extends ConnectionHandler {
 
   constructor(
     context: vscode.ExtensionContext,
-    statusBar: PuppetStatusBar,
+    statusBar: IPuppetStatusBar,
     logger: OutputChannelLogger,
     config: IAggregateConfiguration,
   ) {

@@ -5,7 +5,7 @@ import { ServerOptions, Executable, StreamInfo } from 'vscode-languageclient';
 
 import { ConnectionHandler } from '../handler';
 import { ConnectionType, ProtocolType, PuppetInstallType } from '../settings';
-import { PuppetStatusBar } from '../PuppetStatusBar';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
 import { OutputChannelLogger } from '../logging/outputchannel';
 import { CommandEnvironmentHelper } from '../helpers/commandHelper';
 import { IAggregateConfiguration } from '../configuration';
@@ -13,7 +13,7 @@ import { IAggregateConfiguration } from '../configuration';
 export class TcpConnectionHandler extends ConnectionHandler {
   constructor(
     context: vscode.ExtensionContext,
-    statusBar: PuppetStatusBar,
+    statusBar: IPuppetStatusBar,
     logger: OutputChannelLogger,
     config: IAggregateConfiguration,
   ) {
