@@ -4,23 +4,23 @@ import * as cp from 'child_process';
 import { ServerOptions, Executable, StreamInfo } from 'vscode-languageclient';
 
 import { ConnectionHandler } from '../handler';
-import { ConnectionStatus, ConnectionType, IConnectionConfiguration } from '../interfaces';
-import { ISettings } from '../settings';
+import { ConnectionType } from '../settings';
+import { ConnectionStatus } from '../interfaces';
 import { PuppetStatusBar } from '../PuppetStatusBar';
 import { OutputChannelLogger } from '../logging/outputchannel';
 import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { IAggregateConfiguration } from '../configuration';
 
 export class DockerConnectionHandler extends ConnectionHandler {
   private name: string;
 
   constructor(
     context: vscode.ExtensionContext,
-    settings: ISettings,
     statusBar: PuppetStatusBar,
     logger: OutputChannelLogger,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
   ) {
-    super(context, settings, statusBar, logger, config);
+    super(context, statusBar, logger, config);
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
 
     /*
@@ -31,7 +31,7 @@ export class DockerConnectionHandler extends ConnectionHandler {
     */
     this.name = this.createUniqueDockerName();
 
-    let exe: Executable = this.getDockerExecutable(this.name, this.settings.editorService.docker.imageName);
+    let exe: Executable = this.getDockerExecutable(this.name, this.config.workspace.editorService.docker.imageName);
     this.logger.debug('Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
 
     /*
@@ -44,7 +44,7 @@ export class DockerConnectionHandler extends ConnectionHandler {
     var isRunning: boolean = false;
     proc.stdout.on('data', data => {
       if (/LANGUAGE SERVER RUNNING/.test(data.toString())) {
-        settings.editorService.tcp.port = this.getDockerPort(this.name);
+        config.workspace.editorService.tcp.port = this.getDockerPort(this.name);
         isRunning = true;
         this.start();
       }
@@ -73,8 +73,8 @@ export class DockerConnectionHandler extends ConnectionHandler {
   createServerOptions(): ServerOptions {
     let serverOptions = () => {
       let socket = net.connect({
-        port: this.settings.editorService.tcp.port,
-        host: this.settings.editorService.tcp.address,
+        port: this.config.workspace.editorService.tcp.port,
+        host: this.config.workspace.editorService.tcp.address,
       });
 
       let result: StreamInfo = {

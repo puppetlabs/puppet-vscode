@@ -4,32 +4,30 @@ import * as cp from 'child_process';
 import { ServerOptions, Executable, StreamInfo } from 'vscode-languageclient';
 
 import { ConnectionHandler } from '../handler';
-import { ConnectionType, ProtocolType, IConnectionConfiguration, PuppetInstallType } from '../interfaces';
-import { ISettings } from '../settings';
+import { ConnectionType, ProtocolType, PuppetInstallType } from '../settings';
 import { PuppetStatusBar } from '../PuppetStatusBar';
 import { OutputChannelLogger } from '../logging/outputchannel';
 import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { IAggregateConfiguration } from '../configuration';
 
 export class TcpConnectionHandler extends ConnectionHandler {
   constructor(
     context: vscode.ExtensionContext,
-    settings: ISettings,
     statusBar: PuppetStatusBar,
     logger: OutputChannelLogger,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
   ) {
-    super(context, settings, statusBar, logger, config);
+    super(context, statusBar, logger, config);
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
 
     if (this.connectionType === ConnectionType.Local) {
       let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
-        this.context.asAbsolutePath(this.config.languageServerPath),
-        this.settings,
+        this.context.asAbsolutePath(this.config.ruby.languageServerPath),
         this.config,
       );
 
       let logPrefix: string = '';
-      switch (this.settings.installType) {
+      switch (this.config.workspace.installType) {
         case PuppetInstallType.PDK:
           logPrefix = '[getRubyEnvFromPDK] ';
           break;
@@ -55,7 +53,7 @@ export class TcpConnectionHandler extends ConnectionHandler {
       proc.stdout.on('data', data => {
         if (/LANGUAGE SERVER RUNNING/.test(data.toString())) {
           var p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
-          settings.editorService.tcp.port = Number(p[1]);
+          config.workspace.editorService.tcp.port = Number(p[1]);
           this.start();
         }
       });
@@ -71,12 +69,12 @@ export class TcpConnectionHandler extends ConnectionHandler {
   }
 
   get connectionType(): ConnectionType {
-    switch (this.settings.editorService.protocol) {
+    switch (this.config.workspace.editorService.protocol) {
       case ProtocolType.TCP:
         if (
-          this.settings.editorService.tcp.address === '127.0.0.1' ||
-          this.settings.editorService.tcp.address === 'localhost' ||
-          this.settings.editorService.tcp.address === ''
+          this.config.workspace.editorService.tcp.address === '127.0.0.1' ||
+          this.config.workspace.editorService.tcp.address === 'localhost' ||
+          this.config.workspace.editorService.tcp.address === ''
         ) {
           return ConnectionType.Local;
         } else {
@@ -90,8 +88,8 @@ export class TcpConnectionHandler extends ConnectionHandler {
 
   createServerOptions(): ServerOptions {
     this.logger.debug(
-      `Starting language server client (host ${this.settings.editorService.tcp.address} port ${
-        this.settings.editorService.tcp.port
+      `Starting language server client (host ${this.config.workspace.editorService.tcp.address} port ${
+        this.config.workspace.editorService.tcp.port
       })`,
     );
 
@@ -99,8 +97,8 @@ export class TcpConnectionHandler extends ConnectionHandler {
       let socket = new net.Socket();
 
       socket.connect({
-        port: this.settings.editorService.tcp.port,
-        host: this.settings.editorService.tcp.address,
+        port: this.config.workspace.editorService.tcp.port,
+        host: this.config.workspace.editorService.tcp.address,
       });
 
       let result: StreamInfo = {

@@ -1,7 +1,24 @@
 'use strict';
 
 import vscode = require("vscode");
-import { ProtocolType, PuppetInstallType } from './interfaces';
+
+export enum PuppetInstallType{
+  PDK    = "pdk",
+  PUPPET = "agent",
+}
+
+export enum ProtocolType {
+  UNKNOWN = '<unknown>',
+  STDIO = 'stdio',
+  TCP = 'tcp',
+  DOCKER = "docker"
+}
+
+export enum ConnectionType {
+  Unknown,
+  Local,
+  Remote
+}
 
 export interface IEditorServiceDockerSettings {
   imageName?: string;
@@ -125,36 +142,41 @@ export function legacySettings(): Map<string, Object> {
   return settings;
 }
 
-export function settingsFromWorkspace(): ISettings {
-  // Default settings
-  const defaultEditorServiceSettings: IEditorServiceSettings = {
-    enable: true,
-    featureflags: [],
-    loglevel: "normal",
-    protocol: ProtocolType.STDIO,
-    timeout: 10,
+// Default settings
+export function DefaultWorkspaceSettings(): ISettings {
+  return {
+    editorService: {
+      enable: true,
+      featureflags: [],
+      loglevel: "normal",
+      protocol: ProtocolType.STDIO,
+      timeout: 10
+    },
+    format: {
+      enable: true
+    },
+    installDirectory: undefined,
+    installType: PuppetInstallType.PUPPET,
+    lint: {
+      enable: true,
+    },
+    pdk: {
+    }
   };
+}
 
-  const defaultFormatSettings: IFormatSettings = {
-    enable: true,
-  };
-
-  const defaultLintSettings: ILintSettings = {
-    enable: true,
-  };
-
-  const defaultPDKSettings: IPDKSettings = {};
-
+export function SettingsFromWorkspace(): ISettings {
   const workspaceConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(workspaceSectionName);
+  const defaults: ISettings = DefaultWorkspaceSettings();
 
   // TODO: What if the wrong type is passed through? will it blow up?
   let settings = {
-    editorService: workspaceConfig.get<IEditorServiceSettings>("editorService", defaultEditorServiceSettings),
-    format: workspaceConfig.get<IFormatSettings>("format", defaultFormatSettings),
-    installDirectory: workspaceConfig.get<string>("installDirectory", undefined),
-    installType: workspaceConfig.get<PuppetInstallType>("installType", PuppetInstallType.PUPPET),
-    lint: workspaceConfig.get<ILintSettings>("lint", defaultLintSettings),
-    pdk: workspaceConfig.get<IPDKSettings>("pdk", defaultPDKSettings)
+    editorService: workspaceConfig.get<IEditorServiceSettings>("editorService", defaults.editorService),
+    format: workspaceConfig.get<IFormatSettings>("format",  defaults.format),
+    installDirectory: workspaceConfig.get<string>("installDirectory",  defaults.installDirectory),
+    installType: workspaceConfig.get<PuppetInstallType>("installType",  defaults.installType),
+    lint: workspaceConfig.get<ILintSettings>("lint",  defaults.lint),
+    pdk: workspaceConfig.get<IPDKSettings>("pdk", defaults.pdk)
   };
 
   /**

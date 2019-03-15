@@ -1,13 +1,14 @@
 import * as vscode from 'vscode';
 import { LanguageClient, ServerOptions, LanguageClientOptions, RevealOutputChannelOn } from 'vscode-languageclient';
 
-import { ConnectionStatus, IConnectionConfiguration, ConnectionType, ProtocolType } from './interfaces';
+import { ConnectionStatus } from './interfaces';
+import { ConnectionType, ProtocolType } from './settings';
 import { PuppetStatusBar } from './PuppetStatusBar';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { ISettings } from './settings';
 import { PuppetVersionDetails, PuppetVersionRequest, PuppetCommandStrings } from './messages';
 import { reporter } from './telemetry/telemetry';
 import { puppetFileLangID, puppetLangID} from './extension';
+import { IAggregateConfiguration } from './configuration';
 
 export abstract class ConnectionHandler {
   private timeSpent:number;
@@ -25,15 +26,14 @@ export abstract class ConnectionHandler {
   abstract get connectionType(): ConnectionType;
 
   public get protocolType(): ProtocolType {
-    return this.settings.editorService.protocol;
+    return this.config.workspace.editorService.protocol;
   }
 
   protected constructor(
     protected context: vscode.ExtensionContext,
-    protected settings: ISettings,
     protected statusBar: PuppetStatusBar,
     protected logger: OutputChannelLogger,
-    protected config: IConnectionConfiguration,
+    protected config: IAggregateConfiguration,
   ) {
     this.timeSpent = Date.now();
     this.setConnectionStatus('Initializing', ConnectionStatus.Initializing);

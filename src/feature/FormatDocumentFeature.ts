@@ -4,9 +4,9 @@ import * as vscode from "vscode";
 import { IFeature } from "../feature";
 import { ILogger } from "../logging";
 import { ConnectionStatus } from '../interfaces';
-import { ISettings } from '../settings';
 import * as messages from '../messages';
 import { ConnectionHandler } from "../handler";
+import { IAggregateConfiguration } from "../configuration";
 
 class RequestParams implements messages.PuppetFixDiagnosticErrorsRequestParams {
   documentUri: string;
@@ -46,13 +46,13 @@ export class FormatDocumentFeature implements IFeature {
   constructor(
     langID: string,
     connectionManager: ConnectionHandler,
-    settings: ISettings,
+    config: IAggregateConfiguration,
     logger: ILogger,
     context: vscode.ExtensionContext
   ) {
     this.provider = new FormatDocumentProvider(connectionManager);
 
-    if (settings.format.enable === true) {
+    if (config.workspace.format.enable === true) {
       logger.debug("Registered Format Document provider");
       context.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(langID, {
         provideDocumentFormattingEdits: (document, options, token) => { return this.provider.formatTextEdits(document, options); }

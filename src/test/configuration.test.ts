@@ -1,8 +1,7 @@
 import * as assert from 'assert';
 
-import * as vscode from 'vscode';
-import { ConnectionConfiguration } from '../configuration';
-import { PuppetInstallType } from '../interfaces';
+import { CreateAggregrateConfiguration } from '../configuration';
+import { DefaultWorkspaceSettings, ISettings, PuppetInstallType } from '../settings';
 
 suite("Configuration Tests", () => {
   var pdkBinDir = '';
@@ -22,26 +21,30 @@ suite("Configuration Tests", () => {
       break;
   }
 
-  test("correct install type", () => {
-    var config = new ConnectionConfiguration();
-    assert.equal(PuppetInstallType.PUPPET, config.puppetInstallType);
-  });
-
   test("resolves puppetBaseDir as puppet with default installtype", () => {
-    var config = new ConnectionConfiguration();
-    assert.equal(config.puppetBaseDir, puppetBaseDir);
+    const settings: ISettings = DefaultWorkspaceSettings();
+    var config = CreateAggregrateConfiguration(settings);
+    assert.equal(config.ruby.puppetBaseDir, puppetBaseDir);
   });
 
   test("resolves puppetBaseDir as puppet with installtype eq puppet", () => {
-    var config = new ConnectionConfiguration();
-    config.puppetInstallType = PuppetInstallType.PUPPET;
-    assert.equal(config.puppetBaseDir, puppetBaseDir);
+    const settings: ISettings = DefaultWorkspaceSettings();
+    settings.installType = PuppetInstallType.PUPPET;
+    var config = CreateAggregrateConfiguration(settings);
+    assert.equal(config.ruby.puppetBaseDir, puppetBaseDir);
+  });
+
+  test("resolves puppetBaseDir as pdk with installtype eq pdk", () => {
+    const settings: ISettings = DefaultWorkspaceSettings();
+    settings.installType = PuppetInstallType.PDK;
+    var config = CreateAggregrateConfiguration(settings);
+    assert.equal(config.ruby.puppetBaseDir, pdkPuppetBaseDir);
   });
 
   test("resolves pdkBinDir with installtype eq pdk", () => {
-    var config = new ConnectionConfiguration();
-    config.puppetInstallType = PuppetInstallType.PDK;
-    assert.equal(config.pdkBinDir, pdkBinDir);
+    const settings: ISettings = DefaultWorkspaceSettings();
+    settings.installType = PuppetInstallType.PDK;
+    var config = CreateAggregrateConfiguration(settings);
+    assert.equal(config.ruby.pdkBinDir, pdkBinDir);
   });
-
 });

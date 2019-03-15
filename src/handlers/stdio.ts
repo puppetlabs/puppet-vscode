@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 
 import { ServerOptions, Executable } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
-import { ConnectionType, PuppetInstallType, IConnectionConfiguration } from '../interfaces';
-import { ISettings } from '../settings';
+import { ConnectionType, PuppetInstallType } from '../settings';
 import { PuppetStatusBar } from '../PuppetStatusBar';
 import { OutputChannelLogger } from '../logging/outputchannel';
 import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { IAggregateConfiguration } from '../configuration';
 
 export class StdioConnectionHandler extends ConnectionHandler {
   get connectionType(): ConnectionType {
@@ -15,25 +15,23 @@ export class StdioConnectionHandler extends ConnectionHandler {
 
   constructor(
     context: vscode.ExtensionContext,
-    settings: ISettings,
     statusBar: PuppetStatusBar,
     logger: OutputChannelLogger,
-    config: IConnectionConfiguration,
+    config: IAggregateConfiguration,
   ) {
-    super(context, settings, statusBar, logger, config);
+    super(context, statusBar, logger, config);
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
     this.start();
   }
 
   createServerOptions(): ServerOptions {
     let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
-      this.context.asAbsolutePath(this.config.languageServerPath),
-      this.settings,
+      this.context.asAbsolutePath(this.config.ruby.languageServerPath),
       this.config,
     );
 
     let logPrefix: string = '';
-    switch (this.settings.installType) {
+    switch (this.config.workspace.installType) {
       case PuppetInstallType.PDK:
         logPrefix = '[getRubyEnvFromPDK] ';
         this.logger.debug(logPrefix + 'Using environment variable DEVKIT_BASEDIR=' + exe.options.env.DEVKIT_BASEDIR);
