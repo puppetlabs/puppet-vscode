@@ -5,6 +5,7 @@ import * as fs from 'fs';
 
 import { PathResolver } from './configuration/pathResolver';
 import { ISettings, ConnectionType, ProtocolType, PuppetInstallType } from './settings';
+import * as pdk from './configuration/pdkResolver';
 
 /** Creates an Aggregate Configuration based on the VSCode Workspace settings (ISettings) */
 export function CreateAggregrateConfiguration(settings:ISettings): IAggregateConfiguration {
@@ -63,9 +64,16 @@ export class AggregateConfiguration implements IAggregateConfiguration {
 
     const puppetBaseDir = this.calculatePuppetBaseDir(settings);
     const puppetDir = this.safeJoin(puppetBaseDir, 'puppet');
-    const pdkRubyDir = this.findFirstDirectory(this.safeJoin(puppetBaseDir, 'private', 'ruby'));
     const facterDir = this.safeJoin(puppetBaseDir, 'facter');
     const rubyDir = this.calculateRubyDir(puppetBaseDir);
+
+    let pdkInstance: pdk.IPDKRubyInstance = pdk.emptyPDKInstance();
+    if (settings.installType === PuppetInstallType.PDK) {
+      const result = pdk.pdkInstances(puppetBaseDir).latest;
+      // An undefined instance means that either PDK isn't installed or that
+      // the requested version doesn't exist.
+      if (result !== undefined) { pdkInstance = result; }
+    }
 
     this.ruby = {
       puppetBaseDir: puppetBaseDir,
@@ -79,11 +87,11 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       sslCertDir: this.safeJoin(puppetDir, 'ssl', 'certs'),
       pdkBinDir: this.safeJoin(puppetBaseDir, 'bin'),
       pdkRubyLib: this.replaceSlashes(this.safeJoin(puppetBaseDir, 'lib')),
-      pdkRubyVerDir: this.findFirstDirectory(this.safeJoin(puppetBaseDir, 'private', 'puppet', 'ruby')),
-      pdkGemDir: this.replaceSlashes(this.findFirstDirectory(this.safeJoin(puppetBaseDir, 'share', 'cache', 'ruby'))),
-      pdkRubyDir: pdkRubyDir,
-      pdkRubyBinDir: this.findFirstDirectory(this.safeJoin(puppetBaseDir, 'private', 'ruby')),
-      pdkGemVerDir: this.findFirstDirectory(this.safeJoin(pdkRubyDir, 'lib', 'ruby', 'gems'))
+      pdkRubyVerDir: pdkInstance.rubyVerDir,
+      pdkGemDir: pdkInstance.gemDir,
+      pdkRubyDir: pdkInstance.rubyDir,
+      pdkRubyBinDir: pdkInstance.rubyBinDir,
+      pdkGemVerDir: pdkInstance.gemVerDir
     };
 
     this.connection = {
