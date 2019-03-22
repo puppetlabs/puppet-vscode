@@ -505,7 +505,7 @@
     "typescript": "3.1.6",
     "tslint": "^5.11.0",
     "vsce": "^1.18.0",
-    "vscode": "1.1.30",
+    "vscode": "^1.1.21",
     "yargs": "^11.0.0",
     "gulp-downloader": "^1.0.4",
     "gulp-decompress": "^2.0.2",
