@@ -24,7 +24,7 @@
   - [Live Workspace Intellisense](#live-workspace-intellisense)
   - [Puppet Commands](#puppet-commands)
     - [Puppet Resource](#puppet-resource)
-    - [Puppet Node Graph](#puppet-node-graph)
+    - [Puppet Node Graph](#puppet-node-graph-preview)
   - [Puppet Development Kit Support](#puppet-development-kit-support)
     - [PDK Supported Versions](#pdk-supported-versions)
     - [PDK New Module](#pdk-new-module)
