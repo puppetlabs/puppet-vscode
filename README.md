@@ -377,6 +377,18 @@ To use a custom install path for the PDK, set the `puppet.installDirectory` sett
 }
 ```
 
+The PDK has many versions of Puppet which can be used. Set the `puppet.editorService.puppet.version` setting to the version you would like to use, for example, if you wanted to use version 5.4.0, then set the configuration to:
+
+```json
+{
+  "puppet.editorService.puppet.version":"5.4.0"
+}
+```
+
+You can also change the version from the status bar in Visual Studio Code.  Click on the Puppet version text in the status bar and then select which Puppet version you would like to use. Note that this will require Visual Studio Code to be restarted to take effect.
+
+![changing_puppet_version](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/change-puppet-version.gif)
+
 ### Configure extension to use Puppet-Agent
 
 To ensure that the extension uses the Puppet-Agent, set the `puppet.installType` setting to the `puppet` value like so:
