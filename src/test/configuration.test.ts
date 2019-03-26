@@ -47,4 +47,38 @@ suite("Configuration Tests", () => {
     var config = CreateAggregrateConfiguration(settings);
     assert.equal(config.ruby.pdkBinDir, pdkBinDir);
   });
+
+  // Note that these integration tests REQUIRE the PDK to be installed locally
+  // as the fileystem is queried for path information
+  test("resolves latest PDK Instance with installtype eq pdk", () => {
+    const settings: ISettings = DefaultWorkspaceSettings();
+    settings.installType = PuppetInstallType.PDK;
+    var config = CreateAggregrateConfiguration(settings);
+    assert.notEqual(config.ruby.pdkGemDir, undefined);
+  });
+
+  test("resolves All Puppet Versions with installtype eq pdk", () => {
+    const settings: ISettings = DefaultWorkspaceSettings();
+    settings.installType = PuppetInstallType.PDK;
+    var config = CreateAggregrateConfiguration(settings);
+    assert.notEqual(config.ruby.pdkPuppetVersions, undefined);
+    assert.ok(config.ruby.pdkPuppetVersions.length > 0, "config.ruby.pdkPuppetVersions.length should have at least one element");
+  });
+
+  test("resolves a puppet version with installtype eq pdk", () => {
+    // Find all of the available puppet settings
+    let settings: ISettings = DefaultWorkspaceSettings();
+    settings.installType = PuppetInstallType.PDK;
+    let config = CreateAggregrateConfiguration(settings);
+    // Use the first version available
+    const puppetVersion = config.ruby.pdkPuppetVersions[0];
+    settings.editorService.puppet = {
+      version: puppetVersion
+    };
+    // Generate the settings again
+    config = CreateAggregrateConfiguration(settings);
+    // Assert that pdk specifc information is still available
+    // TODO: Should we test that version we ask is the version we get?
+    assert.notEqual(config.ruby.pdkGemDir, undefined);
+  });
 });

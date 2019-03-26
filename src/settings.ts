@@ -34,6 +34,7 @@ export interface IEditorServicePuppetSettings {
   environment?: string;
   modulePath?: string;
   vardir?: string;
+  version?: string;
 }
 
 export interface IEditorServiceSettings {

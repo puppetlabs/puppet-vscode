@@ -3,7 +3,7 @@ import { LanguageClient, ServerOptions, LanguageClientOptions, RevealOutputChann
 
 import { ConnectionStatus } from './interfaces';
 import { ConnectionType, ProtocolType } from './settings';
-import { PuppetStatusBar } from './PuppetStatusBar';
+import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { PuppetVersionDetails, PuppetVersionRequest, PuppetCommandStrings } from './messages';
 import { reporter } from './telemetry/telemetry';
@@ -31,7 +31,7 @@ export abstract class ConnectionHandler {
 
   protected constructor(
     protected context: vscode.ExtensionContext,
-    protected statusBar: PuppetStatusBar,
+    protected statusBar: IPuppetStatusBar,
     protected logger: OutputChannelLogger,
     protected config: IAggregateConfiguration,
   ) {

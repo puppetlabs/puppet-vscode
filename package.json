@@ -365,6 +365,11 @@
           "default": "",
           "description": "The Puppet cache directory. See https://puppet.com/docs/puppet/latest/dirs_vardir.html for more information"
         },
+        "puppet.editorService.puppet.version": {
+          "type": "string",
+          "default": "",
+          "description": "The version of Puppet to use. For example '5.4.0'. This is generally only applicable when using the PDK installation type. If Puppet Editor Services is unable to use this version, it will default to the latest available version of Puppet."
+        },
         "puppet.editorService.tcp.address": {
           "type": "string",
           "description": "The IP address or hostname of the remote Puppet Editor Service to connect to, for example 'computer.domain' or '192.168.0.1'. Only applicable when the editorService.protocol is set to tcp"

@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { ServerOptions, Executable } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
 import { ConnectionType, PuppetInstallType } from '../settings';
-import { PuppetStatusBar } from '../PuppetStatusBar';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
 import { OutputChannelLogger } from '../logging/outputchannel';
 import { CommandEnvironmentHelper } from '../helpers/commandHelper';
 import { IAggregateConfiguration } from '../configuration';
@@ -15,7 +15,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
 
   constructor(
     context: vscode.ExtensionContext,
-    statusBar: PuppetStatusBar,
+    statusBar: IPuppetStatusBar,
     logger: OutputChannelLogger,
     config: IAggregateConfiguration,
   ) {
