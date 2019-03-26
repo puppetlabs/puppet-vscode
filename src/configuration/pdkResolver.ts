@@ -147,7 +147,7 @@ class PDKRubyInstance implements IPDKRubyInstance {
     // the gem cache is just as easy and doesn't need to spawn a ruby process per
     // ruby version.
     fs.readdirSync(gemdir).forEach( (item) => {
-      let pathMatch = item.match(/^puppet-(\d+\.\d+\.\d+)-/);
+      let pathMatch = item.match(/^puppet-(\d+\.\d+\.\d+)(?:(-|$))/);
       if (pathMatch !== null) { this._puppetVersions.push(pathMatch[1]); }
     });
 
