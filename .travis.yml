@@ -2,6 +2,10 @@
 sudo: false
 language: cpp
 
+# Must be Trusty!
+# For some reason Xenial fails with exit code 1
+dist: trusty
+
 os:
   - linux
   - osx
@@ -24,6 +28,21 @@ before_install: true
 
 install:
   - "export BUILD_VERSION=0.7.0-travis.$TRAVIS_BUILD_NUMBER"
+  # Install PDK for Ubuntu 14.04 (Trusty)
+  - if [ $TRAVIS_OS_NAME == "linux" ]; then
+      wget https://apt.puppetlabs.com/puppet6-release-trusty.deb;
+      sudo dpkg -i puppet6-release-trusty.deb;
+      sudo apt-get update;
+      sudo apt-get install pdk;
+      pdk --version;
+    fi
+  # Install PDK for Mac (Disable homebrew auto-update)
+  # Uses an absolute path due to shell needing to be reloaded.
+  - if [ $TRAVIS_OS_NAME == "osx" ]; then
+      export HOMEBREW_NO_AUTO_UPDATE=1;
+      brew cask install puppetlabs/puppet/pdk;
+      /opt/puppetlabs/pdk/bin/pdk --version;
+    fi
   - if [ "$nodejs_version" != "" ]; then
       git clone --depth 1 https://github.com/creationix/nvm.git ./.nvm;
       source ./.nvm/nvm.sh;
@@ -41,6 +60,7 @@ install:
       npm install -g vsce --silent;
       npm install --silent;
       node node_modules/gulp/bin/gulp.js bump --version $BUILD_VERSION;
+      node node_modules/gulp/bin/gulp.js initial;
     fi
 
 script:

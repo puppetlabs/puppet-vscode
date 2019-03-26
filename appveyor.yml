@@ -36,7 +36,12 @@ install:
 
        Write-Host "Set the package.json version..."
        & node node_modules\gulp\bin\gulp.js bump --specific $ENV:APPVEYOR_BUILD_VERSION
+
+       Write-Host "Setting up initial configuration..."
+       & node node_modules\gulp\bin\gulp.js initial
      }
+- cmd: choco install pdk
+- ps: pdk --version
 
 build_script:
 - cmd: npm test --silent
