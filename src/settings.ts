@@ -62,12 +62,18 @@ export interface IPDKSettings {
   // Future Use
 }
 
+export interface INotificationSettings {
+  nodeGraph?: string;
+  puppetResource?: string;
+}
+
 export interface ISettings {
   editorService?: IEditorServiceSettings;
   format?: IFormatSettings;
   installDirectory?: string;
   installType?: PuppetInstallType;
   lint?: ILintSettings;
+  notification?: INotificationSettings;
   pdk?: IPDKSettings;
 }
 
@@ -161,6 +167,10 @@ export function DefaultWorkspaceSettings(): ISettings {
     lint: {
       enable: true,
     },
+    notification: {
+      nodeGraph: "messagebox",
+      puppetResource: "messagebox"
+    },
     pdk: {
     }
   };
@@ -177,6 +187,7 @@ export function SettingsFromWorkspace(): ISettings {
     installDirectory: workspaceConfig.get<string>("installDirectory",  defaults.installDirectory),
     installType: workspaceConfig.get<PuppetInstallType>("installType",  defaults.installType),
     lint: workspaceConfig.get<ILintSettings>("lint",  defaults.lint),
+    notification: workspaceConfig.get<INotificationSettings>("notification", defaults.notification),
     pdk: workspaceConfig.get<IPDKSettings>("pdk", defaults.pdk)
   };
 
