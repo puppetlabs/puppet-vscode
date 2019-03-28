@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## Unreleased
 
+## [0.17.0] - 2019-02-14
+
 ### Added
 
 - ([GH-476](https://github.com/lingua-pupuli/puppet-vscode/issues/476)) Add Bolt commands
@@ -319,4 +321,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
+[0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0..0.17.0
 [0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1..0.16.0
