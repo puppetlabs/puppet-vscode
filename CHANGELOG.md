@@ -4,7 +4,21 @@ All notable changes to the "vscode-puppet" extension will be documented in this 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## Unreleased
+## [Unreleased]
+
+## [0.18.0] - 2019-03-29
+
+### Added
+
+- ([GH-494](https://github.com/lingua-pupuli/puppet-vscode/issues/494)) Add Progress Bar for long lived operations
+- ([GH-489](https://github.com/lingua-pupuli/puppet-vscode/issues/489)) Allow users to change puppet version used by editor services in PDK
+
+### Changed
+
+- ([Commit](https://github.com/lingua-pupuli/puppet-vscode/commit/8b2815ad06f7b3f82574c44684387007c5213f5d)) Update puppet-editor-syntax to [1.3.1](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.1)
+- ([GH-489](https://github.com/lingua-pupuli/puppet-vscode/issues/489)) Update puppet-editor-services to [0.19.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0190---2019-03-24)
+
+## [0.17.0] - 2019-02-14
 
 ### Added
 
@@ -319,4 +333,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1..0.16.0
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...master
+[0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
+[0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0...0.17.0
+[0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1...0.16.0
