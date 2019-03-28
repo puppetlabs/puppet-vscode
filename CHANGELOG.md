@@ -4,7 +4,7 @@ All notable changes to the "vscode-puppet" extension will be documented in this 
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## Unreleased
+## [Unreleased]
 
 ## [0.18.0] - 2019-03-29
 
@@ -333,6 +333,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0..0.18.0
-[0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0..0.17.0
-[0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1..0.16.0
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...master
+[0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
+[0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0...0.17.0
+[0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1...0.16.0
