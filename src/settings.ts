@@ -163,7 +163,7 @@ export function DefaultWorkspaceSettings(): ISettings {
       enable: true
     },
     installDirectory: undefined,
-    installType: PuppetInstallType.PUPPET,
+    installType: PuppetInstallType.PDK,
     lint: {
       enable: true,
     },
