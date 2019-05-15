@@ -226,6 +226,7 @@
       "editor/title": [
         {
           "command": "extension.pdkNewModule",
+          "when": "config.puppet.titleBar.pdkNewModule.enable",
           "group": "navigation@100"
         },
         {
@@ -422,6 +423,11 @@
             "statusbar",
             "none"
           ]
+        },
+        "puppet.titleBar.pdkNewModule.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the PDK New Module icon in the Editor Title Bar"
         },
         "puppet.editorService.modulePath": {
           "description": "**DEPRECATED** Please use puppet.editorService.puppet.modulePath instead"
