@@ -308,6 +308,11 @@
       "type": "object",
       "title": "Puppet",
       "properties": {
+        "puppet.editorService.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable advanced Puppet Language Features"
+        },
         "puppet.editorService.debugFilePath": {
           "type": "string",
           "default": "",
