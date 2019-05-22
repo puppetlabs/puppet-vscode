@@ -81,6 +81,8 @@ class PDKRubyInstances implements IPDKRubyInstances {
     if (!fs.existsSync(this.pdkDirectory)) { return this.rubyInstances; }
 
     var rubyDir = path.join(this.pdkDirectory, 'private', 'ruby');
+    if (!fs.existsSync(rubyDir)) { return this.rubyInstances; }
+
     fs.readdirSync(rubyDir).forEach( (item) => {
       this.rubyInstances.push(new PDKRubyInstance(
         this.pdkDirectory,

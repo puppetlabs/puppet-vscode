@@ -16,10 +16,9 @@ import { ConnectionHandler } from './handler';
 import { DockerConnectionHandler } from './handlers/docker';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
-import { ConnectionType, ProtocolType } from './settings';
+import { ConnectionType, ProtocolType, PuppetInstallType } from './settings';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-//import { PuppetStatusBar } from './PuppetStatusBar';
 import { legacySettings, SettingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
 
@@ -30,7 +29,6 @@ const debugType = 'Puppet';  // don't change this
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
 let logger: OutputChannelLogger;
-//let statusBar: PuppetStatusBar;
 let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
@@ -43,14 +41,19 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(new Reporter(extContext));
 
   const settings = SettingsFromWorkspace();
-  reporter.sendTelemetryEvent('config', {
-    'installType'   : settings.installType,
-    'protocol'      : settings.editorService.protocol,
-    'imageName'     : settings.editorService.docker.imageName
-  });
+  const previousInstallType = settings.installType;
   configSettings = CreateAggregrateConfiguration(settings);
+  logger = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
+  if (configSettings.workspace.installType !== previousInstallType) {
+    logger.debug(`Installation type has changed from ${previousInstallType} to ${configSettings.workspace.installType}`);
+  }
 
-  logger          = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
+  reporter.sendTelemetryEvent('config', {
+    'installType'   : configSettings.workspace.installType,
+    'protocol'      : configSettings.workspace.editorService.protocol,
+    'imageName'     : configSettings.workspace.editorService.docker.imageName
+  });
+
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
 
   extensionFeatures = [
@@ -133,12 +136,25 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
 
   // we want to check directory if STDIO or Local TCP
   if (!fs.existsSync(config.ruby.puppetBaseDir)) {
-    showErrorMessage(
-      `Could not find a valid Puppet installation at '${
+    let message = '';
+    // Need to use SettingsFromWorkspace() here because the AggregateConfiguration
+    // changes the installType from Auto, to its calculated value
+    if (SettingsFromWorkspace().installType === PuppetInstallType.AUTO) {
+      let m = [
+        'The extension failed to find a Puppet installation automatically in the default locations for PDK and for Puppet Agent.',
+        'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.',
+      ];
+      message = m.join(' ');
+    }else{
+      message = `Could not find a valid Puppet installation at '${
         config.ruby.puppetBaseDir
-      }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
-      'Troubleshooting Information',
-      'https://github.com/lingua-pupuli/puppet-vscode#experience-a-problem',
+      }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`;
+    }
+
+    showErrorMessage(
+      message,
+      'Configuration Information',
+      'https://github.com/lingua-pupuli/puppet-vscode#configuration',
       logger
     );
     return false;
