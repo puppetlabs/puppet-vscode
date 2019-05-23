@@ -21,10 +21,10 @@ suite("Configuration Tests", () => {
       break;
   }
 
-  test("resolves puppetBaseDir as puppet with default installtype", () => {
+  test("resolves pdkPuppetBaseDir as puppet with default installtype", () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     var config = CreateAggregrateConfiguration(settings);
-    assert.equal(config.ruby.puppetBaseDir, puppetBaseDir);
+    assert.equal(config.ruby.puppetBaseDir, pdkPuppetBaseDir);
   });
 
   test("resolves puppetBaseDir as puppet with installtype eq puppet", () => {
