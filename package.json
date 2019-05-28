@@ -23,8 +23,8 @@
   "qna": "https://stackoverflow.com/questions/tagged/visual-studio-code+puppet",
   "badges": [
     {
-      "url": "https://travis-ci.org/lingua-pupuli/puppet-vscode.svg?branch=master",
-      "href": "https://travis-ci.org/lingua-pupuli/puppet-vscode",
+      "url": "https://travis-ci.com/lingua-pupuli/puppet-vscode.svg?branch=master",
+      "href": "https://travis-ci.com/lingua-pupuli/puppet-vscode",
       "description": "Continuous integration (Travis)"
     },
     {
