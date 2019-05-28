@@ -1,7 +1,7 @@
 {
   "recommendations": [
     "eamodio.gitlens",
-    "eg2.tslint",
+    "ms-vscode.vscode-typescript-tslint-plugin",
     "wwm.better-align",
     "rebornix.Ruby"
   ]
