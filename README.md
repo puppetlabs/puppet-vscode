@@ -75,6 +75,10 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
+## Supported Puppet Versions
+
+The Puppet Extension for VSCode works with Puppet 4 or higher. Some features will be slower or not work on Puppet 4, and are noted in the section for that feature. See [open source Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet Enterprise](https://puppet.com/docs/pe/2017.3/getting_support_for_pe.html#supported-puppet-enterprise-versions) lifecycle pages for version support details. 
+
 ## Requirements
 
 You will need to have the [Puppet Agent](https://puppet.com/docs/puppet/4.10/about_agent.html)  or [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) installed in order to fully use this extension.
@@ -159,13 +163,15 @@ When the `breadcrumbs.enabled` setting is set to true, both the file path and th
 
 Opening the `Command Palette` and typing the `@` symbol initiates the `Go to Symbol` view which allows you to navigate around inside a Puppet manifest more quickly.
 
-> Note: Puppet 4 is not supported for symbols
+> Note: Puppet 4 is not supported
 
 ![go_to_symbol](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/go_to_symbol.gif)
 
 ### Open Symbol by Name
 
 Pressing `Ctrl+T` (or ⌘T on OSX) will list all [Puppet Custom Types](https://puppet.com/docs/puppet/latest/custom_types.html), [Functions](https://puppet.com/docs/puppet/latest/lang_write_functions_in_puppet.html), [Classes](https://puppet.com/docs/puppet/latest/lang_classes.html) and [Defined Types](https://puppet.com/docs/puppet/latest/lang_defined_types.html) in the workspace. You can then [navigate to the symbol](https://code.visualstudio.com/docs/editor/editingevolved#_open-symbol-by-name) by pressing `Enter`.
+
+> Note: Puppet 4 has limited support
 
 ### Code Snippets
 
