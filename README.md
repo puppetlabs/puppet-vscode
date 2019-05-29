@@ -3,7 +3,7 @@
 [![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
 [![Appveyor](https://ci.appveyor.com/api/projects/status/8ke8fhdt9a7j688m/branch/master?svg=true)](https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode/branch/master)
-[![Travis Ci](https://travis-ci.org/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.org/lingua-pupuli/puppet-vscode)
+[![Travis Ci](https://travis-ci.com/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.com/lingua-pupuli/puppet-vscode)
 
 ## Table of Contents
 
