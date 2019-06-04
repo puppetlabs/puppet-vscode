@@ -331,21 +331,22 @@ You can also install the extension without access to the internet by following t
 
 ## Configuration
 
-The Puppet VSCode extension can use the PDK or the Puppet Agent to provide advanced features, which can be set using two configuration options: `puppet.installType` and `puppet.installDirectory`.
+### Puppet Source Configuration
 
-- By default the `puppet.installType` is set to `agent`, and allows you to choose to use `pdk` or `agent`.
+The Puppet VSCode extension can use either the PDK or the Puppet Agent as a source to provide advanced features. Which source it uses, and what location to find them in, can be set using two configuration options: `puppet.installType` and `puppet.installDirectory`.
+
+- The `puppet.installType` setting allows you to choose to use `auto`, `pdk` or `agent`, and is set to `auto` by default.
 - The `puppet.installDirectory` allows you to choose a custom path to either a PDK install or a Puppet-Agent install, and must match the correct setting in `puppet.installType`.
 
-If no settings are chosen, the extension will attempt to use the Puppet Agent, to force it to use the PDK you have to select `pdk` for `puppet.installType`.
+> The default values for these settings will require no configuration by the user in order to use the extension if the PDK or Puppet Agent are installed in the default locations.
 
+#### Automatic Configuration
 
-> Note: The `puppet.installDirectory` setting name will be changed in the `0.12.0` release to `puppet.installDirectory`
+By default the extension attempts to automatically find a valid installation of the PDK on your system. If a PDK installation is not found, it attempts to find a Puppet Agent installation. The locations it looks for are the default install locations for each product. Exact default values for these locations can be found in the following sections for manually configuring the extension.
 
-> Note: Only PDK v1.5.0 and above are supported.
+#### Configure extension to use PDK
 
-### Configure extension to use PDK
-
-To ensure that the extension uses the PDK, set the `puppet.installType` setting to the `pdk` value like so:
+To ensure that the extension uses the `PDK`, set the `puppet.installType` setting to the `pdk` value like so:
 
 ```json
 {
@@ -379,7 +380,7 @@ Linux:
 }
 ```
 
-To use a custom install path for the PDK, set the `puppet.installDirectory` setting to the path you installed the PDK to:
+To use a custom install path for the `PDK`, set the `puppet.installDirectory` setting to the path you installed the `PDK` to:
 
 ```json
 {
@@ -387,7 +388,9 @@ To use a custom install path for the PDK, set the `puppet.installDirectory` sett
 }
 ```
 
-The PDK has many versions of Puppet which can be used. Set the `puppet.editorService.puppet.version` setting to the version you would like to use, for example, if you wanted to use version 5.4.0, then set the configuration to:
+#### Configure Puppet Version in PDK 
+
+The `PDK` has many versions of Puppet which can be used. Set the `puppet.editorService.puppet.version` setting to the version you would like to use, for example, if you wanted to use version 5.4.0, then set the configuration to:
 
 ```json
 {
@@ -399,7 +402,7 @@ You can also change the version from the status bar in Visual Studio Code.  Clic
 
 ![changing_puppet_version](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/change-puppet-version.gif)
 
-### Configure extension to use Puppet-Agent
+#### Configure extension to use Puppet-Agent
 
 To ensure that the extension uses the Puppet-Agent, set the `puppet.installType` setting to the `puppet` value like so:
 

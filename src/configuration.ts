@@ -63,6 +63,20 @@ export class AggregateConfiguration implements IAggregateConfiguration {
   constructor(settings:ISettings) {
     this.workspace = settings;
 
+    // If the user has set the installType to 'auto' then we need
+    // to resolve which install type we will actually use
+    if (settings.installType === PuppetInstallType.AUTO) {
+      if (fs.existsSync(this.getPdkBasePath())) {
+        settings.installType = PuppetInstallType.PDK;
+      } else if(fs.existsSync(this.getAgentBasePath())) {
+        settings.installType = PuppetInstallType.PUPPET;
+      } else {
+        // We can't automatically figure it out so, assume PDK
+        // TODO: Should we log this?
+        settings.installType = PuppetInstallType.PDK;
+      }
+    }
+
     const puppetBaseDir = this.calculatePuppetBaseDir(settings);
     const puppetDir = this.safeJoin(puppetBaseDir, 'puppet');
     const facterDir = this.safeJoin(puppetBaseDir, 'facter');
@@ -180,32 +194,36 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       return settings.installDirectory;
     }
 
-    let programFiles = PathResolver.getprogramFiles();
     switch (settings.installType) {
       case PuppetInstallType.PDK:
-        switch (process.platform) {
-          case 'win32':
-            return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit');
-          default:
-            return path.join(programFiles, 'puppetlabs', 'pdk');
-        }
+        return this.getPdkBasePath();
       case PuppetInstallType.PUPPET:
-        switch (process.platform) {
-          case 'win32':
-            // On Windows we have a subfolder called 'Puppet' that has 
-            // every product underneath 
-            return path.join(programFiles, 'Puppet Labs', 'Puppet');
-          default:
-            // On *nix we don't have a sub folder called 'Puppet' 
-            return path.join(programFiles, 'puppetlabs');
-        }
+        return this.getAgentBasePath();
       default:
-        switch (process.platform) {
-          case 'win32':
-            return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit');
-          default:
-            return path.join(programFiles, 'puppetlabs', 'pdk');
-        }
+        return this.getPdkBasePath();
+    }
+  }
+
+  private getAgentBasePath() {
+    let programFiles = PathResolver.getprogramFiles();
+    switch (process.platform) {
+      case 'win32':
+        // On Windows we have a subfolder called 'Puppet' that has 
+        // every product underneath 
+        return path.join(programFiles, 'Puppet Labs', 'Puppet');
+      default:
+        // On *nix we don't have a sub folder called 'Puppet' 
+        return path.join(programFiles, 'puppetlabs');
+    }
+  }
+
+  private getPdkBasePath() {
+    let programFiles = PathResolver.getprogramFiles();
+    switch (process.platform) {
+      case 'win32':
+        return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit');
+      default:
+        return path.join(programFiles, 'puppetlabs', 'pdk');
     }
   }
 

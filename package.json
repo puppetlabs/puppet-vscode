@@ -402,9 +402,10 @@
         },
         "puppet.installType": {
           "type": "string",
-          "default": "pdk",
-          "description": "The type of Puppet installation. Either the Puppet Development Kit (pdk) or the Puppet Agent (agent)",
+          "default": "auto",
+          "description": "The type of Puppet installation. Either the Puppet Development Kit (pdk) or the Puppet Agent (agent). Choose 'auto' to have the extension detect which to use automatically based on default install locations",
           "enum": [
+            "auto",
             "pdk",
             "agent"
           ]

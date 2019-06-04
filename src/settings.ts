@@ -5,6 +5,7 @@ import vscode = require("vscode");
 export enum PuppetInstallType{
   PDK    = "pdk",
   PUPPET = "agent",
+  AUTO   = "auto",
 }
 
 export enum ProtocolType {
@@ -163,7 +164,7 @@ export function DefaultWorkspaceSettings(): ISettings {
       enable: true
     },
     installDirectory: undefined,
-    installType: PuppetInstallType.PDK,
+    installType: PuppetInstallType.AUTO,
     lint: {
       enable: true,
     },
