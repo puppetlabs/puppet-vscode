@@ -6,6 +6,31 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.18.1] - 2019-06-07
+
+### Added
+
+- ([GH-505](https://github.com/lingua-pupuli/puppet-vscode/issues/505)) Add hide `PDK New Module` titlebar button
+- ([GH-507](https://github.com/lingua-pupuli/puppet-vscode/issues/507))([GH-508](https://github.com/lingua-pupuli/puppet-vscode/issues/508)) Document Puppet Version Support
+
+### Changed
+
+- ([GH-502](https://github.com/lingua-pupuli/puppet-vscode/issues/502)) Switch default PuppetInstallType to PDK rather than the agent
+- ([GH-502](https://github.com/lingua-pupuli/puppet-vscode/issues/502)) Automatically determine PuppetInstallType
+- ([GH-499](https://github.com/lingua-pupuli/puppet-vscode/issues/499)) Add setting to allow disabling editor services
+
+### Fixed
+
+- ([GH-436](https://github.com/lingua-pupuli/puppet-vscode/issues/436)) Fix extension "crash" after editing line of code
+- ([GH-132](https://github.com/lingua-pupuli/puppet-editor-services/issues/132)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Suppress $stdout usage for STDIO transport
+- ([GH-118](https://github.com/lingua-pupuli/puppet-editor-services/issues/118)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Fail gracefully when critical gems cannot load
+- ([GH-39](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/39)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Node definitions can only be strings
+- ([GH-38](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/38)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Fix highlighting of classes and functions
+- ([GH-37](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/37)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Tokenise variables within arrays
+- ([GH-32](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/32)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Highlight resource names and titles correctly
+- ([GH-30](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/30)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Highlight regex capture variables
+
+
 ## [0.18.0] - 2019-03-29
 
 ### Added
