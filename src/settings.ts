@@ -53,6 +53,10 @@ export interface IEditorServiceSettings {
 export interface IFormatSettings {
   enable?: boolean;
 }
+export interface IHoverSettings {
+  showMetadataInfo?: boolean;
+  // showPuppetfileInfo?: boolean; Future use
+}
 
 export interface ILintSettings {
   // Future Use
@@ -71,6 +75,7 @@ export interface INotificationSettings {
 export interface ISettings {
   editorService?: IEditorServiceSettings;
   format?: IFormatSettings;
+  hover?: IHoverSettings;
   installDirectory?: string;
   installType?: PuppetInstallType;
   lint?: ILintSettings;
@@ -163,6 +168,9 @@ export function DefaultWorkspaceSettings(): ISettings {
     format: {
       enable: true
     },
+    hover: {
+      showMetadataInfo: true,
+    },
     installDirectory: undefined,
     installType: PuppetInstallType.AUTO,
     lint: {
@@ -186,6 +194,7 @@ export function SettingsFromWorkspace(): ISettings {
   let settings = {
     editorService: workspaceConfig.get<IEditorServiceSettings>("editorService", defaults.editorService),
     format: workspaceConfig.get<IFormatSettings>("format",  defaults.format),
+    hover: workspaceConfig.get<IHoverSettings>("hover",  defaults.hover),
     installDirectory: workspaceConfig.get<string>("installDirectory",  defaults.installDirectory),
     installType: workspaceConfig.get<PuppetInstallType>("installType",  defaults.installType),
     lint: workspaceConfig.get<ILintSettings>("lint",  defaults.lint),
