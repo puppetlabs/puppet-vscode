@@ -1,6 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
 import { PDKCommandStrings } from '../messages';
@@ -58,10 +59,14 @@ export class PDKFeature implements IFeature {
       matchOnDescription: true,
       matchOnDetail: true
     };
-    let dirOpts: vscode.QuickPickOptions = {
-      placeHolder: 'Enter a path for the new Puppet module',
-      matchOnDescription: true,
-      matchOnDetail: true
+
+    const options: vscode.OpenDialogOptions = {
+      canSelectMany: false,
+      openLabel: 'Select',
+      filters: {
+      },
+      canSelectFolders: true,
+      canSelectFiles: false,
     };
 
     vscode.window.showInputBox(nameOpts).then(moduleName => {
@@ -69,12 +74,18 @@ export class PDKFeature implements IFeature {
         vscode.window.showWarningMessage('No module name specifed. Exiting.');
         return;
       }
-      vscode.window.showInputBox(dirOpts).then(dir => {
-        this.terminal.sendText(`pdk new module --skip-interview ${moduleName} ${dir}`);
-        this.terminal.sendText(`code ${dir}`);
-        this.terminal.show();
-        if (reporter) {
-          reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
+
+      vscode.window.showOpenDialog(options).then(fileUri => {
+        if (fileUri && fileUri[0]) {
+
+          let dir = path.join(fileUri[0].fsPath, moduleName);
+
+          this.terminal.sendText(`pdk new module --skip-interview ${moduleName} ${dir}`);
+          this.terminal.sendText(`code ${dir}`);
+          this.terminal.show();
+          if (reporter) {
+            reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
+          }
         }
       });
     });

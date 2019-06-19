@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Changed
+
+- (maint) Change PDK New Module command to use a native file picker instead of a user provided path
+
 ## [0.18.1] - 2019-06-07
 
 ### Added
