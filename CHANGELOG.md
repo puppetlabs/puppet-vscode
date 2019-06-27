@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Changed
+
+- ([GH-530](https://github.com/lingua-pupuli/puppet-vscode/issues/530)) Enable extension with Puppet workspace files
+
 ## [0.18.1] - 2019-06-07
 
 ### Added

@@ -53,6 +53,9 @@
   "activationEvents": [
     "onLanguage:puppet",
     "onLanguage:puppetfile",
+    "workspaceContains:**/*.pp",
+    "workspaceContains:**/*.epp",
+    "workspaceContains:**/Puppetfile",
     "onCommand:extension.puppetShowConnectionLogs",
     "onCommand:extension.puppetShowConnectionMenu",
     "onCommand:extension.puppetLint",
