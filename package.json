@@ -546,7 +546,7 @@
     "gulp-bump": "^3.1.3",
     "gulp-decompress": "^2.0.2",
     "gulp-downloader": "^1.0.4",
-    "lodash": ">=4.17.5",
+    "lodash": ">=4.17.13",
     "tslint": "^5.17.0",
     "typescript": "^3.5.2",
     "vsce": "^1.63.0",
