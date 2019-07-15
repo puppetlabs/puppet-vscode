@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { CreateAggregrateConfiguration, IAggregateConfiguration } from './configuration';
 import { IFeature } from './feature';
+import { AlignHashRocketsFeature } from './feature/AlignHashRocketsFeature';
 import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
@@ -93,6 +94,7 @@ export function activate(context: vscode.ExtensionContext) {
   extensionFeatures.push(new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
   extensionFeatures.push(new DebuggingFeature(debugType, configSettings, extContext, logger));
+  extensionFeatures.push(new AlignHashRocketsFeature(puppetLangID, configSettings, extContext, logger));
 }
 
 export function deactivate() {

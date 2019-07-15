@@ -446,6 +446,22 @@ To use a custom install path for the Puppet-Agent, set the `puppet.installDirect
 }
 ```
 
+#### Turning on experimental features
+
+To assist in trying out new features the Puppet extension can turn on feature flags, which by default are turned off. Features are enabled by configuring the `puppet.editorService.featureFlags` setting. The available feature flags are:
+
+##### `hashrocket`
+
+Turns on the [Format As You Type](https://code.visualstudio.com/api/language-extensions/programmatic-language-features#incrementally-format-code-as-the-user-types) feature and auto aligns hash rockets after you type ` =>`
+
+Note - This feature requires `"editor.formatOnType": true` to be enabled
+
+``` json
+{
+  "puppet.editorService.featureFlags": ["hashrocket"]
+}
+```
+
 ## Experience a Problem?
 
 ### Puppet Agent Install
