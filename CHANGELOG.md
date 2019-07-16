@@ -6,6 +6,20 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.19.0] - 2019-07-19
+
+### Changed
+
+- ([GH-530](https://github.com/lingua-pupuli/puppet-vscode/issues/530)) Enable extension with Puppet workspace files
+- ([GH-141](https://github.com/lingua-pupuli/puppet-editor-services/issues/141)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Load all Puppet 4 API Features
+- ([GH-137](https://github.com/lingua-pupuli/puppet-editor-services/issues/137)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Load Puppet 4 Custom Types, Defined Types and Classes
+- ([GH-121](https://github.com/lingua-pupuli/puppet-editor-services/issues/121)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Load Puppet 4 Functions and Puppet 3 Functions
+
+### Fixed
+
+- ([GH-128](https://github.com/lingua-pupuli/puppet-editor-services/issues/128)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/commit/5f1751086abc3c12016b47d1fdba974afda60671) Detect Puppet Plan files correctly
+- ([GH-147](https://github.com/lingua-pupuli/puppet-editor-services/issues/147)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/commit/b0405552e892152b9cb56198c9c090960044459e) Gracefully fail on LoadError when compiling manifests
+
 ## [0.18.1] - 2019-06-07
 
 ### Added
