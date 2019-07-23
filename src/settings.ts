@@ -42,7 +42,7 @@ export interface IEditorServiceSettings {
   debugFilePath?: string;
   docker?: IEditorServiceDockerSettings;
   enable?: boolean;
-  featureflags?: string[];
+  featureFlags?: string[];
   loglevel?: string;
   protocol?: ProtocolType;
   puppet?: IEditorServicePuppetSettings;
@@ -155,7 +155,7 @@ export function DefaultWorkspaceSettings(): ISettings {
   return {
     editorService: {
       enable: true,
-      featureflags: [],
+      featureFlags: [],
       loglevel: "normal",
       protocol: ProtocolType.STDIO,
       timeout: 10
@@ -201,7 +201,7 @@ export function SettingsFromWorkspace(): ISettings {
 
    // Ensure that object types needed for legacy settings exists
   if (settings.editorService === undefined) { settings.editorService = {}; }
-  if (settings.editorService.featureflags === undefined) { settings.editorService.featureflags = []; }
+  if (settings.editorService.featureFlags === undefined) { settings.editorService.featureFlags = []; }
   if (settings.editorService.puppet === undefined) { settings.editorService.puppet = {}; }
   if (settings.editorService.tcp === undefined) { settings.editorService.tcp = {}; }
 
@@ -233,7 +233,7 @@ export function SettingsFromWorkspace(): ISettings {
         break;
 
       case "puppet.languageserver.filecache.enable": // --> puppet.editorService.featureflags['filecache']
-        if (value === true) { settings.editorService.featureflags.push("filecache"); }
+        if (value === true) { settings.editorService.featureFlags.push("filecache"); }
         break;
 
       case "puppet.languageserver.port": // --> puppet.editorService.tcp.port
