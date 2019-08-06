@@ -476,10 +476,11 @@ If you're having an issue with crashing or other erratic behavior, add the follo
 line to your User Settings in Visual Studio Code:
 
 ```json
+    "puppet.editorService.loglevel": "debug",
     "puppet.editorService.debugFilePath": "C:\\Some\\file\\path.txt"
 ```
 
-Restart Visual Studio Code and try to reproduce the problem, then examine the log. If the issue persists please open an issue.
+Restart Visual Studio Code and try to reproduce the problem, then examine the log. If the issue persists please open an issue and add both the content of the `Output` pane as well as the content in the log file. Please inspect the log and be sure to redact any information you would not want posted publicly.
 
 ## Maintainers
 
