@@ -16,11 +16,13 @@ import { ConnectionHandler } from './handler';
 import { DockerConnectionHandler } from './handlers/docker';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
-import { ConnectionType, ProtocolType, PuppetInstallType } from './settings';
+import { ConnectionType, ProtocolType, PuppetInstallType, ISettings } from './settings';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { legacySettings, SettingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
+
+const axios = require('axios');
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
@@ -36,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
   extContext = context;
 
   notifyOnNewExtensionVersion(extContext);
+
   checkForLegacySettings();
 
   context.subscriptions.push(new Reporter(extContext));
@@ -75,6 +78,12 @@ export function activate(context: vscode.ExtensionContext) {
     // If we return true, we can continue
     // This can be revisited to enable disabling language server portion
     return;
+  }
+  
+  // this happens after checkInstallDirectory so that we don't check pdk version
+  // if it's not installed
+  if(settings.pdk.checkVersion){
+    notifyIfNewPDKVersion(extContext, configSettings);
   }
 
   switch (configSettings.workspace.editorService.protocol) {
@@ -231,4 +240,58 @@ async function notifyEditorServiceDisabled(context: vscode.ExtensionContext) {
   if (result.title === dontShowAgainNotice) {
     context.globalState.update(suppressEditorServicesDisabled, true);
   }
+}
+
+async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:IAggregateConfiguration) {
+  const suppressPDKUpdateCheck = 'suppressPDKUpdateCheck';
+  const dontCheckAgainNotice = "Don't check again";
+  const viewPDKDownloadPage = "More info";
+
+  if (context.globalState.get(suppressPDKUpdateCheck, false)) {
+    return;
+  }
+
+  let version = '';
+  if(settings.ruby.pdkVersion){
+    version = settings.ruby.pdkVersion;
+  }else{
+    // should we throw a warning here? technically this is only reached *if* a
+    // PDK install is found, so the only way this is null is if the PDK_VERSION
+    // file was removed.
+    return;
+  }
+
+  axios.get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST')
+    .then(response => {
+      return response.data;
+    })
+    .then(latest_version => {
+      if(version !== latest_version){
+        return vscode.window.showWarningMessage(
+          `The installed PDK version is ${version}, the newest version is ${latest_version}. To find out how to update to the latest version click the more info button`,
+          { modal: false },
+          { title: dontCheckAgainNotice },
+          { title: viewPDKDownloadPage }
+        );
+      }
+    })
+    .then(result=>{
+      if (result === undefined) {
+        return;
+      }
+    
+      if (result.title === dontCheckAgainNotice) {
+        context.globalState.update(suppressPDKUpdateCheck, true);
+      }
+
+      if (result.title === viewPDKDownloadPage) {
+        vscode.commands.executeCommand(
+          'vscode.open',
+          vscode.Uri.parse('https://puppet.com/download-puppet-development-kit')
+        );
+      }
+    })
+    .catch(error => {
+      logger.error(error);
+    });
 }

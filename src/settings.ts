@@ -60,7 +60,7 @@ export interface ILintSettings {
 }
 
 export interface IPDKSettings {
-  // Future Use
+  checkVersion?: boolean;
 }
 
 export interface INotificationSettings {
@@ -173,6 +173,7 @@ export function DefaultWorkspaceSettings(): ISettings {
       puppetResource: "messagebox"
     },
     pdk: {
+      checkVersion: true,
     }
   };
 }

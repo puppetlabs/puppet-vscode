@@ -35,6 +35,7 @@ interface IRubyConfiguration {
   readonly pdkRubyBinDir:string;
   readonly pdkGemVerDir:string;
   readonly pdkPuppetVersions: string[];
+  readonly pdkVersion:string;
 }
 
 /** The IConnectionConfiguration interface describes the connection used to
@@ -117,6 +118,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       pdkRubyBinDir: pdkInstance.rubyBinDir,
       pdkGemVerDir: pdkInstance.gemVerDir,
       pdkPuppetVersions: puppetVersions,
+      pdkVersion: this.getPdkVersionFromFile(puppetBaseDir),
     };
 
     this.connection = {
@@ -224,6 +226,16 @@ export class AggregateConfiguration implements IAggregateConfiguration {
         return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit');
       default:
         return path.join(programFiles, 'puppetlabs', 'pdk');
+    }
+  }
+
+  private getPdkVersionFromFile(puppetBaseDir:string){
+    let basePath = path.join(puppetBaseDir, 'PDK_VERSION');
+    if(fs.existsSync(basePath)){
+      let contents = fs.readFileSync(basePath, 'utf8').toString();
+      return contents.trim();
+    }else{
+      return '';
     }
   }
 
