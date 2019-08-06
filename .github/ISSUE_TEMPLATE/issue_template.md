@@ -17,8 +17,9 @@ Feel free to delete the comment blocks
 OS Version:
 VSCode Version:
 Puppet Extension Version:
-Puppet Agent Version:
-PDK Version (if applicable):
+PDK Version:
+
+<!-- If you are using the Puppet Agent instead of the PDK as a source for this extension, note that here -->
 
 ### What You Are Seeing?
 
@@ -26,8 +27,12 @@ PDK Version (if applicable):
 
 ### How Did You Get This To Happen? (Steps to Reproduce)
 
+<!-- Be as specific as possible, and provide example code if you can -->
+
 ### Output Log
 
 <!-- 
+Please remember to redact any output you put here, or request to use a private method for senistive log files
+
 For information how to capture verbose logs, look [here](https://github.com/lingua-pupuli/puppet-vscode#2-capture-verbose-logs-and-send-them-to-us)
 -->
