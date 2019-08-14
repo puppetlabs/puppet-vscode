@@ -148,8 +148,8 @@
         "category": "Puppet",
         "title": "PDK New Module",
         "icon": {
-          "dark": "images/puppet_logo_sm.svg",
-          "light": "images/puppet_logo_sm.svg"
+          "dark": "images/puppet-dag-dark.svg",
+          "light": "images/puppet-dag-light.svg"
         }
       },
       {
