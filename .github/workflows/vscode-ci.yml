@@ -1,0 +1,68 @@
+name: vscode-ci
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [10]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@master
+      - name: 'setup node: ${{ matrix.node-version }} platform: ${{ matrix.os }}'
+        uses: actions/setup-node@v1
+        with:
+          fetch-depth: 1
+          version: ${{ matrix.node-version }}
+
+      - name: setup linux
+        run: |
+          /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & echo ">>> Started xvfb";
+          wget https://apt.puppetlabs.com/puppet6-release-trusty.deb;
+          sudo dpkg -i puppet6-release-trusty.deb;
+          sudo apt-get update;
+          sudo apt-get install pdk;
+          pdk --version;
+        if: runner.os == 'Linux'
+
+      - name: setup macos
+        run: |
+          export HOMEBREW_NO_AUTO_UPDATE=1;
+          brew cask install puppetlabs/puppet/pdk;
+          /opt/puppetlabs/pdk/bin/pdk --version;
+        if: runner.os == 'macOS'
+
+      - name: setup windows
+        run: |
+          choco install pdk
+        if: runner.os == 'Windows'
+
+      - name: npm install, build, and test
+        env:
+          BUILD_VERSION: "0.99.${{ github.event.number }}"
+          VSCODE_BUILD_VERBOSE: true
+          DISPLAY: ':99.0'
+        run: |
+          npm install -g vsce --silent;
+          npm install --silent;
+          node node_modules/gulp/bin/gulp.js bump --version $BUILD_VERSION;
+          node node_modules/gulp/bin/gulp.js initial;
+          npm test --silent
+          mkdir artifacts
+          vsce package --out artifacts/puppet-vscode-$BUILD_VERSION.vsix
+
+      - name: upload vsix
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@master
+        with:
+          name: "puppet-vscode"
+          path: artifacts
