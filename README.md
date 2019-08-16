@@ -71,7 +71,7 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 - Node graph preview
 - Puppet Development Kit integration
 - (Experimental) Local debugging of Puppet manifests
-- (Experimental) Docker Language Server support
+- **DEPRECATED** Docker Language Server support
 
 **It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
 
@@ -306,7 +306,7 @@ The [VSCode Debugging - Launch Configurations](https://code.visualstudio.com/doc
 
 ### Docker Language Server Support
 
-**Note - This is an experimental feature**
+**Note - This is feature is deprecated in favor of the Microsoft Remote Container Extension and will be removed in a future release**
 
 The Puppet VSCode extension bundles the Puppet Language Server inside the extension, and loads the language server on demaned and communicates it with either STDIO or TCP. Another option is to communicate via TCP pointed towards a docker container running the Puppet Language Server. The Lingua-Pupuli organization maintains a Puppet Language Server docker container here: https://github.com/lingua-pupuli/images. Using this docker image, we can run the Puppet Language Server without having Puppet Agent or the Puppet Development Kit installed locally, all that is needed is a working docker installation.
 
