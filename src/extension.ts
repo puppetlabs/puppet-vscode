@@ -85,6 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
       connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings);
       break;
     case ProtocolType.DOCKER:
+      vscode.window.showWarningMessage('The Puppet VSCode Docker protocol is deprecated in favor of the Microsoft Remote Container Extension. It will be removed in a future release');
       connectionHandler = new DockerConnectionHandler(extContext, statusBar, logger, configSettings);
       break;
   }

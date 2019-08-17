@@ -325,7 +325,7 @@
         "puppet.editorService.docker.imageName": {
           "type": "string",
           "default": "linguapupuli/puppet-language-server:latest",
-          "description": "The name of the image with tag that contains the Puppet Language server. For example: linguapupuli/puppet-language-server:latest"
+          "description": "**DEPRECATED** The name of the image with tag that contains the Puppet Language server. For example: linguapupuli/puppet-language-server:latest"
         },
         "puppet.editorService.featureFlags": {
           "type": "array",
@@ -347,7 +347,7 @@
         "puppet.editorService.protocol": {
           "type": "string",
           "default": "stdio",
-          "description": "The protocol used to communicate with the Puppet Editor Service.  By default the local STDIO protocol is used",
+          "description": "The protocol used to communicate with the Puppet Editor Service. By default the local STDIO protocol is used. The docker protocol is **DEPRECATED** and will be removed in a future version",
           "enum": [
             "stdio",
             "tcp",
