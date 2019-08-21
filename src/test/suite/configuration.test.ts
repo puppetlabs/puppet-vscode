@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
-import { CreateAggregrateConfiguration } from '../configuration';
-import { DefaultWorkspaceSettings, ISettings, PuppetInstallType } from '../settings';
+import { CreateAggregrateConfiguration } from '../../configuration';
+import { DefaultWorkspaceSettings, ISettings, PuppetInstallType } from '../../settings';
 
 suite("Configuration Tests", () => {
   var pdkBinDir = '';
