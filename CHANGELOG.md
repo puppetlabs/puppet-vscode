@@ -16,6 +16,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-55](https://github.com/lingua-pupuli/puppet-editor-services/issues/55)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Allow Debug Server to work with Puppet 6
 - ([GH-106](https://github.com/lingua-pupuli/puppet-editor-services/issues/106)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Update puppet-lint to 2.3.6
 
+### Fixed
+- ([GH-43](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/43)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Fix syntax highlighting for resource references and chain arrows
+- ([GH-34](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/34)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Comments in hashes should tokenize
+
 ### Deprecated
 
 - [maint] Puppet Docker Protocol deprecated in favor of Microsoft Remote Container Extension
