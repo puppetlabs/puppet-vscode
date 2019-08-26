@@ -393,7 +393,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...master
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...master
+[0.19.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...0.19.0
 [0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
 [0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0...0.17.0
 [0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1...0.16.0
