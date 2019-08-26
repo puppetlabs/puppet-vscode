@@ -21,6 +21,7 @@ import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { legacySettings, SettingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
+import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
 
 const axios = require('axios');
 
@@ -103,6 +104,10 @@ export function activate(context: vscode.ExtensionContext) {
   extensionFeatures.push(new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
   extensionFeatures.push(new DebuggingFeature(debugType, configSettings, extContext, logger));
+  
+  if(settings.hover.showMetadataInfo){
+    extensionFeatures.push(new PuppetModuleHoverFeature(extContext, logger));
+  }
 }
 
 export function deactivate() {

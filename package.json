@@ -332,6 +332,11 @@
           "default": [],
           "description": "An array of strings of experimental features to enable in the Puppet Editor Service"
         },
+        "puppet.editorService.hover.showMetadataInfo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable showing Puppet Module version information in the metadata.json file"
+        },
         "puppet.editorService.loglevel": {
           "type": "string",
           "default": "normal",
@@ -563,6 +568,7 @@
     "yargs": "^13.2.4"
   },
   "dependencies": {
+    "jsonc-parser": "~2.1.0",
     "viz.js": "~1.7.0",
     "vscode-debugadapter": "^1.19.0",
     "vscode-debugprotocol": "^1.19.0",
