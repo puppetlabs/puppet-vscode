@@ -6,6 +6,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Added
+
+- ([GH-2](https://github.com/lingua-pupuli/docs/issues/2)) [docs-0.1.0](https://github.com/lingua-pupuli/docs/releases/tag/0.1.0) Puppet VSCode Website v1
+
+### Changed
+
+- ([GH-546](https://github.com/lingua-pupuli/puppet-vscode/issues/546)) Update Puppet DAG svg icon
+- ([GH-55](https://github.com/lingua-pupuli/puppet-editor-services/issues/55)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Allow Debug Server to work with Puppet 6
+- ([GH-106](https://github.com/lingua-pupuli/puppet-editor-services/issues/106)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Update puppet-lint to 2.3.6
+
+### Fixed
+- ([GH-43](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/43)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Fix syntax highlighting for resource references and chain arrows
+- ([GH-34](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/34)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Comments in hashes should tokenize
+
+### Deprecated
+
+- [maint] Puppet Docker Protocol deprecated in favor of Microsoft Remote Container Extension
+
 ## [0.19.0] - 2019-07-19
 
 ### Changed
@@ -36,14 +54,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - ([GH-436](https://github.com/lingua-pupuli/puppet-vscode/issues/436)) Fix extension "crash" after editing line of code
-- ([GH-132](https://github.com/lingua-pupuli/puppet-editor-services/issues/132)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Suppress $stdout usage for STDIO transport
+- ([GH-132](https://github.com/lingua-pupuli/puppet-editor-services/issues/132)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Suppress \$stdout usage for STDIO transport
 - ([GH-118](https://github.com/lingua-pupuli/puppet-editor-services/issues/118)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Fail gracefully when critical gems cannot load
 - ([GH-39](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/39)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Node definitions can only be strings
 - ([GH-38](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/38)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Fix highlighting of classes and functions
 - ([GH-37](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/37)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Tokenise variables within arrays
 - ([GH-32](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/32)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Highlight resource names and titles correctly
 - ([GH-30](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/30)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Highlight regex capture variables
-
 
 ## [0.18.0] - 2019-03-29
 
@@ -145,9 +162,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
-- ([GH-397](https://github.com/lingua-pupuli/puppet-vscode/issues/397)) Updated Puppet Editor Services to version 0.15.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
+- ([GH-397](https://github.com/lingua-pupuli/puppet-vscode/issues/397)) Updated Puppet Editor Services to version 0.15.0. Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
 - ([GH-373](https://github.com/lingua-pupuli/puppet-vscode/issues/373)) Refactor commands and providers to features
-- ([GH-351](https://github.com/lingua-pupuli/puppet-vscode/issues/351)) Updated Puppet Editor Services to version 0.14.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.14.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
+- ([GH-351](https://github.com/lingua-pupuli/puppet-vscode/issues/351)) Updated Puppet Editor Services to version 0.14.0. Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.14.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
 - ([GH-323](https://github.com/lingua-pupuli/puppet-vscode/issues/323)) Update readme with gif examples
 - ([GH-399](https://github.com/lingua-pupuli/puppet-vscode/issues/399)) Update Puppet loading UI to be more user friendly
 - ([GH-405](https://github.com/lingua-pupuli/puppet-vscode/issues/405)) Update readme with correct links into the readme
@@ -165,7 +182,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
-- ([GH-327](https://github.com/lingua-pupuli/puppet-vscode/issues/327)) Updated Puppet Editor Services to version 0.13.0.  Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0)
+- ([GH-327](https://github.com/lingua-pupuli/puppet-vscode/issues/327)) Updated Puppet Editor Services to version 0.13.0. Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0)
 - ([GH-316](https://github.com/lingua-pupuli/puppet-vscode/issues/316)) Conform to Keep-A-Changelog format in CHANGELOG
 
 ### Fixed
@@ -196,7 +213,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-289](https://github.com/lingua-pupuli/puppet-vscode/issues/289)) Fix Autoindenting for DSL.
 - ([GH-301](https://github.com/lingua-pupuli/puppet-vscode/issues/301)) Fail fast if Puppet Agent is not installed.
 - ([GH-310](https://github.com/lingua-pupuli/puppet-vscode/issues/310)) Fix gulp bump.
-- ([GH-307](https://github.com/lingua-pupuli/puppet-vscode/issues/307)) Fix Path resolution on mac and *nix.
+- ([GH-307](https://github.com/lingua-pupuli/puppet-vscode/issues/307)) Fix Path resolution on mac and \*nix.
 - ([GH-241](https://github.com/lingua-pupuli/puppet-vscode/issues/241)) Ensure specified tcp port is honored.
 - ([GH-296](https://github.com/lingua-pupuli/puppet-vscode/issues/296)) Ensure document file scheme is set.
 - (maint) Fix tslint errors.
@@ -222,7 +239,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-214](https://github.com/lingua-pupuli/puppet-vscode/issues/214)) Updated README for PDK `1.3.X`.
 - ([GH-231](https://github.com/lingua-pupuli/puppet-vscode/issues/231)) Make document validation asynchronous.
 
-#### Removed 
+#### Removed
 
 - ([GH-236](https://github.com/lingua-pupuli/puppet-vscode/issues/236)) Remove the preload option.
 
@@ -253,10 +270,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.7.2] - 2017-11-01
 
 ### Added
+
 - ([GH-167](https://github.com/lingua-pupuli/puppet-vscode/issues/167)) Add PDK New Task command.
 - ([GH-156](https://github.com/lingua-pupuli/puppet-vscode/issues/156)) Document restarting Puppet extension command.
 
 ### Changed
+
 - ([GH-88](https://github.com/lingua-pupuli/puppet-vscode/issues/88)) Rework Node Graph Preview to use local svg instead of calling out to the internet.
 - ([GH-154](https://github.com/lingua-pupuli/puppet-vscode/issues/154)) Use hosted JSON schema files instead of vendoring them.
 
@@ -270,6 +289,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [0.7.1] - 2017-09-29
 
 ### Fixed
+
 - ([GH-157](https://github.com/lingua-pupuli/puppet-vscode/issues/157)) Unhide `Puppet Resource` command in the Command Palette.
 
 ## [0.7.0] - 2017-09-22
@@ -278,21 +298,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - ([GH-115](https://github.com/lingua-pupuli/puppet-vscode/issues/115)) Add Puppet Development Kit (PDK) integration.
 - ([GH-136](https://github.com/lingua-pupuli/puppet-vscode/issues/136)) Create a better UI experience while Puppet loads.
-- ([GH-61](https://github.com/lingua-pupuli/puppet-vscode/issues/61))  Create a better experience when language client fails.
+- ([GH-61](https://github.com/lingua-pupuli/puppet-vscode/issues/61)) Create a better experience when language client fails.
 - ([GH-122](https://github.com/lingua-pupuli/puppet-vscode/issues/122)) Show upgrade message with changelog.
 - ([GH-120](https://github.com/lingua-pupuli/puppet-vscode/issues/120)) Allow custom Puppet agent installation directory.
 - ([GH-111](https://github.com/lingua-pupuli/puppet-vscode/issues/111)) Parse `puppet-lint.rc` in module directory.
 
 ### Changed
+
 - ([GH-109](https://github.com/lingua-pupuli/puppet-vscode/issues/109)) Randomize languageserver port.
 
 ### Fixed
+
 - ([GH-135](https://github.com/lingua-pupuli/puppet-vscode/issues/135)) Fix incorrect logger when a client error occurs.
 - ([GH-129](https://github.com/lingua-pupuli/puppet-vscode/issues/129)) Honor inline puppet lint directives.
 - ([GH-133](https://github.com/lingua-pupuli/puppet-vscode/issues/133)) Fix issue with puppet 5.1.0.
 - ([GH-126](https://github.com/lingua-pupuli/puppet-vscode/issues/126)) Fix completion provider with Puppet 5.2.0.
-
-
 
 ## [0.6.0] - 2017-08-08
 
@@ -310,6 +330,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-89](https://github.com/lingua-pupuli/puppet-vscode/issues/89)) Documented support for Linux in README.
 
 ### Changed
+
 - ([GH-99](https://github.com/lingua-pupuli/puppet-vscode/issues/99)) Improved client README and Gallery page.
 
 ### Fixed
@@ -372,7 +393,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...master
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...master
+[0.19.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...0.19.0
 [0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
 [0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0...0.17.0
 [0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1...0.16.0
