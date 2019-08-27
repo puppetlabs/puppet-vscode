@@ -5,13 +5,17 @@
 [![Appveyor](https://ci.appveyor.com/api/projects/status/8ke8fhdt9a7j688m/branch/master?svg=true)](https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode/branch/master)
 [![Travis Ci](https://travis-ci.com/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.com/lingua-pupuli/puppet-vscode)
 
+# New Puppet VSCode [Website](https://puppet-vscode.github.io)
+
+We are proud to announce the new Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vscode.github.io/)! This website will contain all of the existing documenation in this README, simplified and organinzed. There will be new content coming soon that shows off all the current features in greater detail, as well as new ways to use the Puppet VSCode Extension with other technologies like the [Microsoft Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This README will be modified to point to the website for most of this content, but will retain some quick information on how to get started.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
 - [Features](#features)
 - [Requirements](#requirements)
 - [Platform Support](#platform-support)
-- [Usage](#usage) 
+- [Usage](#usage)
   - [Syntax highlighting](#syntax-highlighting)
   - [Auto completion](#auto-completion)
   - [Hover Support](#hover-support)
@@ -77,11 +81,11 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 ## Supported Puppet Versions
 
-The Puppet Extension for VSCode works with Puppet 4 or higher. Some features will be slower or not work on Puppet 4, and are noted in the section for that feature. See [open source Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet Enterprise](https://puppet.com/docs/pe/2017.3/getting_support_for_pe.html#supported-puppet-enterprise-versions) lifecycle pages for version support details. 
+The Puppet Extension for VSCode works with Puppet 4 or higher. Some features will be slower or not work on Puppet 4, and are noted in the section for that feature. See [open source Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet Enterprise](https://puppet.com/docs/pe/2017.3/getting_support_for_pe.html#supported-puppet-enterprise-versions) lifecycle pages for version support details.
 
 ## Requirements
 
-You will need to have the [Puppet Agent](https://puppet.com/docs/puppet/4.10/about_agent.html)  or [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) installed in order to fully use this extension.
+You will need to have the [Puppet Agent](https://puppet.com/docs/puppet/4.10/about_agent.html) or [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) installed in order to fully use this extension.
 
 > Note: PDK version 1.5.0 or higher is required.
 
@@ -89,13 +93,13 @@ You can find instructions and installation links here:
 
 ### PDK
 
-* [Download page](https://puppet.com/download-puppet-development-kit)
+- [Download page](https://puppet.com/download-puppet-development-kit)
 
 ### Puppet-Agent
 
-* [Windows](https://docs.puppet.com/puppet/latest/install_windows.html)
-* [MacOSX](https://docs.puppet.com/puppet/latest/install_osx.html)
-* [Linux](https://docs.puppet.com/puppet/latest/install_linux.html)
+- [Windows](https://docs.puppet.com/puppet/latest/install_windows.html)
+- [MacOSX](https://docs.puppet.com/puppet/latest/install_osx.html)
+- [Linux](https://docs.puppet.com/puppet/latest/install_linux.html)
 
 ## Platform support
 
@@ -110,7 +114,6 @@ You can find instructions and installation links here:
 The Puppet extension includes additional information in the form of a tooltip which describes the features that are loaded and still loading during startup.
 
 ![loading_status](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/loading_status.gif)
-
 
 ### Syntax Highlighting
 
@@ -136,7 +139,7 @@ Hovering over any resource, class declaration or other Puppet symbol provides in
 
 ### Outline View
 
-The new `Outline View` shows the symbol tree of the currently selected Puppet manifest. 
+The new `Outline View` shows the symbol tree of the currently selected Puppet manifest.
 
 Supported symbols:
 
@@ -277,14 +280,13 @@ We have added support for VSCode Command Palatte commands for opening Bolt user 
 
 The Puppet extension is able to debug the compilation of a Puppet manifest; much like the Go, PowerShell, and C# languages. The debugger supports:
 
-* Line breakpoints but not conditions on those breakpoints
-* Function breakpoints
-* Exception breakpoints
-* Call stack
-* Variables, but only at the top stack frame
-* Limited interactive debug console.  For example, you can assign a variable a value, but just as in regular Puppet you can't change its value later
-* Step In, Out, and Over
-
+- Line breakpoints but not conditions on those breakpoints
+- Function breakpoints
+- Exception breakpoints
+- Call stack
+- Variables, but only at the top stack frame
+- Limited interactive debug console. For example, you can assign a variable a value, but just as in regular Puppet you can't change its value later
+- Step In, Out, and Over
 
 ![Puppet Debug Adapter](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/puppet_debug.gif)
 
@@ -298,9 +300,9 @@ The [VSCode Debugging - Launch Configurations](https://code.visualstudio.com/doc
 
 #### Settings
 
-- `manifest` - The manifest to apply.  By default this is the currently open file in the editor
+- `manifest` - The manifest to apply. By default this is the currently open file in the editor
 
-- `noop` - Whether the `puppet apply` sets No Operation (Noop) mode.  By default, this is set to true.  This means when running the debugger it will not make changes to your system. The [documentation about the puppet agent](https://puppet.com/docs/puppet/5.3/man/apply.html#OPTIONS) has more information about `puppet apply` and and the `noop` option.
+- `noop` - Whether the `puppet apply` sets No Operation (Noop) mode. By default, this is set to true. This means when running the debugger it will not make changes to your system. The [documentation about the puppet agent](https://puppet.com/docs/puppet/5.3/man/apply.html#OPTIONS) has more information about `puppet apply` and and the `noop` option.
 
 - `args` - Additional arguements to pass to `puppet apply`, for example `['--debug']` will output debug information
 
@@ -314,8 +316,8 @@ Enable using docker by adding the following configuration:
 
 ```json
 {
-  "puppet.editorService.protocol":"docker",
-  "puppet.editorService.docker.imageName":"linguapupuli/puppet-language-server:latest"
+  "puppet.editorService.protocol": "docker",
+  "puppet.editorService.docker.imageName": "linguapupuli/puppet-language-server:latest"
 }
 ```
 
@@ -350,7 +352,7 @@ To ensure that the extension uses the `PDK`, set the `puppet.installType` settin
 
 ```json
 {
-  "puppet.installType":"pdk"
+  "puppet.installType": "pdk"
 }
 ```
 
@@ -360,7 +362,7 @@ Windows:
 
 ```json
 {
-  "puppet.installDirectory":"C:\\Program Files\\Puppet Labs\\DevelopmentKit"
+  "puppet.installDirectory": "C:\\Program Files\\Puppet Labs\\DevelopmentKit"
 }
 ```
 
@@ -368,7 +370,7 @@ OSX:
 
 ```json
 {
-  "puppet.installDirectory":"/opt/puppetlabs/pdk"
+  "puppet.installDirectory": "/opt/puppetlabs/pdk"
 }
 ```
 
@@ -376,7 +378,7 @@ Linux:
 
 ```json
 {
-  "puppet.installDirectory":"/opt/puppetlabs/pdk"
+  "puppet.installDirectory": "/opt/puppetlabs/pdk"
 }
 ```
 
@@ -384,21 +386,21 @@ To use a custom install path for the `PDK`, set the `puppet.installDirectory` se
 
 ```json
 {
-  "puppet.installDirectory":"D:/programs/pdk"
+  "puppet.installDirectory": "D:/programs/pdk"
 }
 ```
 
-#### Configure Puppet Version in PDK 
+#### Configure Puppet Version in PDK
 
 The `PDK` has many versions of Puppet which can be used. Set the `puppet.editorService.puppet.version` setting to the version you would like to use, for example, if you wanted to use version 5.4.0, then set the configuration to:
 
 ```json
 {
-  "puppet.editorService.puppet.version":"5.4.0"
+  "puppet.editorService.puppet.version": "5.4.0"
 }
 ```
 
-You can also change the version from the status bar in Visual Studio Code.  Click on the Puppet version text in the status bar and then select which Puppet version you would like to use. Note that this will require Visual Studio Code to be restarted to take effect.
+You can also change the version from the status bar in Visual Studio Code. Click on the Puppet version text in the status bar and then select which Puppet version you would like to use. Note that this will require Visual Studio Code to be restarted to take effect.
 
 ![changing_puppet_version](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/change-puppet-version.gif)
 
@@ -408,7 +410,7 @@ To ensure that the extension uses the Puppet-Agent, set the `puppet.installType`
 
 ```json
 {
-  "puppet.installType":"puppet"
+  "puppet.installType": "puppet"
 }
 ```
 
@@ -418,7 +420,7 @@ Windows:
 
 ```json
 {
-  "puppet.installDirectory":"C:\\Program Files\\Puppet Labs\\Puppet",
+  "puppet.installDirectory": "C:\\Program Files\\Puppet Labs\\Puppet"
 }
 ```
 
@@ -426,7 +428,7 @@ OSX
 
 ```json
 {
-  "puppet.installDirectory":"/opt/puppetlabs"
+  "puppet.installDirectory": "/opt/puppetlabs"
 }
 ```
 
@@ -434,7 +436,7 @@ Linux:
 
 ```json
 {
-  "puppet.installDirectory":"/opt/puppetlabs"
+  "puppet.installDirectory": "/opt/puppetlabs"
 }
 ```
 
@@ -442,7 +444,7 @@ To use a custom install path for the Puppet-Agent, set the `puppet.installDirect
 
 ```json
 {
-  "puppet.installDirectory":"D:/programs/puppet"
+  "puppet.installDirectory": "D:/programs/puppet"
 }
 ```
 
