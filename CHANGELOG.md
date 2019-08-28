@@ -1,14 +1,18 @@
 # Change Log
 
-All notable changes to the "vscode-puppet" extension will be documented in this file.
+All notable changes to the "puppet-vscode" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
 
+## [0.20.0] - 2019-08-30
+
 ### Added
 
 - ([GH-2](https://github.com/lingua-pupuli/docs/issues/2)) [docs-0.1.0](https://github.com/lingua-pupuli/docs/releases/tag/0.1.0) Puppet VSCode Website v1
+- ([GH-534](https://github.com/lingua-pupuli/puppet-vscode/issues/534)) Puppet Module Metadata hover provider
+- ([GH-541](https://github.com/lingua-pupuli/puppet-vscode/issues/541)) Check for latest PDK version and notify
 
 ### Changed
 
@@ -17,6 +21,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-106](https://github.com/lingua-pupuli/puppet-editor-services/issues/106)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Update puppet-lint to 2.3.6
 
 ### Fixed
+
 - ([GH-43](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/43)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Fix syntax highlighting for resource references and chain arrows
 - ([GH-34](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/34)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Comments in hashes should tokenize
 
