@@ -35,22 +35,24 @@ install:
        & npm install --silent
 
        Write-Host "Set the package.json version..."
-       & node node_modules\gulp\bin\gulp.js bump --specific $ENV:APPVEYOR_BUILD_VERSION
+       invoke-psake -properties @{ packageVersion = $ENV:APPVEYOR_BUILD_VERSION } -tasklist bump
+
+       Install-Module -Name psake -Force
 
        Write-Host "Setting up initial configuration..."
-       & node node_modules\gulp\bin\gulp.js initial
+       invoke-psake -taskList 'initial'
      }
 - cmd: choco install pdk
 - ps: pdk --version
 
 build_script:
 - cmd: npm test --silent
-- cmd: IF NOT [%GULP_BUILD_TASK%] == [] node node_modules\gulp\bin\gulp.js %GULP_BUILD_TASK%
+- ps: if($env:GULP_BUILD_TASK) { invoke-psake -taskList $env:GULP_BUILD_TASK }
 - cmd: IF NOT [%VSCE_TASK%] == [] vsce %VSCE_TASK%
 
 test_script:
 - cmd: IF NOT [%NPM_TASK%] == [] npm run %NPM_TASK%
-- cmd: IF NOT [%GULP_TASK%] == [] node node_modules\gulp\bin\gulp.js %GULP_TASK%
+- ps: if($env:GULP_BUILD_TASK) { invoke-psake -taskList $env:GULP_BUILD_TASK }
 
 artifacts:
 - path: .\*.vsix

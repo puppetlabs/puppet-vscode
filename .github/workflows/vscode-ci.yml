@@ -46,23 +46,44 @@ jobs:
           choco install pdk
         if: runner.os == 'Windows'
 
-      - name: npm install, build, and test
-        env:
-          BUILD_VERSION: "0.99.${{ github.event.number }}"
-          VSCODE_BUILD_VERBOSE: true
-          DISPLAY: ':99.0'
+      - name: Install psake
+        shell: pwsh
+        run: Install-Module psake -Force
+
+      - name: npm install
+        shell: pwsh
         run: |
           npm install -g vsce --silent;
+          npm install -g typescript --silent;
           npm install --silent;
-          node node_modules/gulp/bin/gulp.js bump --version $BUILD_VERSION;
-          node node_modules/gulp/bin/gulp.js initial;
+
+      - name: npm build
+        shell: pwsh
+        run: |
+          invoke-psake -taskList 'build'
+
+      - name: npm test
+        env:
+          BUILD_VERSION: '0.99.${{ github.event.number }}'
+          VSCODE_BUILD_VERBOSE: true
+          DISPLAY: ':99.0'
+        shell: pwsh
+        run: |
           npm test --silent
+
+      - name: vsce package
+        if: runner.os == 'Linux'
+        env:
+          BUILD_VERSION: '0.99.${{ github.event.number }}'
+        shell: pwsh
+        run: |
+          invoke-psake -properties @{ packageVersion = $env:BUILD_VERSION } -tasklist bump
           mkdir artifacts
-          vsce package --out artifacts/puppet-vscode-$BUILD_VERSION.vsix
+          vsce package --out artifacts/puppet-vscode-$env:BUILD_VERSION.vsix
 
       - name: upload vsix
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@master
         with:
-          name: "puppet-vscode"
+          name: 'puppet-vscode'
           path: artifacts
