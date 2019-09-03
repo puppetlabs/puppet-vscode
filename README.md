@@ -308,20 +308,9 @@ The [VSCode Debugging - Launch Configurations](https://code.visualstudio.com/doc
 
 ### Docker Language Server Support
 
-**Note - This is feature is deprecated in favor of the Microsoft Remote Container Extension and will be removed in a future release**
+**Note - This is feature is deprecated in favor of the Microsoft Remote Container Extension and is removed**
 
-The Puppet VSCode extension bundles the Puppet Language Server inside the extension, and loads the language server on demaned and communicates it with either STDIO or TCP. Another option is to communicate via TCP pointed towards a docker container running the Puppet Language Server. The Lingua-Pupuli organization maintains a Puppet Language Server docker container here: https://github.com/lingua-pupuli/images. Using this docker image, we can run the Puppet Language Server without having Puppet Agent or the Puppet Development Kit installed locally, all that is needed is a working docker installation.
-
-Enable using docker by adding the following configuration:
-
-```json
-{
-  "puppet.editorService.protocol": "docker",
-  "puppet.editorService.docker.imageName": "linguapupuli/puppet-language-server:latest"
-}
-```
-
-This will cause the Puppet Extension to instruct docker to start the linguapupuli/puppet-language-server container, then wait for it to start. After starting, the Puppet Extension will use the docker container to perform the same functionality as if it was running locally.
+For instructions on how to use the Microsoft Remote Container Extension with the Puppet VSCode Extension, go to the Puppet VSCode website [here](https://puppet-vscode.github.io/docs/features/remote-development/).
 
 ## Installing the Extension
 
