@@ -6,6 +6,7 @@ import { ILogger } from "../logging";
 import { ConnectionStatus } from '../interfaces';
 import { PuppetCommandStrings } from '../messages';
 import { IAggregateConfiguration } from "../configuration";
+import { ProtocolType } from "../settings";
 
 class PuppetStatusBarProvider {
   private statusBarItem: vscode.StatusBarItem;
@@ -80,7 +81,11 @@ class PuppetStatusBarProvider {
         () => { vscode.commands.executeCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId); }),
     );
 
-    if (this.config.ruby.pdkPuppetVersions !== undefined && this.config.ruby.pdkPuppetVersions.length > 0) {
+    if (
+      this.config.ruby.pdkPuppetVersions !== undefined &&
+      this.config.ruby.pdkPuppetVersions.length > 0 &&
+      this.config.connection.protocol != ProtocolType.TCP
+      ) {
       // Add a static menu item to use the latest version
       menuItems.push(
         new PuppetConnectionMenuItem(
