@@ -168,8 +168,8 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
 
     showErrorMessage(
       message,
-      'Configuration Information',
-      'https://github.com/lingua-pupuli/puppet-vscode#configuration',
+      'Troubleshooting Information',
+      'https://puppet-vscode.github.io/docs/experience-a-problem',
       logger
     );
     return false;
