@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- ([GH-557](https://github.com/lingua-pupuli/puppet-vscode/issues/557)) Remove Docker Connection Handler
+
 ## [0.20.0] - 2019-08-30
 
 ### Added

@@ -13,7 +13,6 @@ import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { PuppetStatusBarFeature } from './feature/PuppetStatusBarFeature';
 import { ConnectionHandler } from './handler';
-import { DockerConnectionHandler } from './handlers/docker';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
 import { ConnectionType, ProtocolType, PuppetInstallType, ISettings } from './settings';
@@ -54,8 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   reporter.sendTelemetryEvent('config', {
     'installType'   : configSettings.workspace.installType,
-    'protocol'      : configSettings.workspace.editorService.protocol,
-    'imageName'     : configSettings.workspace.editorService.docker.imageName
+    'protocol'      : configSettings.workspace.editorService.protocol
   });
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
@@ -93,10 +91,6 @@ export function activate(context: vscode.ExtensionContext) {
       break;
     case ProtocolType.TCP:
       connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings);
-      break;
-    case ProtocolType.DOCKER:
-      vscode.window.showWarningMessage('The Puppet VSCode Docker protocol is deprecated in favor of the Microsoft Remote Container Extension. It will be removed in a future release');
-      connectionHandler = new DockerConnectionHandler(extContext, statusBar, logger, configSettings);
       break;
   }
 
@@ -139,9 +133,6 @@ function checkForLegacySettings() {
 }
 
 function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger) : boolean {
-  if (config.workspace.editorService.protocol === ProtocolType.DOCKER) {
-    return true;
-  }
   if (config.workspace.editorService.protocol === ProtocolType.TCP) {
     if (config.connection.type === ConnectionType.Remote) {
       // Return if we are connecting to a remote TCP LangServer
