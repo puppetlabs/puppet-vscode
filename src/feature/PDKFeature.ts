@@ -3,13 +3,13 @@
 import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
-import { PDKCommandStrings } from '../messages';
 import { reporter } from '../telemetry/telemetry';
+import { IAggregateConfiguration } from '../configuration';
 
 export class PDKFeature implements IFeature {
   private terminal: vscode.Terminal;
 
-  constructor(context: vscode.ExtensionContext, logger: ILogger) {
+  constructor(context: vscode.ExtensionContext, logger: ILogger, settings: IAggregateConfiguration) {
     this.terminal = vscode.window.createTerminal('Puppet PDK');
     this.terminal.processId.then(pid => {
       logger.debug('pdk shell started, pid: ' + pid);
@@ -17,35 +17,27 @@ export class PDKFeature implements IFeature {
     context.subscriptions.push(this.terminal);
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkNewModuleCommandId, () => {
+      vscode.commands.registerCommand('puppet.pdkNewModule', () => {
         this.pdkNewModuleCommand();
       })
     );
-    logger.debug("Registered " + PDKCommandStrings.PdkNewModuleCommandId + " command");
-    context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkNewClassCommandId, () => {
-        this.pdkNewClassCommand();
-      })
-    );
-    logger.debug("Registered " + PDKCommandStrings.PdkNewClassCommandId + " command");
-    context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkNewTaskCommandId, () => {
-        this.pdkNewTaskCommand();
-      })
-    );
-    logger.debug("Registered " + PDKCommandStrings.PdkNewTaskCommandId + " command");
-    context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkValidateCommandId, () => {
-        this.pdkValidateCommand();
-      })
-    );
-    logger.debug("Registered " + PDKCommandStrings.PdkValidateCommandId + " command");
-    context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkTestUnitCommandId, () => {
-        this.pdkTestUnitCommand();
-      })
-    );
-    logger.debug("Registered " + PDKCommandStrings.PdkTestUnitCommandId + " command");
+    logger.debug('Registered ' + 'puppet.pdkNewModule' + ' command');
+
+    [
+      { id: 'puppet.pdkValidate', request: 'pdk validate', type: 'validate' },
+      { id: 'puppet.pdkTestUnit', request: 'pdk test unit', type: 'test' }
+    ].forEach(command => {
+      context.subscriptions.push(
+        vscode.commands.registerCommand(command.id, () => {
+          this.terminal.sendText(command.request);
+          this.terminal.show();
+          if (reporter) {
+            reporter.sendTelemetryEvent(command.id, { pdkVersion: settings.ruby.pdkVersion });
+          }
+        })
+      );
+      logger.debug(`Registered ${command.id} command`);
+    });
   }
 
   public dispose(): any {
@@ -59,7 +51,7 @@ export class PDKFeature implements IFeature {
       matchOnDetail: true
     };
     let dirOpts: vscode.QuickPickOptions = {
-      placeHolder: 'Enter a path for the new Puppet module',
+      placeHolder: 'Enter a path for the new Puppet module. Leave this empy to use the current open directory',
       matchOnDescription: true,
       matchOnDetail: true
     };
@@ -69,60 +61,18 @@ export class PDKFeature implements IFeature {
         vscode.window.showWarningMessage('No module name specifed. Exiting.');
         return;
       }
-      vscode.window.showInputBox(dirOpts).then(dir => {
-        this.terminal.sendText(`pdk new module --skip-interview ${moduleName} ${dir}`);
-        this.terminal.sendText(`code ${dir}`);
+      vscode.window.showInputBox(dirOpts).then(targetFolder => {
+        if (targetFolder === undefined) {
+          targetFolder = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        }
+
+        this.terminal.sendText(`pdk new module --skip-interview ${moduleName} ${targetFolder}`);
+        this.terminal.sendText(`code ${targetFolder}`);
         this.terminal.show();
         if (reporter) {
-          reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
+          reporter.sendTelemetryEvent('puppet.pdkNewModule', { pdkVersion: settings.ruby.pdkVersion });
         }
       });
     });
-  }
-
-  private pdkNewClassCommand() {
-    let nameOpts: vscode.QuickPickOptions = {
-      placeHolder: 'Enter a name for the new Puppet class',
-      matchOnDescription: true,
-      matchOnDetail: true
-    };
-    vscode.window.showInputBox(nameOpts).then(moduleName => {
-      this.terminal.sendText(`pdk new class ${moduleName}`);
-      this.terminal.show();
-      if (reporter) {
-        reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewClassCommandId);
-      }
-    });
-  }
-
-  private pdkNewTaskCommand() {
-    let nameOpts: vscode.QuickPickOptions = {
-      placeHolder: 'Enter a name for the new Puppet Task',
-      matchOnDescription: true,
-      matchOnDetail: true
-    };
-    vscode.window.showInputBox(nameOpts).then(taskName => {
-      this.terminal.sendText(`pdk new task ${taskName}`);
-      this.terminal.show();
-      if (reporter) {
-        reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewTaskCommandId);
-      }
-    });
-  }
-
-  private pdkValidateCommand() {
-    this.terminal.sendText(`pdk validate`);
-    this.terminal.show();
-    if (reporter) {
-      reporter.sendTelemetryEvent(PDKCommandStrings.PdkValidateCommandId);
-    }
-  }
-
-  private pdkTestUnitCommand() {
-    this.terminal.sendText(`pdk test unit`);
-    this.terminal.show();
-    if (reporter) {
-      reporter.sendTelemetryEvent(PDKCommandStrings.PdkTestUnitCommandId);
-    }
   }
 }

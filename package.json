@@ -70,11 +70,11 @@
     "onCommand:extension.puppetParserValidate",
     "onCommand:extension.puppetShowNodeGraphToSide",
     "onCommand:extension.puppetResource",
-    "onCommand:extension.pdkNewModule",
-    "onCommand:extension.pdkNewClass",
-    "onCommand:extension.pdkNewTask",
-    "onCommand:extension.pdkTestUnit",
-    "onCommand:extension.pdkValidate",
+    "onCommand:puppet.pdkNewModule",
+    "onCommand:puppet.pdkNewClass",
+    "onCommand:puppet.pdkNewTask",
+    "onCommand:puppet.pdkTestUnit",
+    "onCommand:puppet.pdkValidate",
     "onCommand:puppet-bolt.OpenUserConfigFile",
     "onCommand:puppet-bolt.OpenUserInventoryFile"
   ],
@@ -152,7 +152,7 @@
         "title": "Show Connection Logs"
       },
       {
-        "command": "extension.pdkNewModule",
+        "command": "puppet.pdkNewModule",
         "category": "Puppet",
         "title": "PDK New Module",
         "icon": {
@@ -161,22 +161,27 @@
         }
       },
       {
-        "command": "extension.pdkTestUnit",
+        "command": "puppet.pdkTestUnit",
         "category": "Puppet",
         "title": "PDK Test Unit"
       },
       {
-        "command": "extension.pdkValidate",
+        "command": "puppet.pdkValidate",
         "category": "Puppet",
         "title": "PDK Validate"
       },
       {
-        "command": "extension.pdkNewClass",
+        "command": "puppet.pdkNewClass",
         "category": "Puppet",
         "title": "PDK New Class"
       },
       {
-        "command": "extension.pdkNewTask",
+        "command": "puppet.pdkNewDefinedType",
+        "category": "Puppet",
+        "title": "PDK New Defined Type"
+      },
+      {
+        "command": "puppet.pdkNewTask",
         "category": "Puppet",
         "title": "PDK New Task"
       },
@@ -211,19 +216,22 @@
           "command": "extension.puppetShowConnectionLogs"
         },
         {
-          "command": "extension.pdkNewModule"
+          "command": "puppet.pdkNewModule"
         },
         {
-          "command": "extension.pdkTestUnit"
+          "command": "puppet.pdkTestUnit"
         },
         {
-          "command": "extension.pdkValidate"
+          "command": "puppet.pdkValidate"
         },
         {
-          "command": "extension.pdkNewClass"
+          "command": "puppet.pdkNewDefinedType",
         },
         {
-          "command": "extension.pdkNewTask"
+          "command": "puppet.pdkNewClass"
+        },
+        {
+          "command": "puppet.pdkNewTask"
         },
         {
           "command": "extension.puppetResource",
@@ -236,29 +244,34 @@
       ],
       "editor/title": [
         {
-          "command": "extension.pdkNewModule",
+          "command": "puppet.pdkNewModule",
           "when": "config.puppet.titleBar.pdkNewModule.enable",
           "group": "navigation@100"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkNewClass",
+          "command": "puppet.pdkNewClass",
           "group": "pdk@2"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkNewTask",
+          "command": "puppet.pdkNewDefinedType",
           "group": "pdk@3"
         },
         {
-          "when": "editorLangId == 'puppet' ",
-          "command": "extension.pdkValidate",
+          "when": "editorLangId == 'puppet'",
+          "command": "puppet.pdkNewTask",
           "group": "pdk@4"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkTestUnit",
+          "command": "puppet.pdkValidate",
           "group": "pdk@5"
+        },
+        {
+          "when": "editorLangId == 'puppet'",
+          "command": "puppet.pdkTestUnit",
+          "group": "pdk@6"
         },
         {
           "when": "editorLangId == 'puppet'",
@@ -274,23 +287,28 @@
       "editor/context": [
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkNewClass",
+          "command": "puppet.pdkNewClass",
           "group": "pdk@1"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkNewClass",
+          "command": "puppet.pdkNewDefinedType",
           "group": "pdk@2"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkValidate",
+          "command": "puppet.pdkNewTask",
           "group": "pdk@3"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkTestUnit",
+          "command": "puppet.pdkValidate",
           "group": "pdk@4"
+        },
+        {
+          "when": "editorLangId == 'puppet'",
+          "command": "puppet.pdkTestUnit",
+          "group": "pdk@5"
         },
         {
           "when": "editorLangId == 'puppet'",

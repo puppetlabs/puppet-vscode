@@ -21,6 +21,7 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { legacySettings, SettingsFromWorkspace } from './settings';
 import { Reporter, reporter } from './telemetry/telemetry';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
+import { PdkLanguageServerFeature } from './feature/PdkLangaugeServerFeature';
 
 const axios = require('axios');
 
@@ -53,13 +54,14 @@ export function activate(context: vscode.ExtensionContext) {
 
   reporter.sendTelemetryEvent('config', {
     'installType'   : configSettings.workspace.installType,
-    'protocol'      : configSettings.workspace.editorService.protocol
+    'protocol'      : configSettings.workspace.editorService.protocol,
+    'pdkVersion'    : configSettings.ruby.pdkVersion
   });
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
 
   extensionFeatures = [
-    new PDKFeature(extContext, logger),
+    new PDKFeature(extContext, logger, configSettings),
     new BoltFeature(extContext),
     new UpdateConfigurationFeature(logger, extContext),
     statusBar
@@ -94,6 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
       break;
   }
 
+  extensionFeatures.push(new PdkLanguageServerFeature(connectionHandler, logger, extContext, settings));
   extensionFeatures.push(new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext));
   extensionFeatures.push(new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
