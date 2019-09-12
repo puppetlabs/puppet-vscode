@@ -24,6 +24,26 @@ env:
       nodejs_arch: "x64"
       VSCE_TASK: package
 
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: false
+      addons:
+        apt:
+          sources:
+            - sourceline: "deb [arch=amd64] https://packages.microsoft.com/ubuntu/14.04/prod trusty main"
+              key_url: "https://packages.microsoft.com/keys/microsoft.asc"
+          packages:
+            - powershell
+    - os: osx
+      osx_image: xcode9.1
+      before_install:
+        - brew tap caskroom/cask
+        - brew cask install powershell
+  fast_finish: true
+
+
 before_install: true
 
 install:
@@ -59,8 +79,8 @@ install:
       npm --version;
       npm install -g vsce --silent;
       npm install --silent;
-      node node_modules/gulp/bin/gulp.js bump --version $BUILD_VERSION;
-      node node_modules/gulp/bin/gulp.js initial;
+      # node node_modules/gulp/bin/gulp.js bump --version $BUILD_VERSION;
+      pwsh -command invoke-psake -taskList 'initial';
     fi
 
 script:

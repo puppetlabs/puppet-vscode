@@ -37,13 +37,13 @@ The following resources are vendored into the extension;
 
 * Puppet Editor Services (`editor-services`)
 
-* Puppet Editor Syntax (`editor-syntax`)
+* Puppet Editor Syntax (`editorSyntax`)
 
-By default the extension will use the specified versions in the `editor-components.json` file when vendoring resources.
+By default the extension will use the specified versions in the `package.json` file when vendoring resources.
 
 #### Example configuration
 
-The following examples use `editor-services`, however the configuration settings can be used on any resource.
+The following examples use `editorServices`, however the configuration settings can be used on any resource.
 
 ##### By release tag
 
@@ -51,8 +51,10 @@ To use version `0.10.0` of the Editor Services;
 
 ``` json
 {
-  "editor-services": {
-    "release": "0.10.0"
+  "editorComponents":{
+    "editorServices": {
+      "release": "0.10.0"
+    }
   }
 }
 ```
@@ -63,17 +65,19 @@ To use a specific GitHub repository that contains the Puppet Editor services, us
 
 ``` json
 {
-  "editor-services": {
-    "githubuser": "Alice",
-    "githubrepo": "puppet-editing",
-    "githubref": "testing"
+  "editorComponents":{
+    "editorServices": {
+      "githubuser": "Alice",
+      "githubrepo": "puppet-editing",
+      "githubref": "testing"
+    }
   }
 }
 ```
 
-Note - For `editor-services` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-services`
+Note - For `editorServices` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-services`
 
-Note - For `editor-syntax` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-syntax`
+Note - For `editorSyntax` the default the githubuser is `lingua-pupuli` and the githubrepo is `puppet-editor-syntax`
 
 Note - Use the full length commit SHA for `githubref`, not the abbreviated eight character SHA
 
@@ -93,19 +97,29 @@ Note - Backslashes in the path must be escaped.
 
 ### Vendoring the resources into the extension
 
-* Use gulp to vendor the resources
+* Use psake to vendor the resources
 
-```bash
-> node node_modules/gulp/bin/gulp.js --series clean vendor
-[15:00:21] Using gulpfile C:\Source\puppet-vscode\gulpfile.js
-[15:00:21] Starting 'clean'...
-[15:00:21] Finished 'clean' after 7.9 ms
-[15:00:21] Starting 'vendor'...
-[15:00:21] Starting 'vendor_editor_services'...
-[15:00:25] Finished 'vendor_editor_services' after 3.88 s
-[15:00:25] Starting 'vendor_editor_syntax'...
-[15:00:27] Finished 'vendor_editor_syntax' after 2.24 s
-[15:00:27] Finished 'vendor' after 6.13 s
+```powershell
+> ./build.ps1 -task clean,vendor
+psake version 4.8.0
+Copyright (c) 2010-2018 James Kovacs & Contributors
+
+Executing clean
+Executing VendorEditorServices
+Executing VendorEditorSyntax
+
+psake succeeded executing C:\Users\james\src\lingua\client\psakefile.ps1
+
+----------------------------------------------------------------------
+Build Time Report
+----------------------------------------------------------------------
+Name                 Duration
+----                 --------
+Clean                00:00:00.075
+VendorEditorServices 00:00:01.601
+VendorEditorSyntax   00:00:00.338
+Vendor               00:00:00.000
+Total:               00:00:02.023
 ```
 
 * Start VS Code
