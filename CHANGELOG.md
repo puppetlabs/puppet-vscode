@@ -6,8 +6,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Added
+
+- ([GH-181](https://github.com/lingua-pupuli/puppet-editor-services/issues/181)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Added completion for resource-like class ([Julio Sueiras](https://github.com/juliosueiras))
+- ([GH-177](https://github.com/lingua-pupuli/puppet-editor-services/issues/177)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Add auto-align hash rocket formatter
+- ([GH-174](https://github.com/lingua-pupuli/puppet-editor-services/issues/174)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Understand Puppet Data Types and hover provider support
+
+### Changed
+
+- (maint) Convert gulp build script to psake
+
+### Fixed
+
+- ([GH-169](https://github.com/lingua-pupuli/puppet-editor-services/issues/169)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Respond to protocol dependant messages correctly
+- ([GH-48](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/48)) [puppet-editor-syntax-1.3.4](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.4) Correctly tokenise if-else
+
+### Removed
+
 - ([GH-557](https://github.com/lingua-pupuli/puppet-vscode/issues/557)) Remove Docker Connection Handler
-- [maint] Convert gulp build script to psake
 
 ## [0.20.0] - 2019-08-30
 
