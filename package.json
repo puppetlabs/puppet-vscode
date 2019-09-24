@@ -5,10 +5,10 @@
   "version": "0.20.0",
   "editorComponents": {
     "editorServices": {
-      "release": "0.21.0"
+      "release": "0.22.0"
     },
     "editorSyntax": {
-      "release": "1.3.3"
+      "release": "1.3.4"
     }
   },
   "publisher": "jpogran",
@@ -334,6 +334,11 @@
           "type": "array",
           "default": [],
           "description": "An array of strings of experimental features to enable in the Puppet Editor Service"
+        },
+        "puppet.editorService.formatOnType.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable/disable the Puppet document on-type formatter, for example hashrocket alignment"
         },
         "puppet.editorService.hover.showMetadataInfo": {
           "type": "boolean",

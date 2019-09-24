@@ -6,8 +6,24 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Added
+
+- ([GH-181](https://github.com/lingua-pupuli/puppet-editor-services/issues/181)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Added completion for resource-like class ([Julio Sueiras](https://github.com/juliosueiras))
+- ([GH-177](https://github.com/lingua-pupuli/puppet-editor-services/issues/177)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Add auto-align hash rocket formatter
+- ([GH-174](https://github.com/lingua-pupuli/puppet-editor-services/issues/174)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Understand Puppet Data Types and hover provider support
+
+### Changed
+
+- (maint) Convert gulp build script to psake
+
+### Fixed
+
+- ([GH-169](https://github.com/lingua-pupuli/puppet-editor-services/issues/169)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Respond to protocol dependant messages correctly
+- ([GH-48](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/48)) [puppet-editor-syntax-1.3.4](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.4) Correctly tokenise if-else
+
+### Removed
+
 - ([GH-557](https://github.com/lingua-pupuli/puppet-vscode/issues/557)) Remove Docker Connection Handler
-- [maint] Convert gulp build script to psake
 
 ## [0.20.0] - 2019-08-30
 
@@ -25,12 +41,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Fixed
 
-- ([GH-43](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/43)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Fix syntax highlighting for resource references and chain arrows
-- ([GH-34](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/34)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/2ecb3d4b44e7d8b413b91676f39ade0ae0c4b2b4) Comments in hashes should tokenize
+- ([GH-43](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/43)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.3) Fix syntax highlighting for resource references and chain arrows
+- ([GH-34](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/34)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.3) Comments in hashes should tokenize
 
 ### Deprecated
 
-- [maint] Puppet Docker Protocol deprecated in favor of Microsoft Remote Container Extension
+- (maint) Puppet Docker Protocol deprecated in favor of Microsoft Remote Container Extension
 
 ## [0.19.0] - 2019-07-19
 
@@ -43,8 +59,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Fixed
 
-- ([GH-128](https://github.com/lingua-pupuli/puppet-editor-services/issues/128)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/commit/5f1751086abc3c12016b47d1fdba974afda60671) Detect Puppet Plan files correctly
-- ([GH-147](https://github.com/lingua-pupuli/puppet-editor-services/issues/147)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/commit/b0405552e892152b9cb56198c9c090960044459e) Gracefully fail on LoadError when compiling manifests
+- ([GH-128](https://github.com/lingua-pupuli/puppet-editor-services/issues/128)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Detect Puppet Plan files correctly
+- ([GH-147](https://github.com/lingua-pupuli/puppet-editor-services/issues/147)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Gracefully fail on LoadError when compiling manifests
 
 ## [0.18.1] - 2019-06-07
 
@@ -62,13 +78,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - ([GH-436](https://github.com/lingua-pupuli/puppet-vscode/issues/436)) Fix extension "crash" after editing line of code
-- ([GH-132](https://github.com/lingua-pupuli/puppet-editor-services/issues/132)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Suppress \$stdout usage for STDIO transport
-- ([GH-118](https://github.com/lingua-pupuli/puppet-editor-services/issues/118)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/commit/08a2fdaeee59fb9339515122e15fb855e32d6500) Fail gracefully when critical gems cannot load
-- ([GH-39](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/39)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Node definitions can only be strings
-- ([GH-38](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/38)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Fix highlighting of classes and functions
-- ([GH-37](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/37)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Tokenise variables within arrays
-- ([GH-32](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/32)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Highlight resource names and titles correctly
-- ([GH-30](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/30)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/commit/466a37c9fd1241cd679382073087571ac3d96b51) Highlight regex capture variables
+- ([GH-132](https://github.com/lingua-pupuli/puppet-editor-services/issues/132)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.19.1) Suppress \$stdout usage for STDIO transport
+- ([GH-118](https://github.com/lingua-pupuli/puppet-editor-services/issues/118)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.19.1) Fail gracefully when critical gems cannot load
+- ([GH-39](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/39)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Node definitions can only be strings
+- ([GH-38](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/38)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Fix highlighting of classes and functions
+- ([GH-37](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/37)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Tokenise variables within arrays
+- ([GH-32](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/32)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Highlight resource names and titles correctly
+- ([GH-30](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/30)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Highlight regex capture variables
 
 ## [0.18.0] - 2019-03-29
 
@@ -401,7 +417,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...master
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.20.0...master
+[0.20.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...0.20.0
 [0.19.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...0.19.0
 [0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
 [0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0...0.17.0
