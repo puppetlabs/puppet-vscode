@@ -53,7 +53,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   reporter.sendTelemetryEvent('config', {
     'installType'   : configSettings.workspace.installType,
-    'protocol'      : configSettings.workspace.editorService.protocol
+    'protocol'      : configSettings.workspace.editorService.protocol,
+    'pdkVersion'    : configSettings.ruby.pdkVersion
   });
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
