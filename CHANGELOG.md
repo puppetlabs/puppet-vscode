@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.20.0] - 2019-09-30
+
 ### Added
 
 - ([GH-181](https://github.com/lingua-pupuli/puppet-editor-services/issues/181)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Added completion for resource-like class ([Julio Sueiras](https://github.com/juliosueiras))
