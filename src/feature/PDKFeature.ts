@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
 import { PDKCommandStrings } from '../messages';
-import { reporter } from '../telemetry/telemetry';
+import { reporter } from '../telemetry';
 
 export class PDKFeature implements IFeature {
   private terminal: vscode.Terminal;

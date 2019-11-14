@@ -19,7 +19,7 @@ import { ConnectionType, ProtocolType, PuppetInstallType, ISettings } from './se
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { legacySettings, SettingsFromWorkspace } from './settings';
-import { Reporter, reporter } from './telemetry/telemetry';
+import { reporter } from './telemetry';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
 
 const axios = require('axios');
@@ -40,8 +40,6 @@ export function activate(context: vscode.ExtensionContext) {
   notifyOnNewExtensionVersion(extContext);
 
   checkForLegacySettings();
-
-  context.subscriptions.push(new Reporter(extContext));
 
   const settings = SettingsFromWorkspace();
   const previousInstallType = settings.installType;
@@ -114,6 +112,7 @@ export function deactivate() {
   if (connectionHandler !== undefined) {
     connectionHandler.stop();
   }
+  reporter.dispose();
 }
 
 function checkForLegacySettings() {

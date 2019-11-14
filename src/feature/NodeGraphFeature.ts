@@ -7,7 +7,7 @@ import { IFeature } from "../feature";
 import { ILogger } from "../logging";
 import { ConnectionStatus } from '../interfaces';
 import { CompileNodeGraphRequest, CompileNodeGraphResponse } from '../messages';
-import { reporter } from '../telemetry/telemetry';
+import { reporter } from '../telemetry';
 import * as viz from 'viz.js';
 import { ConnectionHandler } from "../handler";
 import { ISettings, SettingsFromWorkspace } from '../settings';
