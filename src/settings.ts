@@ -115,58 +115,10 @@ export function legacySettings(): Map<string, Object> {
   let value: Object = undefined;
 
   // puppet.editorService.modulePath
-  value = getSafeWorkspaceConfig(workspaceConfig, ['editorService', 'modulePath']);
-  if (value !== undefined) {
-    settings.set('puppet.editorService.modulePath', value);
-  }
-
-  // puppet.languageclient.minimumUserLogLevel
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageclient', 'minimumUserLogLevel']);
-  if (value !== undefined) {
-    settings.set('puppet.languageclient.minimumUserLogLevel', value);
-  }
-
-  // puppet.languageclient.protocol
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageclient', 'protocol']);
-  if (value !== undefined) {
-    settings.set('puppet.languageclient.protocol', value);
-  }
-
-  // puppet.languageserver.address
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageserver', 'address']);
-  if (value !== undefined) {
-    settings.set('puppet.languageserver.address', value);
-  }
-
-  // puppet.languageserver.debugFilePath
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageserver', 'debugFilePath']);
-  if (value !== undefined) {
-    settings.set('puppet.languageserver.debugFilePath', value);
-  }
-
-  // puppet.languageserver.filecache.enable
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageserver', 'filecache', 'enable']);
-  if (value !== undefined) {
-    settings.set('puppet.languageserver.filecache.enable', value);
-  }
-
-  // puppet.languageserver.port
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageserver', 'port']);
-  if (value !== undefined) {
-    settings.set('puppet.languageserver.port', value);
-  }
-
-  // puppet.languageserver.timeout
-  value = getSafeWorkspaceConfig(workspaceConfig, ['languageserver', 'timeout']);
-  if (value !== undefined) {
-    settings.set('puppet.languageserver.timeout', value);
-  }
-
-  // puppet.puppetAgentDir
-  value = getSafeWorkspaceConfig(workspaceConfig, ['puppetAgentDir']);
-  if (value !== undefined) {
-    settings.set('puppet.puppetAgentDir', value);
-  }
+  // value = getSafeWorkspaceConfig(workspaceConfig, ['editorService', 'modulePath']);
+  // if (value !== undefined) {
+  //   settings.set('puppet.editorService.modulePath', value);
+  // }
 
   return settings;
 }
@@ -245,43 +197,9 @@ export function SettingsFromWorkspace(): ISettings {
   // Translate the legacy settings into the new setting names
   for (const [settingName, value] of oldSettings) {
     switch (settingName) {
-      case 'puppet.editorService.modulePath': // --> puppet.editorService.puppet.modulePath
-        settings.editorService.puppet.modulePath = <string>value;
-        break;
-
-      case 'puppet.languageclient.minimumUserLogLevel': // --> puppet.editorService.loglevel
-        settings.editorService.loglevel = <string>value;
-        break;
-
-      case 'puppet.languageclient.protocol': // --> puppet.editorService.protocol
-        settings.editorService.protocol = <ProtocolType>value;
-        break;
-
-      case 'puppet.languageserver.address': // --> puppet.editorService.tcp.address
-        settings.editorService.tcp.address = <string>value;
-        break;
-
-      case 'puppet.languageserver.debugFilePath': // --> puppet.editorService.debugFilePath
-        settings.editorService.debugFilePath = <string>value;
-        break;
-
-      case 'puppet.languageserver.filecache.enable': // --> puppet.editorService.featureflags['filecache']
-        if (value === true) {
-          settings.editorService.featureFlags.push('filecache');
-        }
-        break;
-
-      case 'puppet.languageserver.port': // --> puppet.editorService.tcp.port
-        settings.editorService.tcp.port = <number>value;
-        break;
-
-      case 'puppet.languageserver.timeout': // --> puppet.editorService.timeout
-        settings.editorService.timeout = <number>value;
-        break;
-
-      case 'puppet.puppetAgentDir': // --> puppet.installDirectory
-        settings.installDirectory = <string>value;
-        break;
+      // case 'puppet.puppetAgentDir': // --> puppet.installDirectory
+      //   settings.installDirectory = <string>value;
+      //   break;
     }
   }
 

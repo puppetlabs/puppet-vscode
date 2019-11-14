@@ -454,33 +454,6 @@
           "type": "boolean",
           "default": true,
           "description": "Enable/disable the PDK New Module icon in the Editor Title Bar"
-        },
-        "puppet.editorService.modulePath": {
-          "description": "**DEPRECATED** Please use puppet.editorService.puppet.modulePath instead"
-        },
-        "puppet.languageclient.protocol": {
-          "description": "**DEPRECATED** Please use puppet.editorService.protocol instead"
-        },
-        "puppet.languageclient.minimumUserLogLevel": {
-          "description": "**DEPRECATED** Please use puppet.editorService.loglevel instead"
-        },
-        "puppet.languageserver.address": {
-          "description": "**DEPRECATED** Please use puppet.editorService.tcp.address instead"
-        },
-        "puppet.languageserver.port": {
-          "description": "**DEPRECATED** Please use puppet.editorService.tcp.port instead"
-        },
-        "puppet.languageserver.timeout": {
-          "description": "**DEPRECATED** Please use puppet.editorService.timeout instead"
-        },
-        "puppet.languageserver.filecache.enable": {
-          "description": "**DEPRECATED** Please use puppet.editorService.featureFlags with 'filecache' instead"
-        },
-        "puppet.languageserver.debugFilePath": {
-          "description": "**DEPRECATED** Please use puppet.editorService.debugFilePath instead"
-        },
-        "puppet.puppetAgentDir": {
-          "description": "**DEPRECATED** Please use puppet.installDirectory instead"
         }
       }
     },
