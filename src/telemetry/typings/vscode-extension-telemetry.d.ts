@@ -6,6 +6,11 @@ declare module 'vscode-extension-telemetry' {
       properties?: { [key: string]: string },
       measures?: { [key: string]: number }
     ): void;
+    sendTelemetryException(
+      error: Error,
+      properties?: { [key: string]: string;},
+      measurements?: { [key: string]: number; }
+    ): void;
     dispose(); // tslint:disable-line
   }
 }
