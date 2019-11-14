@@ -1,6 +1,6 @@
 properties {
   $config = Get-Content (Join-Path $PSScriptRoot 'package.json') | ConvertFrom-Json
-  $langaugeServerPath = (Join-Path $PSScriptRoot 'vendor/languageserver')
+  $languageServerPath = (Join-Path $PSScriptRoot 'vendor/languageserver')
   $languageServerZip = Join-Path $PSScriptRoot 'editor_services.zip'
   $syntaxFilePath = Join-Path $PSScriptRoot 'syntaxes/puppet.tmLanguage'
   $packageVersion = ''
@@ -17,6 +17,7 @@ task Clean {
 }
 
 task VendorEditorServices {
+  $githubref = $config.editorComponents.editorServices.githubref
   if ($config.editorComponents.editorServices.githubuser) {
     $githubuser = $config.editorComponents.editorServices.githubuser
   }
@@ -31,25 +32,26 @@ task VendorEditorServices {
   }
 
   if ($config.editorComponents.editorServices.directory) {
-    Copy-Item -Path $config.editorComponents.editorServices.directory -Destination $langaugeServerPath -Recurse -Force
-    return
-  }
-
-  if ($config.editorComponents.editorServices.release) {
+    Copy-Item -Path $config.editorComponents.editorServices.directory -Destination $languageServerPath -Recurse -Force
+  }elseif ($config.editorComponents.editorServices.release) {
     $releasenumber = $config.editorComponents.editorServices.release
     $uri = "https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet_editor_services_${releasenumber}.zip";
+    Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop
+    Expand-Archive -Path $languageServerZip -DestinationPath $languageServerPath -ErrorAction Stop
+    Remove-Item -Path $languageServerZip -Force
   }
   elseif ($config.editorComponents.editorServices.githubref) {
     $githubref = $config.editorComponents.editorServices.githubref;
     $uri = "https://github.com/${githubuser}/${githubrepo}/archive/${githubref}.zip"
+    Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop
+    Expand-Archive -Path $languageServerZip -DestinationPath "$($languageServerPath)/tmp" -ErrorAction Stop
+    Move-Item -Path (Join-Path $languageServerPath "tmp/$githubrepo-$githubref/*") -Destination $languageServerPath
+    Remove-Item -Path $languageServerZip -Force
+    Remove-Item -Path "$($languageServerPath)/tmp" -Force -Recurse
   }
   else {
     throw "Unable to vendor Editor Serices. Missing a release, directory, or git reference configuration item"
   }
-
-  Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop 
-  Expand-Archive -Path $languageServerZip -DestinationPath $langaugeServerPath -ErrorAction Stop 
-  Remove-Item -Path $languageServerZip -Force
 }
 
 task VendorEditorSyntax {
