@@ -6,3 +6,6 @@ tmp/
 // Ignore generated module output
 *.vsix
 .vscode-test
+
+// Ignore temporary vendoring files
+editor_services.zip

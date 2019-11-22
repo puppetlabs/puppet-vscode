@@ -5,7 +5,7 @@
   "version": "0.21.0",
   "editorComponents": {
     "editorServices": {
-      "release": "0.22.0"
+      "release": "0.23.0"
     },
     "editorSyntax": {
       "release": "1.3.4"
@@ -394,6 +394,11 @@
         "puppet.editorService.tcp.address": {
           "type": "string",
           "description": "The IP address or hostname of the remote Puppet Editor Service to connect to, for example 'computer.domain' or '192.168.0.1'. Only applicable when the editorService.protocol is set to tcp"
+        },
+        "puppet.validate.resolvePuppetfiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable using dependency resolution for Puppetfiles"
         },
         "puppet.editorService.tcp.port": {
           "type": "integer",
