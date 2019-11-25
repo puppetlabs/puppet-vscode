@@ -2,7 +2,7 @@ import { ExtensionContext, commands, window, Uri } from 'vscode';
 import { IFeature } from '../feature';
 import * as path from 'path';
 import * as fs from 'fs';
-import { reporter } from '../telemetry/telemetry';
+import { reporter } from '../telemetry';
 
 export class BoltFeature implements IFeature {
   dispose() { }

@@ -6,7 +6,7 @@ import { ConnectionType, ProtocolType } from './settings';
 import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { PuppetVersionDetails, PuppetVersionRequest, PuppetCommandStrings } from './messages';
-import { reporter } from './telemetry/telemetry';
+import { reporter } from './telemetry';
 import { puppetFileLangID, puppetLangID} from './extension';
 import { IAggregateConfiguration } from './configuration';
 

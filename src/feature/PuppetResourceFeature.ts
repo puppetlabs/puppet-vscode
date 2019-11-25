@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
 import { PuppetCommandStrings, PuppetResourceRequestParams, PuppetResourceRequest, PuppetResourceResponse } from '../messages';
-import { reporter } from '../telemetry/telemetry';
+import { reporter } from '../telemetry';
 import { ConnectionStatus } from '../interfaces';
 import { ConnectionHandler } from '../handler';
 import { ISettings, SettingsFromWorkspace } from '../settings';
