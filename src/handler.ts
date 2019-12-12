@@ -56,6 +56,10 @@ export abstract class ConnectionHandler {
       .onReady()
       .then(
         () => {
+          this.languageClient.onTelemetry(event => {
+            const eventName = event.Name ? event.Name : 'PUPPET_LANGUAGESERVER_EVENT';
+            reporter.sendTelemetryEvent(eventName, event.Measurements, event.Properties);
+          });
           this.setConnectionStatus('Loading Puppet', ConnectionStatus.Starting);
           this.queryLanguageServerStatusWithProgress();
         },
