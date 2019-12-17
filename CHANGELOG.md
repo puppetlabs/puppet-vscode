@@ -6,6 +6,33 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.22.0] - 2019-12-20
+
+### Added
+
+- ([GH-592](https://github.com/lingua-pupuli/puppet-vscode/issues/592)) Add Puppetfile resolver in Puppet-Editor-Services
+- ([GH-588](https://github.com/lingua-pupuli/puppet-vscode/issues/588)) Add server telemetry pass through
+- ([GH-198](https://github.com/lingua-pupuli/puppet-editor-services/issues/198)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Added the Puppetfile Resolver for more in-depth Puppetfile validation
+- ([GH-94](https://github.com/lingua-pupuli/puppet-editor-services/issues/94)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Added better intellisense when inside Bolt plans
+
+### Changed
+
+- ([Commit](https://github.com/lingua-pupuli/puppet-vscode/commit/dd47821c56f9d984f428899c4dbfd982a2731206)) Sends PDK version telemetry on start
+- ([Commit](https://github.com/lingua-pupuli/puppet-vscode/commit/3464a3cc94ee8b972b7d7673fc3ee42fa874e39f)) Update telemetry to v0.1.2
+- ([GH-592](https://github.com/lingua-pupuli/puppet-vscode/issues/592)) Update Editor Services to version 0.23.0
+- ([GH-193](https://github.com/lingua-pupuli/puppet-editor-services/issues/193)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Refactor the TCP and STDIO servers, protocols and handlers
+- ([Commit](https://github.com/lingua-pupuli/puppet-editor-services/commit/c3bd86f5b9a237b92f4c0e2d6c2ddc7aa5b0d9e5)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Update puppet-lint to version 2.4.2
+
+### Fixed
+
+- ([GH-579](https://github.com/lingua-pupuli/puppet-vscode/issues/579)) Fix build script extract path
+- ([GH-199](https://github.com/lingua-pupuli/puppet-editor-services/issues/199)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Fixes for Puppet 6.11.0
+- ([GH-139](https://github.com/lingua-pupuli/puppet-editor-services/issues/139)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Provide completions for defined types
+
+### Removed
+
+- ([GH-585](https://github.com/lingua-pupuli/puppet-vscode/issues/585)) Remove deprecated settings
+
 ## [0.21.0] - 2019-09-30
 
 ### Added
@@ -419,7 +446,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.20.0...master
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.22.0...master
+[0.22.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.21.0...0.22.0
+[0.21.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.20.0...0.21.0
 [0.20.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...0.20.0
 [0.19.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...0.19.0
 [0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
