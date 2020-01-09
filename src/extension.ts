@@ -36,6 +36,8 @@ let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
   extContext = context;
+  
+  setLanguageConfiguration();
 
   notifyOnNewExtensionVersion(extContext);
 
@@ -290,4 +292,40 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
     .catch(error => {
       logger.error(error);
     });
+}
+
+function setLanguageConfiguration() {
+  vscode.languages.setLanguageConfiguration(puppetLangID, {
+    onEnterRules: [
+      {
+        // foo{'bar':}
+        beforeText: /^.*{\s{0,}'.*':/,
+        afterText: /\s{0,}}$/,
+        action: {
+          indentAction: vscode.IndentAction.IndentOutdent
+        }
+      }
+    ],
+    brackets: [
+      ["{", "}"],
+      ["[", "]"],
+      ["(", ")"]
+    ],
+    comments: {
+      lineComment: "#",
+      blockComment: ["/*", "*/"]
+    }
+  });
+  vscode.languages.setLanguageConfiguration(puppetFileLangID, {
+    onEnterRules: [],
+    brackets: [
+      ["{", "}"],
+      ["[", "]"],
+      ["(", ")"]
+    ],
+    comments: {
+      lineComment: "#",
+      blockComment: ["/*", "*/"]
+    }
+  });
 }
