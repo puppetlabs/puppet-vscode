@@ -545,7 +545,7 @@
   },
   "dependencies": {
     "jsonc-parser": "~2.1.0",
-    "viz.js": "~1.7.0",
+    "viz.js": "~2.1.2",
     "vscode-debugadapter": "^1.19.0",
     "vscode-debugprotocol": "^1.19.0",
     "vscode-extension-telemetry": "0.1.2",

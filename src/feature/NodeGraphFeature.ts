@@ -8,7 +8,8 @@ import { ILogger } from "../logging";
 import { ConnectionStatus } from '../interfaces';
 import { CompileNodeGraphRequest, CompileNodeGraphResponse } from '../messages';
 import { reporter } from '../telemetry';
-import * as viz from 'viz.js';
+const { Module, render } = require('viz.js/full.render.js');
+let Viz = require("viz.js");
 import { ConnectionHandler } from "../handler";
 import { ISettings, SettingsFromWorkspace } from '../settings';
 
@@ -126,7 +127,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
       graphContent = graphContent.replace(/\\/g,"\\\\");
       graphContent = graphContent.replace(`label = "editorservices"`,styling);
 
-      svgContent = viz(graphContent,"svg");
+      svgContent = new Viz({Module, render}).renderString(graphContent);
     }
 
     var errorContent = `<div style='font-size: 1.5em'>${compileResult.error}</div>`;
