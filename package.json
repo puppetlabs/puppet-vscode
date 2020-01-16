@@ -90,8 +90,7 @@
         "extensions": [
           ".pp",
           ".epp"
-        ],
-        "configuration": "./languages/puppet-language-configuration.json"
+        ]
       },
       {
         "id": "puppetfile",
@@ -101,8 +100,7 @@
         ],
         "filenames": [
           "Puppetfile"
-        ],
-        "configuration": "./languages/puppetfile-language-configuration.json"
+        ]
       }
     ],
     "jsonValidation": [
