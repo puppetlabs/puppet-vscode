@@ -157,7 +157,7 @@ export class CommandEnvironmentHelper {
     [
       { name: 'confdir', value: settings.workspace.editorService.puppet.confdir },
       { name: 'environment', value: settings.workspace.editorService.puppet.environment },
-      { name: 'modulePath', value: settings.workspace.editorService.puppet.modulePath },
+      { name: 'modulepath', value: settings.workspace.editorService.puppet.modulePath },
       { name: 'vardir', value: settings.workspace.editorService.puppet.vardir }
     ].forEach(function (item) {
       if (item.value !== undefined && item.value !== '') {
