@@ -6,6 +6,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.23.0] - 2020-01-31
+
+### Added
+
+- ([GH-213](https://github.com/lingua-pupuli/puppet-editor-services/issues/213)) [puppet-editor-services-0.24.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.24.0) Gather and use facts using sidecar
+
+### Fixed
+
+- ([GH-289](https://github.com/lingua-pupuli/puppet-vscode/issues/289)) Fix paramter indentation after type declaration
+- ([GH-605](https://github.com/lingua-pupuli/puppet-vscode/issues/605)) Use correct setting name for module path
+- ([GH-199](https://github.com/lingua-pupuli/puppet-editor-services/issues/199)) [puppet-editor-services-0.24.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.24.0) Update stack trace tests for Puppet 5.5.18
+
 ## [0.22.0] - 2019-12-20
 
 ### Added
