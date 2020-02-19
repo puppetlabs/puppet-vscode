@@ -36,7 +36,7 @@ let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
   extContext = context;
-  
+
   setLanguageConfiguration();
 
   notifyOnNewExtensionVersion(extContext);
