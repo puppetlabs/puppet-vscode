@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.24.0] - 2020-02-28
+
+### Fixed
+
+- ([GH-610](https://github.com/lingua-pupuli/puppet-vscode/issues/610)) Highlighted text is replaced instead of surrounded with characters
+
 ## [0.23.0] - 2020-01-31
 
 ### Added
