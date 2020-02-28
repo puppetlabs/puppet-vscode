@@ -143,7 +143,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
         if (settings.editorService.tcp.address === '127.0.0.1' ||
             settings.editorService.tcp.address === 'localhost' ||
             settings.editorService.tcp.address === '') {
-          return ConnectionType.Local;
+              return ConnectionType.Remote;
         } else {
           return ConnectionType.Remote;
         }

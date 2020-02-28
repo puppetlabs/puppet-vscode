@@ -47,6 +47,16 @@ export interface PuppetFixDiagnosticErrorsResponse {
   newContent: string;
 }
 
+export namespace PuppetNodeGraphRequest {
+  export const type = new RequestType<any, PuppetNodeGraphResponse, void, void>('puppet/compileNodeGraph');
+}
+
+export interface PuppetNodeGraphResponse {
+  vertices: [];
+  edges: [];
+  error: string;
+}
+
 export namespace CompileNodeGraphRequest {
   export const type = new RequestType<any, any, void, void>('puppet/compileNodeGraph');
 }

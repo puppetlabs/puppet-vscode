@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Changed
+
+- ([GH-614](https://github.com/lingua-pupuli/puppet-vscode/issues/614)) Puppet Node Graph Feature Rewrite
+
 ## [0.24.0] - 2020-02-28
 
 ### Fixed

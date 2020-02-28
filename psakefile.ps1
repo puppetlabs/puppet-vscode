@@ -89,6 +89,12 @@ task VendorEditorSyntax {
   Invoke-RestMethod -Uri $uri -OutFile $syntaxFilePath -ErrorAction Stop 
 }
 
+task VendorCytoscape {
+  $cyto = Join-Path $PSScriptRoot 'node_modules\cytoscape\dist'
+  $vendorCytoPath = (Join-Path $PSScriptRoot 'vendor\cytoscape')
+  Copy-Item -Path $cyto -Recurse -Destination $vendorCytoPath
+}
+
 task CompileTypeScript {
   exec { tsc -p ./ }
 }
@@ -97,7 +103,7 @@ task Bump {
   exec { npm version --no-git-tag-version $packageVersion }
 }
 
-task Vendor -depends VendorEditorServices, VendorEditorSyntax
+task Vendor -depends VendorEditorServices, VendorEditorSyntax, VendorCytoscape
 
 task Build -depends Clean, Vendor, CompileTypeScript
 
