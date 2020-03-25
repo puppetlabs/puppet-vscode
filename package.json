@@ -42,7 +42,7 @@
     }
   ],
   "engines": {
-    "vscode": "^1.30.0"
+    "vscode": "^1.38.0"
   },
   "categories": [
     "Linters",
@@ -68,7 +68,6 @@
     "onCommand:extension.puppetShowConnectionMenu",
     "onCommand:extension.puppetLint",
     "onCommand:extension.puppetParserValidate",
-    "onCommand:extension.puppetShowNodeGraphToSide",
     "onCommand:extension.puppetResource",
     "onCommand:extension.pdkNewModule",
     "onCommand:extension.pdkNewClass",
@@ -186,7 +185,7 @@
         "title": "Puppet Resource"
       },
       {
-        "command": "extension.puppetShowNodeGraphToSide",
+        "command": "puppet.puppetShowNodeGraphToSide",
         "title": "Open Node Graph to the Side",
         "category": "Puppet",
         "icon": {
@@ -230,7 +229,7 @@
           "when": "editorLangId == 'puppet'"
         },
         {
-          "command": "extension.puppetShowNodeGraphToSide",
+          "command": "puppet.puppetShowNodeGraphToSide",
           "when": "editorLangId == 'puppet'"
         }
       ],
@@ -262,7 +261,7 @@
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.puppetShowNodeGraphToSide",
+          "command": "puppet.puppetShowNodeGraphToSide",
           "group": "puppet"
         },
         {
@@ -294,7 +293,7 @@
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.puppetShowNodeGraphToSide",
+          "command": "puppet.puppetShowNodeGraphToSide",
           "group": "puppet"
         },
         {
@@ -535,13 +534,14 @@
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.0.8",
-    "@types/vscode": "^1.30.0",
+    "@types/vscode": "^1.38.0",
     "glob": "^7.1.4",
     "mocha": "^6.2.2",
     "tslint": "^5.17.0",
     "typescript": "^3.5.2",
     "vsce": "^1.63.0",
-    "vscode-test": "^1.0.2"
+    "vscode-test": "^1.0.2",
+    "cytoscape": "3.14.0"
   },
   "dependencies": {
     "jsonc-parser": "~2.1.0",

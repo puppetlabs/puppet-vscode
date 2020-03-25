@@ -7,7 +7,6 @@ import { IFeature } from './feature';
 import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
-import { NodeGraphFeature } from './feature/NodeGraphFeature';
 import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
 import { PDKFeature } from './feature/PDKFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
@@ -21,6 +20,7 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { legacySettings, SettingsFromWorkspace } from './settings';
 import { reporter } from './telemetry';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
+import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 
 const axios = require('axios');
 
@@ -72,6 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
     return;
   }
 
+  
   if (checkInstallDirectory(configSettings, logger) === false){
     // If this returns false, then we needed a local directory
     // but did not find it, so we should abort here
@@ -96,7 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   extensionFeatures.push(new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext));
-  extensionFeatures.push(new NodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
+  extensionFeatures.push(new PuppetNodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
   extensionFeatures.push(new DebuggingFeature(debugType, configSettings, extContext, logger));
   
