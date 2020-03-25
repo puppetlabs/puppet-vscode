@@ -6,9 +6,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.25.0] - 2020-03-27
+
 ### Changed
 
 - ([GH-614](https://github.com/lingua-pupuli/puppet-vscode/issues/614)) Puppet Node Graph Feature Rewrite
+- ([GH-221](https://github.com/lingua-pupuli/puppet-editor-services/issues/221)) [puppet-editor-services-0.25.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.25.0) Puppet Node Graph JSON Response
+- (maint) [puppetfile-resolver-0.2.0](https://github.com/glennsarti/puppetfile-resolver/releases/tag/0.2.0) Puppetfile Resolver v0.2.0
+
+### Fixed
+
+- ([GH-207](https://github.com/lingua-pupuli/puppet-editor-services/issues/207)) [puppet-editor-services-0.25.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.25.0) Allow Qualified Resource Names in hover provider
+
 
 ## [0.24.0] - 2020-02-28
 
