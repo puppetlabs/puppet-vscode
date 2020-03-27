@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.25.1] - 2020-03-27
+
+### Fixed
+
+- Updated publisher in all places
+
 ## [0.25.0] - 2020-03-27
 
 ### Changed

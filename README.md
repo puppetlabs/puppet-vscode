@@ -1,7 +1,7 @@
 # [Puppet](https://www.puppet.com) Extension for Visual Studio Code
 
-[![Version](https://vsmarketplacebadge.apphb.com/version-short/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs/jpogran.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode)
+[![Version](https://vsmarketplacebadge.apphb.com/version-short/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
 [![Appveyor](https://ci.appveyor.com/api/projects/status/8ke8fhdt9a7j688m/branch/master?svg=true)](https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode/branch/master)
 [![Travis Ci](https://travis-ci.com/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.com/lingua-pupuli/puppet-vscode)
 
@@ -52,7 +52,7 @@ We are proud to announce the new Puppet VSCode website [https://puppet-vscode.gi
 > For a more detailed walkthrough see the [official documentation](https://puppet-vscode.github.io/docs/getting-started/)
 
 - Step 1: Install a supported version of the Puppet Development Kit on your system (see [Requirements](#requirements) for more information).
-- Step 2: Install the Puppet [extension](https://marketplace.visualstudio.com/items?itemName=jpogran.puppet-vscode) for Visual Studio Code.
+- Step 2: Install the Puppet [extension](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode) for Visual Studio Code.
 - Step 3: Open or create a Puppet manifest file (a file with a `.pp` or `.epp` extension or named `Puppetfile`) and start automating!
 
 ## Features

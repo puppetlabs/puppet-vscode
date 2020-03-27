@@ -26,7 +26,7 @@ const axios = require('axios');
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
-const debugType = 'Puppet';  // don't change this
+const debugType = 'Puppet'; // don't change this
 
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
@@ -48,13 +48,15 @@ export function activate(context: vscode.ExtensionContext) {
   configSettings = CreateAggregrateConfiguration(settings);
   logger = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
   if (configSettings.workspace.installType !== previousInstallType) {
-    logger.debug(`Installation type has changed from ${previousInstallType} to ${configSettings.workspace.installType}`);
+    logger.debug(
+      `Installation type has changed from ${previousInstallType} to ${configSettings.workspace.installType}`
+    );
   }
 
   reporter.sendTelemetryEvent('config', {
-    'installType'   : configSettings.workspace.installType,
-    'protocol'      : configSettings.workspace.editorService.protocol,
-    'pdkVersion'    : configSettings.ruby.pdkVersion
+    installType: configSettings.workspace.installType,
+    protocol: configSettings.workspace.editorService.protocol,
+    pdkVersion: configSettings.ruby.pdkVersion
   });
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
@@ -66,24 +68,23 @@ export function activate(context: vscode.ExtensionContext) {
     statusBar
   ];
 
-  if (configSettings.workspace.editorService.enable === false){
+  if (configSettings.workspace.editorService.enable === false) {
     notifyEditorServiceDisabled(extContext);
     reporter.sendTelemetryEvent('editorServiceDisabled');
     return;
   }
 
-  
-  if (checkInstallDirectory(configSettings, logger) === false){
+  if (checkInstallDirectory(configSettings, logger) === false) {
     // If this returns false, then we needed a local directory
     // but did not find it, so we should abort here
     // If we return true, we can continue
     // This can be revisited to enable disabling language server portion
     return;
   }
-  
+
   // this happens after checkInstallDirectory so that we don't check pdk version
   // if it's not installed
-  if(settings.pdk.checkVersion){
+  if (settings.pdk.checkVersion) {
     notifyIfNewPDKVersion(extContext, configSettings);
   }
 
@@ -96,12 +97,14 @@ export function activate(context: vscode.ExtensionContext) {
       break;
   }
 
-  extensionFeatures.push(new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext));
+  extensionFeatures.push(
+    new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext)
+  );
   extensionFeatures.push(new PuppetNodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
   extensionFeatures.push(new DebuggingFeature(debugType, configSettings, extContext, logger));
-  
-  if(settings.hover.showMetadataInfo){
+
+  if (settings.hover.showMetadataInfo) {
     extensionFeatures.push(new PuppetModuleHoverFeature(extContext, logger));
   }
 }
@@ -135,7 +138,7 @@ function checkForLegacySettings() {
   }
 }
 
-function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger) : boolean {
+function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger): boolean {
   if (config.workspace.editorService.protocol === ProtocolType.TCP) {
     if (config.connection.type === ConnectionType.Remote) {
       // Return if we are connecting to a remote TCP LangServer
@@ -151,13 +154,11 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
     if (SettingsFromWorkspace().installType === PuppetInstallType.AUTO) {
       let m = [
         'The extension failed to find a Puppet installation automatically in the default locations for PDK and for Puppet Agent.',
-        'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.',
+        'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.'
       ];
       message = m.join(' ');
-    }else{
-      message = `Could not find a valid Puppet installation at '${
-        config.ruby.puppetBaseDir
-      }'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`;
+    } else {
+      message = `Could not find a valid Puppet installation at '${config.ruby.puppetBaseDir}'. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`;
     }
 
     showErrorMessage(
@@ -186,7 +187,7 @@ function showErrorMessage(message: string, title: string, helpLink: string, logg
 }
 
 async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
-  const puppetExtension = vscode.extensions.getExtension('jpogran.puppet-vscode')!;
+  const puppetExtension = vscode.extensions.getExtension('puppet.puppet-vscode')!;
   const version = puppetExtension.packageJSON.version;
 
   const viewReleaseNotes = 'View Release Notes';
@@ -211,7 +212,7 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
   if (result.title === viewReleaseNotes) {
     vscode.commands.executeCommand(
       'vscode.open',
-      vscode.Uri.parse('https://marketplace.visualstudio.com/items/jpogran.puppet-vscode/changelog')
+      vscode.Uri.parse('https://marketplace.visualstudio.com/items/puppet.puppet-vscode/changelog')
     );
   } else {
     context.globalState.update(suppressUpdateNotice, true);
@@ -241,31 +242,32 @@ async function notifyEditorServiceDisabled(context: vscode.ExtensionContext) {
   }
 }
 
-async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:IAggregateConfiguration) {
+async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings: IAggregateConfiguration) {
   const suppressPDKUpdateCheck = 'suppressPDKUpdateCheck';
   const dontCheckAgainNotice = "Don't check again";
-  const viewPDKDownloadPage = "More info";
+  const viewPDKDownloadPage = 'More info';
 
   if (context.globalState.get(suppressPDKUpdateCheck, false)) {
     return;
   }
 
   let version = '';
-  if(settings.ruby.pdkVersion){
+  if (settings.ruby.pdkVersion) {
     version = settings.ruby.pdkVersion;
-  }else{
+  } else {
     // should we throw a warning here? technically this is only reached *if* a
     // PDK install is found, so the only way this is null is if the PDK_VERSION
     // file was removed.
     return;
   }
 
-  axios.get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST')
+  axios
+    .get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST')
     .then(response => {
       return response.data;
     })
     .then(latest_version => {
-      if(version !== latest_version){
+      if (version !== latest_version) {
         return vscode.window.showWarningMessage(
           `The installed PDK version is ${version}, the newest version is ${latest_version}. To find out how to update to the latest version click the more info button`,
           { modal: false },
@@ -274,11 +276,11 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
         );
       }
     })
-    .then(result=>{
+    .then(result => {
       if (result === undefined) {
         return;
       }
-    
+
       if (result.title === dontCheckAgainNotice) {
         context.globalState.update(suppressPDKUpdateCheck, true);
       }
@@ -308,25 +310,25 @@ function setLanguageConfiguration() {
       }
     ],
     brackets: [
-      ["{", "}"],
-      ["[", "]"],
-      ["(", ")"]
+      ['{', '}'],
+      ['[', ']'],
+      ['(', ')']
     ],
     comments: {
-      lineComment: "#",
-      blockComment: ["/*", "*/"]
+      lineComment: '#',
+      blockComment: ['/*', '*/']
     }
   });
   vscode.languages.setLanguageConfiguration(puppetFileLangID, {
     onEnterRules: [],
     brackets: [
-      ["{", "}"],
-      ["[", "]"],
-      ["(", ")"]
+      ['{', '}'],
+      ['[', ']'],
+      ['(', ')']
     ],
     comments: {
-      lineComment: "#",
-      blockComment: ["/*", "*/"]
+      lineComment: '#',
+      blockComment: ['/*', '*/']
     }
   });
 }
