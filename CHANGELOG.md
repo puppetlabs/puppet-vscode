@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.25.2] - 2020-03-27
+
+### Fixed
+
+- Updated telemetry class with new publisher
+
 ## [0.25.1] - 2020-03-27
 
 ### Fixed

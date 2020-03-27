@@ -15,7 +15,7 @@ function getTelemetryReporter() {
 }
 
 function getPackageInfo(): IPackageInfo {
-  let pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
+  let pkg = vscode.extensions.getExtension('puppet.puppet-vscode');
   return {	
     name: pkg.packageJSON.name,	
     version: pkg.packageJSON.version,	
