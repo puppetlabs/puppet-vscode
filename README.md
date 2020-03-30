@@ -7,7 +7,7 @@
 
 # Puppet VSCode [Website](https://puppet-vscode.github.io)
 
-We are proud to announce the new Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vscode.github.io/)! This website contains all of the documenation previously held in this README, simplified and organinzed. There is also new content that shows off all the current features in greater detail, as well as new ways to use the Puppet VSCode Extension with other technologies like the [Microsoft Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This README retains some quick information on how to get started and where to get help if things go wrong.
+We are proud to announce the new Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vscode.github.io/)! This website contains all of the documentation previously held in this README, simplified and organized. There is also new content that shows off all the current features in greater detail, as well as new ways to use the Puppet VSCode Extension with other technologies like the [Microsoft Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This README retains some quick information on how to get started and where to get help if things go wrong.
 
 ## Table of Contents
 
@@ -128,7 +128,7 @@ If you are receiving an error right after opening a Puppet file saying that a Pu
 
 If you haven't see the Problems Pane update in awhile, or hover and intellisense doesn't seem to showing up, and you might not know what to do. Sometimes the Puppet extension can experience problems which cause the language server to crash or not respond. The extension has a way of logging the crash, but there is something you can do to get right back to working: reload the Puppet Language Server.
 
-You can reload the Puppet Lanuguage Server by opening the command palette and starting to type `Reload`. A list of commands will appear, select `Reload Window`. This will reload the Visual Studio Code window without closing down the enitre edtior, and without losing any work currently open in the editor.
+You can reload the Puppet Language Server by opening the command palette and starting to type `Reload`. A list of commands will appear, select `Reload Window`. This will reload the Visual Studio Code window without closing down the entire editor, and without losing any work currently open in the editor.
 
 ## Reporting Problems
 
