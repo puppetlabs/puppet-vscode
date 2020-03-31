@@ -34,5 +34,5 @@ PDK Version:
 <!-- 
 Please remember to redact any output you put here, or request to use a private method for senistive log files
 
-For information how to capture verbose logs, look [here](https://github.com/lingua-pupuli/puppet-vscode#2-capture-verbose-logs-and-send-them-to-us)
+For information how to capture verbose logs, look [here](https://github.com/puppetlabs/puppet-vscode#2-capture-verbose-logs-and-send-them-to-us)
 -->

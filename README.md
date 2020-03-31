@@ -2,8 +2,6 @@
 
 [![Version](https://vsmarketplacebadge.apphb.com/version-short/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
-[![Appveyor](https://ci.appveyor.com/api/projects/status/8ke8fhdt9a7j688m/branch/master?svg=true)](https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode/branch/master)
-[![Travis Ci](https://travis-ci.com/lingua-pupuli/puppet-vscode.svg?branch=master)](https://travis-ci.com/lingua-pupuli/puppet-vscode)
 
 # Puppet VSCode [Website](https://puppet-vscode.github.io)
 
@@ -112,7 +110,7 @@ You can find instructions and installation links here:
 
 You can install the official release of the Puppet extension by following the steps in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery). In the Extensions pane, search for "puppet-vscode" extension and install it there. You will get notified automatically about any future extension updates!
 
-![extension_install](https://raw.githubusercontent.com/lingua-pupuli/puppet-vscode/master/docs/assets/extension_install.gif)
+![extension_install](https://raw.githubusercontent.com/puppetlabs/puppet-vscode/master/docs/assets/extension_install.gif)
 
 You can also install the extension without access to the internet by following these [instructions](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix.)
 
@@ -120,7 +118,7 @@ You can also install the extension without access to the internet by following t
 
 ### Puppet Agent Install
 
-A commonly encountered problem is not having the PDK or Puppet Agent installed on the computer you are running VSCode on. As noted in the [Requirements section](https://github.com/lingua-pupuli/puppet-vscode/blob/master/README.md#requirements), you will need to have the PDK or Puppet Agent installed in order to fully use this extension, as the extension uses the Puppet binaries and the Ruby language bundled into the PDK or agent install in order to function.
+A commonly encountered problem is not having the PDK or Puppet Agent installed on the computer you are running VSCode on. As noted in the [Requirements section](https://github.com/puppetlabs/puppet-vscode/blob/master/README.md#requirements), you will need to have the PDK or Puppet Agent installed in order to fully use this extension, as the extension uses the Puppet binaries and the Ruby language bundled into the PDK or agent install in order to function.
 
 If you are receiving an error right after opening a Puppet file saying that a Puppet Agent install could not be found, ensure that Puppet is installed on the system. The VSCode extension attempts to find a valid Puppet install if a path is not configured in `puppet.installDirectory` in `User Settings`, so if Puppet is installed but not in a default path please check that your setting points to the correct path.
 
@@ -135,7 +133,7 @@ You can reload the Puppet Language Server by opening the command palette and sta
 If you're having trouble with the Puppet extension, please follow these instructions
 to file an issue on our GitHub repository:
 
-### 1. File an issue on our [Issues Page](https://github.com/lingua-pupuli/puppet-vscode/issues)
+### 1. File an issue on our [Issues Page](https://github.com/puppetlabs/puppet-vscode/issues)
 
 Make sure to fill in the information that is requested in the issue template as it
 will help us investigate the problem more quickly.
@@ -157,7 +155,6 @@ Restart Visual Studio Code and try to reproduce the problem, then examine the lo
 - [James Pogran](https://github.com/jpogran) - [@ender2025](http://twitter.com/ender2025)
 - [Glenn Sarti](https://github.com/glennsarti) - [@glennsarti](http://twitter.com/glennsarti)
 - [Michael T Lombardi](https://github.com/michaeltlombardi) - [@barbariankb](http://twitter.com/barbariankb)
-- [Austin Blatt](https://github.com/austb)
 
 ## Telemetry
 
