@@ -3,11 +3,11 @@ BEFORE YOU CREATE A PULL REQUEST:
 
 Ensure you have read over
 
-CONTRIBUTING - https://github.com/lingua-pupuli/puppet-vscode/blob/master/CONTRIBUTING.md
+CONTRIBUTING - https://github.com/puppetlabs/puppet-vscode/blob/master/CONTRIBUTING.md
 
 and
 
-CODE_OF_CONDUCT - https://github.com/lingua-pupuli/puppet-vscode/blob/master/CODE_OF_CONDUCT.md
+CODE_OF_CONDUCT - https://github.com/puppetlabs/puppet-vscode/blob/master/CODE_OF_CONDUCT.md
 
 We provide defined guidance (as such, we strongly adhere to it).
 
