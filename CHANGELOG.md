@@ -31,6 +31,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - ([GH-207](https://github.com/lingua-pupuli/puppet-editor-services/issues/207)) [puppet-editor-services-0.25.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.25.0) Allow Qualified Resource Names in hover provider
 
 
+## [0.24.2] - 2020-03-30
+
+- Added button in warning dialog to auto-update `jpogran.puppet-vscode` to `puppet.puppet-vscode`
+
+## [0.24.1] - 2020-03-27
+
+- Deprecated `jpogran.puppet-vscode` extension to transition to Puppet namespace `puppet.puppet-vscode`
+
 ## [0.24.0] - 2020-02-28
 
 ### Fixed
