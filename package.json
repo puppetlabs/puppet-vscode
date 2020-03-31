@@ -19,26 +19,21 @@
     "color": "#000000",
     "theme": "dark"
   },
-  "homepage": "https://github.com/lingua-pupuli/puppet-vscode",
+  "homepage": "https://github.com/puppetlabs/puppet-vscode",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lingua-pupuli/puppet-vscode"
+    "url": "https://github.com/puppetlabs/puppet-vscode"
   },
   "bugs": {
     "type": "git",
-    "url": "https://github.com/lingua-pupuli/puppet-vscode/issues"
+    "url": "https://github.com/puppetlabs/puppet-vscode/issues"
   },
   "qna": "https://stackoverflow.com/questions/tagged/visual-studio-code+puppet",
   "badges": [
     {
-      "url": "https://travis-ci.com/lingua-pupuli/puppet-vscode.svg?branch=master",
-      "href": "https://travis-ci.com/lingua-pupuli/puppet-vscode",
+      "url": "https://travis-ci.com/puppetlabs/puppet-vscode.svg?branch=master",
+      "href": "https://travis-ci.com/puppetlabs/puppet-vscode",
       "description": "Continuous integration (Travis)"
-    },
-    {
-      "url": "https://ci.appveyor.com/api/projects/status/8ke8fhdt9a7j688m/branch/master?svg=true",
-      "href": "https://ci.appveyor.com/project/lingua-pupuli/puppet-vscode/branch/master",
-      "description": "Continuous integration (Appveyor)"
     }
   ],
   "engines": {

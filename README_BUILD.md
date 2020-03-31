@@ -11,7 +11,7 @@ This extension provides Puppet Language support for [Visual Studio Code](https:/
 * Clone this repository
 
 ```bash
-> git clone https://github.com/lingua-pupuli/puppet-vscode.git
+> git clone https://github.com/puppetlabs/puppet-vscode.git
 
 > cd puppet-vscode
 ```
@@ -136,4 +136,4 @@ Total:               00:00:02.023
 
 ## Issues
 
-Please raise issues for the Language Server or Extension using the GitHub [issue tracker](https://github.com/lingua-pupuli/puppet-vscode/issues/new).
+Please raise issues for the Language Server or Extension using the GitHub [issue tracker](https://github.com/puppetlabs/puppet-vscode/issues/new).
