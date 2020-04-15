@@ -1,11 +1,17 @@
-# [Puppet](https://www.puppet.com) Extension for Visual Studio Code
+# [Puppet](https://www.puppet.com) Visual Studio Code Extension
 
 [![Version](https://vsmarketplacebadge.apphb.com/version-short/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
 
-# Puppet VSCode [Website](https://puppet-vscode.github.io)
+The Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vscode.github.io) contains all of the documentation previously held in this README, simplified and organized. There is also new content that shows off all the current features in greater detail, as well as new ways to use the Puppet VSCode Extension with other technologies like the [Microsoft Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This README retains some quick information on how to get started and where to get help if things go wrong.
 
-We are proud to announce the new Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vscode.github.io/)! This website contains all of the documentation previously held in this README, simplified and organized. There is also new content that shows off all the current features in greater detail, as well as new ways to use the Puppet VSCode Extension with other technologies like the [Microsoft Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This README retains some quick information on how to get started and where to get help if things go wrong.
+## Quick start
+
+> For a more detailed walkthrough see the [official documentation](https://puppet-vscode.github.io/docs/getting-started/)
+
+- Step 1: Install a supported version of the Puppet Development Kit on your system (see [Requirements](#requirements) for more information).
+- Step 2: Install the Puppet [extension](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode) for Visual Studio Code.
+- Step 3: Open or create a Puppet manifest file (a file with a `.pp` or `.epp` extension or named `Puppetfile`) and start automating!
 
 ## Table of Contents
 
@@ -44,14 +50,6 @@ We are proud to announce the new Puppet VSCode website [https://puppet-vscode.gi
 - [Maintainers](#maintainers)
 - [Telemetry](#telemetry)
 - [License](#license)
-
-## Quick start
-
-> For a more detailed walkthrough see the [official documentation](https://puppet-vscode.github.io/docs/getting-started/)
-
-- Step 1: Install a supported version of the Puppet Development Kit on your system (see [Requirements](#requirements) for more information).
-- Step 2: Install the Puppet [extension](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode) for Visual Studio Code.
-- Step 3: Open or create a Puppet manifest file (a file with a `.pp` or `.epp` extension or named `Puppetfile`) and start automating!
 
 ## Features
 
