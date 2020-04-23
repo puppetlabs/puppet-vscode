@@ -35,6 +35,15 @@ let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
+  let pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
+  if (pkg){
+    let message = 'The "jpogran.puppet-vscode" extension has been detected, which will conflict with the "puppet.puppet-vscode" extension. This will cause problems activating when each extension tries to load at the same time and may cause errors. Please uninstall it by executing the following from the commandline: "code --uninstall-extension jpogran.puppet-vscode"';
+    vscode.window.showWarningMessage(
+      message,
+      { modal: false },
+    );
+  }
+
   extContext = context;
 
   setLanguageConfiguration();
