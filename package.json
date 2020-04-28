@@ -199,6 +199,15 @@
         "category": "Puppet"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "puppet-toolbar",
+          "title": "Puppet Toolbar",
+          "icon": "images/puppet-dag-dark.svg"
+        }
+      ]
+    },
     "menus": {
       "commandPalette": [
         {
