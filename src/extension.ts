@@ -21,6 +21,7 @@ import { legacySettings, SettingsFromWorkspace } from './settings';
 import { reporter } from './telemetry';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
 import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
+import { PuppetFactsProvider } from './views/facts';
 
 const axios = require('axios');
 
@@ -116,6 +117,10 @@ export function activate(context: vscode.ExtensionContext) {
   if (settings.hover.showMetadataInfo) {
     extensionFeatures.push(new PuppetModuleHoverFeature(extContext, logger));
   }
+
+  let facts = new PuppetFactsProvider(connectionHandler);
+  vscode.window.registerTreeDataProvider('puppetFacts', facts);
+
 }
 
 export function deactivate() {
