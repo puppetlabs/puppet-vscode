@@ -11,7 +11,7 @@ import {
 } from 'vscode';
 import { RequestType, RequestType0 } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
-import { PuppetVersionRequest } from '../messages';
+import { PuppetVersionRequest, PuppetVersionDetails } from '../messages';
 
 class PuppetFact extends TreeItem {
   constructor(
@@ -75,6 +75,46 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
       facts is slow.
     */
     await this.handler.languageClient.onReady();
+
+    const details = await this.handler.languageClient.sendRequest(
+      new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion')
+    );
+    if (!details.factsLoaded) {
+      // language server is ready, but hasn't loaded facts yet
+      return new Promise<PuppetFact[]>((resolve, reject) => {
+        let count = 0;
+        let handle = setInterval(async () => {
+          count++;
+          if (count >= 60) {
+            clearInterval(handle);
+
+            const results = await this.handler.languageClient.sendRequest(
+              new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
+            );
+            this.elements = this.toList(results.facts);
+
+            resolve(this.elements.map((e) => e[1]));
+          }
+
+          const details = await this.handler.languageClient.sendRequest(
+            new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion')
+          );
+          if (details.factsLoaded) {
+            clearInterval(handle);
+
+            const results = await this.handler.languageClient.sendRequest(
+              new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
+            );
+            this.elements = this.toList(results.facts);
+
+            resolve(this.elements.map((e) => e[1]));
+          } else {
+            // not ready yet
+          }
+        }, 1000);
+      });
+    }
+
     const results = await this.handler.languageClient.sendRequest(
       new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
     );
