@@ -76,7 +76,7 @@ export class TcpConnectionHandler extends ConnectionHandler {
           this.config.workspace.editorService.tcp.address === 'localhost' ||
           this.config.workspace.editorService.tcp.address === ''
         ) {
-          return ConnectionType.Remote;
+          return ConnectionType.Local;
         } else {
           return ConnectionType.Remote;
         }
