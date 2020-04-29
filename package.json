@@ -197,8 +197,33 @@
         "command": "puppet-bolt.OpenUserInventoryFile",
         "title": "Open Bolt User Inventory File",
         "category": "Puppet"
+      },
+      {
+        "command": "puppet.refreshFacts",
+        "title": "Refresh",
+        "icon": {
+          "light": "assets/icons/light/sync.svg",
+          "dark": "assets/icons/dark/sync.svg"
+        }
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "puppet-toolbar",
+          "title": "Puppet Toolbar",
+          "icon": "images/puppet-dag-dark.svg"
+        }
+      ]
+    },
+    "views": {
+      "puppet-toolbar": [
+        {
+          "id": "puppetFacts",
+          "name": "Facts"
+        }
+      ]
+    },
     "menus": {
       "commandPalette": [
         {
@@ -295,6 +320,13 @@
           "when": "editorLangId == 'puppet'",
           "command": "extension.puppetResource",
           "group": "puppet"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "puppet.refreshFacts",
+          "when": "view == puppetFacts",
+          "group": "navigation"
         }
       ]
     },
