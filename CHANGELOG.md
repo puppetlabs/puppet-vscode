@@ -6,6 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Added
+
+- ([GH-630](https://github.com/puppetlabs/puppet-vscode/issues/630)) Add Puppet ToolBar
+- ([GH-631](https://github.com/puppetlabs/puppet-vscode/issues/631)) Add Puppet Facts View
+
 ## [0.25.2] - 2020-03-27
 
 ### Fixed
