@@ -7,11 +7,11 @@ import {
   EventEmitter,
   commands,
   ProviderResult,
-  window,
 } from 'vscode';
-import { RequestType, RequestType0 } from 'vscode-languageclient';
+import { RequestType0 } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
-import { PuppetVersionRequest, PuppetVersionDetails } from '../messages';
+import { PuppetVersionDetails } from '../messages';
+import { reporter } from '../telemetry';
 
 class PuppetFact extends TreeItem {
   constructor(
@@ -81,7 +81,7 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
     );
     if (!details.factsLoaded) {
       // language server is ready, but hasn't loaded facts yet
-      return new Promise<PuppetFact[]>((resolve, reject) => {
+      return new Promise<PuppetFact[]>((resolve) => {
         let count = 0;
         let handle = setInterval(async () => {
           count++;
@@ -92,6 +92,10 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
               new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
             );
             this.elements = this.toList(results.facts);
+
+            if (reporter) {
+              reporter.sendTelemetryEvent('puppetFacts');
+            }
 
             resolve(this.elements.map((e) => e[1]));
           }
@@ -107,6 +111,10 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
             );
             this.elements = this.toList(results.facts);
 
+            if (reporter) {
+              reporter.sendTelemetryEvent('puppetFacts');
+            }
+
             resolve(this.elements.map((e) => e[1]));
           } else {
             // not ready yet
@@ -119,6 +127,11 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
       new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
     );
     this.elements = this.toList(results.facts);
+
+    if (reporter) {
+      reporter.sendTelemetryEvent('puppetFacts');
+    }
+
     return this.elements.map((e) => e[1]);
   }
 
