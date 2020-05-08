@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Changed
+
+- (maint) Update facts view telemetry
+
 ## [0.26.0] - 2020-05-01
 
 ### Added
