@@ -16,33 +16,43 @@ task Clean {
   }
 }
 
+# "editorServices": {
+#   "release": "0.26.0"
+# }
+# "editorServices": {
+#   "release": "0.26.0"
+#   "githubrepo": "puppet-editor-services",
+#   "githubuser": "glennsarti"
+# }
+  # "editorServices": {
+#   "githubrepo": "puppet-editor-services",
+#   "githubref": "glennsarti:spike-rearch-langserver"
+# },
 task VendorEditorServices {
-  $githubref = $config.editorComponents.editorServices.githubref
-  if ($config.editorComponents.editorServices.githubuser) {
-    $githubuser = $config.editorComponents.editorServices.githubuser
-  }
-  else {
-    $githubuser = 'lingua-pupuli'
-  }
-  if ($config.editorComponents.editorServices.githubrepo) {
-    $githubrepo = $config.editorComponents.editorServices.githubrepo
-  }
-  else {
-    $githubrepo = 'puppet-editor-services'
+  $githubrepo = $config.editorComponents.editorServices.githubrepo ?? 'puppet-editor-services'
+  $githubuser = $config.editorComponents.editorServices.githubuser ?? 'puppetlabs'
+
+  if($config.editorComponents.editorServices.release){
+    $releasenumber = $config.editorComponents.editorServices.release
+    $uri = "https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet_editor_services_${releasenumber}.zip";
+  }else{
+    $githubref = $config.editorComponents.editorServices.githubref;
+    if($githubref -notcontains ':'){
+      throw "Invalid githubref. Must be in user:branch format like glennsarti:spike-rearch-langserver"
+    }
+    $githubuser = $githubref.split(":")[0]
+    $githubbranch = $githubref.split(":")[1]
+    $uri = "https://github.com/${githubuser}/${githubrepo}/archive/${githubbranch}.zip"
   }
 
   if ($config.editorComponents.editorServices.directory) {
     Copy-Item -Path $config.editorComponents.editorServices.directory -Destination $languageServerPath -Recurse -Force
   }elseif ($config.editorComponents.editorServices.release) {
-    $releasenumber = $config.editorComponents.editorServices.release
-    $uri = "https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet_editor_services_${releasenumber}.zip";
     Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop
     Expand-Archive -Path $languageServerZip -DestinationPath $languageServerPath -ErrorAction Stop
     Remove-Item -Path $languageServerZip -Force
   }
   elseif ($config.editorComponents.editorServices.githubref) {
-    $githubref = $config.editorComponents.editorServices.githubref;
-    $uri = "https://github.com/${githubuser}/${githubrepo}/archive/${githubref}.zip"
     Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop
     Expand-Archive -Path $languageServerZip -DestinationPath "$($languageServerPath)/tmp" -ErrorAction Stop
     Move-Item -Path (Join-Path $languageServerPath "tmp/$githubrepo-$githubref/*") -Destination $languageServerPath
@@ -103,9 +113,13 @@ task Bump {
   exec { npm version --no-git-tag-version $packageVersion }
 }
 
+task Npm {
+  exec { npm install }
+}
+
 task Vendor -depends VendorEditorServices, VendorEditorSyntax, VendorCytoscape
 
-task Build -depends Clean, Vendor, CompileTypeScript
+task Build -depends Clean, Npm, Vendor, CompileTypeScript
 
 task Initial -depends Clean, Vendor
 
