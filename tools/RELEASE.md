@@ -38,3 +38,14 @@
 1. `git clone https://github.com/puppetlabs/puppet-vscode` or `git clean -xfd` on working copy
 1. `npm install`
 1. `npmx vsce publish`
+
+## Update the `puppet-vscode` docs website
+
+1. Checkout `https://github.com/lingua-pupuli/docs`
+1. Run the release update PowerShell script
+
+   ``` powershell
+   PS> docs/vscode/update-from-source.ps1 -ExtensionSourcePath C:\puppet-vscode
+   ```
+   
+1. Create a commit for the changes and raise a Pull Request
