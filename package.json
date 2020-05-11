@@ -216,6 +216,12 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "puppetFacts",
+        "contents": "No facts foundn\n [Refresh](command:puppet.refreshFacts)"
+      }
+    ],
     "views": {
       "puppet-toolbar": [
         {
