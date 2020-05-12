@@ -219,7 +219,7 @@
     "viewsWelcome": [
       {
         "view": "puppetFacts",
-        "contents": "No facts foundn\n [Refresh](command:puppet.refreshFacts)"
+        "contents": "No facts found\n[Refresh](command:puppet.refreshFacts)"
       }
     ],
     "views": {
