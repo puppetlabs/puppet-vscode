@@ -108,7 +108,7 @@ You can find instructions and installation links here:
 
 You can install the official release of the Puppet extension by following the steps in the [Visual Studio Code documentation](https://code.visualstudio.com/docs/editor/extension-gallery). In the Extensions pane, search for "puppet-vscode" extension and install it there. You will get notified automatically about any future extension updates!
 
-![extension_install](https://raw.githubusercontent.com/puppetlabs/puppet-vscode/master/docs/assets/extension_install.gif)
+![extension_install](https://puppet-vscode.github.io/img/extension_install.gif)
 
 You can also install the extension without access to the internet by following these [instructions](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix.)
 
