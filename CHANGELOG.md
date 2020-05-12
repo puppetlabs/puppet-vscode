@@ -6,11 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.26.1] - 2020-05-12
+
 ### Changed
 
-- (maint) Update facts view telemetry
 - ([GH-647](https://github.com/puppetlabs/puppet-vscode/issues/647)) Add Puppet Facts Welcome View
 - ([GH-583](https://github.com/puppetlabs/puppet-vscode/issues/583)) Optimize build script
+- ([GH-662](https://github.com/puppetlabs/puppet-vscode/issues/662)) Update extension install gif
+- (maint) Update facts view telemetry
 
 ## [0.26.0] - 2020-05-01
 
