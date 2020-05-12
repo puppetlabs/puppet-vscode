@@ -1,0 +1,26 @@
+on:
+  release:
+    types: [created]
+
+env:
+  NODE_VERSION: '12.x'
+  VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+    - name: 'Deploy to Azure WebApp'
+      run: |
+        npm publish -p $VSCE_TOKEN
