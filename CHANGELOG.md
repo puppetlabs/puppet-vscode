@@ -10,6 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - (maint) Update facts view telemetry
 - ([GH-647](https://github.com/puppetlabs/puppet-vscode/issues/647)) Add Puppet Facts Welcome View
+- ([GH-583](https://github.com/puppetlabs/puppet-vscode/issues/583)) Optimize build script
 
 ## [0.26.0] - 2020-05-01
 

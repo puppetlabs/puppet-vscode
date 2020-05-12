@@ -16,33 +16,45 @@ task Clean {
   }
 }
 
-task VendorEditorServices {
-  $githubref = $config.editorComponents.editorServices.githubref
-  if ($config.editorComponents.editorServices.githubuser) {
-    $githubuser = $config.editorComponents.editorServices.githubuser
+# "editorServices": {
+#   "release": "0.26.0"
+# }
+# "editorServices": {
+#   "release": "0.26.0"
+#   "githubrepo": "puppet-editor-services",
+#   "githubuser": "glennsarti"
+# }
+# "editorServices": {
+#   "githubrepo": "puppet-editor-services",
+#   "githubref": "glennsarti:spike-rearch-langserver"
+# },
+task VendorEditorServices -precondition { !(Test-Path (Join-Path $PSScriptRoot 'vendor/languageserver')) } {
+  $githubrepo = $config.editorComponents.editorServices.githubrepo ?? 'puppet-editor-services'
+  $githubuser = $config.editorComponents.editorServices.githubuser ?? 'puppetlabs'
+
+  if ($config.editorComponents.editorServices.release) {
+    $releasenumber = $config.editorComponents.editorServices.release
+    $uri = "https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet_editor_services_${releasenumber}.zip";
   }
   else {
-    $githubuser = 'lingua-pupuli'
-  }
-  if ($config.editorComponents.editorServices.githubrepo) {
-    $githubrepo = $config.editorComponents.editorServices.githubrepo
-  }
-  else {
-    $githubrepo = 'puppet-editor-services'
+    $githubref = $config.editorComponents.editorServices.githubref;
+    if ($githubref -notcontains ':') {
+      throw "Invalid githubref. Must be in user:branch format like glennsarti:spike-rearch-langserver"
+    }
+    $githubuser = $githubref.split(":")[0]
+    $githubbranch = $githubref.split(":")[1]
+    $uri = "https://github.com/${githubuser}/${githubrepo}/archive/${githubbranch}.zip"
   }
 
   if ($config.editorComponents.editorServices.directory) {
     Copy-Item -Path $config.editorComponents.editorServices.directory -Destination $languageServerPath -Recurse -Force
-  }elseif ($config.editorComponents.editorServices.release) {
-    $releasenumber = $config.editorComponents.editorServices.release
-    $uri = "https://github.com/${githubuser}/${githubrepo}/releases/download/${releasenumber}/puppet_editor_services_${releasenumber}.zip";
+  }
+  elseif ($config.editorComponents.editorServices.release) {
     Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop
     Expand-Archive -Path $languageServerZip -DestinationPath $languageServerPath -ErrorAction Stop
     Remove-Item -Path $languageServerZip -Force
   }
   elseif ($config.editorComponents.editorServices.githubref) {
-    $githubref = $config.editorComponents.editorServices.githubref;
-    $uri = "https://github.com/${githubuser}/${githubrepo}/archive/${githubref}.zip"
     Invoke-RestMethod -Uri $uri -OutFile $languageServerZip -ErrorAction Stop
     Expand-Archive -Path $languageServerZip -DestinationPath "$($languageServerPath)/tmp" -ErrorAction Stop
     Move-Item -Path (Join-Path $languageServerPath "tmp/$githubrepo-$githubref/*") -Destination $languageServerPath
@@ -54,19 +66,9 @@ task VendorEditorServices {
   }
 }
 
-task VendorEditorSyntax {
-  if ($config.editorComponents.editorSyntax.githubuser) {
-    $githubuser = $config.editorComponents.editorSyntax.githubuser
-  }
-  else {
-    $githubuser = 'lingua-pupuli'
-  }
-  if ($config.editorComponents.editorSyntax.githubrepo) {
-    $githubrepo = $config.editorComponents.editorSyntax.githubrepo
-  }
-  else {
-    $githubrepo = 'puppet-editor-syntax'
-  }
+task VendorEditorSyntax -precondition { !(Test-Path (Join-Path $PSScriptRoot 'syntaxes/puppet.tmLanguage')) } {
+  $githubrepo = $config.editorComponents.editorSyntax.githubrepo ?? 'puppet-editor-syntax'
+  $githubuser = $config.editorComponents.editorSyntax.githubuser ?? 'puppetlabs'
 
   if ($config.editorComponents.editorSyntax.directory) {
     $source = Join-Path ($config.editorComponents.editorSyntax.directory, 'syntaxes/puppet.tmLanguage')
@@ -89,7 +91,7 @@ task VendorEditorSyntax {
   Invoke-RestMethod -Uri $uri -OutFile $syntaxFilePath -ErrorAction Stop 
 }
 
-task VendorCytoscape {
+task VendorCytoscape -precondition { !(Test-Path (Join-Path $PSScriptRoot 'vendor\cytoscape')) } {
   $cyto = Join-Path $PSScriptRoot 'node_modules\cytoscape\dist'
   $vendorCytoPath = (Join-Path $PSScriptRoot 'vendor\cytoscape')
   Copy-Item -Path $cyto -Recurse -Destination $vendorCytoPath
@@ -103,10 +105,12 @@ task Bump {
   exec { npm version --no-git-tag-version $packageVersion }
 }
 
+task Npm -precondition { !(Test-Path (Join-Path $PSScriptRoot 'node_modules')) } {
+  exec { npm install }
+}
+
 task Vendor -depends VendorEditorServices, VendorEditorSyntax, VendorCytoscape
 
-task Build -depends Clean, Vendor, CompileTypeScript
-
-task Initial -depends Clean, Vendor
+task Build -depends Npm, Vendor, CompileTypeScript
 
 task default -depends Build
