@@ -59,18 +59,7 @@
     "workspaceContains:**/*.pp",
     "workspaceContains:**/*.epp",
     "workspaceContains:**/Puppetfile",
-    "onCommand:extension.puppetShowConnectionLogs",
-    "onCommand:extension.puppetShowConnectionMenu",
-    "onCommand:extension.puppetLint",
-    "onCommand:extension.puppetParserValidate",
-    "onCommand:extension.puppetResource",
-    "onCommand:extension.pdkNewModule",
-    "onCommand:extension.pdkNewClass",
-    "onCommand:extension.pdkNewTask",
-    "onCommand:extension.pdkTestUnit",
-    "onCommand:extension.pdkValidate",
-    "onCommand:puppet-bolt.OpenUserConfigFile",
-    "onCommand:puppet-bolt.OpenUserInventoryFile"
+    "onCommand:extension.pdkNewModule"
   ],
   "main": "./out/extension",
   "contributes": {
