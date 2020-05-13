@@ -3,7 +3,7 @@
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "editor.trimAutoWhitespace": true,
-  
+
     "files.encoding": "utf8",
     // The default end of line character. Use \n for LF and \r\n for CRLF.
     "files.eol": "\n",
@@ -19,11 +19,17 @@
       "node_modules": true,
       "out": true // set this to false to include "out" folder in search results
     },
-  
+
     "prettier.printWidth": 120,
     "prettier.singleQuote": true,
     "prettier.tabWidth": 2,
 
     // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-    "typescript.tsc.autoDetect": "off"
-  }
+    "typescript.tsc.autoDetect": "off",
+    "typescript.format.enable": false,
+    "[typescript]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnType": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+}
