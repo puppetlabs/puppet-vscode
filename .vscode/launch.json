@@ -10,12 +10,8 @@
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/out/**/*.js"
-      ],
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"],
       "preLaunchTask": "npm: watch"
     },
     {
@@ -27,9 +23,7 @@
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
       ],
-      "outFiles": [
-        "${workspaceFolder}/out/test/**/*.js"
-      ],
+      "outFiles": ["${workspaceFolder}/out/test/**/*.js"],
       "preLaunchTask": "npm: watch"
     },
     {
@@ -38,8 +32,8 @@
       "name": "DebugAdapter",
       "cwd": "${workspaceFolder}",
       "program": "${workspaceFolder}/src/debugAdapter.ts",
-      "args": [ "--server=4711" ],
-      "outFiles": [ "${workspaceFolder}/out/**/*.js" ]
+      "args": ["--server=4711"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"]
     },
     {
       "type": "node",
@@ -56,7 +50,7 @@
   "compounds": [
     {
       "name": "Extension + DebugAdapter",
-      "configurations": [ "Extension", "DebugAdapter" ]
+      "configurations": ["Extension", "DebugAdapter"]
     }
   ]
 }

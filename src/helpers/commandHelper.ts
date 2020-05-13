@@ -33,11 +33,7 @@ export class CommandEnvironmentHelper {
     return exe;
   }
 
-  private static applyRubyEnvFromConfiguration(
-    exe: Executable,
-    config: IAggregateConfiguration
-  ): Executable {
-
+  private static applyRubyEnvFromConfiguration(exe: Executable, config: IAggregateConfiguration): Executable {
     // setup defaults
     exe.options.env = this.shallowCloneObject(process.env);
     exe.options.stdio = 'pipe';
@@ -95,7 +91,7 @@ export class CommandEnvironmentHelper {
       // not so much on Linux etc.. Look through all of the environment names looking for PATH in a
       // case insensitive way and remove the conflicting env var.
       let envPath: string = '';
-      Object.keys(exe.options.env).forEach(function(keyname) {
+      Object.keys(exe.options.env).forEach(function (keyname) {
         if (keyname.match(/^PATH$/i)) {
           envPath = exe.options.env[keyname];
           exe.options.env[keyname] = undefined;
@@ -107,7 +103,6 @@ export class CommandEnvironmentHelper {
       exe.options.env.RUBYLIB = '';
     }
   }
-
 
   private static buildExecutableCommand(config: IAggregateConfiguration) {
     let command: string = '';
@@ -122,10 +117,7 @@ export class CommandEnvironmentHelper {
     return command;
   }
 
-  private static buildLanguageServerArguments(
-    serverPath: string,
-    settings: IAggregateConfiguration,
-  ): string[] {
+  private static buildLanguageServerArguments(serverPath: string, settings: IAggregateConfiguration): string[] {
     let args = [serverPath];
 
     switch (settings.workspace.editorService.protocol) {
@@ -133,7 +125,10 @@ export class CommandEnvironmentHelper {
         args.push('--stdio');
         break;
       case ProtocolType.TCP:
-        if (settings.workspace.editorService.tcp.address === undefined || settings.workspace.editorService.tcp.address === '') {
+        if (
+          settings.workspace.editorService.tcp.address === undefined ||
+          settings.workspace.editorService.tcp.address === ''
+        ) {
           args.push('--ip=127.0.0.1');
         } else {
           args.push('--ip=' + settings.workspace.editorService.tcp.address);
@@ -158,7 +153,7 @@ export class CommandEnvironmentHelper {
       { name: 'confdir', value: settings.workspace.editorService.puppet.confdir },
       { name: 'environment', value: settings.workspace.editorService.puppet.environment },
       { name: 'modulepath', value: settings.workspace.editorService.puppet.modulePath },
-      { name: 'vardir', value: settings.workspace.editorService.puppet.vardir }
+      { name: 'vardir', value: settings.workspace.editorService.puppet.vardir },
     ].forEach(function (item) {
       if (item.value !== undefined && item.value !== '') {
         puppetSettings.push('--' + item.name + ',' + item.value);
@@ -168,19 +163,23 @@ export class CommandEnvironmentHelper {
       args.push('--puppet-settings=' + puppetSettings.join(','));
     }
 
-    if (settings.workspace.editorService.puppet.version !== undefined && settings.workspace.editorService.puppet.version.trim() !== "") {
+    if (
+      settings.workspace.editorService.puppet.version !== undefined &&
+      settings.workspace.editorService.puppet.version.trim() !== ''
+    ) {
       args.push('--puppet-version=' + settings.workspace.editorService.puppet.version.trim());
     }
 
-    if (settings.workspace.editorService.debugFilePath !== undefined && settings.workspace.editorService.debugFilePath !== '') {
+    if (
+      settings.workspace.editorService.debugFilePath !== undefined &&
+      settings.workspace.editorService.debugFilePath !== ''
+    ) {
       args.push('--debug=' + settings.workspace.editorService.debugFilePath);
     }
     return args;
   }
 
-  private static buildDebugServerArguments(
-    serverPath: string
-  ): string[] {
+  private static buildDebugServerArguments(serverPath: string): string[] {
     let args = [serverPath];
 
     // The Debug Adapter always runs on TCP and IPv4 loopback
@@ -208,9 +207,17 @@ export class CommandEnvironmentHelper {
     exe.options.env.DEVKIT_BASEDIR = config.ruby.puppetBaseDir;
     exe.options.env.RUBY_DIR = config.ruby.pdkRubyDir;
     exe.options.env.GEM_HOME = config.ruby.pdkGemDir;
-    exe.options.env.GEM_PATH = this.buildPathArray([config.ruby.pdkGemVerDir, config.ruby.pdkGemDir, config.ruby.pdkRubyVerDir]);
+    exe.options.env.GEM_PATH = this.buildPathArray([
+      config.ruby.pdkGemVerDir,
+      config.ruby.pdkGemDir,
+      config.ruby.pdkRubyVerDir,
+    ]);
     exe.options.env.RUBYLIB = this.buildPathArray([config.ruby.pdkRubyLib, exe.options.env.RUBYLIB]);
-    exe.options.env.PATH = this.buildPathArray([config.ruby.pdkBinDir, config.ruby.pdkRubyBinDir, exe.options.env.PATH]);
+    exe.options.env.PATH = this.buildPathArray([
+      config.ruby.pdkBinDir,
+      config.ruby.pdkRubyBinDir,
+      exe.options.env.PATH,
+    ]);
   }
 
   private static buildPathArray(items: any[]) {

@@ -18,7 +18,7 @@ class PuppetFact extends TreeItem {
     public readonly label: string,
     private value: string,
     public readonly collapsibleState: TreeItemCollapsibleState,
-    public readonly children?: Array<[string, PuppetFact]>
+    public readonly children?: Array<[string, PuppetFact]>,
   ) {
     super(label, collapsibleState);
     if (children) {
@@ -77,7 +77,7 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
     await this.handler.languageClient.onReady();
 
     const details = await this.handler.languageClient.sendRequest(
-      new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion')
+      new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion'),
     );
     if (!details.factsLoaded) {
       // language server is ready, but hasn't loaded facts yet
@@ -89,7 +89,7 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
             clearInterval(handle);
 
             const results = await this.handler.languageClient.sendRequest(
-              new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
+              new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts'),
             );
             this.elements = this.toList(results.facts);
 
@@ -101,13 +101,13 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
           }
 
           const details = await this.handler.languageClient.sendRequest(
-            new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion')
+            new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion'),
           );
           if (details.factsLoaded) {
             clearInterval(handle);
 
             const results = await this.handler.languageClient.sendRequest(
-              new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
+              new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts'),
             );
             this.elements = this.toList(results.facts);
 
@@ -124,7 +124,7 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
     }
 
     const results = await this.handler.languageClient.sendRequest(
-      new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts')
+      new RequestType0<PuppetFactResponse, void, void>('puppet/getFacts'),
     );
     this.elements = this.toList(results.facts);
 

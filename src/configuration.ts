@@ -8,7 +8,7 @@ import { ISettings, ConnectionType, ProtocolType, PuppetInstallType } from './se
 import * as pdk from './configuration/pdkResolver';
 
 /** Creates an Aggregate Configuration based on the VSCode Workspace settings (ISettings) */
-export function CreateAggregrateConfiguration(settings:ISettings): IAggregateConfiguration {
+export function CreateAggregrateConfiguration(settings: ISettings): IAggregateConfiguration {
   const value = new AggregateConfiguration(settings);
 
   return value;
@@ -27,15 +27,15 @@ interface IRubyConfiguration {
   readonly sslCertFile: string;
   readonly sslCertDir: string;
 
-  readonly pdkBinDir:string;
-  readonly pdkRubyLib:string;
-  readonly pdkRubyVerDir:string;
-  readonly pdkGemDir:string;
-  readonly pdkRubyDir:string;
-  readonly pdkRubyBinDir:string;
-  readonly pdkGemVerDir:string;
+  readonly pdkBinDir: string;
+  readonly pdkRubyLib: string;
+  readonly pdkRubyVerDir: string;
+  readonly pdkGemDir: string;
+  readonly pdkRubyDir: string;
+  readonly pdkRubyBinDir: string;
+  readonly pdkGemVerDir: string;
   readonly pdkPuppetVersions: string[];
-  readonly pdkVersion:string;
+  readonly pdkVersion: string;
 }
 
 /** The IConnectionConfiguration interface describes the connection used to
@@ -61,7 +61,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
   public ruby: IRubyConfiguration;
   public connection: IConnectionConfiguration;
 
-  constructor(settings:ISettings) {
+  constructor(settings: ISettings) {
     this.workspace = settings;
 
     // If the user has set the installType to 'auto' then we need
@@ -69,7 +69,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     if (settings.installType === PuppetInstallType.AUTO) {
       if (fs.existsSync(this.getPdkBasePath())) {
         settings.installType = PuppetInstallType.PDK;
-      } else if(fs.existsSync(this.getAgentBasePath())) {
+      } else if (fs.existsSync(this.getAgentBasePath())) {
         settings.installType = PuppetInstallType.PUPPET;
       } else {
         // We can't automatically figure it out so, assume PDK
@@ -88,15 +88,23 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     if (settings.installType === PuppetInstallType.PDK) {
       const pdkInfo = pdk.pdkInstances(puppetBaseDir);
       let result: pdk.IPDKRubyInstance;
-      if (settings.editorService !== undefined && settings.editorService.puppet !== undefined && settings.editorService.puppet.version !== undefined) {
+      if (
+        settings.editorService !== undefined &&
+        settings.editorService.puppet !== undefined &&
+        settings.editorService.puppet.version !== undefined
+      ) {
         result = pdkInfo.InstanceForPuppetVersion(settings.editorService.puppet.version);
       }
       // If we can't find the PDK instance from the puppet version or it wasn't defined, assume the latest.
-      if (result === undefined) { result = pdkInfo.latest; }
+      if (result === undefined) {
+        result = pdkInfo.latest;
+      }
 
       // An undefined instance means that either PDK isn't installed or that
       // the requested version doesn't exist.
-      if (result !== undefined) { pdkInstance = result; }
+      if (result !== undefined) {
+        pdkInstance = result;
+      }
       puppetVersions = pdkInfo.allPuppetVersions;
     }
 
@@ -123,7 +131,10 @@ export class AggregateConfiguration implements IAggregateConfiguration {
 
     this.connection = {
       type: this.calculateConnectionType(settings),
-      protocol: (settings.editorService !== undefined && settings.editorService.protocol === ProtocolType.TCP) ? ProtocolType.TCP : ProtocolType.STDIO
+      protocol:
+        settings.editorService !== undefined && settings.editorService.protocol === ProtocolType.TCP
+          ? ProtocolType.TCP
+          : ProtocolType.STDIO,
     };
   }
 
@@ -131,18 +142,26 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     let foundUndefined: Boolean = false;
     // path.join makes sure that no elements are 'undefined' and throws if there is. Instead
     // we can search for it and just return undefined ourself.
-    paths.forEach( (item) => { foundUndefined = foundUndefined || (item === undefined); });
-    if (foundUndefined) { return undefined; }
+    paths.forEach((item) => {
+      foundUndefined = foundUndefined || item === undefined;
+    });
+    if (foundUndefined) {
+      return undefined;
+    }
     return path.join(...paths);
   }
 
-  private calculateConnectionType(settings:ISettings): ConnectionType {
-    if (settings.editorService === undefined) { return undefined; }
+  private calculateConnectionType(settings: ISettings): ConnectionType {
+    if (settings.editorService === undefined) {
+      return undefined;
+    }
     switch (settings.editorService.protocol) {
       case ProtocolType.TCP:
-        if (settings.editorService.tcp.address === '127.0.0.1' ||
-            settings.editorService.tcp.address === 'localhost' ||
-            settings.editorService.tcp.address === '') {
+        if (
+          settings.editorService.tcp.address === '127.0.0.1' ||
+          settings.editorService.tcp.address === 'localhost' ||
+          settings.editorService.tcp.address === ''
+        ) {
           return ConnectionType.Local;
         } else {
           return ConnectionType.Remote;
@@ -158,10 +177,10 @@ export class AggregateConfiguration implements IAggregateConfiguration {
 
   // PATH=%PUPPET_DIR%\bin;%FACTERDIR%\bin;%HIERA_DIR%\bin;%PL_BASEDIR%\bin;%RUBY_DIR%\bin;%PL_BASEDIR%\sys\tools\bin;%PATH%
   private calculateEnvironmentPath(
-    puppetDir:string,
-    facterDir:string,
-    puppetBaseDir:string,
-    rubydir:string
+    puppetDir: string,
+    facterDir: string,
+    puppetBaseDir: string,
+    rubydir: string,
   ): string {
     return new Array(
       path.join(puppetDir, 'bin'),
@@ -169,20 +188,22 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       // path.join(hieraDir, 'bin'),
       path.join(puppetBaseDir, 'bin'),
       path.join(rubydir, 'bin'),
-      path.join(puppetBaseDir, 'sys', 'tools', 'bin')
+      path.join(puppetBaseDir, 'sys', 'tools', 'bin'),
     ).join(PathResolver.pathEnvSeparator());
   }
 
   // RUBYLIB=%PUPPET_DIR%\lib;%FACTERDIR%\lib;%HIERA_DIR%\lib;%RUBYLIB%
-  private calculateRubylib(puppetDir:string, facterDir:string): string {
-    return this.replaceSlashes(new Array(
-      path.join(puppetDir, 'lib'),
-      path.join(facterDir, 'lib'),
-      // path.join(this.hieraDir, 'lib'),
-    ).join(PathResolver.pathEnvSeparator()));
+  private calculateRubylib(puppetDir: string, facterDir: string): string {
+    return this.replaceSlashes(
+      new Array(
+        path.join(puppetDir, 'lib'),
+        path.join(facterDir, 'lib'),
+        // path.join(this.hieraDir, 'lib'),
+      ).join(PathResolver.pathEnvSeparator()),
+    );
   }
-  
-  private calculateRubyDir(puppetBaseDir:string): string {
+
+  private calculateRubyDir(puppetBaseDir: string): string {
     switch (process.platform) {
       case 'win32':
         return path.join(puppetBaseDir, 'sys', 'ruby');
@@ -191,8 +212,12 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     }
   }
 
-  private calculatePuppetBaseDir(settings:ISettings): string {
-    if ( (settings.installDirectory !== null) && (settings.installDirectory !== undefined) && (settings.installDirectory.trim() !== "") ) {
+  private calculatePuppetBaseDir(settings: ISettings): string {
+    if (
+      settings.installDirectory !== null &&
+      settings.installDirectory !== undefined &&
+      settings.installDirectory.trim() !== ''
+    ) {
       return settings.installDirectory;
     }
 
@@ -210,11 +235,11 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     let programFiles = PathResolver.getprogramFiles();
     switch (process.platform) {
       case 'win32':
-        // On Windows we have a subfolder called 'Puppet' that has 
-        // every product underneath 
+        // On Windows we have a subfolder called 'Puppet' that has
+        // every product underneath
         return path.join(programFiles, 'Puppet Labs', 'Puppet');
       default:
-        // On *nix we don't have a sub folder called 'Puppet' 
+        // On *nix we don't have a sub folder called 'Puppet'
         return path.join(programFiles, 'puppetlabs');
     }
   }
@@ -229,25 +254,29 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     }
   }
 
-  private getPdkVersionFromFile(puppetBaseDir:string){
+  private getPdkVersionFromFile(puppetBaseDir: string) {
     let basePath = path.join(puppetBaseDir, 'PDK_VERSION');
-    if(fs.existsSync(basePath)){
+    if (fs.existsSync(basePath)) {
       let contents = fs.readFileSync(basePath, 'utf8').toString();
       return contents.trim();
-    }else{
+    } else {
       return '';
     }
   }
 
   private findFirstDirectory(rootDir: string): string {
-    if (!fs.existsSync(rootDir)) { return undefined; }
+    if (!fs.existsSync(rootDir)) {
+      return undefined;
+    }
     var files = fs.readdirSync(rootDir);
-    let result = files.sort( (a, b) => a.localeCompare(b, undefined, { numeric:true }) ).reverse()[0];
+    let result = files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).reverse()[0];
     return path.join(rootDir, result);
   }
 
   private replaceSlashes(path: string): string {
-    if (path === undefined) { return path; }
+    if (path === undefined) {
+      return path;
+    }
     if (process.platform === 'win32') {
       // Translate all slashes to / style to avoid puppet/ruby issue #11930
       path = path.replace(/\\/g, '/');

@@ -10,6 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - ([GH-649](https://github.com/puppetlabs/puppet-vscode/issues/649)) Reduce activation events for extension
 - ([GH-639](https://github.com/puppetlabs/puppet-vscode/issues/639))  Deprecate Bolt Commands
+- ([GH-643](https://github.com/puppetlabs/puppet-vscode/issues/643)) Enable, configure and run prettier
 
 ## [0.26.1] - 2020-05-12
 

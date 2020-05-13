@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 export class PathResolver {
-
   public static getprogramFiles(): string {
     switch (process.platform) {
       case 'win32':
@@ -42,5 +41,4 @@ export class PathResolver {
       return ':';
     }
   }
-
 }
