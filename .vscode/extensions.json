@@ -1,8 +1,8 @@
 {
   "recommendations": [
+    "dbaeumer.vscode-eslint",
     "eamodio.gitlens",
     "esbenp.prettier-vscode",
-    "ms-vscode.vscode-typescript-tslint-plugin",
     "wwm.better-align",
     "rebornix.Ruby"
   ]
