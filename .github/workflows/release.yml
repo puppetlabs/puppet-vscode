@@ -1,26 +1,57 @@
+name: release
+
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+    - '[0-9].[0-9]+.[0-9]+' # Push events matching all semantic versioning tags, i.e. 0.26.01, 1.0, v20.15.10
 
 env:
   NODE_VERSION: '12.x'
-  VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ env.NODE_VERSION }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build --if-present
-        npm run test --if-present
-    - name: 'Deploy to Azure WebApp'
-      run: |
-        npm publish -p $VSCE_TOKEN
+      - uses: actions/checkout@v2
+      - name: Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Package vsix
+        id: create_package
+        run: |
+          npm i
+          npx vsce package
+
+      - name: Set vsix version
+        id: vsce
+        run: |
+          echo "::set-output name=version::$(cat package.json | jq -r .version)"
+
+      - name: Create Github Release
+        id: create_github_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.vsce.outputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload vsix
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_github_release.outputs.upload_url }}
+          asset_path: ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
+          asset_name: puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
+          asset_content_type: application/zip
+
+      - name: Publish Extension
+        id: publish-release-asset
+        run: |
+          npx vsce publish -p ${{ secrets.VSCE_TOKEN }} --packagePath ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
