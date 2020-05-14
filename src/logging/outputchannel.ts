@@ -5,9 +5,8 @@ import * as logging from '../logging';
 import { ISettings } from '../settings';
 
 export class OutputChannelLogger implements logging.ILogger {
-  
-  private _logChannel : vscode.OutputChannel;
-  public get logChannel() : vscode.OutputChannel {
+  private _logChannel: vscode.OutputChannel;
+  public get logChannel(): vscode.OutputChannel {
     return this._logChannel;
   }
 

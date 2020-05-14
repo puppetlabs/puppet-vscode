@@ -10,5 +10,5 @@ export enum ConnectionStatus {
   Failed,
   Stopped,
   Initializing,
-  InitializationComplete
+  InitializationComplete,
 }

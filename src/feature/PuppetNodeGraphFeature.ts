@@ -18,7 +18,7 @@ export class PuppetNodeGraphFeature implements IFeature {
     protected puppetLangID: string,
     protected handler: ConnectionHandler,
     protected logger: ILogger,
-    protected context: vscode.ExtensionContext
+    protected context: vscode.ExtensionContext,
   ) {
     this.providers = [];
 
@@ -35,7 +35,7 @@ export class PuppetNodeGraphFeature implements IFeature {
           this.handler.status !== ConnectionStatus.RunningLoading
         ) {
           vscode.window.showInformationMessage(
-            'The Puppet Node Graph Preview is not available as the Editor Service is not ready. Please try again.'
+            'The Puppet Node Graph Preview is not available as the Editor Service is not ready. Please try again.',
           );
           return;
         }
@@ -44,29 +44,29 @@ export class PuppetNodeGraphFeature implements IFeature {
           vscode.window.activeTextEditor.document.uri,
           handler,
           logger,
-          context
+          context,
         );
         this.providers.push(provider);
         provider.show();
-      })
+      }),
     );
     logger.debug('Registered command for node graph event handler');
 
     context.subscriptions.push(
-      vscode.workspace.onDidSaveTextDocument(document => {
+      vscode.workspace.onDidSaveTextDocument((document) => {
         // Subscribe to save events and fire updates
-        this.providers.forEach(item => {
+        this.providers.forEach((item) => {
           if (document.uri === vscode.window.activeTextEditor.document.uri) {
             item.show(true);
           }
         });
-      })
+      }),
     );
     logger.debug('Registered onDidSaveTextDocument for node graph event handler');
   }
 
   dispose() {
-    this.providers.forEach(p => {
+    this.providers.forEach((p) => {
       p.dispose();
     });
   }
@@ -79,18 +79,18 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     protected resource: vscode.Uri,
     protected connectionHandler: ConnectionHandler,
     protected logger: ILogger,
-    protected context: vscode.ExtensionContext
+    protected context: vscode.ExtensionContext,
   ) {
     let fileName = path.basename(resource.fsPath);
     this.panel = vscode.window.createWebviewPanel(
       'puppetNodeGraph', // Identifies the type of the webview. Used internally
       `Node Graph '${fileName}'`, // Title of the panel displayed to the user
       vscode.ViewColumn.Beside, // Editor column to show the new webview panel in.
-      { enableScripts: true }
+      { enableScripts: true },
     );
     this.panel.webview.html = this.getHtml(this.context.extensionPath);
     this.panel.onDidDispose(() => {});
-    this.panel.webview.onDidReceiveMessage(message => {
+    this.panel.webview.onDidReceiveMessage((message) => {
       switch (message.command) {
         case 'error':
           vscode.window.showErrorMessage(message.errorMsg);
@@ -109,9 +109,9 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     if (notificationType === undefined) {
       return this.connectionHandler.languageClient
         .sendRequest(PuppetNodeGraphRequest.type, {
-          external: this.resource.toString()
+          external: this.resource.toString(),
         })
-        .then(compileResult => {
+        .then((compileResult) => {
           this.getJsonContent(compileResult, redraw);
         });
     } else {
@@ -119,19 +119,19 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
         {
           location: notificationType,
           title: 'Puppet',
-          cancellable: false
+          cancellable: false,
         },
-        progress => {
+        (progress) => {
           progress.report({ message: 'Generating New Node Graph' });
 
           return this.connectionHandler.languageClient
             .sendRequest(PuppetNodeGraphRequest.type, {
-              external: this.resource.toString()
+              external: this.resource.toString(),
             })
-            .then(compileResult => {
+            .then((compileResult) => {
               this.getJsonContent(compileResult, redraw);
             });
-        }
+        },
       );
     }
   }
@@ -140,13 +140,13 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     this.panel.dispose();
   }
 
-  private getJsonContent(compileResult: PuppetNodeGraphResponse, redraw: boolean){
-    if(compileResult === undefined){
+  private getJsonContent(compileResult: PuppetNodeGraphResponse, redraw: boolean) {
+    if (compileResult === undefined) {
       vscode.window.showErrorMessage('Invalid data returned from manifest. Cannot build node graph');
       return;
     }
 
-    if(compileResult.error){
+    if (compileResult.error) {
       vscode.window.showErrorMessage(compileResult.error);
       return;
     }
@@ -157,7 +157,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
 
     this.panel.webview.postMessage({
       content: compileResult,
-      redraw: redraw
+      redraw: redraw,
     });
   }
 
@@ -188,13 +188,13 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
 
   private getHtml(extensionPath: string): string {
     let cytoPath = this.panel.webview.asWebviewUri(
-      vscode.Uri.file(path.join(extensionPath, 'vendor', 'cytoscape', 'cytoscape.min.js'))
+      vscode.Uri.file(path.join(extensionPath, 'vendor', 'cytoscape', 'cytoscape.min.js')),
     );
     let mainScript = this.panel.webview.asWebviewUri(
-      vscode.Uri.file(path.join(extensionPath, 'assets', 'js', 'main.js'))
+      vscode.Uri.file(path.join(extensionPath, 'assets', 'js', 'main.js')),
     );
     let mainCss = this.panel.webview.asWebviewUri(
-      vscode.Uri.file(path.join(extensionPath, 'assets', 'css', 'main.css'))
+      vscode.Uri.file(path.join(extensionPath, 'assets', 'css', 'main.css')),
     );
 
     let html = `<!DOCTYPE html>

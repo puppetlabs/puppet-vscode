@@ -37,12 +37,10 @@ let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
   let pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
-  if (pkg){
-    let message = 'The "jpogran.puppet-vscode" extension has been detected, which will conflict with the "puppet.puppet-vscode" extension. This will cause problems activating when each extension tries to load at the same time and may cause errors. Please uninstall it by executing the following from the commandline: "code --uninstall-extension jpogran.puppet-vscode"';
-    vscode.window.showWarningMessage(
-      message,
-      { modal: false },
-    );
+  if (pkg) {
+    let message =
+      'The "jpogran.puppet-vscode" extension has been detected, which will conflict with the "puppet.puppet-vscode" extension. This will cause problems activating when each extension tries to load at the same time and may cause errors. Please uninstall it by executing the following from the commandline: "code --uninstall-extension jpogran.puppet-vscode"';
+    vscode.window.showWarningMessage(message, { modal: false });
   }
 
   extContext = context;
@@ -59,14 +57,14 @@ export function activate(context: vscode.ExtensionContext) {
   logger = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
   if (configSettings.workspace.installType !== previousInstallType) {
     logger.debug(
-      `Installation type has changed from ${previousInstallType} to ${configSettings.workspace.installType}`
+      `Installation type has changed from ${previousInstallType} to ${configSettings.workspace.installType}`,
     );
   }
 
   reporter.sendTelemetryEvent('config', {
     installType: configSettings.workspace.installType,
     protocol: configSettings.workspace.editorService.protocol,
-    pdkVersion: configSettings.ruby.pdkVersion
+    pdkVersion: configSettings.ruby.pdkVersion,
   });
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
@@ -75,7 +73,7 @@ export function activate(context: vscode.ExtensionContext) {
     new PDKFeature(extContext, logger),
     new BoltFeature(extContext),
     new UpdateConfigurationFeature(logger, extContext),
-    statusBar
+    statusBar,
   ];
 
   if (configSettings.workspace.editorService.enable === false) {
@@ -108,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   extensionFeatures.push(
-    new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext)
+    new FormatDocumentFeature(puppetLangID, connectionHandler, configSettings, logger, extContext),
   );
   extensionFeatures.push(new PuppetNodeGraphFeature(puppetLangID, connectionHandler, logger, extContext));
   extensionFeatures.push(new PuppetResourceFeature(extContext, connectionHandler, logger));
@@ -120,12 +118,11 @@ export function activate(context: vscode.ExtensionContext) {
 
   let facts = new PuppetFactsProvider(connectionHandler);
   vscode.window.registerTreeDataProvider('puppetFacts', facts);
-
 }
 
 export function deactivate() {
   // Dispose all extension features
-  extensionFeatures.forEach(feature => {
+  extensionFeatures.forEach((feature) => {
     feature.dispose();
   });
 
@@ -147,7 +144,7 @@ function checkForLegacySettings() {
       'Deprecated Puppet settings have been detected. Please either remove them or, convert them to the correct settings names. (' +
         settingNames.join(', ') +
         ')',
-      { modal: false }
+      { modal: false },
     );
   }
 }
@@ -168,7 +165,7 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
     if (SettingsFromWorkspace().installType === PuppetInstallType.AUTO) {
       let m = [
         'The extension failed to find a Puppet installation automatically in the default locations for PDK and for Puppet Agent.',
-        'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.'
+        'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.',
       ];
       message = m.join(' ');
     } else {
@@ -179,7 +176,7 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
       message,
       'Troubleshooting Information',
       'https://puppet-vscode.github.io/docs/experience-a-problem',
-      logger
+      logger,
     );
     return false;
   } else {
@@ -190,7 +187,7 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
 
 function showErrorMessage(message: string, title: string, helpLink: string, logger: ILogger) {
   logger.error(message);
-  vscode.window.showErrorMessage(message, { modal: false }, { title: title }).then(item => {
+  vscode.window.showErrorMessage(message, { modal: false }, { title: title }).then((item) => {
     if (item === undefined) {
       return;
     }
@@ -216,7 +213,7 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
     `Puppet VSCode has been updated to v${version}`,
     { modal: false },
     { title: dontShowAgainNotice },
-    { title: viewReleaseNotes }
+    { title: viewReleaseNotes },
   );
 
   if (result === undefined) {
@@ -226,7 +223,7 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
   if (result.title === viewReleaseNotes) {
     vscode.commands.executeCommand(
       'vscode.open',
-      vscode.Uri.parse('https://marketplace.visualstudio.com/items/puppet.puppet-vscode/changelog')
+      vscode.Uri.parse('https://marketplace.visualstudio.com/items/puppet.puppet-vscode/changelog'),
     );
   } else {
     context.globalState.update(suppressUpdateNotice, true);
@@ -244,7 +241,7 @@ async function notifyEditorServiceDisabled(context: vscode.ExtensionContext) {
   const result = await vscode.window.showInformationMessage(
     `Puppet Editor Services has been disabled. While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.`,
     { modal: false },
-    { title: dontShowAgainNotice }
+    { title: dontShowAgainNotice },
   );
 
   if (result === undefined) {
@@ -277,20 +274,20 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
 
   axios
     .get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST')
-    .then(response => {
+    .then((response) => {
       return response.data;
     })
-    .then(latest_version => {
+    .then((latest_version) => {
       if (version !== latest_version) {
         return vscode.window.showWarningMessage(
           `The installed PDK version is ${version}, the newest version is ${latest_version}. To find out how to update to the latest version click the more info button`,
           { modal: false },
           { title: dontCheckAgainNotice },
-          { title: viewPDKDownloadPage }
+          { title: viewPDKDownloadPage },
         );
       }
     })
-    .then(result => {
+    .then((result) => {
       if (result === undefined) {
         return;
       }
@@ -302,11 +299,11 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
       if (result.title === viewPDKDownloadPage) {
         vscode.commands.executeCommand(
           'vscode.open',
-          vscode.Uri.parse('https://puppet.com/download-puppet-development-kit')
+          vscode.Uri.parse('https://puppet.com/download-puppet-development-kit'),
         );
       }
     })
-    .catch(error => {
+    .catch((error) => {
       logger.error(error);
     });
 }
@@ -319,30 +316,30 @@ function setLanguageConfiguration() {
         beforeText: /^.*{\s{0,}'.*':/,
         afterText: /\s{0,}}$/,
         action: {
-          indentAction: vscode.IndentAction.IndentOutdent
-        }
-      }
+          indentAction: vscode.IndentAction.IndentOutdent,
+        },
+      },
     ],
     brackets: [
       ['{', '}'],
       ['[', ']'],
-      ['(', ')']
+      ['(', ')'],
     ],
     comments: {
       lineComment: '#',
-      blockComment: ['/*', '*/']
-    }
+      blockComment: ['/*', '*/'],
+    },
   });
   vscode.languages.setLanguageConfiguration(puppetFileLangID, {
     onEnterRules: [],
     brackets: [
       ['{', '}'],
       ['[', ']'],
-      ['(', ')']
+      ['(', ')'],
     ],
     comments: {
       lineComment: '#',
-      blockComment: ['/*', '*/']
-    }
+      blockComment: ['/*', '*/'],
+    },
   });
 }

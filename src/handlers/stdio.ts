@@ -41,10 +41,10 @@ export class StdioConnectionHandler extends ConnectionHandler {
       case PuppetInstallType.PUPPET:
         logPrefix = '[getRubyExecFromPuppetAgent] ';
         this.logger.debug(logPrefix + 'Using environment variable SSL_CERT_FILE=' + exe.options.env.SSL_CERT_FILE);
-        this.logger.debug(logPrefix + 'Using environment variable SSL_CERT_DIR=' + exe.options.env.SSL_CERT_DIR);    
+        this.logger.debug(logPrefix + 'Using environment variable SSL_CERT_DIR=' + exe.options.env.SSL_CERT_DIR);
         break;
     }
-  
+
     this.logger.debug(logPrefix + 'Using environment variable RUBY_DIR=' + exe.options.env.RUBY_DIR);
     this.logger.debug(logPrefix + 'Using environment variable RUBYLIB=' + exe.options.env.RUBYLIB);
     this.logger.debug(logPrefix + 'Using environment variable PATH=' + exe.options.env.PATH);

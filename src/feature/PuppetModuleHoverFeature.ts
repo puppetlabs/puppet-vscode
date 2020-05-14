@@ -18,7 +18,7 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,
-    token: vscode.CancellationToken
+    token: vscode.CancellationToken,
   ): Thenable<vscode.Hover> | null {
     const offset = document.offsetAt(position);
     const location = getLocation(document.getText(), offset);
@@ -40,12 +40,9 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
 
     this.logger.debug('Metadata hover info found ' + word + ' module');
 
-    let name = word
-      .replace('"', '')
-      .replace('"', '')
-      .replace('/', '-');
+    let name = word.replace('"', '').replace('"', '').replace('/', '-');
 
-    return this.getModuleInfo(name).then(function(result: any) {
+    return this.getModuleInfo(name).then(function (result: any) {
       let msg: string[] = [];
       msg.push(`### ${result.slug}`);
 
@@ -75,11 +72,11 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
 
   private getModuleInfo(name: string) {
     var options = {
-      url: `https://forgeapi.puppet.com/v3/modules/${name}?exclude_fields=readme%20changelog%20license%20reference`
+      url: `https://forgeapi.puppet.com/v3/modules/${name}?exclude_fields=readme%20changelog%20license%20reference`,
     };
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       const request = require('request');
-      request.get(options, function(err, resp, body) {
+      request.get(options, function (err, resp, body) {
         if (err) {
           reject(err);
         } else {

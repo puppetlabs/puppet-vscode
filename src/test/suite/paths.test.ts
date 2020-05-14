@@ -3,10 +3,9 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { PathResolver } from '../../configuration/pathResolver';
 
-suite("Path Resolution Tests", () => {
-
-  test("resolves programfiles", () => {
-    switch(process.platform){
+suite('Path Resolution Tests', () => {
+  test('resolves programfiles', () => {
+    switch (process.platform) {
       case 'win32':
         assert.equal('C:\\Program Files', PathResolver.getprogramFiles());
         break;
@@ -15,9 +14,9 @@ suite("Path Resolution Tests", () => {
         break;
     }
   });
-  
-  test("resolves environment PATH seperator", () => {
-    switch(process.platform){
+
+  test('resolves environment PATH seperator', () => {
+    switch (process.platform) {
       case 'win32':
         assert.equal(';', PathResolver.pathEnvSeparator());
         break;
@@ -26,5 +25,4 @@ suite("Path Resolution Tests", () => {
         break;
     }
   });
-
 });

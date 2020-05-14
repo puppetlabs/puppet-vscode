@@ -7,11 +7,11 @@ import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { PuppetVersionDetails, PuppetVersionRequest, PuppetCommandStrings } from './messages';
 import { reporter } from './telemetry';
-import { puppetFileLangID, puppetLangID} from './extension';
+import { puppetFileLangID, puppetLangID } from './extension';
 import { IAggregateConfiguration } from './configuration';
 
 export abstract class ConnectionHandler {
-  private timeSpent:number;
+  private timeSpent: number;
 
   private _status: ConnectionStatus;
   public get status(): ConnectionStatus {
@@ -38,7 +38,10 @@ export abstract class ConnectionHandler {
     this.timeSpent = Date.now();
     this.setConnectionStatus('Initializing', ConnectionStatus.Initializing);
 
-    let documents = [{ scheme: 'file', language: puppetLangID }, { scheme: 'file', language: puppetFileLangID }];
+    let documents = [
+      { scheme: 'file', language: puppetLangID },
+      { scheme: 'file', language: puppetFileLangID },
+    ];
 
     this.logger.debug('Configuring language client options');
     let clientOptions: LanguageClientOptions = {
@@ -56,14 +59,14 @@ export abstract class ConnectionHandler {
       .onReady()
       .then(
         () => {
-          this.languageClient.onTelemetry(event => {
+          this.languageClient.onTelemetry((event) => {
             const eventName = event.Name ? event.Name : 'PUPPET_LANGUAGESERVER_EVENT';
             reporter.sendTelemetryEvent(eventName, event.Measurements, event.Properties);
           });
           this.setConnectionStatus('Loading Puppet', ConnectionStatus.Starting);
           this.queryLanguageServerStatusWithProgress();
         },
-        reason => {
+        (reason) => {
           this.setConnectionStatus('Starting error', ConnectionStatus.Starting);
           this.languageClient.error(reason);
           reporter.sendTelemetryException(reason);
@@ -75,9 +78,11 @@ export abstract class ConnectionHandler {
       });
     this.setConnectionStatus('Initialization Complete', ConnectionStatus.InitializationComplete);
 
-    this.context.subscriptions.push(vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId,
-      () => { this.logger.show(); }
-    ));
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId, () => {
+        this.logger.show();
+      }),
+    );
   }
 
   abstract createServerOptions(): ServerOptions;
@@ -92,12 +97,12 @@ export abstract class ConnectionHandler {
     this.setConnectionStatus('Stopping languageserver', ConnectionStatus.Stopping, '');
     if (this.languageClient !== undefined) {
       this.timeSpent = Date.now() - this.timeSpent;
-      this._languageClient.sendRequest(PuppetVersionRequest.type).then(versionDetails => {
+      this._languageClient.sendRequest(PuppetVersionRequest.type).then((versionDetails) => {
         reporter.sendTelemetryEvent('data', {
-          'timeSpent'            : this.timeSpent.toString(),
-          'puppetVersion'        : versionDetails.puppetVersion,
-          'facterVersion'        : versionDetails.facterVersion,
-          'languageServerVersion': versionDetails.languageServerVersion,
+          timeSpent: this.timeSpent.toString(),
+          puppetVersion: versionDetails.puppetVersion,
+          facterVersion: versionDetails.facterVersion,
+          languageServerVersion: versionDetails.languageServerVersion,
         });
       });
       this.languageClient.stop();
@@ -128,7 +133,7 @@ export abstract class ConnectionHandler {
           return;
         }
 
-        this._languageClient.sendRequest(PuppetVersionRequest.type).then(versionDetails => {
+        this._languageClient.sendRequest(PuppetVersionRequest.type).then((versionDetails) => {
           lastVersionResponse = versionDetails;
           if (
             versionDetails.factsLoaded &&

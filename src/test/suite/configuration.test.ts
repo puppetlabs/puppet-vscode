@@ -3,45 +3,45 @@ import * as assert from 'assert';
 import { CreateAggregrateConfiguration } from '../../configuration';
 import { DefaultWorkspaceSettings, ISettings, PuppetInstallType } from '../../settings';
 
-suite("Configuration Tests", () => {
+suite('Configuration Tests', () => {
   var pdkBinDir = '';
   var pdkPuppetBaseDir = '';
   var puppetBaseDir = '';
 
-  switch(process.platform){
+  switch (process.platform) {
     case 'win32':
       pdkPuppetBaseDir = 'C:\\Program Files\\Puppet Labs\\DevelopmentKit';
-      pdkBinDir        = 'C:\\Program Files\\Puppet Labs\\DevelopmentKit\\bin';
-      puppetBaseDir    = 'C:\\Program Files\\Puppet Labs\\Puppet';
+      pdkBinDir = 'C:\\Program Files\\Puppet Labs\\DevelopmentKit\\bin';
+      puppetBaseDir = 'C:\\Program Files\\Puppet Labs\\Puppet';
       break;
     default:
       pdkPuppetBaseDir = '/opt/puppetlabs/pdk';
-      pdkBinDir        = '/opt/puppetlabs/pdk/bin';
-      puppetBaseDir    = '/opt/puppetlabs';
+      pdkBinDir = '/opt/puppetlabs/pdk/bin';
+      puppetBaseDir = '/opt/puppetlabs';
       break;
   }
 
-  test("resolves pdkPuppetBaseDir as puppet with default installtype", () => {
+  test('resolves pdkPuppetBaseDir as puppet with default installtype', () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     var config = CreateAggregrateConfiguration(settings);
     assert.equal(config.ruby.puppetBaseDir, pdkPuppetBaseDir);
   });
 
-  test("resolves puppetBaseDir as puppet with installtype eq puppet", () => {
+  test('resolves puppetBaseDir as puppet with installtype eq puppet', () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     settings.installType = PuppetInstallType.PUPPET;
     var config = CreateAggregrateConfiguration(settings);
     assert.equal(config.ruby.puppetBaseDir, puppetBaseDir);
   });
 
-  test("resolves puppetBaseDir as pdk with installtype eq pdk", () => {
+  test('resolves puppetBaseDir as pdk with installtype eq pdk', () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     settings.installType = PuppetInstallType.PDK;
     var config = CreateAggregrateConfiguration(settings);
     assert.equal(config.ruby.puppetBaseDir, pdkPuppetBaseDir);
   });
 
-  test("resolves pdkBinDir with installtype eq pdk", () => {
+  test('resolves pdkBinDir with installtype eq pdk', () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     settings.installType = PuppetInstallType.PDK;
     var config = CreateAggregrateConfiguration(settings);
@@ -50,22 +50,25 @@ suite("Configuration Tests", () => {
 
   // Note that these integration tests REQUIRE the PDK to be installed locally
   // as the fileystem is queried for path information
-  test("resolves latest PDK Instance with installtype eq pdk", () => {
+  test('resolves latest PDK Instance with installtype eq pdk', () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     settings.installType = PuppetInstallType.PDK;
     var config = CreateAggregrateConfiguration(settings);
     assert.notEqual(config.ruby.pdkGemDir, undefined);
   });
 
-  test("resolves All Puppet Versions with installtype eq pdk", () => {
+  test('resolves All Puppet Versions with installtype eq pdk', () => {
     const settings: ISettings = DefaultWorkspaceSettings();
     settings.installType = PuppetInstallType.PDK;
     var config = CreateAggregrateConfiguration(settings);
     assert.notEqual(config.ruby.pdkPuppetVersions, undefined);
-    assert.ok(config.ruby.pdkPuppetVersions.length > 0, "config.ruby.pdkPuppetVersions.length should have at least one element");
+    assert.ok(
+      config.ruby.pdkPuppetVersions.length > 0,
+      'config.ruby.pdkPuppetVersions.length should have at least one element',
+    );
   });
 
-  test("resolves a puppet version with installtype eq pdk", () => {
+  test('resolves a puppet version with installtype eq pdk', () => {
     // Find all of the available puppet settings
     let settings: ISettings = DefaultWorkspaceSettings();
     settings.installType = PuppetInstallType.PDK;
@@ -73,7 +76,7 @@ suite("Configuration Tests", () => {
     // Use the first version available
     const puppetVersion = config.ruby.pdkPuppetVersions[0];
     settings.editorService.puppet = {
-      version: puppetVersion
+      version: puppetVersion,
     };
     // Generate the settings again
     config = CreateAggregrateConfiguration(settings);

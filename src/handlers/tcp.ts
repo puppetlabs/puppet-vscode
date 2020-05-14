@@ -50,14 +50,14 @@ export class TcpConnectionHandler extends ConnectionHandler {
 
       this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
       var proc = cp.spawn(exe.command, exe.args, convertedOptions);
-      proc.stdout.on('data', data => {
+      proc.stdout.on('data', (data) => {
         if (/LANGUAGE SERVER RUNNING/.test(data.toString())) {
           var p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
           config.workspace.editorService.tcp.port = Number(p[1]);
           this.start();
         }
       });
-      proc.on('close', exitCode => {
+      proc.on('close', (exitCode) => {
         this.logger.debug('SERVER terminated with exit code: ' + exitCode);
       });
       if (!proc || !proc.pid) {
@@ -88,9 +88,7 @@ export class TcpConnectionHandler extends ConnectionHandler {
 
   createServerOptions(): ServerOptions {
     this.logger.debug(
-      `Starting language server client (host ${this.config.workspace.editorService.tcp.address} port ${
-        this.config.workspace.editorService.tcp.port
-      })`,
+      `Starting language server client (host ${this.config.workspace.editorService.tcp.address} port ${this.config.workspace.editorService.tcp.port})`,
     );
 
     let serverOptions = () => {

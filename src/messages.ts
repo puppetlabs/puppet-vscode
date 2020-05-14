@@ -21,7 +21,7 @@ export interface PuppetResourceRequestParams {
 
 export namespace PuppetResourceRequest {
   export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void, void>(
-    'puppet/getResource'
+    'puppet/getResource',
   );
 }
 
@@ -37,7 +37,7 @@ export interface PuppetFixDiagnosticErrorsRequestParams {
 
 export namespace PuppetFixDiagnosticErrorsRequest {
   export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void, void>(
-    'puppet/fixDiagnosticErrors'
+    'puppet/fixDiagnosticErrors',
   );
 }
 

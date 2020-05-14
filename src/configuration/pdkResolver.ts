@@ -52,14 +52,14 @@ export function pdkInstances(pdkRootDirectory: string): IPDKRubyInstances {
 
 export function emptyPDKInstance(): IPDKRubyInstance {
   return {
-    'rubyVerDir': undefined,
-    'rubyDir': undefined,
-    'rubyBinDir': undefined,
-    'gemVerDir': undefined,
-    'gemDir': undefined,
-    'puppetVersions': undefined,
-    'rubyVersion': undefined,
-    'valid': false
+    rubyVerDir: undefined,
+    rubyDir: undefined,
+    rubyBinDir: undefined,
+    gemVerDir: undefined,
+    gemDir: undefined,
+    puppetVersions: undefined,
+    rubyVersion: undefined,
+    valid: false,
   };
 }
 
@@ -68,65 +68,77 @@ class PDKRubyInstances implements IPDKRubyInstances {
   private rubyInstances: IPDKRubyInstance[] = undefined;
   private puppetVersions: string[] = undefined;
 
-  constructor(
-    pdkRootDirectory: string
-  ) {
+  constructor(pdkRootDirectory: string) {
     this.pdkDirectory = pdkRootDirectory;
   }
 
   get instances(): IPDKRubyInstance[] {
-    if (this.rubyInstances !== undefined) { return this.rubyInstances; }
+    if (this.rubyInstances !== undefined) {
+      return this.rubyInstances;
+    }
     this.rubyInstances = new Array<IPDKRubyInstance>();
-    if (this.pdkDirectory === undefined) { return this.rubyInstances; }
-    if (!fs.existsSync(this.pdkDirectory)) { return this.rubyInstances; }
+    if (this.pdkDirectory === undefined) {
+      return this.rubyInstances;
+    }
+    if (!fs.existsSync(this.pdkDirectory)) {
+      return this.rubyInstances;
+    }
 
     var rubyDir = path.join(this.pdkDirectory, 'private', 'ruby');
-    if (!fs.existsSync(rubyDir)) { return this.rubyInstances; }
+    if (!fs.existsSync(rubyDir)) {
+      return this.rubyInstances;
+    }
 
-    fs.readdirSync(rubyDir).forEach( (item) => {
-      this.rubyInstances.push(new PDKRubyInstance(
-        this.pdkDirectory,
-        path.join(rubyDir, item)
-      ));
+    fs.readdirSync(rubyDir).forEach((item) => {
+      this.rubyInstances.push(new PDKRubyInstance(this.pdkDirectory, path.join(rubyDir, item)));
     });
 
     return this.rubyInstances;
   }
 
   get allPuppetVersions(): string[] {
-    if (this.puppetVersions !== undefined) { return this.puppetVersions; }
+    if (this.puppetVersions !== undefined) {
+      return this.puppetVersions;
+    }
     this.puppetVersions = [];
     // This searching method isn't the most performant but as the list will probably
     // be very small (< 20 items) it's not a big deal and is cached anyway
-    this.instances.forEach( (instance) => {
-      instance.puppetVersions.forEach ( (puppetVersion) => {
-        if (this.puppetVersions.indexOf(puppetVersion) === -1) { this.puppetVersions.push(puppetVersion); }
+    this.instances.forEach((instance) => {
+      instance.puppetVersions.forEach((puppetVersion) => {
+        if (this.puppetVersions.indexOf(puppetVersion) === -1) {
+          this.puppetVersions.push(puppetVersion);
+        }
       });
     });
     return this.puppetVersions;
   }
 
   public InstanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance {
-    return this.instances.find( (instance) => {
+    return this.instances.find((instance) => {
       return instance.puppetVersions.includes(puppetVersion);
     });
   }
 
   // Override toString to make it look pretty
   toString(): string {
-    return "[" + 
-    this.instances.map( (item) => {
-      return item.toString();
-    }).join(", ") + "]";
+    return (
+      '[' +
+      this.instances
+        .map((item) => {
+          return item.toString();
+        })
+        .join(', ') +
+      ']'
+    );
   }
 
   get latest(): IPDKRubyInstance {
     let result = undefined;
-    let lastVersion = "0.0.0";
+    let lastVersion = '0.0.0';
 
-    this.instances.forEach( (instance) => {
+    this.instances.forEach((instance) => {
       // We don't have a real semver module so treat the strings as numbers and sort.
-      if (instance.rubyVersion.localeCompare(lastVersion,undefined, { numeric:true }) > 0) {
+      if (instance.rubyVersion.localeCompare(lastVersion, undefined, { numeric: true }) > 0) {
         result = instance;
         lastVersion = instance.rubyVersion;
       }
@@ -148,37 +160,58 @@ class PDKRubyInstance implements IPDKRubyInstance {
   private _valid: boolean = undefined;
 
   // Directory Paths
-  get rubyVerDir():string { return this._rubyVerDir; }
-  get rubyDir():string { return this._rubyDir; }
-  get rubyBinDir():string { return this._rubyBinDir; }
-  get gemVerDir():string { return this._gemVerDir; }
-  get gemDir():string { return this._gemDir; }
+  get rubyVerDir(): string {
+    return this._rubyVerDir;
+  }
+  get rubyDir(): string {
+    return this._rubyDir;
+  }
+  get rubyBinDir(): string {
+    return this._rubyBinDir;
+  }
+  get gemVerDir(): string {
+    return this._gemVerDir;
+  }
+  get gemDir(): string {
+    return this._gemDir;
+  }
 
-  get rubyVersion():string { return this._rubyVersion; }
+  get rubyVersion(): string {
+    return this._rubyVersion;
+  }
 
-  get valid():boolean {
-    if (this._valid !== undefined) { return this._valid; }
+  get valid(): boolean {
+    if (this._valid !== undefined) {
+      return this._valid;
+    }
     // This instance is valid if these directories exist
-    this._valid = fs.existsSync(this._rubyDir) &&
-                  fs.existsSync(this._rubyBinDir) &&
-                  fs.existsSync(this._rubyVerDir) &&
-                  fs.existsSync(this._gemVerDir) &&
-                  fs.existsSync(this._gemDir);
+    this._valid =
+      fs.existsSync(this._rubyDir) &&
+      fs.existsSync(this._rubyBinDir) &&
+      fs.existsSync(this._rubyVerDir) &&
+      fs.existsSync(this._gemVerDir) &&
+      fs.existsSync(this._gemDir);
     return this._valid;
   }
 
-  get puppetVersions():string[] {
-    if (this._puppetVersions !== undefined) { return this._puppetVersions; }
+  get puppetVersions(): string[] {
+    if (this._puppetVersions !== undefined) {
+      return this._puppetVersions;
+    }
     this._puppetVersions = [];
     let gemdir = path.join(this._rubyVerDir, 'gems');
-    if (!fs.existsSync(gemdir)) { return this._puppetVersions; }
+    if (!fs.existsSync(gemdir)) {
+      return this._puppetVersions;
+    }
 
     // We could just call Ruby and ask it for all gems called puppet, but searching
     // the gem cache is just as easy and doesn't need to spawn a ruby process per
     // ruby version.
-    fs.readdirSync(gemdir).forEach( (item) => {
+    fs.readdirSync(gemdir).forEach((item) => {
       let pathMatch = item.match(/^puppet-(\d+\.\d+\.\d+)(?:(-|$))/);
-      if (pathMatch !== null) { this._puppetVersions.push(pathMatch[1]); }
+      if (pathMatch !== null) {
+        this._puppetVersions.push(pathMatch[1]);
+      }
     });
 
     return this._puppetVersions;
@@ -186,20 +219,23 @@ class PDKRubyInstance implements IPDKRubyInstance {
 
   // Override toString to make it look pretty
   toString(): string {
-    return "{" +
-    [`rubyVersion: \"${this._rubyVersion}\"`,
-      `rubyDir: \"${this._rubyDir}\"`,
-      `rubyVerDir: \"${this.rubyVerDir}\"`,
-      `gemVerDir: \"${this.gemVerDir}\"`,
-      `gemDir: \"${this.gemDir}\"`,
-      `gemDir: \"${this.gemDir}\"`,
-      `puppetVersions: \"${this.puppetVersions}\"`,
-      `valid: \"${this.valid}\"`
-    ].join(", ") +
-    "}";
+    return (
+      '{' +
+      [
+        `rubyVersion: \"${this._rubyVersion}\"`,
+        `rubyDir: \"${this._rubyDir}\"`,
+        `rubyVerDir: \"${this.rubyVerDir}\"`,
+        `gemVerDir: \"${this.gemVerDir}\"`,
+        `gemDir: \"${this.gemDir}\"`,
+        `gemDir: \"${this.gemDir}\"`,
+        `puppetVersions: \"${this.puppetVersions}\"`,
+        `valid: \"${this.valid}\"`,
+      ].join(', ') +
+      '}'
+    );
   }
 
-  constructor(pdkDirectory: string, rubyDir:string) {
+  constructor(pdkDirectory: string, rubyDir: string) {
     this._rubyDir = rubyDir;
     this._rubyBinDir = path.join(rubyDir, 'bin');
     this._rubyVersion = path.basename(rubyDir);

@@ -5,28 +5,23 @@ import * as fs from 'fs';
 import { reporter } from '../telemetry';
 
 export class BoltFeature implements IFeature {
-  dispose() { }
+  dispose() {}
 
-  showDeprecation(){
-    let message = 'The "Open Bolt User Configuration File" and "Open Bolt User Inventory File" commands will be removed in a future release. Do you think they should be kept? Think there are other ways for this extension to help using Puppet Bolt? Let us know by clicking "Feedback" to add a comment to Github Issue #639';
-    window.showWarningMessage(message,
-      { modal: false },
-      { title: 'Feedback' }
-    ).then(result => {
+  showDeprecation() {
+    let message =
+      'The "Open Bolt User Configuration File" and "Open Bolt User Inventory File" commands will be removed in a future release. Do you think they should be kept? Think there are other ways for this extension to help using Puppet Bolt? Let us know by clicking "Feedback" to add a comment to Github Issue #639';
+    window.showWarningMessage(message, { modal: false }, { title: 'Feedback' }).then((result) => {
       if (result === undefined) {
         return;
       }
 
       if (result.title === 'Feedback') {
-        commands.executeCommand(
-          'vscode.open',
-          Uri.parse('https://github.com/puppetlabs/puppet-vscode/issues/639')
-        );
+        commands.executeCommand('vscode.open', Uri.parse('https://github.com/puppetlabs/puppet-vscode/issues/639'));
       }
     });
   }
-  constructor(context: ExtensionContext) {
 
+  constructor(context: ExtensionContext) {
     context.subscriptions.push(
       commands.registerCommand('puppet-bolt.OpenUserConfigFile', () => {
         this.showDeprecation();
@@ -36,13 +31,13 @@ export class BoltFeature implements IFeature {
         this.openOrCreateFile(
           userInventoryFile,
           `Default bolt config yml not present. Do you want to create it?`,
-          '# This is an empty bolt config file.\n# You can get started quickly by using the built-in bolt snippets'
+          '# This is an empty bolt config file.\n# You can get started quickly by using the built-in bolt snippets',
         );
 
         if (reporter) {
           reporter.sendTelemetryEvent('puppet-bolt.OpenUserConfigFile');
         }
-      })
+      }),
     );
 
     context.subscriptions.push(
@@ -54,13 +49,13 @@ export class BoltFeature implements IFeature {
         this.openOrCreateFile(
           userInventoryFile,
           `Default bolt inventory yml not present. Do you want to create it?`,
-          '# This is an empty bolt inventory file.\n# You can get started quickly by using the built-in bolt snippets or use bolt to generate an inventory file from PuppetDb'
+          '# This is an empty bolt inventory file.\n# You can get started quickly by using the built-in bolt snippets or use bolt to generate an inventory file from PuppetDb',
         );
 
         if (reporter) {
           reporter.sendTelemetryEvent('puppet-bolt.OpenUserInventoryFile');
         }
-      })
+      }),
     );
   }
 
@@ -70,9 +65,9 @@ export class BoltFeature implements IFeature {
         .showQuickPick(['yes', 'no'], {
           placeHolder: message,
           canPickMany: false,
-          ignoreFocusOut: true
+          ignoreFocusOut: true,
         })
-        .then(answer => {
+        .then((answer) => {
           switch (answer) {
             case 'no':
               break;
@@ -83,8 +78,7 @@ export class BoltFeature implements IFeature {
               commands.executeCommand('vscode.openFolder', Uri.file(file), false);
           }
         });
-    }
-    else {
+    } else {
       commands.executeCommand('vscode.openFolder', Uri.file(file), false);
     }
   }

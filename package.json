@@ -551,7 +551,8 @@
     "build": "pwsh -file ./build.ps1",
     "watch": "npm run build && tsc -watch -p ./",
     "pretest": "npm run compile",
-    "test": "node ./out/test/runtest.js"
+    "test": "node ./out/test/runtest.js",
+    "format": "prettier --write '**/**/*.{ts,js,json}'"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

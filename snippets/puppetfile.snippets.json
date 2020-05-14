@@ -1,12 +1,16 @@
 {
   "Forge_module1": {
     "prefix": "Forge Module",
-    "body": ["mod '${1:author}-${2:name}', '${3:version}'"],
+    "body": [
+      "mod '${1:author}-${2:name}', '${3:version}'"
+    ],
     "description": "Install from the forge"
   },
   "Forge_module2": {
     "prefix": "Latest Forge Module",
-    "body": ["mod '${1:author}-${2:name}', :latest"],
+    "body": [
+      "mod '${1:author}-${2:name}', :latest"
+    ],
     "description": "Install the latest version from the forge"
   },
   "Git_module1": {
@@ -46,7 +50,9 @@
   },
   "Local_module1": {
     "prefix": "Local Module",
-    "body": ["mod '${1:name}', :local => true"],
+    "body": [
+      "mod '${1:name}', :local => true"
+    ],
     "description": "Install from the local Puppetfile module path"
   }
 }

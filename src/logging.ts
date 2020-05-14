@@ -5,14 +5,14 @@ export enum LogLevel {
   Verbose,
   Normal,
   Warning,
-  Error
+  Error,
 }
 
 export interface ILogger {
-  show():void;
-  verbose(message: string):void;
-  debug(message: string):void;
-  normal(message: string):void;
-  warning(message: string):void;
-  error(message: string):void;
+  show(): void;
+  verbose(message: string): void;
+  debug(message: string): void;
+  normal(message: string): void;
+  warning(message: string): void;
+  error(message: string): void;
 }

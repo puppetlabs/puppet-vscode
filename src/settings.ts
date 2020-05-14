@@ -5,19 +5,19 @@ import vscode = require('vscode');
 export enum PuppetInstallType {
   PDK = 'pdk',
   PUPPET = 'agent',
-  AUTO = 'auto'
+  AUTO = 'auto',
 }
 
 export enum ProtocolType {
   UNKNOWN = '<unknown>',
   STDIO = 'stdio',
-  TCP = 'tcp'
+  TCP = 'tcp',
 }
 
 export enum ConnectionType {
   Unknown,
   Local,
-  Remote
+  Remote,
 }
 
 export interface IEditorServiceTCPSettings {
@@ -131,26 +131,26 @@ export function DefaultWorkspaceSettings(): ISettings {
       featureFlags: [],
       loglevel: 'normal',
       protocol: ProtocolType.STDIO,
-      timeout: 10
+      timeout: 10,
     },
     format: {
-      enable: true
+      enable: true,
     },
     hover: {
-      showMetadataInfo: true
+      showMetadataInfo: true,
     },
     installDirectory: undefined,
     installType: PuppetInstallType.AUTO,
     lint: {
-      enable: true
+      enable: true,
     },
     notification: {
       nodeGraph: 'messagebox',
-      puppetResource: 'messagebox'
+      puppetResource: 'messagebox',
     },
     pdk: {
-      checkVersion: true
-    }
+      checkVersion: true,
+    },
   };
 }
 
@@ -167,7 +167,7 @@ export function SettingsFromWorkspace(): ISettings {
     installType: workspaceConfig.get<PuppetInstallType>('installType', defaults.installType),
     lint: workspaceConfig.get<ILintSettings>('lint', defaults.lint),
     notification: workspaceConfig.get<INotificationSettings>('notification', defaults.notification),
-    pdk: workspaceConfig.get<IPDKSettings>('pdk', defaults.pdk)
+    pdk: workspaceConfig.get<IPDKSettings>('pdk', defaults.pdk),
   };
 
   /**
@@ -196,10 +196,12 @@ export function SettingsFromWorkspace(): ISettings {
 
   // Translate the legacy settings into the new setting names
   for (const [settingName, value] of oldSettings) {
-    switch (settingName) {
+    switch (
+      settingName
       // case 'puppet.puppetAgentDir': // --> puppet.installDirectory
       //   settings.installDirectory = <string>value;
       //   break;
+    ) {
     }
   }
 
