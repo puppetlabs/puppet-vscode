@@ -6,9 +6,31 @@ import { reporter } from '../telemetry';
 
 export class BoltFeature implements IFeature {
   dispose() { }
+
+  showDeprecation(){
+    let message = 'The "Open Bolt User Configuration File" and "Open Bolt User Inventory File" commands will be removed in a future release. Do you think they should be kept? Think there are other ways for this extension to help using Puppet Bolt? Let us know by clicking "Feedback" to add a comment to Github Issue #639';
+    window.showWarningMessage(message,
+      { modal: false },
+      { title: 'Feedback' }
+    ).then(result => {
+      if (result === undefined) {
+        return;
+      }
+
+      if (result.title === 'Feedback') {
+        commands.executeCommand(
+          'vscode.open',
+          Uri.parse('https://github.com/puppetlabs/puppet-vscode/issues/639')
+        );
+      }
+    });
+  }
   constructor(context: ExtensionContext) {
+
     context.subscriptions.push(
       commands.registerCommand('puppet-bolt.OpenUserConfigFile', () => {
+        this.showDeprecation();
+
         let userInventoryFile = path.join(process.env['USERPROFILE'] || '~', '.puppetlabs', 'bolt', 'bolt.yaml');
 
         this.openOrCreateFile(
@@ -25,6 +47,8 @@ export class BoltFeature implements IFeature {
 
     context.subscriptions.push(
       commands.registerCommand('puppet-bolt.OpenUserInventoryFile', () => {
+        this.showDeprecation();
+
         let userInventoryFile = path.join(process.env['USERPROFILE'] || '~', '.puppetlabs', 'bolt', 'inventory.yaml');
 
         this.openOrCreateFile(
