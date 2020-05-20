@@ -143,7 +143,8 @@ export class CommandEnvironmentHelper {
 
     args.push('--timeout=' + settings.workspace.editorService.timeout);
     if (vscode.workspace.workspaceFolders !== undefined) {
-      args.push('--local-workspace=' + vscode.workspace.workspaceFolders[0].uri.fsPath);
+      const path = `--local-workspace='${vscode.workspace.workspaceFolders[0].uri.fsPath}'`;
+      args.push(path);
     }
 
     // Convert the individual puppet settings into the --puppet-settings
