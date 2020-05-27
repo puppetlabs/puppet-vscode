@@ -48,14 +48,14 @@ export class OutputChannelLogger implements logging.ILogger {
   }
 
   private logWithLevel(level: logging.LogLevel, message: string) {
-    let logMessage = this.logLevelPrefixAsString(level) + new Date().toISOString() + ' ' + message;
+    const logMessage = this.logLevelPrefixAsString(level) + new Date().toISOString() + ' ' + message;
 
     if (level >= this.minimumUserLogLevel) {
       this._logChannel.appendLine(logMessage);
     }
   }
 
-  private logLevelFromString(logLevelName: String): logging.LogLevel {
+  private logLevelFromString(logLevelName: string): logging.LogLevel {
     switch (logLevelName.toLowerCase()) {
       case 'verbose':
         return logging.LogLevel.Verbose;
@@ -72,7 +72,7 @@ export class OutputChannelLogger implements logging.ILogger {
     }
   }
 
-  private logLevelPrefixAsString(level: logging.LogLevel): String {
+  private logLevelPrefixAsString(level: logging.LogLevel): string {
     switch (level) {
       case logging.LogLevel.Verbose:
         return 'VERBOSE: ';

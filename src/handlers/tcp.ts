@@ -1,14 +1,13 @@
-import * as vscode from 'vscode';
-import * as net from 'net';
 import * as cp from 'child_process';
-import { ServerOptions, Executable, StreamInfo } from 'vscode-languageclient';
-
-import { ConnectionHandler } from '../handler';
-import { ConnectionType, ProtocolType, PuppetInstallType } from '../settings';
-import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
-import { OutputChannelLogger } from '../logging/outputchannel';
-import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import * as net from 'net';
+import * as vscode from 'vscode';
+import { Executable, ServerOptions, StreamInfo } from 'vscode-languageclient';
 import { IAggregateConfiguration } from '../configuration';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
+import { ConnectionHandler } from '../handler';
+import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { OutputChannelLogger } from '../logging/outputchannel';
+import { ConnectionType, ProtocolType, PuppetInstallType } from '../settings';
 
 export class TcpConnectionHandler extends ConnectionHandler {
   constructor(
@@ -21,12 +20,13 @@ export class TcpConnectionHandler extends ConnectionHandler {
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
 
     if (this.connectionType === ConnectionType.Local) {
-      let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
+      const exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
         this.context.asAbsolutePath(this.config.ruby.languageServerPath),
         this.config,
       );
 
-      let logPrefix: string = '';
+      let logPrefix = '';
+      // eslint-disable-next-line default-case
       switch (this.config.workspace.installType) {
         case PuppetInstallType.PDK:
           logPrefix = '[getRubyEnvFromPDK] ';
@@ -45,14 +45,14 @@ export class TcpConnectionHandler extends ConnectionHandler {
       this.logger.debug(logPrefix + 'Using environment variable GEM_PATH=' + exe.options.env.GEM_PATH);
       this.logger.debug(logPrefix + 'Using environment variable GEM_HOME=' + exe.options.env.GEM_HOME);
 
-      let spawn_options: cp.SpawnOptions = {};
-      let convertedOptions = Object.assign(spawn_options, exe.options);
+      const spawnOptions: cp.SpawnOptions = {};
+      const convertedOptions = Object.assign(spawnOptions, exe.options);
 
       this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
-      var proc = cp.spawn(exe.command, exe.args, convertedOptions);
+      const proc = cp.spawn(exe.command, exe.args, convertedOptions);
       proc.stdout.on('data', (data) => {
         if (/LANGUAGE SERVER RUNNING/.test(data.toString())) {
-          var p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
+          const p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
           config.workspace.editorService.tcp.port = Number(p[1]);
           this.start();
         }
@@ -91,15 +91,15 @@ export class TcpConnectionHandler extends ConnectionHandler {
       `Starting language server client (host ${this.config.workspace.editorService.tcp.address} port ${this.config.workspace.editorService.tcp.port})`,
     );
 
-    let serverOptions = () => {
-      let socket = new net.Socket();
+    const serverOptions = () => {
+      const socket = new net.Socket();
 
       socket.connect({
         port: this.config.workspace.editorService.tcp.port,
         host: this.config.workspace.editorService.tcp.address,
       });
 
-      let result: StreamInfo = {
+      const result: StreamInfo = {
         writer: socket,
         reader: socket,
       };

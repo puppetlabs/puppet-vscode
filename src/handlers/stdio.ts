@@ -1,12 +1,11 @@
 import * as vscode from 'vscode';
-
-import { ServerOptions, Executable } from 'vscode-languageclient';
-import { ConnectionHandler } from '../handler';
-import { ConnectionType, PuppetInstallType } from '../settings';
-import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
-import { OutputChannelLogger } from '../logging/outputchannel';
-import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { Executable, ServerOptions } from 'vscode-languageclient';
 import { IAggregateConfiguration } from '../configuration';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
+import { ConnectionHandler } from '../handler';
+import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { OutputChannelLogger } from '../logging/outputchannel';
+import { ConnectionType, PuppetInstallType } from '../settings';
 
 export class StdioConnectionHandler extends ConnectionHandler {
   get connectionType(): ConnectionType {
@@ -25,12 +24,13 @@ export class StdioConnectionHandler extends ConnectionHandler {
   }
 
   createServerOptions(): ServerOptions {
-    let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
+    const exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
       this.context.asAbsolutePath(this.config.ruby.languageServerPath),
       this.config,
     );
 
-    let logPrefix: string = '';
+    let logPrefix = '';
+    // eslint-disable-next-line default-case
     switch (this.config.workspace.installType) {
       case PuppetInstallType.PDK:
         logPrefix = '[getRubyEnvFromPDK] ';
@@ -51,7 +51,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
     this.logger.debug(logPrefix + 'Using environment variable RUBYOPT=' + exe.options.env.RUBYOPT);
     this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
 
-    let serverOptions: ServerOptions = {
+    const serverOptions: ServerOptions = {
       run: exe,
       debug: exe,
     };

@@ -38,20 +38,20 @@ export abstract class ConnectionHandler {
     this.timeSpent = Date.now();
     this.setConnectionStatus('Initializing', ConnectionStatus.Initializing);
 
-    let documents = [
+    const documents = [
       { scheme: 'file', language: puppetLangID },
       { scheme: 'file', language: puppetFileLangID },
     ];
 
     this.logger.debug('Configuring language client options');
-    let clientOptions: LanguageClientOptions = {
+    const clientOptions: LanguageClientOptions = {
       documentSelector: documents,
       outputChannel: this.logger.logChannel,
       revealOutputChannelOn: RevealOutputChannelOn.Info,
     };
 
     this.logger.debug('Creating server options');
-    let serverOptions = this.createServerOptions();
+    const serverOptions = this.createServerOptions();
 
     this.logger.debug('Creating language client');
     this._languageClient = new LanguageClient('PuppetVSCode', serverOptions, clientOptions);
@@ -122,7 +122,7 @@ export abstract class ConnectionHandler {
     return new Promise((resolve, reject) => {
       let count = 0;
       let lastVersionResponse: PuppetVersionDetails;
-      let handle = setInterval(() => {
+      const handle = setInterval(() => {
         count++;
 
         // After 30 seonds timeout the progress
@@ -145,7 +145,7 @@ export abstract class ConnectionHandler {
             this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.RunningLoaded, '');
             resolve();
           } else {
-            let toolTip: string = '';
+            let toolTip = '';
 
             toolTip += versionDetails.classesLoaded ? '✔ Classes: Loaded\n' : '⏳ Classes: Loading...\n';
             toolTip += versionDetails.factsLoaded ? '✔ Facts: Loaded\n' : '⏳ Facts: Loading...\n';

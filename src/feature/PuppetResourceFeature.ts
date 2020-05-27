@@ -2,22 +2,23 @@
 
 import * as vscode from 'vscode';
 import { IFeature } from '../feature';
+import { ConnectionHandler } from '../handler';
+import { ConnectionStatus } from '../interfaces';
 import { ILogger } from '../logging';
 import {
   PuppetCommandStrings,
-  PuppetResourceRequestParams,
   PuppetResourceRequest,
+  PuppetResourceRequestParams,
   PuppetResourceResponse,
 } from '../messages';
-import { reporter } from '../telemetry';
-import { ConnectionStatus } from '../interfaces';
-import { ConnectionHandler } from '../handler';
 import { ISettings, SettingsFromWorkspace } from '../settings';
+import { reporter } from '../telemetry';
 
 export class PuppetResourceFeature implements IFeature {
   private _connectionHandler: ConnectionHandler;
   private logger: ILogger;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {}
 
   constructor(context: vscode.ExtensionContext, connMgr: ConnectionHandler, logger: ILogger) {
@@ -30,27 +31,26 @@ export class PuppetResourceFeature implements IFeature {
     );
   }
   public run() {
-    var thisCommand = this;
-
-    if (thisCommand._connectionHandler.status !== ConnectionStatus.RunningLoaded) {
+    if (this._connectionHandler.status !== ConnectionStatus.RunningLoaded) {
       vscode.window.showInformationMessage('Puppet Resource is not available as the Language Server is not ready');
       return;
     }
 
     this.pickPuppetResource().then((moduleName) => {
       if (moduleName) {
-        let editor = vscode.window.activeTextEditor;
+        const editor = vscode.window.activeTextEditor;
         if (!editor) {
           return;
         }
 
-        let doc = editor.document;
-        let requestParams = new RequestParams();
+        const doc = editor.document;
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        const requestParams = new RequestParams();
         requestParams.typename = moduleName;
 
         // Calculate where the progress message should go, if at all.
         const currentSettings: ISettings = SettingsFromWorkspace();
-        var notificationType = vscode.ProgressLocation.Notification;
+        let notificationType = vscode.ProgressLocation.Notification;
         if (currentSettings.notification !== undefined && currentSettings.notification.puppetResource !== undefined) {
           switch (currentSettings.notification.puppetResource.toLowerCase()) {
             case 'messagebox':
@@ -76,7 +76,7 @@ export class PuppetResourceFeature implements IFeature {
             },
             (progress) => {
               progress.report({ message: `Gathering Puppet ${moduleName} Resources` });
-              return thisCommand._connectionHandler.languageClient
+              return this._connectionHandler.languageClient
                 .sendRequest(PuppetResourceRequest.type, requestParams)
                 .then((resourceResult) => {
                   this.respsonseToVSCodeEdit(resourceResult, editor, doc);
@@ -84,7 +84,7 @@ export class PuppetResourceFeature implements IFeature {
             },
           );
         } else {
-          thisCommand._connectionHandler.languageClient
+          this._connectionHandler.languageClient
             .sendRequest(PuppetResourceRequest.type, requestParams)
             .then((resourceResult) => {
               this.respsonseToVSCodeEdit(resourceResult, editor, doc);
@@ -111,7 +111,7 @@ export class PuppetResourceFeature implements IFeature {
       return;
     }
 
-    var newPosition = new vscode.Position(0, 0);
+    let newPosition = new vscode.Position(0, 0);
     if (editor.selection.isEmpty) {
       const position = editor.selection.active;
       newPosition = position.with(position.line, 0);
@@ -124,7 +124,7 @@ export class PuppetResourceFeature implements IFeature {
   }
 
   private pickPuppetResource(): Thenable<string | undefined> {
-    let options: vscode.QuickPickOptions = {
+    const options: vscode.QuickPickOptions = {
       placeHolder: 'Enter a Puppet resource to interrogate',
       matchOnDescription: true,
       matchOnDetail: true,
@@ -133,7 +133,7 @@ export class PuppetResourceFeature implements IFeature {
   }
 
   private editCurrentDocument(uri: vscode.Uri, text: string, position: vscode.Position) {
-    let edit = new vscode.WorkspaceEdit();
+    const edit = new vscode.WorkspaceEdit();
     edit.insert(uri, position, text);
     vscode.workspace.applyEdit(edit);
   }

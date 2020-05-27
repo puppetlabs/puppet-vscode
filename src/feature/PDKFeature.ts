@@ -53,12 +53,12 @@ export class PDKFeature implements IFeature {
   }
 
   private pdkNewModuleCommand() {
-    let nameOpts: vscode.QuickPickOptions = {
+    const nameOpts: vscode.QuickPickOptions = {
       placeHolder: 'Enter a name for the new Puppet module',
       matchOnDescription: true,
       matchOnDetail: true,
     };
-    let dirOpts: vscode.QuickPickOptions = {
+    const dirOpts: vscode.QuickPickOptions = {
       placeHolder: 'Enter a path for the new Puppet module',
       matchOnDescription: true,
       matchOnDetail: true,
@@ -81,7 +81,7 @@ export class PDKFeature implements IFeature {
   }
 
   private pdkNewClassCommand() {
-    let nameOpts: vscode.QuickPickOptions = {
+    const nameOpts: vscode.QuickPickOptions = {
       placeHolder: 'Enter a name for the new Puppet class',
       matchOnDescription: true,
       matchOnDetail: true,
@@ -96,7 +96,7 @@ export class PDKFeature implements IFeature {
   }
 
   private pdkNewTaskCommand() {
-    let nameOpts: vscode.QuickPickOptions = {
+    const nameOpts: vscode.QuickPickOptions = {
       placeHolder: 'Enter a name for the new Puppet Task',
       matchOnDescription: true,
       matchOnDetail: true,

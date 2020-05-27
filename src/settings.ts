@@ -91,7 +91,7 @@ function getSafeWorkspaceConfig(workspaceConfig: vscode.WorkspaceConfiguration, 
   }
 
   let index: string = indexes.shift();
-  let result: Object = workspaceConfig[index];
+  let result: Record<string, any> = workspaceConfig[index];
   while (indexes.length > 0 && result !== undefined) {
     index = indexes.shift();
     result = result[index];
@@ -108,11 +108,11 @@ function getSafeWorkspaceConfig(workspaceConfig: vscode.WorkspaceConfiguration, 
 /**
  * Retrieves the list of "legacy" or deprecated setting names and their values
  */
-export function legacySettings(): Map<string, Object> {
+export function legacySettings(): Map<string, Record<string, any>> {
   const workspaceConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(workspaceSectionName);
 
-  let settings: Map<string, Object> = new Map<string, Object>();
-  let value: Object = undefined;
+  const settings: Map<string, Record<string, any>> = new Map<string, Record<string, any>>();
+  const value: Record<string, any> = undefined;
 
   // puppet.editorService.modulePath
   // value = getSafeWorkspaceConfig(workspaceConfig, ['editorService', 'modulePath']);
@@ -159,7 +159,7 @@ export function SettingsFromWorkspace(): ISettings {
   const defaults: ISettings = DefaultWorkspaceSettings();
 
   // TODO: What if the wrong type is passed through? will it blow up?
-  let settings = {
+  const settings = {
     editorService: workspaceConfig.get<IEditorServiceSettings>('editorService', defaults.editorService),
     format: workspaceConfig.get<IFormatSettings>('format', defaults.format),
     hover: workspaceConfig.get<IHoverSettings>('hover', defaults.hover),
@@ -192,10 +192,11 @@ export function SettingsFromWorkspace(): ISettings {
   }
 
   // Retrieve the legacy settings
-  const oldSettings: Map<string, Object> = legacySettings();
+  const oldSettings: Map<string, Record<string, any>> = legacySettings();
 
   // Translate the legacy settings into the new setting names
   for (const [settingName, value] of oldSettings) {
+    // eslint-disable-next-line no-empty
     switch (
       settingName
       // case 'puppet.puppetAgentDir': // --> puppet.installDirectory

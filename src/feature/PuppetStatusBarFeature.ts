@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 'use strict';
 
 import * as vscode from 'vscode';
-import { IFeature } from '../feature';
-import { ILogger } from '../logging';
-import { ConnectionStatus } from '../interfaces';
-import { PuppetCommandStrings } from '../messages';
 import { IAggregateConfiguration } from '../configuration';
+import { IFeature } from '../feature';
+import { ConnectionStatus } from '../interfaces';
+import { ILogger } from '../logging';
+import { PuppetCommandStrings } from '../messages';
 import { ProtocolType } from '../settings';
 
 class PuppetStatusBarProvider {
@@ -32,8 +33,8 @@ class PuppetStatusBarProvider {
   public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
     this.logger.debug(`Setting status bar to ${statusText}`);
     // Icons are from https://octicons.github.com/
-    var statusIconText: string;
-    var statusColor: string;
+    let statusIconText: string;
+    let statusColor: string;
 
     switch (status) {
       case ConnectionStatus.RunningLoaded:
@@ -71,7 +72,7 @@ class PuppetStatusBarProvider {
   }
 
   public showConnectionMenu() {
-    var menuItems: PuppetConnectionMenuItem[] = [];
+    const menuItems: PuppetConnectionMenuItem[] = [];
 
     menuItems.push(
       new PuppetConnectionMenuItem('Show Puppet Session Logs', () => {
@@ -114,8 +115,9 @@ class PuppetStatusBarProvider {
 }
 
 class PuppetConnectionMenuItem implements vscode.QuickPickItem {
-  public description: string = '';
+  public description = '';
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(public readonly label: string, public readonly callback: () => void = () => {}) {}
 }
 

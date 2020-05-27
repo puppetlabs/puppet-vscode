@@ -1,14 +1,15 @@
-import { ExtensionContext, commands, window, Uri } from 'vscode';
-import { IFeature } from '../feature';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
+import { commands, ExtensionContext, Uri, window } from 'vscode';
+import { IFeature } from '../feature';
 import { reporter } from '../telemetry';
 
 export class BoltFeature implements IFeature {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {}
 
   showDeprecation() {
-    let message =
+    const message =
       'The "Open Bolt User Configuration File" and "Open Bolt User Inventory File" commands will be removed in a future release. Do you think they should be kept? Think there are other ways for this extension to help using Puppet Bolt? Let us know by clicking "Feedback" to add a comment to Github Issue #639';
     window.showWarningMessage(message, { modal: false }, { title: 'Feedback' }).then((result) => {
       if (result === undefined) {
@@ -26,7 +27,7 @@ export class BoltFeature implements IFeature {
       commands.registerCommand('puppet-bolt.OpenUserConfigFile', () => {
         this.showDeprecation();
 
-        let userInventoryFile = path.join(process.env['USERPROFILE'] || '~', '.puppetlabs', 'bolt', 'bolt.yaml');
+        const userInventoryFile = path.join(process.env['USERPROFILE'] || '~', '.puppetlabs', 'bolt', 'bolt.yaml');
 
         this.openOrCreateFile(
           userInventoryFile,
@@ -44,7 +45,7 @@ export class BoltFeature implements IFeature {
       commands.registerCommand('puppet-bolt.OpenUserInventoryFile', () => {
         this.showDeprecation();
 
-        let userInventoryFile = path.join(process.env['USERPROFILE'] || '~', '.puppetlabs', 'bolt', 'inventory.yaml');
+        const userInventoryFile = path.join(process.env['USERPROFILE'] || '~', '.puppetlabs', 'bolt', 'inventory.yaml');
 
         this.openOrCreateFile(
           userInventoryFile,
@@ -68,6 +69,7 @@ export class BoltFeature implements IFeature {
           ignoreFocusOut: true,
         })
         .then((answer) => {
+          // eslint-disable-next-line default-case
           switch (answer) {
             case 'no':
               break;

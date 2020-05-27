@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 'use strict';
 
 import * as fs from 'fs';
@@ -7,22 +8,22 @@ import { IFeature } from './feature';
 import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
-import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
 import { PDKFeature } from './feature/PDKFeature';
+import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
+import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { PuppetStatusBarFeature } from './feature/PuppetStatusBarFeature';
+import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
 import { ConnectionHandler } from './handler';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
-import { ConnectionType, ProtocolType, PuppetInstallType, ISettings } from './settings';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { legacySettings, SettingsFromWorkspace } from './settings';
+import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, SettingsFromWorkspace } from './settings';
 import { reporter } from './telemetry';
-import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
-import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 import { PuppetFactsProvider } from './views/facts';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios');
 
 export const puppetLangID = 'puppet'; // don't change this
@@ -36,9 +37,9 @@ let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
-  let pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
+  const pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
   if (pkg) {
-    let message =
+    const message =
       'The "jpogran.puppet-vscode" extension has been detected, which will conflict with the "puppet.puppet-vscode" extension. This will cause problems activating when each extension tries to load at the same time and may cause errors. Please uninstall it by executing the following from the commandline: "code --uninstall-extension jpogran.puppet-vscode"';
     vscode.window.showWarningMessage(message, { modal: false });
   }
@@ -96,6 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
     notifyIfNewPDKVersion(extContext, configSettings);
   }
 
+  // eslint-disable-next-line default-case
   switch (configSettings.workspace.editorService.protocol) {
     case ProtocolType.STDIO:
       connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings);
@@ -116,7 +118,7 @@ export function activate(context: vscode.ExtensionContext) {
     extensionFeatures.push(new PuppetModuleHoverFeature(extContext, logger));
   }
 
-  let facts = new PuppetFactsProvider(connectionHandler);
+  const facts = new PuppetFactsProvider(connectionHandler);
   vscode.window.registerTreeDataProvider('puppetFacts', facts);
 }
 
@@ -134,9 +136,9 @@ export function deactivate() {
 
 function checkForLegacySettings() {
   // Raise a warning if we detect any legacy settings
-  const legacySettingValues: Map<string, Object> = legacySettings();
+  const legacySettingValues: Map<string, Record<string, any>> = legacySettings();
   if (legacySettingValues.size > 0) {
-    let settingNames: string[] = [];
+    const settingNames: string[] = [];
     for (const [settingName, _value] of legacySettingValues) {
       settingNames.push(settingName);
     }
@@ -163,7 +165,7 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
     // Need to use SettingsFromWorkspace() here because the AggregateConfiguration
     // changes the installType from Auto, to its calculated value
     if (SettingsFromWorkspace().installType === PuppetInstallType.AUTO) {
-      let m = [
+      const m = [
         'The extension failed to find a Puppet installation automatically in the default locations for PDK and for Puppet Agent.',
         'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.',
       ];
@@ -277,10 +279,10 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
     .then((response) => {
       return response.data;
     })
-    .then((latest_version) => {
-      if (version !== latest_version) {
+    .then((latestVersion) => {
+      if (version !== latestVersion) {
         return vscode.window.showWarningMessage(
-          `The installed PDK version is ${version}, the newest version is ${latest_version}. To find out how to update to the latest version click the more info button`,
+          `The installed PDK version is ${version}, the newest version is ${latestVersion}. To find out how to update to the latest version click the more info button`,
           { modal: false },
           { title: dontCheckAgainNotice },
           { title: viewPDKDownloadPage },

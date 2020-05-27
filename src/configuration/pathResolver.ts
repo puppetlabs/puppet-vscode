@@ -1,10 +1,11 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 
 export class PathResolver {
   public static getprogramFiles(): string {
     switch (process.platform) {
       case 'win32':
+        // eslint-disable-next-line no-case-declarations
         let programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
 
         if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {
@@ -18,12 +19,12 @@ export class PathResolver {
   }
 
   public static resolveSubDirectory(rootDir: string, subDir: string) {
-    var versionDir = path.join(rootDir, subDir);
+    const versionDir = path.join(rootDir, subDir);
 
     if (fs.existsSync(versionDir)) {
       return versionDir;
     } else {
-      var subdir = PathResolver.getDirectories(rootDir)[1];
+      const subdir = PathResolver.getDirectories(rootDir)[1];
       return subdir;
     }
   }

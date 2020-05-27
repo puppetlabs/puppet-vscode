@@ -1,12 +1,12 @@
+/* eslint-disable */
 'use strict';
 
-import * as vscode from 'vscode';
 import * as cp from 'child_process';
-
-import { IFeature } from '../feature';
-import { ILogger } from '../logging';
-import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import * as vscode from 'vscode';
 import { IAggregateConfiguration } from '../configuration';
+import { IFeature } from '../feature';
+import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { ILogger } from '../logging';
 
 // Socket vs Exec DebugAdapter types
 // https://github.com/Microsoft/vscode/blob/2808feeaf6b24feaaa6ba49fb91ea165c4d5fb06/src/vs/workbench/parts/debug/node/debugger.ts#L58-L61
@@ -36,15 +36,15 @@ export class DebugAdapterDescriptorFactory implements vscode.DebugAdapterDescrip
   ): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
     // Right now we don't care about session as we only have one type of adapter, which is launch.  When
     // we add the ability to attach to a debugger remotely we'll need to switch scenarios based on `session`
-    let thisFactory = this;
+    const thisFactory = this;
 
     return new Promise<vscode.DebugAdapterDescriptor>(function (resolve, reject) {
-      let debugServer = CommandEnvironmentHelper.getDebugServerRubyEnvFromConfiguration(
+      const debugServer = CommandEnvironmentHelper.getDebugServerRubyEnvFromConfiguration(
         thisFactory.Context.asAbsolutePath(thisFactory.Config.ruby.debugServerPath),
         thisFactory.Config,
       );
 
-      let spawn_options: cp.SpawnOptions = {};
+      const spawn_options: cp.SpawnOptions = {};
       spawn_options.env = debugServer.options.env;
       spawn_options.stdio = 'pipe';
       if (process.platform !== 'win32') {
@@ -54,17 +54,17 @@ export class DebugAdapterDescriptorFactory implements vscode.DebugAdapterDescrip
       thisFactory.Logger.verbose(
         'Starting the Debug Server with ' + debugServer.command + ' ' + debugServer.args.join(' '),
       );
-      let debugServerProc = cp.spawn(debugServer.command, debugServer.args, spawn_options);
+      const debugServerProc = cp.spawn(debugServer.command, debugServer.args, spawn_options);
       thisFactory.ChildProcesses.push(debugServerProc);
 
-      let debugSessionRunning: boolean = false;
+      let debugSessionRunning = false;
       debugServerProc.stdout.on('data', (data) => {
         thisFactory.Logger.debug('Debug Server STDOUT: ' + data.toString());
         // If the debug client isn't already running and it's sent the trigger text, start up a client
         if (!debugSessionRunning && data.toString().match('DEBUG SERVER RUNNING') !== null) {
           debugSessionRunning = true;
 
-          var p = data.toString().match(/DEBUG SERVER RUNNING (.*):(\d+)/);
+          const p = data.toString().match(/DEBUG SERVER RUNNING (.*):(\d+)/);
           if (p === null) {
             reject('Debug Server started but unable to parse hostname and port');
           } else {
@@ -119,7 +119,7 @@ export class DebugConfigurationProvider implements vscode.DebugConfigurationProv
   }
 
   private createLaunchConfigFromContext(folder: vscode.WorkspaceFolder | undefined): vscode.DebugConfiguration {
-    let config = {
+    const config = {
       type: this.debugType,
       request: 'launch',
       name: 'Puppet Apply current file',

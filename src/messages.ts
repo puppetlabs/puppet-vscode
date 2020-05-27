@@ -1,4 +1,5 @@
-import { RequestType0, RequestType } from 'vscode-languageclient';
+/* eslint-disable @typescript-eslint/no-namespace */
+import { RequestType, RequestType0 } from 'vscode-languageclient';
 
 export namespace PuppetVersionRequest {
   export const type = new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion');
@@ -68,16 +69,16 @@ export interface CompileNodeGraphResponse {
 }
 
 export class PuppetCommandStrings {
-  static PuppetResourceCommandId: string = 'extension.puppetResource';
+  static PuppetResourceCommandId = 'extension.puppetResource';
   static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
   static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
   static PuppetUpdateConfigurationCommandId = 'extension.puppetUpdateConfiguration';
 }
 
 export class PDKCommandStrings {
-  static PdkNewModuleCommandId: string = 'extension.pdkNewModule';
-  static PdkNewClassCommandId: string = 'extension.pdkNewClass';
-  static PdkNewTaskCommandId: string = 'extension.pdkNewTask';
-  static PdkValidateCommandId: string = 'extension.pdkValidate';
-  static PdkTestUnitCommandId: string = 'extension.pdkTestUnit';
+  static PdkNewModuleCommandId = 'extension.pdkNewModule';
+  static PdkNewClassCommandId = 'extension.pdkNewClass';
+  static PdkNewTaskCommandId = 'extension.pdkNewTask';
+  static PdkValidateCommandId = 'extension.pdkValidate';
+  static PdkTestUnitCommandId = 'extension.pdkTestUnit';
 }

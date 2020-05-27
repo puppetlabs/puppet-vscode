@@ -32,7 +32,7 @@ class FormatDocumentProvider {
       return [];
     }
 
-    let requestParams = new RequestParams();
+    const requestParams = new RequestParams();
     requestParams.documentUri = document.uri.toString(false);
     requestParams.alwaysReturnContent = false;
 
