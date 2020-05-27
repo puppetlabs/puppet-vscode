@@ -84,7 +84,7 @@ class PDKRubyInstances implements IPDKRubyInstances {
       return this.rubyInstances;
     }
 
-    var rubyDir = path.join(this.pdkDirectory, 'private', 'ruby');
+    const rubyDir = path.join(this.pdkDirectory, 'private', 'ruby');
     if (!fs.existsSync(rubyDir)) {
       return this.rubyInstances;
     }
@@ -199,7 +199,7 @@ class PDKRubyInstance implements IPDKRubyInstance {
       return this._puppetVersions;
     }
     this._puppetVersions = [];
-    let gemdir = path.join(this._rubyVerDir, 'gems');
+    const gemdir = path.join(this._rubyVerDir, 'gems');
     if (!fs.existsSync(gemdir)) {
       return this._puppetVersions;
     }
@@ -208,7 +208,7 @@ class PDKRubyInstance implements IPDKRubyInstance {
     // the gem cache is just as easy and doesn't need to spawn a ruby process per
     // ruby version.
     fs.readdirSync(gemdir).forEach((item) => {
-      let pathMatch = item.match(/^puppet-(\d+\.\d+\.\d+)(?:(-|$))/);
+      const pathMatch = item.match(/^puppet-(\d+\.\d+\.\d+)(?:(-|$))/);
       if (pathMatch !== null) {
         this._puppetVersions.push(pathMatch[1]);
       }
@@ -242,7 +242,7 @@ class PDKRubyInstance implements IPDKRubyInstance {
     // This is a little naive however there doesn't appear to be a native semver module
     // loaded in VS Code. The gem path is always the <Major>.<Minor>.0 version of the
     // corresponding Ruby version
-    let gemDirName = this._rubyVersion.replace(/\.\d+$/, '.0');
+    const gemDirName = this._rubyVersion.replace(/\.\d+$/, '.0');
     // Calculate gem paths
     this._rubyVerDir = path.join(pdkDirectory, 'private', 'puppet', 'ruby', gemDirName);
     this._gemVerDir = path.join(this._rubyDir, 'lib', 'ruby', 'gems', gemDirName);

@@ -68,16 +68,16 @@ export interface CompileNodeGraphResponse {
 }
 
 export class PuppetCommandStrings {
-  static PuppetResourceCommandId: string = 'extension.puppetResource';
+  static PuppetResourceCommandId = 'extension.puppetResource';
   static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
   static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
   static PuppetUpdateConfigurationCommandId = 'extension.puppetUpdateConfiguration';
 }
 
 export class PDKCommandStrings {
-  static PdkNewModuleCommandId: string = 'extension.pdkNewModule';
-  static PdkNewClassCommandId: string = 'extension.pdkNewClass';
-  static PdkNewTaskCommandId: string = 'extension.pdkNewTask';
-  static PdkValidateCommandId: string = 'extension.pdkValidate';
-  static PdkTestUnitCommandId: string = 'extension.pdkTestUnit';
+  static PdkNewModuleCommandId = 'extension.pdkNewModule';
+  static PdkNewClassCommandId = 'extension.pdkNewClass';
+  static PdkNewTaskCommandId = 'extension.pdkNewTask';
+  static PdkValidateCommandId = 'extension.pdkValidate';
+  static PdkTestUnitCommandId = 'extension.pdkTestUnit';
 }

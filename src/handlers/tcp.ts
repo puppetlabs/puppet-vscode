@@ -21,12 +21,12 @@ export class TcpConnectionHandler extends ConnectionHandler {
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
 
     if (this.connectionType === ConnectionType.Local) {
-      let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
+      const exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
         this.context.asAbsolutePath(this.config.ruby.languageServerPath),
         this.config,
       );
 
-      let logPrefix: string = '';
+      let logPrefix = '';
       switch (this.config.workspace.installType) {
         case PuppetInstallType.PDK:
           logPrefix = '[getRubyEnvFromPDK] ';
@@ -45,14 +45,14 @@ export class TcpConnectionHandler extends ConnectionHandler {
       this.logger.debug(logPrefix + 'Using environment variable GEM_PATH=' + exe.options.env.GEM_PATH);
       this.logger.debug(logPrefix + 'Using environment variable GEM_HOME=' + exe.options.env.GEM_HOME);
 
-      let spawn_options: cp.SpawnOptions = {};
-      let convertedOptions = Object.assign(spawn_options, exe.options);
+      const spawn_options: cp.SpawnOptions = {};
+      const convertedOptions = Object.assign(spawn_options, exe.options);
 
       this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
-      var proc = cp.spawn(exe.command, exe.args, convertedOptions);
+      const proc = cp.spawn(exe.command, exe.args, convertedOptions);
       proc.stdout.on('data', (data) => {
         if (/LANGUAGE SERVER RUNNING/.test(data.toString())) {
-          var p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
+          const p = data.toString().match(/LANGUAGE SERVER RUNNING.*:(\d+)/);
           config.workspace.editorService.tcp.port = Number(p[1]);
           this.start();
         }
@@ -91,15 +91,15 @@ export class TcpConnectionHandler extends ConnectionHandler {
       `Starting language server client (host ${this.config.workspace.editorService.tcp.address} port ${this.config.workspace.editorService.tcp.port})`,
     );
 
-    let serverOptions = () => {
-      let socket = new net.Socket();
+    const serverOptions = () => {
+      const socket = new net.Socket();
 
       socket.connect({
         port: this.config.workspace.editorService.tcp.port,
         host: this.config.workspace.editorService.tcp.address,
       });
 
-      let result: StreamInfo = {
+      const result: StreamInfo = {
         writer: socket,
         reader: socket,
       };

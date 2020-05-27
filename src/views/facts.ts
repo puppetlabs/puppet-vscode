@@ -83,7 +83,7 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
       // language server is ready, but hasn't loaded facts yet
       return new Promise<PuppetFact[]>((resolve) => {
         let count = 0;
-        let handle = setInterval(async () => {
+        const handle = setInterval(async () => {
           count++;
           if (count >= 60) {
             clearInterval(handle);
@@ -140,12 +140,12 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
   }
 
   toList(data: any): Array<[string, PuppetFact]> {
-    let things: Array<[string, PuppetFact]> = [];
+    const things: Array<[string, PuppetFact]> = [];
 
-    for (let key of Object.keys(data)) {
-      let value = data[key];
+    for (const key of Object.keys(data)) {
+      const value = data[key];
       if (Object.prototype.toString.call(value) === '[object Object]') {
-        let children = this.toList(value);
+        const children = this.toList(value);
         const item = new PuppetFact(key, value, TreeItemCollapsibleState.Collapsed, children);
         things.push([key, item]);
       } else {

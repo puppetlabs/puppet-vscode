@@ -139,7 +139,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
   }
 
   private safeJoin(...paths: string[]): string {
-    let foundUndefined: Boolean = false;
+    let foundUndefined = false;
     // path.join makes sure that no elements are 'undefined' and throws if there is. Instead
     // we can search for it and just return undefined ourself.
     paths.forEach((item) => {
@@ -182,24 +182,24 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     puppetBaseDir: string,
     rubydir: string,
   ): string {
-    return new Array(
+    return [
       path.join(puppetDir, 'bin'),
       path.join(facterDir, 'bin'),
       // path.join(hieraDir, 'bin'),
       path.join(puppetBaseDir, 'bin'),
       path.join(rubydir, 'bin'),
       path.join(puppetBaseDir, 'sys', 'tools', 'bin'),
-    ).join(PathResolver.pathEnvSeparator());
+    ].join(PathResolver.pathEnvSeparator());
   }
 
   // RUBYLIB=%PUPPET_DIR%\lib;%FACTERDIR%\lib;%HIERA_DIR%\lib;%RUBYLIB%
   private calculateRubylib(puppetDir: string, facterDir: string): string {
     return this.replaceSlashes(
-      new Array(
+      [
         path.join(puppetDir, 'lib'),
         path.join(facterDir, 'lib'),
         // path.join(this.hieraDir, 'lib'),
-      ).join(PathResolver.pathEnvSeparator()),
+      ].join(PathResolver.pathEnvSeparator()),
     );
   }
 
@@ -232,7 +232,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
   }
 
   private getAgentBasePath() {
-    let programFiles = PathResolver.getprogramFiles();
+    const programFiles = PathResolver.getprogramFiles();
     switch (process.platform) {
       case 'win32':
         // On Windows we have a subfolder called 'Puppet' that has
@@ -245,7 +245,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
   }
 
   private getPdkBasePath() {
-    let programFiles = PathResolver.getprogramFiles();
+    const programFiles = PathResolver.getprogramFiles();
     switch (process.platform) {
       case 'win32':
         return path.join(programFiles, 'Puppet Labs', 'DevelopmentKit');
@@ -255,9 +255,9 @@ export class AggregateConfiguration implements IAggregateConfiguration {
   }
 
   private getPdkVersionFromFile(puppetBaseDir: string) {
-    let basePath = path.join(puppetBaseDir, 'PDK_VERSION');
+    const basePath = path.join(puppetBaseDir, 'PDK_VERSION');
     if (fs.existsSync(basePath)) {
-      let contents = fs.readFileSync(basePath, 'utf8').toString();
+      const contents = fs.readFileSync(basePath, 'utf8').toString();
       return contents.trim();
     } else {
       return '';
@@ -268,8 +268,8 @@ export class AggregateConfiguration implements IAggregateConfiguration {
     if (!fs.existsSync(rootDir)) {
       return undefined;
     }
-    var files = fs.readdirSync(rootDir);
-    let result = files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).reverse()[0];
+    const files = fs.readdirSync(rootDir);
+    const result = files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).reverse()[0];
     return path.join(rootDir, result);
   }
 

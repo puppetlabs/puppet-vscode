@@ -32,8 +32,8 @@ class PuppetStatusBarProvider {
   public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
     this.logger.debug(`Setting status bar to ${statusText}`);
     // Icons are from https://octicons.github.com/
-    var statusIconText: string;
-    var statusColor: string;
+    let statusIconText: string;
+    let statusColor: string;
 
     switch (status) {
       case ConnectionStatus.RunningLoaded:
@@ -71,7 +71,7 @@ class PuppetStatusBarProvider {
   }
 
   public showConnectionMenu() {
-    var menuItems: PuppetConnectionMenuItem[] = [];
+    const menuItems: PuppetConnectionMenuItem[] = [];
 
     menuItems.push(
       new PuppetConnectionMenuItem('Show Puppet Session Logs', () => {
@@ -114,7 +114,7 @@ class PuppetStatusBarProvider {
 }
 
 class PuppetConnectionMenuItem implements vscode.QuickPickItem {
-  public description: string = '';
+  public description = '';
 
   constructor(public readonly label: string, public readonly callback: () => void = () => {}) {}
 }

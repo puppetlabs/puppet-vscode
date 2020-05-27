@@ -25,12 +25,12 @@ export class StdioConnectionHandler extends ConnectionHandler {
   }
 
   createServerOptions(): ServerOptions {
-    let exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
+    const exe: Executable = CommandEnvironmentHelper.getLanguageServerRubyEnvFromConfiguration(
       this.context.asAbsolutePath(this.config.ruby.languageServerPath),
       this.config,
     );
 
-    let logPrefix: string = '';
+    let logPrefix = '';
     switch (this.config.workspace.installType) {
       case PuppetInstallType.PDK:
         logPrefix = '[getRubyEnvFromPDK] ';
@@ -51,7 +51,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
     this.logger.debug(logPrefix + 'Using environment variable RUBYOPT=' + exe.options.env.RUBYOPT);
     this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
 
-    let serverOptions: ServerOptions = {
+    const serverOptions: ServerOptions = {
       run: exe,
       debug: exe,
     };

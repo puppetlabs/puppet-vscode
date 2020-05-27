@@ -5,7 +5,7 @@ import { ILogger } from '../logging';
 
 export class PuppetModuleHoverFeature implements IFeature {
   constructor(public context: vscode.ExtensionContext, public logger: ILogger) {
-    let selector = [{ language: 'json', scheme: '*', pattern: '**/metadata.json' }];
+    const selector = [{ language: 'json', scheme: '*', pattern: '**/metadata.json' }];
     context.subscriptions.push(vscode.languages.registerHoverProvider(selector, new PuppetModuleHoverProvider(logger)));
   }
 
@@ -40,10 +40,10 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
 
     this.logger.debug('Metadata hover info found ' + word + ' module');
 
-    let name = word.replace('"', '').replace('"', '').replace('/', '-');
+    const name = word.replace('"', '').replace('"', '').replace('/', '-');
 
     return this.getModuleInfo(name).then(function (result: any) {
-      let msg: string[] = [];
+      const msg: string[] = [];
       msg.push(`### ${result.slug}`);
 
       const releaseDate = new Date(result.releases[0].created_at);
@@ -64,14 +64,14 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
         msg.push(`\nProject: \[${result.homepage_url}\](${result.homepage_url})\n`);
       }
 
-      let md = msg.join('\n');
+      const md = msg.join('\n');
 
       return Promise.resolve(new vscode.Hover(new vscode.MarkdownString(md), range));
     });
   }
 
   private getModuleInfo(name: string) {
-    var options = {
+    const options = {
       url: `https://forgeapi.puppet.com/v3/modules/${name}?exclude_fields=readme%20changelog%20license%20reference`,
     };
     return new Promise(function (resolve, reject) {

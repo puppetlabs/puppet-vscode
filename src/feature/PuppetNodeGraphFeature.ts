@@ -40,7 +40,7 @@ export class PuppetNodeGraphFeature implements IFeature {
           return;
         }
 
-        let provider = new NodeGraphWebViewProvider(
+        const provider = new NodeGraphWebViewProvider(
           vscode.window.activeTextEditor.document.uri,
           handler,
           logger,
@@ -81,7 +81,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     protected logger: ILogger,
     protected context: vscode.ExtensionContext,
   ) {
-    let fileName = path.basename(resource.fsPath);
+    const fileName = path.basename(resource.fsPath);
     this.panel = vscode.window.createWebviewPanel(
       'puppetNodeGraph', // Identifies the type of the webview. Used internally
       `Node Graph '${fileName}'`, // Title of the panel displayed to the user
@@ -104,8 +104,8 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     });
   }
 
-  async show(redraw: boolean = false) {
-    let notificationType = this.getNotificationType();
+  async show(redraw = false) {
+    const notificationType = this.getNotificationType();
     if (notificationType === undefined) {
       return this.connectionHandler.languageClient
         .sendRequest(PuppetNodeGraphRequest.type, {
@@ -165,7 +165,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     // Calculate where the progress message should go, if at all.
     const currentSettings: ISettings = SettingsFromWorkspace();
 
-    var notificationType = vscode.ProgressLocation.Notification;
+    let notificationType = vscode.ProgressLocation.Notification;
 
     if (currentSettings.notification !== undefined && currentSettings.notification.nodeGraph !== undefined) {
       switch (currentSettings.notification.nodeGraph.toLowerCase()) {
@@ -187,17 +187,17 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
   }
 
   private getHtml(extensionPath: string): string {
-    let cytoPath = this.panel.webview.asWebviewUri(
+    const cytoPath = this.panel.webview.asWebviewUri(
       vscode.Uri.file(path.join(extensionPath, 'vendor', 'cytoscape', 'cytoscape.min.js')),
     );
-    let mainScript = this.panel.webview.asWebviewUri(
+    const mainScript = this.panel.webview.asWebviewUri(
       vscode.Uri.file(path.join(extensionPath, 'assets', 'js', 'main.js')),
     );
-    let mainCss = this.panel.webview.asWebviewUri(
+    const mainCss = this.panel.webview.asWebviewUri(
       vscode.Uri.file(path.join(extensionPath, 'assets', 'css', 'main.css')),
     );
 
-    let html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">

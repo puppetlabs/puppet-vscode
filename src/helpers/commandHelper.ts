@@ -11,7 +11,7 @@ export class CommandEnvironmentHelper {
     languageServerpath: string,
     config: IAggregateConfiguration,
   ): Executable {
-    let exe: Executable = {
+    const exe: Executable = {
       command: this.buildExecutableCommand(config),
       args: this.buildLanguageServerArguments(languageServerpath, config),
       options: {},
@@ -24,7 +24,7 @@ export class CommandEnvironmentHelper {
     debugServerpath: string,
     config: IAggregateConfiguration,
   ): Executable {
-    let exe: Executable = {
+    const exe: Executable = {
       command: this.buildExecutableCommand(config),
       args: this.buildDebugServerArguments(debugServerpath),
       options: {},
@@ -64,8 +64,8 @@ export class CommandEnvironmentHelper {
     return exe;
   }
 
-  public static shallowCloneObject(value: Object): Object {
-    const clone: Object = {};
+  public static shallowCloneObject(value: Record<string, any>): Record<string, any> {
+    const clone: Record<string, any> = {};
     for (const propertyName in value) {
       if (value.hasOwnProperty(propertyName)) {
         clone[propertyName] = value[propertyName];
@@ -74,9 +74,9 @@ export class CommandEnvironmentHelper {
     return clone;
   }
 
-  public static removeEmptyElements(obj: Object) {
+  public static removeEmptyElements(obj: Record<string, any>) {
     const propNames = Object.getOwnPropertyNames(obj);
-    for (var i = 0; i < propNames.length; i++) {
+    for (let i = 0; i < propNames.length; i++) {
       const propName = propNames[i];
       if (obj[propName] === null || obj[propName] === undefined) {
         delete obj[propName];
@@ -90,7 +90,7 @@ export class CommandEnvironmentHelper {
       // case sensitive it could simply be that it's called Path or path, particularly on Windows
       // not so much on Linux etc.. Look through all of the environment names looking for PATH in a
       // case insensitive way and remove the conflicting env var.
-      let envPath: string = '';
+      let envPath = '';
       Object.keys(exe.options.env).forEach(function (keyname) {
         if (keyname.match(/^PATH$/i)) {
           envPath = exe.options.env[keyname];
@@ -105,7 +105,7 @@ export class CommandEnvironmentHelper {
   }
 
   private static buildExecutableCommand(config: IAggregateConfiguration) {
-    let command: string = '';
+    let command = '';
     switch (config.workspace.installType) {
       case PuppetInstallType.PDK:
         command = path.join(config.ruby.pdkRubyDir, 'bin', 'ruby');
@@ -118,7 +118,7 @@ export class CommandEnvironmentHelper {
   }
 
   private static buildLanguageServerArguments(serverPath: string, settings: IAggregateConfiguration): string[] {
-    let args = [serverPath];
+    const args = [serverPath];
 
     switch (settings.workspace.editorService.protocol) {
       case ProtocolType.STDIO:
@@ -148,7 +148,7 @@ export class CommandEnvironmentHelper {
 
     // Convert the individual puppet settings into the --puppet-settings
     // command line argument
-    let puppetSettings: string[] = [];
+    const puppetSettings: string[] = [];
     [
       { name: 'confdir', value: settings.workspace.editorService.puppet.confdir },
       { name: 'environment', value: settings.workspace.editorService.puppet.environment },
@@ -180,7 +180,7 @@ export class CommandEnvironmentHelper {
   }
 
   private static buildDebugServerArguments(serverPath: string): string[] {
-    let args = [serverPath];
+    const args = [serverPath];
 
     // The Debug Adapter always runs on TCP and IPv4 loopback
     // Using localhost can have issues due to ruby and node differing on what address

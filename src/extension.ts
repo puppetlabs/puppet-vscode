@@ -36,9 +36,9 @@ let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
-  let pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
+  const pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
   if (pkg) {
-    let message =
+    const message =
       'The "jpogran.puppet-vscode" extension has been detected, which will conflict with the "puppet.puppet-vscode" extension. This will cause problems activating when each extension tries to load at the same time and may cause errors. Please uninstall it by executing the following from the commandline: "code --uninstall-extension jpogran.puppet-vscode"';
     vscode.window.showWarningMessage(message, { modal: false });
   }
@@ -116,7 +116,7 @@ export function activate(context: vscode.ExtensionContext) {
     extensionFeatures.push(new PuppetModuleHoverFeature(extContext, logger));
   }
 
-  let facts = new PuppetFactsProvider(connectionHandler);
+  const facts = new PuppetFactsProvider(connectionHandler);
   vscode.window.registerTreeDataProvider('puppetFacts', facts);
 }
 
@@ -134,9 +134,9 @@ export function deactivate() {
 
 function checkForLegacySettings() {
   // Raise a warning if we detect any legacy settings
-  const legacySettingValues: Map<string, Object> = legacySettings();
+  const legacySettingValues: Map<string, Record<string, any>> = legacySettings();
   if (legacySettingValues.size > 0) {
-    let settingNames: string[] = [];
+    const settingNames: string[] = [];
     for (const [settingName, _value] of legacySettingValues) {
       settingNames.push(settingName);
     }
@@ -163,7 +163,7 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
     // Need to use SettingsFromWorkspace() here because the AggregateConfiguration
     // changes the installType from Auto, to its calculated value
     if (SettingsFromWorkspace().installType === PuppetInstallType.AUTO) {
-      let m = [
+      const m = [
         'The extension failed to find a Puppet installation automatically in the default locations for PDK and for Puppet Agent.',
         'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.',
       ];

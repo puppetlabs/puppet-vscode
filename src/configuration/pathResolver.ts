@@ -18,12 +18,12 @@ export class PathResolver {
   }
 
   public static resolveSubDirectory(rootDir: string, subDir: string) {
-    var versionDir = path.join(rootDir, subDir);
+    const versionDir = path.join(rootDir, subDir);
 
     if (fs.existsSync(versionDir)) {
       return versionDir;
     } else {
-      var subdir = PathResolver.getDirectories(rootDir)[1];
+      const subdir = PathResolver.getDirectories(rootDir)[1];
       return subdir;
     }
   }

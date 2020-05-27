@@ -16,12 +16,12 @@ export class UpdateConfigurationFeature implements IFeature {
       vscode.workspace.workspaceFolders === undefined || vscode.workspace.workspaceFolders.length === 0
         ? vscode.ConfigurationTarget.Global
         : null;
-    var requiresRestart = false;
+    let requiresRestart = false;
 
     await Object.keys(updateSettingsHash).forEach((key) => {
       requiresRestart = requiresRestart || this.settingsRequireRestart.includes(key);
-      let value = updateSettingsHash[key];
-      let config = vscode.workspace.getConfiguration();
+      const value = updateSettingsHash[key];
+      const config = vscode.workspace.getConfiguration();
       this.logger.debug('Updating configuration item ' + key + " to '" + value + "'");
       config.update(key, value, configTarget);
     });
