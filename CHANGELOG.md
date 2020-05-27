@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Added
+
+- ([GH-666](https://github.com/puppetlabs/puppet-vscode/issues/666)) Add Puppetfile view to Puppet ToolBar
+
 ### Changed
 
 - ([GH-649](https://github.com/puppetlabs/puppet-vscode/issues/649)) Reduce activation events for extension
