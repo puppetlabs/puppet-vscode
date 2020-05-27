@@ -1,14 +1,14 @@
 'use strict';
 
-import * as path from 'path';
 import * as fs from 'fs';
-
+import * as path from 'path';
 import { PathResolver } from './configuration/pathResolver';
-import { ISettings, ConnectionType, ProtocolType, PuppetInstallType } from './settings';
 import * as pdk from './configuration/pdkResolver';
+import { ConnectionType, ISettings, ProtocolType, PuppetInstallType } from './settings';
 
 /** Creates an Aggregate Configuration based on the VSCode Workspace settings (ISettings) */
 export function CreateAggregrateConfiguration(settings: ISettings): IAggregateConfiguration {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const value = new AggregateConfiguration(settings);
 
   return value;

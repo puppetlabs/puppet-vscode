@@ -1,10 +1,11 @@
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 
 export class PathResolver {
   public static getprogramFiles(): string {
     switch (process.platform) {
       case 'win32':
+        // eslint-disable-next-line no-case-declarations
         let programFiles = process.env['ProgramFiles'] || 'C:\\Program Files';
 
         if (process.env['PROCESSOR_ARCHITEW6432'] === 'AMD64') {

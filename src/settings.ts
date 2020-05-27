@@ -196,6 +196,7 @@ export function SettingsFromWorkspace(): ISettings {
 
   // Translate the legacy settings into the new setting names
   for (const [settingName, value] of oldSettings) {
+    // eslint-disable-next-line no-empty
     switch (
       settingName
       // case 'puppet.puppetAgentDir': // --> puppet.installDirectory

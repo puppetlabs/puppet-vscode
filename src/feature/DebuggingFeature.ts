@@ -1,12 +1,12 @@
+/* eslint-disable */
 'use strict';
 
-import * as vscode from 'vscode';
 import * as cp from 'child_process';
-
-import { IFeature } from '../feature';
-import { ILogger } from '../logging';
-import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import * as vscode from 'vscode';
 import { IAggregateConfiguration } from '../configuration';
+import { IFeature } from '../feature';
+import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { ILogger } from '../logging';
 
 // Socket vs Exec DebugAdapter types
 // https://github.com/Microsoft/vscode/blob/2808feeaf6b24feaaa6ba49fb91ea165c4d5fb06/src/vs/workbench/parts/debug/node/debugger.ts#L58-L61

@@ -1,4 +1,5 @@
-import { RequestType0, RequestType } from 'vscode-languageclient';
+/* eslint-disable @typescript-eslint/no-namespace */
+import { RequestType, RequestType0 } from 'vscode-languageclient';
 
 export namespace PuppetVersionRequest {
   export const type = new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion');

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 'use strict';
 
 import * as fs from 'fs';
@@ -7,22 +8,22 @@ import { IFeature } from './feature';
 import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
-import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
 import { PDKFeature } from './feature/PDKFeature';
+import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
+import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { PuppetStatusBarFeature } from './feature/PuppetStatusBarFeature';
+import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
 import { ConnectionHandler } from './handler';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
-import { ConnectionType, ProtocolType, PuppetInstallType, ISettings } from './settings';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { legacySettings, SettingsFromWorkspace } from './settings';
+import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, SettingsFromWorkspace } from './settings';
 import { reporter } from './telemetry';
-import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
-import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 import { PuppetFactsProvider } from './views/facts';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios');
 
 export const puppetLangID = 'puppet'; // don't change this
@@ -96,6 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
     notifyIfNewPDKVersion(extContext, configSettings);
   }
 
+  // eslint-disable-next-line default-case
   switch (configSettings.workspace.editorService.protocol) {
     case ProtocolType.STDIO:
       connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings);
@@ -277,10 +279,10 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
     .then((response) => {
       return response.data;
     })
-    .then((latest_version) => {
-      if (version !== latest_version) {
+    .then((latestVersion) => {
+      if (version !== latestVersion) {
         return vscode.window.showWarningMessage(
-          `The installed PDK version is ${version}, the newest version is ${latest_version}. To find out how to update to the latest version click the more info button`,
+          `The installed PDK version is ${version}, the newest version is ${latestVersion}. To find out how to update to the latest version click the more info button`,
           { modal: false },
           { title: dontCheckAgainNotice },
           { title: viewPDKDownloadPage },

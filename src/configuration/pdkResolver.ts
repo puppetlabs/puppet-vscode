@@ -47,6 +47,7 @@ export interface IPDKRubyInstance {
 //             | 2.5.0               <---- pdkGemDir (GEM_PATH #2, replaceSlashes) (contains all the ancillary gems e.g. puppet-lint, rspec)
 
 export function pdkInstances(pdkRootDirectory: string): IPDKRubyInstances {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return new PDKRubyInstances(pdkRootDirectory);
 }
 
@@ -90,6 +91,7 @@ class PDKRubyInstances implements IPDKRubyInstances {
     }
 
     fs.readdirSync(rubyDir).forEach((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       this.rubyInstances.push(new PDKRubyInstance(this.pdkDirectory, path.join(rubyDir, item)));
     });
 
@@ -222,14 +224,14 @@ class PDKRubyInstance implements IPDKRubyInstance {
     return (
       '{' +
       [
-        `rubyVersion: \"${this._rubyVersion}\"`,
-        `rubyDir: \"${this._rubyDir}\"`,
-        `rubyVerDir: \"${this.rubyVerDir}\"`,
-        `gemVerDir: \"${this.gemVerDir}\"`,
-        `gemDir: \"${this.gemDir}\"`,
-        `gemDir: \"${this.gemDir}\"`,
-        `puppetVersions: \"${this.puppetVersions}\"`,
-        `valid: \"${this.valid}\"`,
+        `rubyVersion: "${this._rubyVersion}"`,
+        `rubyDir: "${this._rubyDir}"`,
+        `rubyVerDir: "${this.rubyVerDir}"`,
+        `gemVerDir: "${this.gemVerDir}"`,
+        `gemDir: "${this.gemDir}"`,
+        `gemDir: "${this.gemDir}"`,
+        `puppetVersions: "${this.puppetVersions}"`,
+        `valid: "${this.valid}"`,
       ].join(', ') +
       '}'
     );

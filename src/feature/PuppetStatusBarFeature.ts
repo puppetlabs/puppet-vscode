@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 'use strict';
 
 import * as vscode from 'vscode';
-import { IFeature } from '../feature';
-import { ILogger } from '../logging';
-import { ConnectionStatus } from '../interfaces';
-import { PuppetCommandStrings } from '../messages';
 import { IAggregateConfiguration } from '../configuration';
+import { IFeature } from '../feature';
+import { ConnectionStatus } from '../interfaces';
+import { ILogger } from '../logging';
+import { PuppetCommandStrings } from '../messages';
 import { ProtocolType } from '../settings';
 
 class PuppetStatusBarProvider {
@@ -116,6 +117,7 @@ class PuppetStatusBarProvider {
 class PuppetConnectionMenuItem implements vscode.QuickPickItem {
   public description = '';
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(public readonly label: string, public readonly callback: () => void = () => {}) {}
 }
 

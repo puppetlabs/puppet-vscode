@@ -5,6 +5,7 @@ import fs = require('fs');
 
 export class FileLogger implements logging.ILogger {
   private logwriter: fs.WriteStream;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public show() {}
 
   constructor(filename: string) {

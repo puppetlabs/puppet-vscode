@@ -1,10 +1,9 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
-
+import * as vscode from 'vscode';
 import { Executable } from 'vscode-languageclient';
-import { PuppetInstallType, ProtocolType } from '../settings';
-import { PathResolver } from '../configuration/pathResolver';
 import { IAggregateConfiguration } from '../configuration';
+import { PathResolver } from '../configuration/pathResolver';
+import { ProtocolType, PuppetInstallType } from '../settings';
 
 export class CommandEnvironmentHelper {
   public static getLanguageServerRubyEnvFromConfiguration(
@@ -48,6 +47,7 @@ export class CommandEnvironmentHelper {
 
     this.cleanEnvironmentPath(exe);
 
+    // eslint-disable-next-line default-case
     switch (config.workspace.installType) {
       case PuppetInstallType.PDK:
         CommandEnvironmentHelper.buildPDKEnvironment(exe, config);
@@ -67,6 +67,7 @@ export class CommandEnvironmentHelper {
   public static shallowCloneObject(value: Record<string, any>): Record<string, any> {
     const clone: Record<string, any> = {};
     for (const propertyName in value) {
+      // eslint-disable-next-line no-prototype-builtins
       if (value.hasOwnProperty(propertyName)) {
         clone[propertyName] = value[propertyName];
       }
@@ -106,6 +107,7 @@ export class CommandEnvironmentHelper {
 
   private static buildExecutableCommand(config: IAggregateConfiguration) {
     let command = '';
+    // eslint-disable-next-line default-case
     switch (config.workspace.installType) {
       case PuppetInstallType.PDK:
         command = path.join(config.ruby.pdkRubyDir, 'bin', 'ruby');

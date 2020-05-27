@@ -1,14 +1,16 @@
-import * as vscode from 'vscode';
 import { getLocation } from 'jsonc-parser';
+import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
 
 export class PuppetModuleHoverFeature implements IFeature {
   constructor(public context: vscode.ExtensionContext, public logger: ILogger) {
     const selector = [{ language: 'json', scheme: '*', pattern: '**/metadata.json' }];
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     context.subscriptions.push(vscode.languages.registerHoverProvider(selector, new PuppetModuleHoverProvider(logger)));
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {}
 }
 
@@ -47,6 +49,7 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
       msg.push(`### ${result.slug}`);
 
       const releaseDate = new Date(result.releases[0].created_at);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const dateformat = require('dateformat');
       msg.push(`\nLatest version: ${result.releases[0].version} (${dateformat(releaseDate, 'dS mmmm yyyy')})`);
 
@@ -58,10 +61,10 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
       msg.push(`\nOwner: ${result.owner.slug}`);
 
       const forgeUri = `https://forge.puppet.com/${result.owner.username}/${result.name}`;
-      msg.push(`\nForge: \[${forgeUri}\](${forgeUri})\n`);
+      msg.push(`\nForge: [${forgeUri}](${forgeUri})\n`);
 
       if (result.homepage_url !== null) {
-        msg.push(`\nProject: \[${result.homepage_url}\](${result.homepage_url})\n`);
+        msg.push(`\nProject: [${result.homepage_url}](${result.homepage_url})\n`);
       }
 
       const md = msg.join('\n');
@@ -75,6 +78,7 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
       url: `https://forgeapi.puppet.com/v3/modules/${name}?exclude_fields=readme%20changelog%20license%20reference`,
     };
     return new Promise(function (resolve, reject) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const request = require('request');
       request.get(options, function (err, resp, body) {
         if (err) {

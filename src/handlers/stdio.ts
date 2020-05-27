@@ -1,12 +1,11 @@
 import * as vscode from 'vscode';
-
-import { ServerOptions, Executable } from 'vscode-languageclient';
-import { ConnectionHandler } from '../handler';
-import { ConnectionType, PuppetInstallType } from '../settings';
-import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
-import { OutputChannelLogger } from '../logging/outputchannel';
-import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { Executable, ServerOptions } from 'vscode-languageclient';
 import { IAggregateConfiguration } from '../configuration';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
+import { ConnectionHandler } from '../handler';
+import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { OutputChannelLogger } from '../logging/outputchannel';
+import { ConnectionType, PuppetInstallType } from '../settings';
 
 export class StdioConnectionHandler extends ConnectionHandler {
   get connectionType(): ConnectionType {
@@ -31,6 +30,7 @@ export class StdioConnectionHandler extends ConnectionHandler {
     );
 
     let logPrefix = '';
+    // eslint-disable-next-line default-case
     switch (this.config.workspace.installType) {
       case PuppetInstallType.PDK:
         logPrefix = '[getRubyEnvFromPDK] ';

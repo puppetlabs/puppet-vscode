@@ -1,13 +1,12 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
-
+import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ConnectionHandler } from '../handler';
-import { ILogger } from '../logging';
 import { ConnectionStatus } from '../interfaces';
+import { ILogger } from '../logging';
 import { PuppetNodeGraphRequest, PuppetNodeGraphResponse } from '../messages';
-import { reporter } from '../telemetry';
 import { ISettings, SettingsFromWorkspace } from '../settings';
+import { reporter } from '../telemetry';
 
 const PuppetNodeGraphToTheSideCommandId = 'puppet.puppetShowNodeGraphToSide';
 
@@ -40,6 +39,7 @@ export class PuppetNodeGraphFeature implements IFeature {
           return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const provider = new NodeGraphWebViewProvider(
           vscode.window.activeTextEditor.document.uri,
           handler,
@@ -89,6 +89,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
       { enableScripts: true },
     );
     this.panel.webview.html = this.getHtml(this.context.extensionPath);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.panel.onDidDispose(() => {});
     this.panel.webview.onDidReceiveMessage((message) => {
       switch (message.command) {

@@ -1,12 +1,12 @@
 import {
-  TreeItem,
-  TreeItemCollapsibleState,
-  ThemeIcon,
-  TreeDataProvider,
+  commands,
   Event,
   EventEmitter,
-  commands,
   ProviderResult,
+  ThemeIcon,
+  TreeDataProvider,
+  TreeItem,
+  TreeItemCollapsibleState,
 } from 'vscode';
 import { RequestType0 } from 'vscode-languageclient';
 import { ConnectionHandler } from '../handler';
@@ -45,9 +45,10 @@ interface PuppetFactResponse {
 export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
   private elements: Array<[string, PuppetFact]> = [];
   private _onDidChangeTreeData: EventEmitter<PuppetFact | undefined> = new EventEmitter<PuppetFact | undefined>();
-  readonly onDidChangeTreeData: Event<PuppetFact | undefined> = this._onDidChangeTreeData.event;
+  readonly onDidChangeTreeData: Event<PuppetFact | undefined>;
 
   constructor(protected handler: ConnectionHandler) {
+    this.onDidChangeTreeData = this._onDidChangeTreeData.event;
     commands.registerCommand('puppet.refreshFacts', () => this.refresh());
   }
 

@@ -3,6 +3,7 @@
 import * as logging from '../logging';
 
 export class StandardOutLogger implements logging.ILogger {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public show() {}
 
   public verbose(message: string) {

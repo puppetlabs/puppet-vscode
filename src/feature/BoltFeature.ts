@@ -1,10 +1,11 @@
-import { ExtensionContext, commands, window, Uri } from 'vscode';
-import { IFeature } from '../feature';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
+import { commands, ExtensionContext, Uri, window } from 'vscode';
+import { IFeature } from '../feature';
 import { reporter } from '../telemetry';
 
 export class BoltFeature implements IFeature {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() {}
 
   showDeprecation() {
@@ -68,6 +69,7 @@ export class BoltFeature implements IFeature {
           ignoreFocusOut: true,
         })
         .then((answer) => {
+          // eslint-disable-next-line default-case
           switch (answer) {
             case 'no':
               break;

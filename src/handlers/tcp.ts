@@ -1,14 +1,13 @@
-import * as vscode from 'vscode';
-import * as net from 'net';
 import * as cp from 'child_process';
-import { ServerOptions, Executable, StreamInfo } from 'vscode-languageclient';
-
-import { ConnectionHandler } from '../handler';
-import { ConnectionType, ProtocolType, PuppetInstallType } from '../settings';
-import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
-import { OutputChannelLogger } from '../logging/outputchannel';
-import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import * as net from 'net';
+import * as vscode from 'vscode';
+import { Executable, ServerOptions, StreamInfo } from 'vscode-languageclient';
 import { IAggregateConfiguration } from '../configuration';
+import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
+import { ConnectionHandler } from '../handler';
+import { CommandEnvironmentHelper } from '../helpers/commandHelper';
+import { OutputChannelLogger } from '../logging/outputchannel';
+import { ConnectionType, ProtocolType, PuppetInstallType } from '../settings';
 
 export class TcpConnectionHandler extends ConnectionHandler {
   constructor(
@@ -27,6 +26,7 @@ export class TcpConnectionHandler extends ConnectionHandler {
       );
 
       let logPrefix = '';
+      // eslint-disable-next-line default-case
       switch (this.config.workspace.installType) {
         case PuppetInstallType.PDK:
           logPrefix = '[getRubyEnvFromPDK] ';
@@ -45,8 +45,8 @@ export class TcpConnectionHandler extends ConnectionHandler {
       this.logger.debug(logPrefix + 'Using environment variable GEM_PATH=' + exe.options.env.GEM_PATH);
       this.logger.debug(logPrefix + 'Using environment variable GEM_HOME=' + exe.options.env.GEM_HOME);
 
-      const spawn_options: cp.SpawnOptions = {};
-      const convertedOptions = Object.assign(spawn_options, exe.options);
+      const spawnOptions: cp.SpawnOptions = {};
+      const convertedOptions = Object.assign(spawnOptions, exe.options);
 
       this.logger.debug(logPrefix + 'Editor Services will invoke with: ' + exe.command + ' ' + exe.args.join(' '));
       const proc = cp.spawn(exe.command, exe.args, convertedOptions);
