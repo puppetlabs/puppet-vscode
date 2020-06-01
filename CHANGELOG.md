@@ -9,6 +9,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Added
 
 - ([GH-666](https://github.com/puppetlabs/puppet-vscode/issues/666)) Add Puppetfile view to Puppet ToolBar
+- ([GH-674](https://github.com/puppetlabs/puppet-vscode/issues/674)) Add Puppetfile forge module hover provider
 
 ### Changed
 
