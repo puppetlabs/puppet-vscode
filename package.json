@@ -472,17 +472,21 @@
         },
         "puppet.installDirectory": {
           "type": "string",
-          "default": null,
-          "description": "The fully qualified path to the Puppet install directory. This can be a PDK or Puppet Agent installation. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'. If this is not set the extension will attempt to detect the installation directory"
+          "markdownDescription": "The fully qualified path to the Puppet install directory. This can be a PDK or Puppet Agent installation. For example: 'C:\\Program Files\\Puppet Labs\\Puppet' or '/opt/puppetlabs/puppet'. If this is not set the extension will attempt to detect the installation directory. Do **not** use when `#puppet.installType#` is set to `auto`"
         },
         "puppet.installType": {
           "type": "string",
           "default": "auto",
-          "description": "The type of Puppet installation. Either the Puppet Development Kit (pdk) or the Puppet Agent (agent). Choose 'auto' to have the extension detect which to use automatically based on default install locations",
+          "markdownDescription": "The type of Puppet installation. Either the Puppet Development Kit (pdk) or the Puppet Agent (agent). Choose `auto` to have the extension detect which to use automatically based on default install locations",
           "enum": [
             "auto",
             "pdk",
             "agent"
+          ],
+          "enumDescriptions": [
+            "The exention will use the PDK or the Puppet Agent based on default install locations. When both are present, it will use the PDK",
+            "Use the PDK as an installation source",
+            "Use the Puppet Agent as an installation source"
           ]
         },
         "puppet.notification.nodeGraph": {
