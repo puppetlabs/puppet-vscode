@@ -2,6 +2,7 @@
 'use strict';
 
 import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { CreateAggregrateConfiguration, IAggregateConfiguration } from './configuration';
 import { IFeature } from './feature';
@@ -22,6 +23,7 @@ import { OutputChannelLogger } from './logging/outputchannel';
 import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, SettingsFromWorkspace } from './settings';
 import { reporter } from './telemetry';
 import { PuppetFactsProvider } from './views/facts';
+import { PuppetfileProvider } from './views/puppetfile';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios');
@@ -67,6 +69,12 @@ export function activate(context: vscode.ExtensionContext) {
     protocol: configSettings.workspace.editorService.protocol,
     pdkVersion: configSettings.ruby.pdkVersion,
   });
+
+  const puppetfile = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'Puppetfile');
+  const exists = fs.existsSync(puppetfile);
+  if (exists && configSettings.workspace.editorService.enable) {
+    vscode.commands.executeCommand('setContext', 'puppet:puppetfileEnabled', true);
+  }
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
 
@@ -120,6 +128,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   const facts = new PuppetFactsProvider(connectionHandler);
   vscode.window.registerTreeDataProvider('puppetFacts', facts);
+
+  const puppetfileView = new PuppetfileProvider(connectionHandler);
+  vscode.window.registerTreeDataProvider('puppetfile', puppetfileView);
 }
 
 export function deactivate() {
