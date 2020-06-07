@@ -10,6 +10,7 @@ import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { PDKFeature } from './feature/PDKFeature';
+import { PuppetfileHoverFeature } from './feature/PuppetfileHoverFeature';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
 import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
@@ -83,6 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
     new BoltFeature(extContext),
     new UpdateConfigurationFeature(logger, extContext),
     statusBar,
+    new PuppetfileHoverFeature(extContext, logger),
   ];
 
   if (configSettings.workspace.editorService.enable === false) {
