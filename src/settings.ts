@@ -170,6 +170,22 @@ export function SettingsFromWorkspace(): ISettings {
     pdk: workspaceConfig.get<IPDKSettings>('pdk', defaults.pdk),
   };
 
+  if (settings.installDirectory && settings.installType === PuppetInstallType.AUTO) {
+    const message =
+      "Do not use 'installDirectory' and set 'installType' to auto. The 'installDirectory' setting" +
+      ' is meant for custom installation directories that will not be discovered by the extension';
+    const title = 'Configuration Information';
+    const helpLink = 'https://puppet-vscode.github.io/docs/extension-settings';
+    vscode.window.showErrorMessage(message, { modal: false }, { title: title }).then((item) => {
+      if (item === undefined) {
+        return;
+      }
+      if (item.title === title) {
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(helpLink));
+      }
+    });
+  }
+
   /**
    * Legacy Workspace Settings
    *
