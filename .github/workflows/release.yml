@@ -20,6 +20,7 @@ jobs:
 
       - name: Package vsix
         id: create_package
+        shell: pwsh
         run: |
           npm i
           npx vsce package
@@ -53,5 +54,6 @@ jobs:
 
       - name: Publish Extension
         id: publish-release-asset
+        shell: pwsh
         run: |
           npx vsce publish -p ${{ secrets.VSCE_TOKEN }} --packagePath ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
