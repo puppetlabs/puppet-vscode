@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.27.0] - 2020-06-08
+
 ### Added
 
 - ([GH-666](https://github.com/puppetlabs/puppet-vscode/issues/666)) Add Puppetfile view to Puppet ToolBar
@@ -14,8 +16,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 
 - ([GH-649](https://github.com/puppetlabs/puppet-vscode/issues/649)) Reduce activation events for extension
-- ([GH-639](https://github.com/puppetlabs/puppet-vscode/issues/639))  Deprecate Bolt Commands
+- ([GH-639](https://github.com/puppetlabs/puppet-vscode/issues/639)) Deprecate Bolt Commands
 - ([GH-643](https://github.com/puppetlabs/puppet-vscode/issues/643)) Enable, configure and run prettier
+- ([GH-642](https://github.com/puppetlabs/puppet-vscode/issues/642)) Migrate to eslint
+
+### Fixed
+
+- ([GH-663](https://github.com/puppetlabs/puppet-vscode/issues/663)) Fix error when using paths with spaces on OSX
+- ([GH-670](https://github.com/puppetlabs/puppet-vscode/issues/670)) Guard installType and installDirectory
 
 ## [0.26.1] - 2020-05-12
 
