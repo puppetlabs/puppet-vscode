@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+### Fixed
+
+- ([GH-678](https://github.com/puppetlabs/puppet-vscode/issues/678)) Remove invalid Configuration Defaults
+
 ## [0.27.0] - 2020-06-08
 
 ### Added
