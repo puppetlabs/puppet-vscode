@@ -3,6 +3,7 @@ import axios from 'axios';
 import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
+import { reporter } from '../telemetry';
 
 interface PuppetForgeModuleInfo {
   uri: string;
@@ -36,6 +37,10 @@ class PuppetfileHoverProvider implements vscode.HoverProvider {
     const line = document.lineAt(position);
     if (line.isEmptyOrWhitespace) {
       return null;
+    }
+
+    if (reporter) {
+      reporter.sendTelemetryEvent('puppetfile/Hover');
     }
 
     const text = line.text

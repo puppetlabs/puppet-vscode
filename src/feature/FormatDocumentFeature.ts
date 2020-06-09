@@ -1,12 +1,13 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { IFeature } from '../feature';
-import { ILogger } from '../logging';
-import { ConnectionStatus } from '../interfaces';
-import * as messages from '../messages';
-import { ConnectionHandler } from '../handler';
 import { IAggregateConfiguration } from '../configuration';
+import { IFeature } from '../feature';
+import { ConnectionHandler } from '../handler';
+import { ConnectionStatus } from '../interfaces';
+import { ILogger } from '../logging';
+import * as messages from '../messages';
+import { reporter } from '../telemetry';
 
 class RequestParams implements messages.PuppetFixDiagnosticErrorsRequestParams {
   documentUri: string;
@@ -30,6 +31,10 @@ class FormatDocumentProvider {
     ) {
       vscode.window.showInformationMessage('Please wait and try again. The Puppet extension is still loading...');
       return [];
+    }
+
+    if (reporter) {
+      reporter.sendTelemetryEvent('puppet/FormatDocument');
     }
 
     const requestParams = new RequestParams();

@@ -2,6 +2,7 @@ import { getLocation } from 'jsonc-parser';
 import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
+import { reporter } from '../telemetry';
 
 export class PuppetModuleHoverFeature implements IFeature {
   constructor(public context: vscode.ExtensionContext, public logger: ILogger) {
@@ -35,6 +36,10 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
 
     if (location.path[2] !== 'name') {
       return;
+    }
+
+    if (reporter) {
+      reporter.sendTelemetryEvent('metadataJSON/Hover');
     }
 
     const range = document.getWordRangeAtPosition(position);
