@@ -16,6 +16,7 @@ import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
 import { PuppetResourceFeature } from './feature/PuppetResourceFeature';
 import { PuppetStatusBarFeature } from './feature/PuppetStatusBarFeature';
 import { UpdateConfigurationFeature } from './feature/UpdateConfigurationFeature';
+import { getPDKVersion } from './forge';
 import { ConnectionHandler } from './handler';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
@@ -25,9 +26,6 @@ import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, Settin
 import { reporter } from './telemetry';
 import { PuppetFactsProvider } from './views/facts';
 import { PuppetfileProvider } from './views/puppetfile';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const axios = require('axios');
 
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
@@ -287,11 +285,7 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
     return;
   }
 
-  axios
-    .get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST')
-    .then((response) => {
-      return response.data;
-    })
+  getPDKVersion(logger)
     .then((latestVersion) => {
       if (version !== latestVersion) {
         return vscode.window.showWarningMessage(
