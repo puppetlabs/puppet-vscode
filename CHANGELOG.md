@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.27.1] - 2020-06-11
+
 ### Fixed
 
 - ([GH-678](https://github.com/puppetlabs/puppet-vscode/issues/678)) Remove invalid Configuration Defaults
