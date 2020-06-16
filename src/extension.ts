@@ -69,10 +69,14 @@ export function activate(context: vscode.ExtensionContext) {
     pdkVersion: configSettings.ruby.pdkVersion,
   });
 
-  const puppetfile = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, 'Puppetfile');
-  const exists = fs.existsSync(puppetfile);
-  if (exists && configSettings.workspace.editorService.enable) {
-    vscode.commands.executeCommand('setContext', 'puppet:puppetfileEnabled', true);
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (workspaceFolders) {
+    const currentWorkspaceFolder = workspaceFolders[0];
+    const puppetfile = path.join(currentWorkspaceFolder.uri.fsPath, 'Puppetfile');
+    const exists = fs.existsSync(puppetfile);
+    if (exists && configSettings.workspace.editorService.enable) {
+      vscode.commands.executeCommand('setContext', 'puppet:puppetfileEnabled', true);
+    }
   }
 
   const statusBar = new PuppetStatusBarFeature([puppetLangID, puppetFileLangID], configSettings, logger, context);
