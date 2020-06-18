@@ -5,7 +5,7 @@ param(
 )
 
 if (!(Get-Module -Name psake -ListAvailable)) {
-  Install-Module -Name psake -Scope CurrentUser
+  Install-Module -Name psake -Scope CurrentUser -Force
 }
 
 Invoke-psake `
