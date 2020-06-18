@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Install psake
+        shell: pwsh
+        run: Install-Module psake -Force
+
       - name: Package vsix
         id: create_package
         shell: pwsh
@@ -58,4 +62,4 @@ jobs:
         id: publish-release-asset
         shell: pwsh
         run: |
-          npx vsce publish -p ${{ secrets.VSCE_TOKEN }} --packagePath ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
+          vsce publish -p ${{ secrets.VSCE_TOKEN }} --packagePath ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
