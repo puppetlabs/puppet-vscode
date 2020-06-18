@@ -22,8 +22,10 @@ jobs:
         id: create_package
         shell: pwsh
         run: |
-          npm i
-          npx vsce package
+          npm install -g vsce --silent;
+          npm install -g typescript --silent;
+          npm install --silent;
+          vsce package
 
       - name: Set vsix version
         id: vsce
