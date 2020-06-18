@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.27.2] - 2020-06-18
+
+### Fixed
+
+- ([GH-684](https://github.com/puppetlabs/puppet-vscode/issues/684)) Fix activation error when using PDK New Command in an empty workspace
+
 ## [0.27.1] - 2020-06-11
 
 ### Fixed
