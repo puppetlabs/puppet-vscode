@@ -6,6 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.27.3] - 2020-06-18
+
+### Fixed
+
+- (maint) Fix release packaging process
+
 ## [0.27.2] - 2020-06-18
 
 ### Fixed
