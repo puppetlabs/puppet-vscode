@@ -92,8 +92,12 @@ export class PDKFeature implements IFeature {
       matchOnDescription: true,
       matchOnDetail: true,
     };
-    vscode.window.showInputBox(nameOpts).then((moduleName) => {
-      this.terminal.sendText(`pdk new class ${moduleName}`);
+    vscode.window.showInputBox(nameOpts).then((className) => {
+      if (className === undefined) {
+        vscode.window.showWarningMessage('No class name specifed. Exiting.');
+        return;
+      }
+      this.terminal.sendText(`pdk new class ${className}`);
       this.terminal.show();
       if (reporter) {
         reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewClassCommandId);
@@ -108,6 +112,10 @@ export class PDKFeature implements IFeature {
       matchOnDetail: true,
     };
     vscode.window.showInputBox(nameOpts).then((taskName) => {
+      if (taskName === undefined) {
+        vscode.window.showWarningMessage('No task name specifed. Exiting.');
+        return;
+      }
       this.terminal.sendText(`pdk new task ${taskName}`);
       this.terminal.show();
       if (reporter) {
@@ -123,6 +131,10 @@ export class PDKFeature implements IFeature {
       matchOnDetail: true,
     };
     vscode.window.showInputBox(nameOpts).then((typeName) => {
+      if (typeName === undefined) {
+        vscode.window.showWarningMessage('No defined type name specifed. Exiting.');
+        return;
+      }
       this.terminal.sendText(`pdk new defined_type ${typeName}`);
       this.terminal.show();
       if (reporter) {
