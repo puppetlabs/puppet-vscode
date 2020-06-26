@@ -59,6 +59,7 @@
     "workspaceContains:**/*.pp",
     "workspaceContains:**/*.epp",
     "workspaceContains:**/Puppetfile",
+    "workspaceContains:**/lib/puppet",
     "onCommand:extension.pdkNewModule"
   ],
   "main": "./out/extension",
