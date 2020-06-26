@@ -22,6 +22,23 @@ export class PDKFeature implements IFeature {
       }),
     );
     logger.debug('Registered ' + PDKCommandStrings.PdkNewModuleCommandId + ' command');
+
+    [
+      { id: 'puppet.pdkValidate', request: 'pdk validate', type: 'validate' },
+      { id: 'puppet.pdkTestUnit', request: 'pdk test unit', type: 'test' },
+    ].forEach((command) => {
+      context.subscriptions.push(
+        vscode.commands.registerCommand(command.id, () => {
+          this.terminal.sendText(command.request);
+          this.terminal.show();
+          if (reporter) {
+            reporter.sendTelemetryEvent(command.id);
+          }
+        }),
+      );
+      logger.debug(`Registered ${command.id} command`);
+    });
+
     context.subscriptions.push(
       vscode.commands.registerCommand(PDKCommandStrings.PdkNewClassCommandId, () => {
         this.pdkNewClassCommand();
@@ -40,18 +57,6 @@ export class PDKFeature implements IFeature {
       }),
     );
     logger.debug('Registered ' + PDKCommandStrings.PdkNewTaskCommandId + ' command');
-    context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkValidateCommandId, () => {
-        this.pdkValidateCommand();
-      }),
-    );
-    logger.debug('Registered ' + PDKCommandStrings.PdkValidateCommandId + ' command');
-    context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkTestUnitCommandId, () => {
-        this.pdkTestUnitCommand();
-      }),
-    );
-    logger.debug('Registered ' + PDKCommandStrings.PdkTestUnitCommandId + ' command');
   }
 
   public dispose(): any {
@@ -141,21 +146,5 @@ export class PDKFeature implements IFeature {
         reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewDefinedTypeCommandId);
       }
     });
-  }
-
-  private pdkValidateCommand() {
-    this.terminal.sendText(`pdk validate`);
-    this.terminal.show();
-    if (reporter) {
-      reporter.sendTelemetryEvent(PDKCommandStrings.PdkValidateCommandId);
-    }
-  }
-
-  private pdkTestUnitCommand() {
-    this.terminal.sendText(`pdk test unit`);
-    this.terminal.show();
-    if (reporter) {
-      reporter.sendTelemetryEvent(PDKCommandStrings.PdkTestUnitCommandId);
-    }
   }
 }
