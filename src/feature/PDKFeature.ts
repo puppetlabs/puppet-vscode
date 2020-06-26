@@ -35,6 +35,12 @@ export class PDKFeature implements IFeature {
     );
     logger.debug('Registered ' + PDKCommandStrings.PdkNewTaskCommandId + ' command');
     context.subscriptions.push(
+      vscode.commands.registerCommand(PDKCommandStrings.PdkNewDefinedTypeCommandId, () => {
+        this.pdkNewDefinedTypeCommand();
+      }),
+    );
+    logger.debug('Registered ' + PDKCommandStrings.PdkNewTaskCommandId + ' command');
+    context.subscriptions.push(
       vscode.commands.registerCommand(PDKCommandStrings.PdkValidateCommandId, () => {
         this.pdkValidateCommand();
       }),
@@ -106,6 +112,21 @@ export class PDKFeature implements IFeature {
       this.terminal.show();
       if (reporter) {
         reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewTaskCommandId);
+      }
+    });
+  }
+
+  private pdkNewDefinedTypeCommand() {
+    const nameOpts: vscode.QuickPickOptions = {
+      placeHolder: 'Enter a name for the new Puppet defined type',
+      matchOnDescription: true,
+      matchOnDetail: true,
+    };
+    vscode.window.showInputBox(nameOpts).then((typeName) => {
+      this.terminal.sendText(`pdk new defined_type ${typeName}`);
+      this.terminal.show();
+      if (reporter) {
+        reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewDefinedTypeCommandId);
       }
     });
   }

@@ -79,6 +79,7 @@ export class PDKCommandStrings {
   static PdkNewModuleCommandId = 'extension.pdkNewModule';
   static PdkNewClassCommandId = 'extension.pdkNewClass';
   static PdkNewTaskCommandId = 'extension.pdkNewTask';
+  static PdkNewDefinedTypeCommandId = 'extension.pdkNewDefinedType';
   static PdkValidateCommandId = 'extension.pdkValidate';
   static PdkTestUnitCommandId = 'extension.pdkTestUnit';
 }
