@@ -334,7 +334,7 @@
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkNewClass",
+          "command": "extension.pdkNewTask",
           "group": "pdk@2"
         },
         {
