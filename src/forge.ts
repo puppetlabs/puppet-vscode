@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MarkdownString } from 'vscode';
+import { extensions, MarkdownString } from 'vscode';
 import { ILogger } from './logging';
 
 export interface PuppetForgeModuleInfo {
@@ -16,6 +16,11 @@ export interface PuppetForgeModuleInfo {
   homepageUrl: string;
   version: number;
   summary: string;
+}
+
+function getVersion(): string {
+  const pkg = extensions.getExtension('puppet.puppet-vscode');
+  return pkg.packageJSON.version;
 }
 
 export function buildMarkdown(info: PuppetForgeModuleInfo): MarkdownString {
@@ -41,7 +46,7 @@ export function getPDKVersion(logger: ILogger): Promise<string> {
         },
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
-          'User-Agent': 'puppet-vscode/0.27.1',
+          'User-Agent': `puppet-vscode/${getVersion()}`,
         },
       })
       .then((response) => {
@@ -64,7 +69,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
         },
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
-          'User-Agent': 'puppet-vscode/0.27.1',
+          'User-Agent': `puppet-vscode/${getVersion()}`,
         },
       })
       .then((response) => {
