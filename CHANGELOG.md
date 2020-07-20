@@ -6,6 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.28.0] - 2020-07-20
+
+### Added
+
+- ([GH-691](https://github.com/puppetlabs/puppet-vscode/issues/691)) Add `pdk new defined_type` command
+
+### Fixed
+
+- ([GH-681](https://github.com/puppetlabs/puppet-vscode/issues/681)) Activate extension when module folder is opened
+- ([GH-682](https://github.com/puppetlabs/puppet-vscode/issues/682)) Set Puppet Forge api header version programatically
+- ([GH-66](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/66)) [puppet-editor-syntax-1.3.7](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.7) undef is not treated as a special value
+- ([GH-65](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/65)) [puppet-editor-syntax-1.3.7](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.7) Tokenise Node names correctly
+
 ## [0.27.3] - 2020-06-18
 
 ### Fixed
@@ -555,7 +568,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.22.0...master
+[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.28.0...master
+[0.28.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.3...0.28.0
+[0.27.3]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.2...0.27.3
+[0.27.2]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.1...0.27.2
+[0.27.1]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.0...0.27.1
+[0.27.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.26.1...0.27.0
+[0.26.1]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.26.0...0.26.1
+[0.26.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.25.2...0.26.0
+[0.25.2]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.25.1...0.25.2
+[0.25.1]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.25.0...0.25.1
+[0.25.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.23.0...0.25.0
+[0.23.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.22.0...0.23.0
 [0.22.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.21.0...0.22.0
 [0.21.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.20.0...0.21.0
 [0.20.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...0.20.0
