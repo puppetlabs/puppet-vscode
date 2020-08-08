@@ -74,17 +74,17 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 - (Experimental) Local debugging of Puppet manifests
 - **DEPRECATED** Docker Language Server support
 
-**It is currently in technical preview, so that we can gather bug reports and find out what new features to add.**
-
 ## Supported Puppet Versions
 
-The Puppet Extension for VSCode works with Puppet 4 or higher. Some features will be slower or not work on Puppet 4, and are noted in the section for that feature. See [open source Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet Enterprise](https://puppet.com/docs/pe/2017.3/getting_support_for_pe.html#supported-puppet-enterprise-versions) lifecycle pages for version support details.
+The Puppet Extension for VSCode works with Puppet 5 or higher. See [open source Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet Enterprise](https://puppet.com/docs/pe/2017.3/getting_support_for_pe.html#supported-puppet-enterprise-versions) lifecycle pages for version support details.
 
 ## Requirements
 
 You will need to have the [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) or [Puppet Agent](https://puppet.com/docs/puppet/latest/about_agent.html) installed in order to fully use this extension.
 
 > Note: When using PDK, version 1.5.0 or higher is required.
+
+> Note: When using Puppet Agent, version 5.0 or higher is required.
 
 You can find instructions and installation links here:
 
