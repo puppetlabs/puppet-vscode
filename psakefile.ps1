@@ -88,7 +88,7 @@ task VendorEditorSyntax -precondition { !(Test-Path (Join-Path $PSScriptRoot 'sy
     throw "Unable to vendor Editor Syntax.  Missing a release, directory, or git reference configuration item"
   }
 
-  Invoke-RestMethod -Uri $uri -OutFile $syntaxFilePath -ErrorAction Stop 
+  Invoke-RestMethod -Uri $uri -OutFile $syntaxFilePath -ErrorAction Stop
 }
 
 task VendorCytoscape -precondition { !(Test-Path (Join-Path $PSScriptRoot 'vendor\cytoscape')) } {
@@ -98,7 +98,7 @@ task VendorCytoscape -precondition { !(Test-Path (Join-Path $PSScriptRoot 'vendo
 }
 
 task CompileTypeScript {
-  exec { tsc -p ./ }
+  exec { npm run compile }
 }
 
 task Bump {

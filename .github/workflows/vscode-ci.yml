@@ -54,7 +54,6 @@ jobs:
         shell: pwsh
         run: |
           npm install -g vsce --silent;
-          npm install -g typescript --silent;
           npm install --silent;
 
       - name: npm build
