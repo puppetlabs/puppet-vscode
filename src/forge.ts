@@ -26,7 +26,7 @@ function getVersion(): string {
 export function buildMarkdown(info: PuppetForgeModuleInfo): MarkdownString {
   const message = `## ${info.name}\n
 ${info.summary}\n
-**Latest version:** ${info.version} (${info.created.toDateString()})\n
+**Latest version:** ${info.version} (${info.updated.toDateString()})\n
 **Forge**: [${info.forgeUrl}](${info.forgeUrl})\n
 **Project**: [${info.homepageUrl}](${info.homepageUrl})\n
 **Owner:** ${info.owner.username}\n
