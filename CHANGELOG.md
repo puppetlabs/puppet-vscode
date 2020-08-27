@@ -6,6 +6,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+Major release 🎉🎉 which drops support for Puppet 4
+
+- ([GH-272](https://github.com/puppetlabs/puppet-editor-services/issues/272)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Puppet Lint and document symbol sometimes not working
+- ([GH-269](https://github.com/puppetlabs/puppet-editor-services/issues/269)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Workspace Symbol Provider
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/7c4a9c4d2d868bdbea1ef590300d5a37fce9b1e4)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Update Puppetfile Resolver to 0.3.0
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/450b9acaabe58eeee52da4000910673647d25d13)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Document removal of Puppet 4
+- ([GH-209](https://github.com/puppetlabs/puppet-editor-services/issues/209)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Refactor the session state to be a class and pass that instead of global modules
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/f7caae3f7b0db4e1debecafe8bd4c3485a334732)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Removed vendored gems and update development and building workflows
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/2f6e0fc143ddd50be5256bf9abb62d91d2e49466)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Facter Helper for 1.0
+- ([GH-252](https://github.com/puppetlabs/puppet-editor-services/issues/252)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Use puppet-strings by default and remove feature flag
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/bc3db27182ad47253e29a86a6cace73292b86d30)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Vendor puppet-strings and Yard
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/5a4800434dbed1756148905464011f882b7e2191)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Remove support for Puppet 4
+
 ## [0.28.0] - 2020-07-20
 
 ### Added
@@ -100,7 +113,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - ([GH-207](https://github.com/lingua-pupuli/puppet-editor-services/issues/207)) [puppet-editor-services-0.25.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.25.0) Allow Qualified Resource Names in hover provider
-
 
 ## [0.24.2] - 2020-03-30
 
@@ -568,7 +580,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[Unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.28.0...master
+[unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.28.0...master
 [0.28.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.3...0.28.0
 [0.27.3]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.2...0.27.3
 [0.27.2]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.1...0.27.2
