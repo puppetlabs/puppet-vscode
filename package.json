@@ -123,10 +123,6 @@
       {
         "language": "puppetfile",
         "path": "./snippets/puppetfile.snippets.json"
-      },
-      {
-        "language": "yaml",
-        "path": "./snippets/bolt.snippets.json"
       }
     ],
     "commands": [
@@ -182,16 +178,6 @@
           "light": "./media/PreviewOnRightPane_16x.svg",
           "dark": "./media/PreviewOnRightPane_16x_dark.svg"
         }
-      },
-      {
-        "command": "puppet-bolt.OpenUserConfigFile",
-        "title": "Open Bolt User Configuration File",
-        "category": "Puppet"
-      },
-      {
-        "command": "puppet-bolt.OpenUserInventoryFile",
-        "title": "Open Bolt User Inventory File",
-        "category": "Puppet"
       },
       {
         "command": "puppet.refreshFacts",

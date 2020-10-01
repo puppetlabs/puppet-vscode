@@ -6,7 +6,6 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { CreateAggregrateConfiguration, IAggregateConfiguration } from './configuration';
 import { IFeature } from './feature';
-import { BoltFeature } from './feature/BoltFeature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { PDKFeature } from './feature/PDKFeature';
@@ -83,7 +82,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new PDKFeature(extContext, logger),
-    new BoltFeature(extContext),
     new UpdateConfigurationFeature(logger, extContext),
     statusBar,
     new PuppetfileHoverFeature(extContext, logger),
