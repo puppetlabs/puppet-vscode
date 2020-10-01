@@ -6,7 +6,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-Major release 🎉🎉 which drops support for Puppet 4
+## [1.0.0] - 2020-11-11
+
+🎉Major release 🎉 which drops support for Puppet 4
+
+### Added
+
+- ([GH-709](https://github.com/puppetlabs/puppet-vscode/issues/709)) Puppetfile Puppet module name autocomplete
+
+### Changed
 
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/9fd498472acedb30152069c613e4b8e6f82bb67a)) [puppet-editor-services-1.0.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.1) Update Bolt schema to 2.30.0
 - ([GH-272](https://github.com/puppetlabs/puppet-editor-services/issues/272)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Puppet Lint and document symbol sometimes not working
@@ -14,11 +22,23 @@ Major release 🎉🎉 which drops support for Puppet 4
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/7c4a9c4d2d868bdbea1ef590300d5a37fce9b1e4)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Update Puppetfile Resolver to 0.3.0
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/450b9acaabe58eeee52da4000910673647d25d13)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Document removal of Puppet 4
 - ([GH-209](https://github.com/puppetlabs/puppet-editor-services/issues/209)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Refactor the session state to be a class and pass that instead of global modules
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/7c4a9c4d2d868bdbea1ef590300d5a37fce9b1e4)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Update Puppetfile Resolver to 0.3.0
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/f7caae3f7b0db4e1debecafe8bd4c3485a334732)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Removed vendored gems and update development and building workflows
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/2f6e0fc143ddd50be5256bf9abb62d91d2e49466)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Facter Helper for 1.0
 - ([GH-252](https://github.com/puppetlabs/puppet-editor-services/issues/252)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Use puppet-strings by default and remove feature flag
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/bc3db27182ad47253e29a86a6cace73292b86d30)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Vendor puppet-strings and Yard
+
+### Fixed
+
+- ([GH-705](https://github.com/puppetlabs/puppet-vscode/issues/705)) Fix Puppetfile module hover update date
+- ([GH-272](https://github.com/puppetlabs/puppet-editor-services/issues/272)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Puppet Lint and document symbol sometimes not working
+- ([GH-269](https://github.com/puppetlabs/puppet-editor-services/issues/269)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Workspace Symbol Provider
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/2f6e0fc143ddd50be5256bf9abb62d91d2e49466)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Facter Helper for 1.0
+
+### Removed
+
+- ([GH-639](https://github.com/puppetlabs/puppet-vscode/issues/639)) Removed deprecated Bolt commands and snippets
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/5a4800434dbed1756148905464011f882b7e2191)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Remove support for Puppet 4
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/450b9acaabe58eeee52da4000910673647d25d13)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Document removal of Puppet 4
 
 ## [0.28.0] - 2020-07-20
 
@@ -581,7 +601,8 @@ Major release 🎉🎉 which drops support for Puppet 4
 
 - Initial release of the puppet extension.
 
-[unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.28.0...master
+[unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/1.0.0...master
+[1.0.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.28.0...1.0.0
 [0.28.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.3...0.28.0
 [0.27.3]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.2...0.27.3
 [0.27.2]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.1...0.27.2
