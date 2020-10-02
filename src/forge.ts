@@ -2,6 +2,11 @@ import axios from 'axios';
 import { extensions, MarkdownString } from 'vscode';
 import { ILogger } from './logging';
 
+export interface PuppetForgeCompletionInfo {
+  total: number;
+  modules: string[];
+}
+
 export interface PuppetForgeModuleInfo {
   uri: string;
   slug: string;
@@ -101,6 +106,41 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
         };
 
         resolve(module);
+      })
+      .catch((error) => {
+        logger.error(`Error getting Puppet forge data: ${error}`);
+        resolve();
+      });
+  });
+}
+
+export function getPuppetModuleCompletion(text: string, logger: ILogger): Promise<PuppetForgeCompletionInfo> {
+  return new Promise((resolve) => {
+    return axios
+      .get(`https://forgeapi.puppet.com/private/modules?starts_with=${text}`, {
+        params: {
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          exclude_fields: 'readme changelog license reference',
+        },
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'User-Agent': `puppet-vscode/${getVersion()}`,
+        },
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
+          resolve();
+        }
+
+        const info = response.data;
+        const results: string[] = info.results as string[];
+        const data = {
+          total: parseInt(info.total),
+          modules: results,
+        };
+
+        resolve(data);
       })
       .catch((error) => {
         logger.error(`Error getting Puppet forge data: ${error}`);

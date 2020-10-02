@@ -9,6 +9,7 @@ import { IFeature } from './feature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { PDKFeature } from './feature/PDKFeature';
+import { PuppetfileCompletionFeature } from './feature/PuppetfileCompletionFeature';
 import { PuppetfileHoverFeature } from './feature/PuppetfileHoverFeature';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
 import { PuppetNodeGraphFeature } from './feature/PuppetNodeGraphFeature';
@@ -85,6 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
     new UpdateConfigurationFeature(logger, extContext),
     statusBar,
     new PuppetfileHoverFeature(extContext, logger),
+    new PuppetfileCompletionFeature(extContext, logger),
   ];
 
   if (configSettings.workspace.editorService.enable === false) {
