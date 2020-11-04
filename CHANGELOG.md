@@ -8,6 +8,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 Major release 🎉🎉 which drops support for Puppet 4
 
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/9fd498472acedb30152069c613e4b8e6f82bb67a)) [puppet-editor-services-1.0.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.1) Update Bolt schema to 2.30.0
 - ([GH-272](https://github.com/puppetlabs/puppet-editor-services/issues/272)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Puppet Lint and document symbol sometimes not working
 - ([GH-269](https://github.com/puppetlabs/puppet-editor-services/issues/269)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Workspace Symbol Provider
 - ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/7c4a9c4d2d868bdbea1ef590300d5a37fce9b1e4)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Update Puppetfile Resolver to 0.3.0
