@@ -395,6 +395,12 @@
           "default": false,
           "description": "Enable/disable the Puppet document on-type formatter, for example hashrocket alignment"
         },
+        "puppet.editorService.formatOnType.maxFileSize": {
+          "type": "integer",
+          "default": 4096,
+          "minimum": 0,
+          "description": "Sets the maximum file size (in Bytes) that document on-type formatting will occur. Setting this to zero (0) will disable the file size check. Note that large file sizes can cause performance issues."
+        },
         "puppet.editorService.hover.showMetadataInfo": {
           "type": "boolean",
           "default": true,
