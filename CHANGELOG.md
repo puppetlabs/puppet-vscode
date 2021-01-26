@@ -6,6 +6,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.1.0] - 2020-01-27
+
+### Added
+
+- ([GH-695](https://github.com/puppetlabs/puppet-vscode/issues/695)) Add puppet.editorService.formatOnType.maxFileSize setting
+- ([GH-289](https://github.com/puppetlabs/puppet-editor-services/issues/289)) [puppet-editor-services-1.1.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.1.0) Make Format On Type file size configurable
+- ([GH-282](https://github.com/puppetlabs/puppet-editor-services/issues/282)) [puppet-editor-services-1.1.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.1.0) Add support for Puppet 7 and Ruby 2.7
+
 ## [1.0.0] - 2020-11-11
 
 🎉Major release 🎉 which drops support for Puppet 4
