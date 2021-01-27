@@ -37,7 +37,7 @@ jobs:
       - name: setup macos
         run: |
           export HOMEBREW_NO_AUTO_UPDATE=1;
-          brew cask install puppetlabs/puppet/pdk;
+          brew install --cask puppetlabs/puppet/pdk;
           /opt/puppetlabs/pdk/bin/pdk --version;
         if: runner.os == 'macOS'
 
