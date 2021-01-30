@@ -1,3 +1,5 @@
+'use strict';
+
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -47,25 +49,21 @@ export class PDKFeature implements IFeature {
       { id: 'extension.pdkNewDefinedType', request: 'pdk new defined_type', type: 'Puppet defined_type' },
     ].forEach((command) => {
       context.subscriptions.push(
-        vscode.commands.registerCommand(command.id, () => {
-          const nameOpts: vscode.QuickPickOptions = {
-            placeHolder: `Enter a name for the new ${command.type}`,
-            matchOnDescription: true,
-            matchOnDetail: true,
-          };
-
-          vscode.window.showInputBox(nameOpts).then((name) => {
-            if (name === undefined) {
-              vscode.window.showWarningMessage(`No ${command.type} value specifed. Exiting.`);
-              return;
-            }
-            const request = `${command.request} ${name}`;
-            this.terminal.sendText(request);
-            this.terminal.show();
-            if (reporter) {
-              reporter.sendTelemetryEvent(command.id);
-            }
+        vscode.commands.registerCommand(command.id, async () => {
+          const name = await vscode.window.showInputBox({
+            prompt: `Enter a name for the new ${command.type}`,
           });
+          if (name === undefined) {
+            vscode.window.showWarningMessage('No module name specifed. Exiting.');
+            return;
+          }
+
+          const request = `${command.request} ${name}`;
+          this.terminal.sendText(request);
+          this.terminal.show();
+          if (reporter) {
+            reporter.sendTelemetryEvent(command.id);
+          }
         }),
       );
       logger.debug(`Registered ${command.id} command`);
