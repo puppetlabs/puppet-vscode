@@ -1,5 +1,7 @@
 'use strict';
 
+import * as fs from 'fs';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { IFeature } from '../feature';
 import { ILogger } from '../logging';
@@ -47,25 +49,21 @@ export class PDKFeature implements IFeature {
       { id: 'extension.pdkNewDefinedType', request: 'pdk new defined_type', type: 'Puppet defined_type' },
     ].forEach((command) => {
       context.subscriptions.push(
-        vscode.commands.registerCommand(command.id, () => {
-          const nameOpts: vscode.QuickPickOptions = {
-            placeHolder: `Enter a name for the new ${command.type}`,
-            matchOnDescription: true,
-            matchOnDetail: true,
-          };
-
-          vscode.window.showInputBox(nameOpts).then((name) => {
-            if (name === undefined) {
-              vscode.window.showWarningMessage(`No ${command.type} value specifed. Exiting.`);
-              return;
-            }
-            const request = `${command.request} ${name}`;
-            this.terminal.sendText(request);
-            this.terminal.show();
-            if (reporter) {
-              reporter.sendTelemetryEvent(command.id);
-            }
+        vscode.commands.registerCommand(command.id, async () => {
+          const name = await vscode.window.showInputBox({
+            prompt: `Enter a name for the new ${command.type}`,
           });
+          if (name === undefined) {
+            vscode.window.showWarningMessage('No module name specifed. Exiting.');
+            return;
+          }
+
+          const request = `${command.request} ${name}`;
+          this.terminal.sendText(request);
+          this.terminal.show();
+          if (reporter) {
+            reporter.sendTelemetryEvent(command.id);
+          }
         }),
       );
       logger.debug(`Registered ${command.id} command`);
@@ -76,31 +74,52 @@ export class PDKFeature implements IFeature {
     this.terminal.dispose();
   }
 
-  private pdkNewModuleCommand(): void {
-    const nameOpts: vscode.QuickPickOptions = {
-      placeHolder: 'Enter a name for the new Puppet module',
-      matchOnDescription: true,
-      matchOnDetail: true,
-    };
-    const dirOpts: vscode.QuickPickOptions = {
-      placeHolder: 'Enter a path for the new Puppet module',
-      matchOnDescription: true,
-      matchOnDetail: true,
-    };
-
-    vscode.window.showInputBox(nameOpts).then((moduleName) => {
-      if (moduleName === undefined) {
-        vscode.window.showWarningMessage('No module name specifed. Exiting.');
-        return;
-      }
-      vscode.window.showInputBox(dirOpts).then((dir) => {
-        this.terminal.sendText(`pdk new module --skip-interview ${moduleName} ${dir}`);
-        this.terminal.sendText(`code ${dir}`);
-        this.terminal.show();
-        if (reporter) {
-          reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
-        }
-      });
+  private async pdkNewModuleCommand(): Promise<void> {
+    const name = await vscode.window.showInputBox({
+      prompt: 'Enter a name for the new Puppet module',
     });
+    if (name === undefined) {
+      vscode.window.showWarningMessage('No module name specifed. Exiting.');
+      return;
+    }
+    const directory = await vscode.window.showOpenDialog({
+      canSelectMany: false,
+      canSelectFiles: false,
+      canSelectFolders: true,
+      openLabel: 'Choose the path for the new Puppet module',
+    });
+    if (directory === undefined) {
+      vscode.window.showWarningMessage('No directory specifed. Exiting.');
+      return;
+    }
+
+    const p = path.join(directory[0].fsPath, name);
+
+    this.terminal.sendText(`pdk new module --skip-interview ${name} ${p}`);
+    this.terminal.show();
+
+    await new Promise<void>((resolve) => {
+      let count = 0;
+      const handle = setInterval(() => {
+        count++;
+        if (count >= 30) {
+          clearInterval(handle);
+          resolve();
+          return;
+        }
+
+        if (fs.existsSync(p)) {
+          resolve();
+          return;
+        }
+      }, 1000);
+    });
+
+    const uri = vscode.Uri.file(p);
+    await vscode.commands.executeCommand('vscode.openFolder', uri);
+
+    if (reporter) {
+      reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
+    }
   }
 }
