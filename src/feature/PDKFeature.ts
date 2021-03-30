@@ -47,6 +47,8 @@ export class PDKFeature implements IFeature {
       { id: 'extension.pdkNewClass', request: 'pdk new class', type: 'Puppet class' },
       { id: 'extension.pdkNewTask', request: 'pdk new task', type: 'Bolt task' },
       { id: 'extension.pdkNewDefinedType', request: 'pdk new defined_type', type: 'Puppet defined_type' },
+      { id: 'extension.pdkNewFact', request: 'pdk new fact', type: 'Puppet Fact' },
+      { id: 'extension.pdkNewFunction', request: 'pdk new function', type: 'Puppet Function' },
     ].forEach((command) => {
       context.subscriptions.push(
         vscode.commands.registerCommand(command.id, async () => {
