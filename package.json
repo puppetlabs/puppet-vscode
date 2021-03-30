@@ -171,6 +171,11 @@
         "title": "PDK New Fact"
       },
       {
+        "command": "extension.pdkNewFunction",
+        "category": "Puppet",
+        "title": "PDK New Function"
+      },
+      {
         "command": "extension.puppetResource",
         "category": "Puppet",
         "title": "Puppet Resource"
@@ -271,6 +276,9 @@
           "command": "extension.pdkNewFact"
         },
         {
+          "command": "extension.pdkNewFunction"
+        },
+        {
           "command": "extension.puppetResource",
           "when": "editorLangId == 'puppet'"
         },
@@ -306,14 +314,19 @@
           "group": "pdk@5"
         },
         {
+          "when": "editorLangId == 'puppet'",
+          "command": "extension.pdkNewFunction",
+          "group": "pdk@6"
+        },
+        {
           "when": "editorLangId == 'puppet' ",
           "command": "extension.pdkValidate",
-          "group": "pdk@6"
+          "group": "pdk@7"
         },
         {
           "when": "editorLangId == 'puppet'",
           "command": "extension.pdkTestUnit",
-          "group": "pdk@7"
+          "group": "pdk@8"
         },
         {
           "when": "editorLangId == 'puppet'",
@@ -349,13 +362,18 @@
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkValidate",
+          "command": "extension.pdkNewFunction",
           "group": "pdk@5"
         },
         {
           "when": "editorLangId == 'puppet'",
-          "command": "extension.pdkTestUnit",
+          "command": "extension.pdkValidate",
           "group": "pdk@6"
+        },
+        {
+          "when": "editorLangId == 'puppet'",
+          "command": "extension.pdkTestUnit",
+          "group": "pdk@7"
         },
         {
           "when": "editorLangId == 'puppet'",
