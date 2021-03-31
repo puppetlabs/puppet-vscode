@@ -219,6 +219,11 @@ export class CommandEnvironmentHelper {
     exe.options.env.PATH = this.buildPathArray([
       config.ruby.pdkBinDir,
       config.ruby.pdkRubyBinDir,
+      // temporary fix for ffi 1.14.2
+      // remove when pdk 2.X comes out https://github.com/puppetlabs/puppet-vscode/issues/730
+      path.join(config.ruby.puppetBaseDir, 'private', 'git', 'mingw64', 'bin'),
+      path.join(config.ruby.puppetBaseDir, 'private', 'git', 'mingw64', 'libexec', 'git-core'),
+      path.join(config.ruby.puppetBaseDir, 'private', 'git', 'usr', 'bin'),
       exe.options.env.PATH,
     ]);
   }
