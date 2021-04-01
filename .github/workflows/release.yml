@@ -63,3 +63,9 @@ jobs:
         shell: pwsh
         run: |
           vsce publish -p ${{ secrets.VSCE_TOKEN }} --packagePath ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix
+
+      - name: Publish Extension to OpenVSX
+        id: publish-release-asset-openvsx
+        shell: pwsh
+        run: |
+          npx ovsx publish ./puppet-vscode-${{ steps.vsce.outputs.version }}.vsix -p ${{ secrets.OPENVSX_TOKEN }}
