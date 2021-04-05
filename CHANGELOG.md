@@ -6,6 +6,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-04-2
+
+### Added
+
+- ([GH-732](https://github.com/puppetlabs/puppet-vscode/issues/732)) Add PDK new fact and function commands
+- ([GH-724](https://github.com/puppetlabs/puppet-vscode/issues/724)) PDK new module uses native OS open window
+
+### Fixed
+
+- ([GH-730](https://github.com/puppetlabs/puppet-vscode/issues/730)) Fix PDK 2.0 missing library
+
 ## [1.1.0] - 2020-01-27
 
 ### Added
