@@ -426,6 +426,11 @@
           "default": [],
           "description": "An array of strings of experimental features to enable in the Puppet Editor Service"
         },
+        "puppet.editorService.foldingRange.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable syntax aware code folding provider."
+        },
         "puppet.editorService.formatOnType.enable": {
           "type": "boolean",
           "default": false,
