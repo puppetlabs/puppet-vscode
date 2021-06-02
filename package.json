@@ -429,7 +429,12 @@
         "puppet.editorService.foldingRange.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Enable/disable syntax aware code folding provider."
+          "description": "Enable/disable syntax aware code folding provider"
+        },
+        "puppet.editorService.foldingRange.showLastLine": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show or hide the last line in code folding regions"
         },
         "puppet.editorService.formatOnType.enable": {
           "type": "boolean",
