@@ -6,6 +6,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.3.0] - 2020-06-08
+
+### Added
+
+- ([GH-289](https://github.com/puppetlabs/puppet-editor-services/issues/306)) [puppet-editor-services-1.2.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.2.0) Add a code folding range provider for Manifests
+
+### Fixed
+
+- ([GH-300](https://github.com/puppetlabs/puppet-editor-services/issues/300)) [puppet-editor-services-1.2.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.2.0) Return nil for bad hover requests
+
 ## [1.2.0] - 2020-04-2
 
 ### Added
@@ -620,23 +630,26 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[unreleased]: https://github.com/lingua-pupuli/puppet-vscode/compare/1.0.0...master
-[1.0.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.28.0...1.0.0
-[0.28.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.3...0.28.0
-[0.27.3]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.2...0.27.3
-[0.27.2]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.1...0.27.2
-[0.27.1]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.27.0...0.27.1
-[0.27.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.26.1...0.27.0
-[0.26.1]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.26.0...0.26.1
-[0.26.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.25.2...0.26.0
-[0.25.2]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.25.1...0.25.2
-[0.25.1]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.25.0...0.25.1
-[0.25.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.23.0...0.25.0
-[0.23.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.22.0...0.23.0
-[0.22.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.21.0...0.22.0
-[0.21.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.20.0...0.21.0
-[0.20.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.19.0...0.20.0
-[0.19.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.18.0...0.19.0
-[0.18.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.17.0...0.18.0
-[0.17.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.16.0...0.17.0
-[0.16.0]: https://github.com/lingua-pupuli/puppet-vscode/compare/0.15.1...0.16.0
+[unreleased]: https://github.com/puppetlabs/puppet-vscode/compare/1.3.0...master
+[1.3.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.2.0...1.3.0
+[1.2.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.1.0...1.2.0
+[1.1.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.0.0...1.1.0
+[1.0.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.28.0...1.0.0
+[0.28.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.3...0.28.0
+[0.27.3]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.2...0.27.3
+[0.27.2]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.1...0.27.2
+[0.27.1]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.0...0.27.1
+[0.27.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.26.1...0.27.0
+[0.26.1]: https://github.com/puppetlabs/puppet-vscode/compare/0.26.0...0.26.1
+[0.26.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.25.2...0.26.0
+[0.25.2]: https://github.com/puppetlabs/puppet-vscode/compare/0.25.1...0.25.2
+[0.25.1]: https://github.com/puppetlabs/puppet-vscode/compare/0.25.0...0.25.1
+[0.25.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.23.0...0.25.0
+[0.23.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.22.0...0.23.0
+[0.22.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.21.0...0.22.0
+[0.21.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.20.0...0.21.0
+[0.20.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.19.0...0.20.0
+[0.19.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.18.0...0.19.0
+[0.18.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.17.0...0.18.0
+[0.17.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.16.0...0.17.0
+[0.16.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.15.1...0.16.0
