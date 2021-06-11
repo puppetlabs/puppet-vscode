@@ -60,7 +60,8 @@
     "workspaceContains:**/*.epp",
     "workspaceContains:**/Puppetfile",
     "workspaceContains:**/lib/puppet",
-    "onCommand:extension.pdkNewModule"
+    "onCommand:extension.pdkNewModule",
+    "onCommand:pct.NewContent"
   ],
   "main": "./out/extension",
   "contributes": {
@@ -130,6 +131,15 @@
         "command": "extension.puppetShowConnectionLogs",
         "category": "Puppet",
         "title": "Show Connection Logs"
+      },
+      {
+        "command": "pct.NewContent",
+        "category": "Puppet",
+        "title": "PCT New Content",
+        "icon": {
+          "dark": "images/puppet-dag-dark.svg",
+          "light": "images/puppet-dag-light.svg"
+        }
       },
       {
         "command": "extension.pdkNewModule",
@@ -253,6 +263,9 @@
       "commandPalette": [
         {
           "command": "extension.puppetShowConnectionLogs"
+        },
+        {
+          "command": "pct.NewContent"
         },
         {
           "command": "extension.pdkNewModule"
@@ -667,6 +680,7 @@
   "dependencies": {
     "axios": "0.21.1",
     "jsonc-parser": "~2.1.0",
+    "promisify-child-process": "^4.1.1",
     "vscode-debugadapter": "^1.19.0",
     "vscode-debugprotocol": "^1.19.0",
     "vscode-extension-telemetry": "0.1.2",
