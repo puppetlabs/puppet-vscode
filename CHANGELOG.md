@@ -6,6 +6,23 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.4.0] - 2021-09-30
+
+### Added
+
+- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/239de128a166c694b7ef88f916d46aaf4ec9ecd5))  [puppet-editor-services-1.3.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.3.0)
+Update Puppet-lint to 2.5.2
+
+### Fixed
+
+- ([GH-311](https://github.com/puppetlabs/puppet-editor-services/issues/311))  [puppet-editor-services-1.3.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.3.0)
+Languageserver doesn't start with Puppet 7.11.0
+
+### Security
+
+- ([PR-780](https://github.com/puppetlabs/puppet-vscode/pull/780)) update for CVE-2021-3807
+- ([PR-774](https://github.com/puppetlabs/puppet-vscode/pull/774)) Update mochaJs to v9.
+
 ## [1.3.0] - 2020-06-08
 
 ### Added
@@ -630,7 +647,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release of the puppet extension.
 
-[unreleased]: https://github.com/puppetlabs/puppet-vscode/compare/1.3.0...master
+[unreleased]: https://github.com/puppetlabs/puppet-vscode/compare/1.3.1...main
+[1.3.1]: https://github.com/puppetlabs/puppet-vscode/compare/1.3.1...1.3.0
 [1.3.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.0.0...1.1.0
