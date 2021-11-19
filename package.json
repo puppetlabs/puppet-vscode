@@ -554,7 +554,7 @@
         "puppet.notification.puppetResource": {
           "type": "string",
           "default": "messagebox",
-          "description": "The type of notification used when a running Puppet Resouce. Default value of messagebox",
+          "description": "The type of notification used when a running Puppet Resource. Default value of messagebox",
           "enum": [
             "messagebox",
             "statusbar",
