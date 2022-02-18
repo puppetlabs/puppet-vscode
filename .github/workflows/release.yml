@@ -6,7 +6,7 @@ on:
     - '[0-9].[0-9]+.[0-9]+' # Push events matching all semantic versioning tags, i.e. 0.26.01, 1.0, v20.15.10
 
 env:
-  NODE_VERSION: '12.x'
+  NODE_VERSION: '14.x'
 
 jobs:
   release:
