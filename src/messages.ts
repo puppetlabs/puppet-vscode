@@ -85,3 +85,7 @@ export class PDKCommandStrings {
   static PdkValidateCommandId = 'extension.pdkValidate';
   static PdkTestUnitCommandId = 'extension.pdkTestUnit';
 }
+
+export class PCTCommandStrings {
+  static PctNewContentCommandId = 'extension.pctNewContent';
+}

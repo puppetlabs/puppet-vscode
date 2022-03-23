@@ -9,6 +9,7 @@ import { IFeature } from './feature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
 import { PDKFeature } from './feature/PDKFeature';
+import { PCTFeature } from './feature/PCTFeature';
 import { PuppetfileCompletionFeature } from './feature/PuppetfileCompletionFeature';
 import { PuppetfileHoverFeature } from './feature/PuppetfileHoverFeature';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
@@ -83,6 +84,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new PDKFeature(extContext, logger),
+    new PCTFeature(extContext, configSettings, logger),
     new UpdateConfigurationFeature(logger, extContext),
     statusBar,
     new PuppetfileHoverFeature(extContext, logger),
