@@ -15,7 +15,7 @@ export class PctExecHelper implements IExecHelper {
   constructor(config: IAggregateConfiguration, logger: ILogger) {
     this.logger = logger;
     this.shell = process.env['SHELL'];
-    this.binPath = path.join(config.pct.pctBaseDir, 'pct');
+    this.binPath = path.join(config.workspace.pct.installDirectory, 'pct');
   }
 
   async execute(opts: string[]): Promise<string> {

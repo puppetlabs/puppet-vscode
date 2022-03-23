@@ -579,6 +579,10 @@
           "default": true,
           "description": "Enable/disable checking if installed PDK version is latest"
         },
+        "puppet.pct.installDirectory": {
+          "type": "string",
+          "markdownDescription": "The fully qualified path to the PCT installation directory. Use this setting to override the default of <HOME_DIR>/.puppetlabs/pct."
+        },
         "puppet.titleBar.pdkNewModule.enable": {
           "type": "boolean",
           "default": true,

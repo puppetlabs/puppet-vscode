@@ -1,7 +1,6 @@
 'use strict';
 
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import { PathResolver } from './configuration/pathResolver';
 import * as pdk from './configuration/pdkResolver';
@@ -13,10 +12,6 @@ export function CreateAggregrateConfiguration(settings: ISettings): IAggregateCo
   const value = new AggregateConfiguration(settings);
 
   return value;
-}
-
-interface IPCTConfiguration {
-  pctBaseDir: string;
 }
 
 /** The IRubyConfiguration describes all of the properties needed
@@ -58,14 +53,12 @@ interface IConnectionConfiguration {
 export interface IAggregateConfiguration {
   readonly workspace: ISettings;
   readonly ruby: IRubyConfiguration;
-  readonly pct: IPCTConfiguration;
   readonly connection: IConnectionConfiguration;
 }
 
 export class AggregateConfiguration implements IAggregateConfiguration {
   public workspace: ISettings;
   public ruby: IRubyConfiguration;
-  public pct: IPCTConfiguration;
   public connection: IConnectionConfiguration;
 
   constructor(settings: ISettings) {
@@ -114,10 +107,6 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       }
       puppetVersions = pdkInfo.allPuppetVersions;
     }
-
-    this.pct = {
-      pctBaseDir: this.getPctBasePath(),
-    };
 
     this.ruby = {
       puppetBaseDir: puppetBaseDir,
@@ -263,10 +252,6 @@ export class AggregateConfiguration implements IAggregateConfiguration {
       default:
         return path.join(programFiles, 'puppetlabs', 'pdk');
     }
-  }
-
-  private getPctBasePath(): string {
-    return path.join(os.homedir(), '.puppetlabs', 'pct');
   }
 
   private getPdkVersionFromFile(puppetBaseDir: string) {

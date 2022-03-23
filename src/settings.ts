@@ -1,6 +1,8 @@
 'use strict';
 
 import vscode = require('vscode');
+import * as os from 'os';
+import * as path from 'path';
 
 export enum PuppetInstallType {
   PDK = 'pdk',
@@ -61,6 +63,10 @@ export interface IPDKSettings {
   checkVersion?: boolean;
 }
 
+export interface IPCTSettings {
+  installDirectory?: string;
+}
+
 export interface INotificationSettings {
   nodeGraph?: string;
   puppetResource?: string;
@@ -75,6 +81,7 @@ export interface ISettings {
   lint?: ILintSettings;
   notification?: INotificationSettings;
   pdk?: IPDKSettings;
+  pct?: IPCTSettings;
 }
 
 const workspaceSectionName = 'puppet';
@@ -151,6 +158,9 @@ export function DefaultWorkspaceSettings(): ISettings {
     pdk: {
       checkVersion: true,
     },
+    pct: {
+      installDirectory: path.join(os.homedir(), '.puppetlabs', 'pct'),
+    },
   };
 }
 
@@ -168,6 +178,7 @@ export function SettingsFromWorkspace(): ISettings {
     lint: workspaceConfig.get<ILintSettings>('lint', defaults.lint),
     notification: workspaceConfig.get<INotificationSettings>('notification', defaults.notification),
     pdk: workspaceConfig.get<IPDKSettings>('pdk', defaults.pdk),
+    pct: workspaceConfig.get<IPCTSettings>('pct', defaults.pct),
   };
 
   if (settings.installDirectory && settings.installType === PuppetInstallType.AUTO) {
@@ -184,6 +195,12 @@ export function SettingsFromWorkspace(): ISettings {
         vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(helpLink));
       }
     });
+  }
+
+  // This is here because the section doesn't seem to be properly populated above.
+  // I must be missing something obvious.
+  if (!settings.pct.installDirectory) {
+    settings.pct.installDirectory = defaults.pct.installDirectory;
   }
 
   /**
