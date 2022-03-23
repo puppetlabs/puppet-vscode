@@ -40,7 +40,7 @@ Happy linting! 💖
     "no-template-curly-in-string": "error",
     "require-atomic-updates": "error",
     "no-useless-backreference": "error",
-    "@typescript-eslint/class-name-casing": "warn",
+    //"@typescript-eslint/class-name-casing": "warn",
     "@typescript-eslint/member-delimiter-style": [
       "warn",
       {
