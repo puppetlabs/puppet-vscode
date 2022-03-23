@@ -18,24 +18,37 @@ export class PCTFeature implements IFeature {
     );
   }
 
-  private async getTemplates(): Promise<vscode.QuickPickItem[]> {
-    this.logger.debug('Fetching templates');
-    const cmdResponse = await this.pct.execute(['new', '--list', '--format json']);
+  private async getTemplateQuickPickList(): Promise<vscode.QuickPickItem[]> {
+    let items: vscode.QuickPickItem[] = [];
 
-    const tmpls = JSON.parse(String(cmdResponse));
-    const items: vscode.QuickPickItem[] = [];
-    tmpls.forEach((t: { Display: string; Author: string; Id: string }) => {
-      items.push({
-        label: `${t.Author}/${t.Id}`,
-        description: t.Display,
-      });
-    });
+    try {
+      this.logger.debug('Fetching templates');
+      const cmdResponse = await this.pct.execute(['new', '--list', '--format json']);
+      const templates = JSON.parse(cmdResponse);
+
+      if (templates.length < 1) {
+        vscode.window.showWarningMessage('No templates were found on the system');
+        return items;
+      }
+
+      items = templates.map((template: { Id: string; Author: string; Display: string }) => ({
+        label: `${template.Author}/${template.Id}`,
+        description: template.Display,
+      }));
+    } catch (err) {
+      vscode.window.showErrorMessage('Failed to fetch templates!');
+    }
+
     return items;
   }
 
   private async createContent(): Promise<void> {
     this.logger.debug('Starting content creation');
-    const templates = await this.getTemplates();
+
+    const templates = await this.getTemplateQuickPickList();
+    if (templates.length < 1) {
+      return;
+    }
 
     const selectedTemplate = await vscode.window.showQuickPick(templates, {
       canPickMany: false,
@@ -52,21 +65,31 @@ export class PCTFeature implements IFeature {
       placeHolder: `Enter a name for ${selectedTemplate.label}`,
     });
 
+    if (!targetName) {
+      vscode.window.showWarningMessage('A name was not specifed. Exiting.');
+      return;
+    }
+
     const targetDir = await vscode.window.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,
       canSelectMany: false,
     });
 
-    await this.pct.execute([
-      'new',
-      selectedTemplate.label,
-      `--name ${targetName}`,
-      `--output ${targetDir[0].fsPath}`,
-      '--format json',
-    ]);
+    try {
+      await this.pct.execute([
+        'new',
+        selectedTemplate.label,
+        `--name ${targetName}`,
+        `--output ${targetDir[0].fsPath}`,
+        '--format json',
+      ]);
+    } catch (err) {
+      vscode.window.showErrorMessage(err.message);
+      return;
+    }
 
-    vscode.window.showInformationMessage(`Created ${targetName} in ${targetDir[0].fsPath}`);
+    vscode.window.showInformationMessage(`Published content '${selectedTemplate.detail} to ${targetDir[0].fsPath}`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

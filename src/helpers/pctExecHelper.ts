@@ -4,7 +4,7 @@ import { IAggregateConfiguration } from '../configuration';
 import { ILogger } from '../logging';
 
 export interface IExecHelper {
-  execute(opts: string[]);
+  execute(opts: string[]): Promise<string>;
 }
 
 export class PctExecHelper implements IExecHelper {
@@ -32,14 +32,10 @@ export class PctExecHelper implements IExecHelper {
         shell: this.shell,
       });
 
-      // we should check for stderr here... or shoould we?
-
-      this.logger.normal(`stdout: ${stdout}`);
-
       return stdout.toString();
     } catch (err) {
-      this.logger.error(`Error executing: pct ${commandString}\n${err}`);
-      // what do we do here? throw?
+      this.logger.error(err);
+      throw err;
     }
   }
 }
