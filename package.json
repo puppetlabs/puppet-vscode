@@ -467,7 +467,7 @@
         },
         "puppet.editorService.loglevel": {
           "type": "string",
-          "default": "normal",
+          "default": "debug",
           "description": "Set the logging verbosity level for the Puppet Editor Service, with Debug producing the most output and Error producing the least",
           "enum": [
             "debug",
@@ -579,9 +579,33 @@
           "default": true,
           "description": "Enable/disable checking if installed PDK version is latest"
         },
+        "puppet.pct.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable experimental PCT support."
+        },
         "puppet.pct.installDirectory": {
           "type": "string",
           "markdownDescription": "The fully qualified path to the PCT installation directory. Use this setting to override the default of <HOME_DIR>/.puppetlabs/pct."
+        },
+        "puppet.pct.enableTelemetry": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable PCT telemetry."
+        },
+        "puppet.prm.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable experimental PRM support."
+        },
+        "puppet.prm.installDirectory": {
+          "type": "string",
+          "markdownDescription": "The fully qualified path to the PRM installation directory. Use this setting to override the default of <HOME_DIR>/.puppetlabs/prm."
+        },
+        "puppet.prm.enableTelemetry": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable PRM telemetry."
         },
         "puppet.titleBar.pdkNewModule.enable": {
           "type": "boolean",
@@ -664,9 +688,12 @@
     "fix": "eslint --fix --ext .ts src"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.0",
     "@types/glob": "^7.1.1",
+    "@types/gunzip-maybe": "^1.4.0",
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.0.8",
+    "@types/tar-fs": "^2.0.1",
     "@types/vscode": "^1.38.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -682,9 +709,13 @@
     "vscode-test": "^1.0.2"
   },
   "dependencies": {
-    "axios": "0.21.2",
+    "adm-zip": "^0.5.9",
+    "axios": "^0.21.2",
+    "gunzip-maybe": "^1.4.2",
     "jsonc-parser": "~2.1.0",
     "promisify-child-process": "^4.1.1",
+    "proxy-agent": "^5.0.0",
+    "tar-fs": "^2.1.1",
     "vscode-debugadapter": "^1.19.0",
     "vscode-debugprotocol": "^1.19.0",
     "vscode-extension-telemetry": "0.1.2",

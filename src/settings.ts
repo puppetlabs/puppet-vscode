@@ -64,7 +64,15 @@ export interface IPDKSettings {
 }
 
 export interface IPCTSettings {
+  enable?: boolean;
   installDirectory?: string;
+  enableTelemetry?: boolean;
+}
+
+export interface IPRMSettings {
+  enable?: boolean;
+  installDirectory?: string;
+  enableTelemetry?: boolean;
 }
 
 export interface INotificationSettings {
@@ -82,6 +90,7 @@ export interface ISettings {
   notification?: INotificationSettings;
   pdk?: IPDKSettings;
   pct?: IPCTSettings;
+  prm?: IPRMSettings;
 }
 
 const workspaceSectionName = 'puppet';
@@ -159,7 +168,14 @@ export function DefaultWorkspaceSettings(): ISettings {
       checkVersion: true,
     },
     pct: {
+      enable: true,
       installDirectory: path.join(os.homedir(), '.puppetlabs', 'pct'),
+      enableTelemetry: true,
+    },
+    prm: {
+      enable: true,
+      installDirectory: path.join(os.homedir(), '.puppetlabs', 'prm'),
+      enableTelemetry: true,
     },
   };
 }

@@ -8,8 +8,8 @@ import { CreateAggregrateConfiguration, IAggregateConfiguration } from './config
 import { IFeature } from './feature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
-import { PDKFeature } from './feature/PDKFeature';
 import { PCTFeature } from './feature/PCTFeature';
+import { PDKFeature } from './feature/PDKFeature';
 import { PuppetfileCompletionFeature } from './feature/PuppetfileCompletionFeature';
 import { PuppetfileHoverFeature } from './feature/PuppetfileHoverFeature';
 import { PuppetModuleHoverFeature } from './feature/PuppetModuleHoverFeature';
@@ -21,6 +21,8 @@ import { getPDKVersion } from './forge';
 import { ConnectionHandler } from './handler';
 import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
+import { ArchiveHelper } from './helpers/archiveHelper';
+import { DownloadHelper } from './helpers/downloadHelper';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
 import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, SettingsFromWorkspace } from './settings';
@@ -38,7 +40,7 @@ let logger: OutputChannelLogger;
 let configSettings: IAggregateConfiguration;
 let extensionFeatures: IFeature[] = [];
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const pkg = vscode.extensions.getExtension('jpogran.puppet-vscode');
   if (pkg) {
     const message =
@@ -68,6 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
     installType: configSettings.workspace.installType,
     protocol: configSettings.workspace.editorService.protocol,
     pdkVersion: configSettings.ruby.pdkVersion,
+    pctEnabled: configSettings.workspace.pct.enable?.toString(),
   });
 
   const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -84,12 +87,21 @@ export function activate(context: vscode.ExtensionContext) {
 
   extensionFeatures = [
     new PDKFeature(extContext, logger),
-    new PCTFeature(extContext, configSettings, logger),
     new UpdateConfigurationFeature(logger, extContext),
     statusBar,
     new PuppetfileHoverFeature(extContext, logger),
     new PuppetfileCompletionFeature(extContext, logger),
   ];
+
+  if (configSettings.workspace.pct.enable) {
+    await installPCT(configSettings, logger);
+    extensionFeatures.push(new PCTFeature(extContext, configSettings, logger));
+  }
+
+  if (configSettings.workspace.prm.enable) {
+    await installPRM(configSettings, logger);
+    //extensionFeatures.push(new PRMFeature(extContext, configSettings, logger));
+  }
 
   if (configSettings.workspace.editorService.enable === false) {
     notifyEditorServiceDisabled(extContext);
@@ -357,4 +369,56 @@ function setLanguageConfiguration() {
       blockComment: ['/*', '*/'],
     },
   });
+}
+
+async function pathExists(path: fs.PathLike): Promise<boolean> {
+  try {
+    await fs.promises.access(path);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+async function installPCT(settings: IAggregateConfiguration, logger: ILogger) {
+  const componentPath = settings.workspace.pct.installDirectory;
+
+  if (await pathExists(componentPath)) {
+    logger.normal(`PCT is already available at ${componentPath}`);
+    return;
+  }
+
+  await fs.promises.mkdir(componentPath, { recursive: true });
+
+  const downloadHelper = new DownloadHelper('pct', settings.workspace.pct.enableTelemetry, logger);
+
+  const archive = await downloadHelper.install();
+  await downloadHelper.verify();
+
+  logger.normal(`Extracting PCT to ${componentPath}`);
+  await ArchiveHelper.expandArchive(archive, componentPath);
+
+  logger.normal(`PCT installed in ${componentPath}`);
+  return;
+}
+
+async function installPRM(settings: IAggregateConfiguration, logger: ILogger) {
+  const componentPath = settings.workspace.prm.installDirectory;
+
+  if (await pathExists(componentPath)) {
+    logger.normal(`PRM is already available at ${componentPath}`);
+    return;
+  }
+
+  await fs.promises.mkdir(componentPath, { recursive: true });
+
+  const downloadHelper = new DownloadHelper('prm', settings.workspace.prm.enableTelemetry, logger);
+  const archive = await downloadHelper.install();
+  await downloadHelper.verify();
+
+  logger.normal(`Extracting PRM to ${componentPath}`);
+  await ArchiveHelper.expandArchive(archive, componentPath);
+
+  logger.normal(`PRM installed in ${componentPath}`);
+  return;
 }
