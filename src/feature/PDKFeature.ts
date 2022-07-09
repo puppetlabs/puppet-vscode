@@ -12,7 +12,9 @@ export class PDKFeature implements IFeature {
   private terminal: vscode.Terminal;
 
   constructor(context: vscode.ExtensionContext, logger: ILogger) {
-    this.terminal = vscode.window.createTerminal('Puppet PDK');
+    const suspendedTerm = vscode.window.terminals.find((tm) => tm.name === 'Puppet PDK');
+    this.terminal = suspendedTerm === undefined ? vscode.window.createTerminal('Puppet PDK') : suspendedTerm;
+
     this.terminal.processId.then((pid) => {
       logger.debug('pdk shell started, pid: ' + pid);
     });
