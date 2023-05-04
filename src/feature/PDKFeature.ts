@@ -9,17 +9,8 @@ import { PDKCommandStrings } from '../messages';
 import { reporter } from '../telemetry';
 
 export class PDKFeature implements IFeature {
-  private terminal: vscode.Terminal;
 
   constructor(context: vscode.ExtensionContext, logger: ILogger) {
-    const suspendedTerm = vscode.window.terminals.find((tm) => tm.name === 'Puppet PDK');
-    this.terminal = suspendedTerm === undefined ? vscode.window.createTerminal('Puppet PDK') : suspendedTerm;
-
-    this.terminal.processId.then((pid) => {
-      logger.debug('pdk shell started, pid: ' + pid);
-    });
-    context.subscriptions.push(this.terminal);
-
     context.subscriptions.push(
       vscode.commands.registerCommand(PDKCommandStrings.PdkNewModuleCommandId, () => {
         this.pdkNewModuleCommand();
@@ -34,8 +25,8 @@ export class PDKFeature implements IFeature {
     ].forEach((command) => {
       context.subscriptions.push(
         vscode.commands.registerCommand(command.id, () => {
-          this.terminal.sendText(command.request);
-          this.terminal.show();
+          this.getTerminal().sendText(command.request);
+          this.getTerminal().show();
           if (reporter) {
             reporter.sendTelemetryEvent(command.id);
           }
@@ -63,8 +54,8 @@ export class PDKFeature implements IFeature {
           }
 
           const request = `${command.request} ${name}`;
-          this.terminal.sendText(request);
-          this.terminal.show();
+          this.getTerminal().sendText(request);
+          this.getTerminal().show();
           if (reporter) {
             reporter.sendTelemetryEvent(command.id);
           }
@@ -74,8 +65,13 @@ export class PDKFeature implements IFeature {
     });
   }
 
+  private getTerminal(): vscode.Terminal {
+    const existingTerm = vscode.window.terminals.find((tm) => tm.name === 'Puppet PDK');
+    return existingTerm === undefined ? vscode.window.createTerminal('Puppet PDK') : existingTerm;
+  }
+
   public dispose(): void {
-    this.terminal.dispose();
+    this.getTerminal().dispose();
   }
 
   private async pdkNewModuleCommand(): Promise<void> {
@@ -99,8 +95,8 @@ export class PDKFeature implements IFeature {
 
     const p = path.join(directory[0].fsPath, name);
 
-    this.terminal.sendText(`pdk new module --skip-interview ${name} ${p}`);
-    this.terminal.show();
+    this.getTerminal().sendText(`pdk new module --skip-interview ${name} ${p}`);
+    this.getTerminal().show();
 
     await new Promise<void>((resolve) => {
       let count = 0;

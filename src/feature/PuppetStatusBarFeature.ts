@@ -31,7 +31,6 @@ class PuppetStatusBarProvider {
   }
 
   public setConnectionStatus(statusText: string, status: ConnectionStatus, toolTip: string): void {
-    this.logger.debug(`Setting status bar to ${statusText}`);
     // Icons are from https://octicons.github.com/
     let statusIconText: string;
     let statusColor: string;
