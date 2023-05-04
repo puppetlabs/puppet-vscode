@@ -661,7 +661,7 @@
     "mocha": "^9.2.2",
     "prettier": "^2.0.5",
     "typescript": "^3.5.2",
-    "vsce": "^1.93.0",
+    "vsce": "^2.15.0",
     "vscode-test": "^1.0.2"
   },
   "dependencies": {
