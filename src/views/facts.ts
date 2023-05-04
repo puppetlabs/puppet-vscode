@@ -136,7 +136,7 @@ export class PuppetFactsProvider implements TreeDataProvider<PuppetFact> {
     return this.elements.map((e) => e[1]);
   }
 
-  getParent?(element: PuppetFact): ProviderResult<PuppetFact> {
+  getParent?(_element: PuppetFact): ProviderResult<PuppetFact> {
     throw new Error('Method not implemented.');
   }
 

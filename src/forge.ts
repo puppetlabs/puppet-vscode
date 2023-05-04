@@ -41,12 +41,12 @@ ${info.summary}\n
   return new MarkdownString(message);
 }
 
-export function getPDKVersion(logger: ILogger): Promise<string> {
+
+export function getPDKVersion(logger: ILogger): Promise<string | void> {
   return new Promise((resolve) => {
     return axios
       .get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST', {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           exclude_fields: 'readme changelog license reference',
         },
         headers: {
@@ -64,12 +64,11 @@ export function getPDKVersion(logger: ILogger): Promise<string> {
   });
 }
 
-export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetForgeModuleInfo> {
+export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetForgeModuleInfo | void> {
   return new Promise((resolve) => {
     return axios
       .get(`https://forgeapi.puppet.com/v3/modules/${title}`, {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           exclude_fields: 'readme changelog license reference',
         },
         headers: {
@@ -115,11 +114,10 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
 }
 
 export function getPuppetModuleCompletion(text: string, logger: ILogger): Promise<PuppetForgeCompletionInfo> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     return axios
       .get(`https://forgeapi.puppet.com/private/modules?starts_with=${text}`, {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           exclude_fields: 'readme changelog license reference',
         },
         headers: {
@@ -130,7 +128,7 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          reject();
         }
 
         const info = response.data;
@@ -144,7 +142,7 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
       })
       .catch((error) => {
         logger.error(`Error getting Puppet forge data: ${error}`);
-        resolve();
+        reject();
       });
   });
 }
