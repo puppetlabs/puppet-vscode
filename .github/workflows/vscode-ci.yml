@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: 'setup node: ${{ matrix.node-version }} platform: ${{ matrix.os }}'
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           fetch-depth: 1
           node-version: ${{ matrix.node-version }}
