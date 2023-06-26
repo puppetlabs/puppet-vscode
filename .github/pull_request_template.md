@@ -1,22 +1,15 @@
-<!--
-BEFORE YOU CREATE A PULL REQUEST:
+## Summary
+Provide a detailed description of all the changes present in this pull request.
 
-Ensure you have read over
+## Additional Context
+Add any additional context about the problem here. 
+- [ ] Root cause and the steps to reproduce. (If applicable)
+- [ ] Thought process behind the implementation.
 
-CONTRIBUTING - https://github.com/puppetlabs/puppet-vscode/blob/master/CONTRIBUTING.md
+## Related Issues (if any)
+Mention any related issues or pull requests.
 
-and
-
-CODE_OF_CONDUCT - https://github.com/puppetlabs/puppet-vscode/blob/master/CODE_OF_CONDUCT.md
-
-We provide defined guidance (as such, we strongly adhere to it).
-
-A summary of our expectations:
- - You are not submitting a pull request from your MASTER branch.
- - YOUR GIT COMMIT MESSAGE FORMAT IS EXTREMELY IMPORTANT. We have a very defined expectation for this format and are sticklers about it. Really, READ the entire Contributing document. It will save you and us pain.
- - Do not reformat code, it makes it hard to see what has changed. Leave the formatting to us.
-
-THANKS! We appreciate you reading the entire Contributing document and not just scanning through it.
-
-DELETE EVERYTHING IN THIS COMMENT BLOCK
--->
+## Checklist
+- [ ] 🟢 Spec tests.
+- [ ] 🟢 Acceptance tests.
+- [ ] Manually verified.
