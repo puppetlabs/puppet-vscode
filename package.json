@@ -29,13 +29,6 @@
     "url": "https://github.com/puppetlabs/puppet-vscode/issues"
   },
   "qna": "https://stackoverflow.com/questions/tagged/visual-studio-code+puppet",
-  "badges": [
-    {
-      "url": "https://travis-ci.com/puppetlabs/puppet-vscode.svg?branch=master",
-      "href": "https://travis-ci.com/puppetlabs/puppet-vscode",
-      "description": "Continuous integration (Travis)"
-    }
-  ],
   "engines": {
     "vscode": "^1.38.0"
   },
