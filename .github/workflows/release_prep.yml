@@ -1,0 +1,67 @@
+name: release_prep
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to released.'
+        required: true
+        default: '0.0.0'
+
+jobs:
+  release_prep:
+    name: "Release Prep"
+    runs-on: "ubuntu-latest"
+    env:
+      NODE_VERSION: "18"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+        with:
+          clean: true
+          fetch-depth: 0
+
+      - name: Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: "Update Version"
+        run: |
+          current_version=$(jq --raw-output .version package.json)
+          # Update version in package.json, only matching first occurrence
+          sed -i "0,/$current_version/s//${{ github.event.inputs.version }}/" $(find . -name 'package.json')
+
+      - name: "Generate package-lock.json"
+        run: |
+          npm install
+          npm update --package-lock-only
+
+      - name: "Generate changelog"
+        run: |
+          export GH_HOST=github.com
+          gh extension install chelnak/gh-changelog
+          gh changelog new --next-version v${{ github.event.inputs.version }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Commit changes"
+        run: |
+          git config --local user.email "${{ github.repository_owner }}@users.noreply.github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Release prep v${{ github.event.inputs.version }}"
+
+      - name: "Create pull request"
+        uses: "peter-evans/create-pull-request@v5"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Release prep v${{ github.event.inputs.version }}"
+          branch: "release-prep"
+          delete-branch: true
+          title: "Release prep v${{ github.event.inputs.version }}"
+          base: "main"
+          body: |
+            Automated release-prep from commit ${{ github.sha }}.
+          labels: "maintenance"
