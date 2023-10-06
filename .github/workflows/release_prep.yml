@@ -7,6 +7,9 @@ on:
         description: 'Version to released.'
         required: true
         default: '0.0.0'
+      language-server-version:
+        description: 'Version of language server for release to consume. In the format v0.0.0'
+        required: false
 
 jobs:
   release_prep:
@@ -29,9 +32,12 @@ jobs:
 
       - name: "Update Version"
         run: |
-          current_version=$(jq --raw-output .version package.json)
-          # Update version in package.json, only matching first occurrence
-          sed -i "0,/$current_version/s//${{ github.event.inputs.version }}/" $(find . -name 'package.json')
+          cat <<< $(jq '.version="${{ github.event.inputs.version }}"' package.json) > package.json
+
+      - name: "Update Language Server Version"
+        if: "${{ github.event.inputs.language-server-version != '' }}"
+        run: |
+          cat <<< $(jq '.editorComponents.editorServices.release="${{ github.event.inputs.language-server-version}}"' package.json) > package.json
 
       - name: "Generate package-lock.json"
         run: |
