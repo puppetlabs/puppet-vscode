@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
 import { extensions, MarkdownString } from 'vscode';
 import { ILogger } from './logging';
@@ -46,7 +47,6 @@ export function getPDKVersion(logger: ILogger): Promise<string> {
     return axios
       .get('https://s3.amazonaws.com/puppet-pdk/pdk/LATEST', {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           exclude_fields: 'readme changelog license reference',
         },
         headers: {
@@ -57,7 +57,7 @@ export function getPDKVersion(logger: ILogger): Promise<string> {
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          resolve(undefined);
         }
         return response.data;
       });
@@ -69,7 +69,6 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
     return axios
       .get(`https://forgeapi.puppet.com/v3/modules/${title}`, {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           exclude_fields: 'readme changelog license reference',
         },
         headers: {
@@ -80,7 +79,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          resolve(undefined);
         }
 
         const info = response.data;
@@ -93,7 +92,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
           created: new Date(info.created_at),
           updated: new Date(info.updated_at),
           endorsement: info.endorsement ?? '',
-          forgeUrl: `https://forge.puppet.com/${info.owner.username}/${info.name}`,
+          forgeUrl: `https://forge.puppet.com/modules/${info.owner.username}/${info.name}`,
           homepageUrl: info.homepage_url ?? '',
           version: info.current_release.version,
           owner: {
@@ -109,7 +108,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
       })
       .catch((error) => {
         logger.error(`Error getting Puppet forge data: ${error}`);
-        resolve();
+        resolve(undefined);
       });
   });
 }
@@ -119,7 +118,6 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
     return axios
       .get(`https://forgeapi.puppet.com/private/modules?starts_with=${text}`, {
         params: {
-          // eslint-disable-next-line @typescript-eslint/camelcase
           exclude_fields: 'readme changelog license reference',
         },
         headers: {
@@ -130,7 +128,7 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          resolve(undefined);
         }
 
         const info = response.data;
@@ -144,7 +142,7 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
       })
       .catch((error) => {
         logger.error(`Error getting Puppet forge data: ${error}`);
-        resolve();
+        resolve(undefined);
       });
   });
 }
