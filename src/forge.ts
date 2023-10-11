@@ -57,7 +57,7 @@ export function getPDKVersion(logger: ILogger): Promise<string> {
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          resolve(void 0);
         }
         return response.data;
       });
@@ -80,7 +80,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          resolve(void 0);
         }
 
         const info = response.data;
@@ -93,7 +93,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
           created: new Date(info.created_at),
           updated: new Date(info.updated_at),
           endorsement: info.endorsement ?? '',
-          forgeUrl: `https://forge.puppet.com/${info.owner.username}/${info.name}`,
+          forgeUrl: `https://forge.puppet.com/modules/${info.owner.username}/${info.name}`,
           homepageUrl: info.homepage_url ?? '',
           version: info.current_release.version,
           owner: {
@@ -109,7 +109,7 @@ export function getModuleInfo(title: string, logger: ILogger): Promise<PuppetFor
       })
       .catch((error) => {
         logger.error(`Error getting Puppet forge data: ${error}`);
-        resolve();
+        resolve(void 0);
       });
   });
 }
@@ -130,7 +130,7 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
       .then((response) => {
         if (response.status !== 200) {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
-          resolve();
+          resolve(void 0);
         }
 
         const info = response.data;
@@ -144,7 +144,7 @@ export function getPuppetModuleCompletion(text: string, logger: ILogger): Promis
       })
       .catch((error) => {
         logger.error(`Error getting Puppet forge data: ${error}`);
-        resolve();
+        resolve(void 0);
       });
   });
 }
