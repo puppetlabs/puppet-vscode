@@ -1,673 +1,511 @@
-# Change Log
+<!-- markdownlint-disable MD024 -->
+# Changelog
 
-All notable changes to the "puppet-vscode" extension will be documented in this file.
+All notable changes to this project will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [Unreleased]
+## [v1.4.1](https://github.com/puppetlabs/puppet-vscode/tree/v1.4.1) - 2023-10-13
 
-## [1.4.0] - 2021-09-30
-
-### Added
-
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/239de128a166c694b7ef88f916d46aaf4ec9ecd5))  [puppet-editor-services-1.3.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.3.0)
-Update Puppet-lint to 2.5.2
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/1.4.0...v1.4.1)
 
 ### Fixed
 
-- ([GH-311](https://github.com/puppetlabs/puppet-editor-services/issues/311))  [puppet-editor-services-1.3.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.3.0)
-Languageserver doesn't start with Puppet 7.11.0
+- (CAT-1491) - Fix broken forge urls in Puppetfile [#850](https://github.com/puppetlabs/puppet-vscode/pull/850) ([jordanbreen28](https://github.com/jordanbreen28))
+- (GH-825) fix duplicate PDK terminals [#833](https://github.com/puppetlabs/puppet-vscode/pull/833) ([timidri](https://github.com/timidri))
+- Detect suspended terminal on start [#820](https://github.com/puppetlabs/puppet-vscode/pull/820) ([jpogran](https://github.com/jpogran))
 
-### Security
+## [1.4.0](https://github.com/puppetlabs/puppet-vscode/tree/1.4.0) - 2021-10-13
 
-- ([PR-780](https://github.com/puppetlabs/puppet-vscode/pull/780)) update for CVE-2021-3807
-- ([PR-774](https://github.com/puppetlabs/puppet-vscode/pull/774)) Update mochaJs to v9.
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/1.3.0...1.4.0)
 
-## [1.3.0] - 2020-06-08
+## [1.3.0](https://github.com/puppetlabs/puppet-vscode/tree/1.3.0) - 2021-06-08
 
-### Added
-
-- ([GH-289](https://github.com/puppetlabs/puppet-editor-services/issues/306)) [puppet-editor-services-1.2.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.2.0) Add a code folding range provider for Manifests
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/1.2.0...1.3.0)
 
 ### Fixed
 
-- ([GH-300](https://github.com/puppetlabs/puppet-editor-services/issues/300)) [puppet-editor-services-1.2.0](https://github.com/puppetlabs/puppet-editor-services/releases/tag/1.2.0) Return nil for bad hover requests
+- (GH-748) Update settings for Editor Services 1.2.0 [#750](https://github.com/puppetlabs/puppet-vscode/pull/750) ([glennsarti](https://github.com/glennsarti))
+- (GH-748) Update Editor Services to 1.2.0 [#749](https://github.com/puppetlabs/puppet-vscode/pull/749) ([glennsarti](https://github.com/glennsarti))
 
-## [1.2.0] - 2020-04-2
+## [1.2.0](https://github.com/puppetlabs/puppet-vscode/tree/1.2.0) - 2021-04-05
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/1.1.0...1.2.0)
 
 ### Added
 
-- ([GH-732](https://github.com/puppetlabs/puppet-vscode/issues/732)) Add PDK new fact and function commands
-- ([GH-724](https://github.com/puppetlabs/puppet-vscode/issues/724)) PDK new module uses native OS open window
+- (GH-732) Add additional PDK 2.0 functions: fact and function [#737](https://github.com/puppetlabs/puppet-vscode/pull/737) ([da-ar](https://github.com/da-ar))
+- (GH-724) PDK New Module with Native window [#724](https://github.com/puppetlabs/puppet-vscode/pull/724) ([jpogran](https://github.com/jpogran))
 
 ### Fixed
 
-- ([GH-730](https://github.com/puppetlabs/puppet-vscode/issues/730)) Fix PDK 2.0 missing library
+- (GH-730) Fix ffi 1.14 libssp-0.dll missing with PDK 2.0 [#735](https://github.com/puppetlabs/puppet-vscode/pull/735) ([jpogran](https://github.com/jpogran))
 
-## [1.1.0] - 2020-01-27
+## [1.1.0](https://github.com/puppetlabs/puppet-vscode/tree/1.1.0) - 2021-01-27
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/1.0.0...1.1.0)
+
+### Fixed
+
+- (GH-695) Add puppet.editorService.formatOnType.maxFileSize setting [#721](https://github.com/puppetlabs/puppet-vscode/pull/721) ([glennsarti](https://github.com/glennsarti))
+
+## [1.0.0](https://github.com/puppetlabs/puppet-vscode/tree/1.0.0) - 2020-11-11
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.28.0...1.0.0)
 
 ### Added
 
-- ([GH-695](https://github.com/puppetlabs/puppet-vscode/issues/695)) Add puppet.editorService.formatOnType.maxFileSize setting
-- ([GH-289](https://github.com/puppetlabs/puppet-editor-services/issues/289)) [puppet-editor-services-1.1.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.1.0) Make Format On Type file size configurable
-- ([GH-282](https://github.com/puppetlabs/puppet-editor-services/issues/282)) [puppet-editor-services-1.1.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.1.0) Add support for Puppet 7 and Ruby 2.7
+- (GH-639) Remove Bolt commands and snippets [#712](https://github.com/puppetlabs/puppet-vscode/pull/712) ([jpogran](https://github.com/jpogran))
+- (GH-709) Puppetfile autocomplete [#710](https://github.com/puppetlabs/puppet-vscode/pull/710) ([jpogran](https://github.com/jpogran))
 
-## [1.0.0] - 2020-11-11
+### Fixed
 
-🎉Major release 🎉 which drops support for Puppet 4
+- (GH-705) Fix Puppetfile module update date [#707](https://github.com/puppetlabs/puppet-vscode/pull/707) ([jpogran](https://github.com/jpogran))
+
+## [0.28.0](https://github.com/puppetlabs/puppet-vscode/tree/0.28.0) - 2020-07-20
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.27.3...0.28.0)
 
 ### Added
 
-- ([GH-709](https://github.com/puppetlabs/puppet-vscode/issues/709)) Puppetfile Puppet module name autocomplete
+- (GH-682) Set Puppet Forge api header version [#694](https://github.com/puppetlabs/puppet-vscode/pull/694) ([jpogran](https://github.com/jpogran))
+- (GH-691) PDK New Defined Type [#692](https://github.com/puppetlabs/puppet-vscode/pull/692) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-681) Activate extension when puppet module [#693](https://github.com/puppetlabs/puppet-vscode/pull/693) ([jpogran](https://github.com/jpogran))
+
+## [0.27.3](https://github.com/puppetlabs/puppet-vscode/tree/0.27.3) - 2020-06-18
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.27.2...0.27.3)
+
+### Fixed
+
+- (maint) Fix automated release packaging [#687](https://github.com/puppetlabs/puppet-vscode/pull/687) ([jpogran](https://github.com/jpogran))
+
+## [0.27.2](https://github.com/puppetlabs/puppet-vscode/tree/0.27.2) - 2020-06-18
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.27.1...0.27.2)
+
+### Fixed
+
+- (GH-684) Fix pdk new module activation [#685](https://github.com/puppetlabs/puppet-vscode/pull/685) ([jpogran](https://github.com/jpogran))
+
+## [0.27.1](https://github.com/puppetlabs/puppet-vscode/tree/0.27.1) - 2020-06-11
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.27.0...0.27.1)
+
+### Fixed
+
+- (GH-678) Remove Invalid Configuration Defaults [#679](https://github.com/puppetlabs/puppet-vscode/pull/679) ([jpogran](https://github.com/jpogran))
+
+## [0.27.0](https://github.com/puppetlabs/puppet-vscode/tree/0.27.0) - 2020-06-08
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.26.1...0.27.0)
+
+### Added
+
+- (GH-670) Guard installType and installDirectory [#673](https://github.com/puppetlabs/puppet-vscode/pull/673) ([jpogran](https://github.com/jpogran))
+- Puppetfile forge module hover provider [#672](https://github.com/puppetlabs/puppet-vscode/pull/672) ([jpogran](https://github.com/jpogran))
+- (GH-666) Puppetfile view [#671](https://github.com/puppetlabs/puppet-vscode/pull/671) ([jpogran](https://github.com/jpogran))
+- (GH-639) Deprecate Bolt commands [#659](https://github.com/puppetlabs/puppet-vscode/pull/659) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-663) Quote Workspace path [#664](https://github.com/puppetlabs/puppet-vscode/pull/664) ([jpogran](https://github.com/jpogran))
+- (GH-649) Reduce Activation Events [#660](https://github.com/puppetlabs/puppet-vscode/pull/660) ([jpogran](https://github.com/jpogran))
+
+## [0.26.1](https://github.com/puppetlabs/puppet-vscode/tree/0.26.1) - 2020-05-12
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.26.0...0.26.1)
+
+### Added
+
+- (GH-647) Puppet Facts Welcome View [#648](https://github.com/puppetlabs/puppet-vscode/pull/648) ([jpogran](https://github.com/jpogran))
+
+## [0.26.0](https://github.com/puppetlabs/puppet-vscode/tree/0.26.0) - 2020-04-29
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.25.2...0.26.0)
+
+### Added
+
+- GH 630 cached facts [#635](https://github.com/puppetlabs/puppet-vscode/pull/635) ([jpogran](https://github.com/jpogran))
+- GH 630 Puppet Toolbar and Puppet Facts View [#632](https://github.com/puppetlabs/puppet-vscode/pull/632) ([jpogran](https://github.com/jpogran))
+
+## [0.25.2](https://github.com/puppetlabs/puppet-vscode/tree/0.25.2) - 2020-03-27
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.25.1...0.25.2)
+
+## [0.25.1](https://github.com/puppetlabs/puppet-vscode/tree/0.25.1) - 2020-03-27
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.25.0...0.25.1)
+
+## [0.25.0](https://github.com/puppetlabs/puppet-vscode/tree/0.25.0) - 2020-03-25
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.23.0...0.25.0)
+
+### Added
+
+- (613) Puppet Node Graph Feature Rewrite [#614](https://github.com/puppetlabs/puppet-vscode/pull/614) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-610) Fix surroundingPairs [#611](https://github.com/puppetlabs/puppet-vscode/pull/611) ([jpogran](https://github.com/jpogran))
+
+## [0.23.0](https://github.com/puppetlabs/puppet-vscode/tree/0.23.0) - 2020-01-29
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.22.0...0.23.0)
+
+### Added
+
+- (GH-289) Auto Indent for Types with Titles [#602](https://github.com/puppetlabs/puppet-vscode/pull/602) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-605) Use correct setting name for module path [#606](https://github.com/puppetlabs/puppet-vscode/pull/606) ([glennsarti](https://github.com/glennsarti))
+
+## [0.22.0](https://github.com/puppetlabs/puppet-vscode/tree/0.22.0) - 2019-12-17
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.21.0...0.22.0)
+
+### Added
+
+- (GH-588) Add server telemetry pass through [#589](https://github.com/puppetlabs/puppet-vscode/pull/589) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-592) Add Puppetfile resolver in Puppet-Editor-Services [#593](https://github.com/puppetlabs/puppet-vscode/pull/593) ([glennsarti](https://github.com/glennsarti))
+- (maint) Update mocha to latest to fix es-abstract [#591](https://github.com/puppetlabs/puppet-vscode/pull/591) ([jpogran](https://github.com/jpogran))
+
+## [0.21.0](https://github.com/puppetlabs/puppet-vscode/tree/0.21.0) - 2019-09-27
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.20.0...0.21.0)
+
+### Fixed
+
+- (GH-567) Update Editor Services and Editor Syntax components [#568](https://github.com/puppetlabs/puppet-vscode/pull/568) ([glennsarti](https://github.com/glennsarti))
+- (WIP)(GH-552) Disallow Puppet version change with TCP Protocol [#561](https://github.com/puppetlabs/puppet-vscode/pull/561) ([jpogran](https://github.com/jpogran))
+
+## [0.20.0](https://github.com/puppetlabs/puppet-vscode/tree/0.20.0) - 2019-08-28
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.19.0...0.20.0)
+
+### Added
+
+- (GH-541) Check for latest PDK Version [#545](https://github.com/puppetlabs/puppet-vscode/pull/545) ([jpogran](https://github.com/jpogran))
+- (GH-534) Puppet Module Metadata hover provider [#529](https://github.com/puppetlabs/puppet-vscode/pull/529) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-546) Update Puppet DAG svg icon [#547](https://github.com/puppetlabs/puppet-vscode/pull/547) ([jpogran](https://github.com/jpogran))
+- (maint) Fix typo for featureFlag [#539](https://github.com/puppetlabs/puppet-vscode/pull/539) ([glennsarti](https://github.com/glennsarti))
+
+## [0.19.0](https://github.com/puppetlabs/puppet-vscode/tree/0.19.0) - 2019-07-12
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.18.1...0.19.0)
+
+### Added
+
+- (GH-530) Enable Extension on Workspace files [#528](https://github.com/puppetlabs/puppet-vscode/pull/528) ([jpogran](https://github.com/jpogran))
+
+## [0.18.1](https://github.com/puppetlabs/puppet-vscode/tree/0.18.1) - 2019-06-05
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.18.0...0.18.1)
+
+### Added
+
+- (GH-502) Auto detect PDK or Puppet-Agent [#513](https://github.com/puppetlabs/puppet-vscode/pull/513) ([jpogran](https://github.com/jpogran))
+
+## [0.18.0](https://github.com/puppetlabs/puppet-vscode/tree/0.18.0) - 2019-05-29
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.17.0...0.18.0)
 
 ### Changed
-
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/9fd498472acedb30152069c613e4b8e6f82bb67a)) [puppet-editor-services-1.0.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.1) Update Bolt schema to 2.30.0
-- ([GH-272](https://github.com/puppetlabs/puppet-editor-services/issues/272)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Puppet Lint and document symbol sometimes not working
-- ([GH-269](https://github.com/puppetlabs/puppet-editor-services/issues/269)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Workspace Symbol Provider
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/7c4a9c4d2d868bdbea1ef590300d5a37fce9b1e4)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Update Puppetfile Resolver to 0.3.0
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/450b9acaabe58eeee52da4000910673647d25d13)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Document removal of Puppet 4
-- ([GH-209](https://github.com/puppetlabs/puppet-editor-services/issues/209)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Refactor the session state to be a class and pass that instead of global modules
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/7c4a9c4d2d868bdbea1ef590300d5a37fce9b1e4)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Update Puppetfile Resolver to 0.3.0
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/f7caae3f7b0db4e1debecafe8bd4c3485a334732)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Removed vendored gems and update development and building workflows
-- ([GH-252](https://github.com/puppetlabs/puppet-editor-services/issues/252)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Use puppet-strings by default and remove feature flag
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/bc3db27182ad47253e29a86a6cace73292b86d30)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Vendor puppet-strings and Yard
-
-### Fixed
-
-- ([GH-705](https://github.com/puppetlabs/puppet-vscode/issues/705)) Fix Puppetfile module hover update date
-- ([GH-272](https://github.com/puppetlabs/puppet-editor-services/issues/272)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Puppet Lint and document symbol sometimes not working
-- ([GH-269](https://github.com/puppetlabs/puppet-editor-services/issues/269)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Workspace Symbol Provider
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/2f6e0fc143ddd50be5256bf9abb62d91d2e49466)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Fix Facter Helper for 1.0
-
-### Removed
-
-- ([GH-639](https://github.com/puppetlabs/puppet-vscode/issues/639)) Removed deprecated Bolt commands and snippets
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/5a4800434dbed1756148905464011f882b7e2191)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Remove support for Puppet 4
-- ([Commit](https://github.com/puppetlabs/puppet-editor-services/commit/450b9acaabe58eeee52da4000910673647d25d13)) [puppet-editor-services-1.0.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/1.0.0) Document removal of Puppet 4
-
-## [0.28.0] - 2020-07-20
+- (GH-502) change the default install type to PDK [#503](https://github.com/puppetlabs/puppet-vscode/pull/503) ([albatrossflavour](https://github.com/albatrossflavour))
 
 ### Added
 
-- ([GH-691](https://github.com/puppetlabs/puppet-vscode/issues/691)) Add `pdk new defined_type` command
+- (GH-505) PDK New Module Button Visibility Setting [#510](https://github.com/puppetlabs/puppet-vscode/pull/510) ([jpogran](https://github.com/jpogran))
+- (GH-489) Use alternate puppet version [#491](https://github.com/puppetlabs/puppet-vscode/pull/491) ([glennsarti](https://github.com/glennsarti))
+- (GH-489) Refactor configration classes  [#490](https://github.com/puppetlabs/puppet-vscode/pull/490) ([glennsarti](https://github.com/glennsarti))
+- (GH-494) Add Progress Bar for long lived operations [#488](https://github.com/puppetlabs/puppet-vscode/pull/488) ([glennsarti](https://github.com/glennsarti))
+- (GH-489) Dynamically detect PDK information [#486](https://github.com/puppetlabs/puppet-vscode/pull/486) ([glennsarti](https://github.com/glennsarti))
 
 ### Fixed
 
-- ([GH-681](https://github.com/puppetlabs/puppet-vscode/issues/681)) Activate extension when module folder is opened
-- ([GH-682](https://github.com/puppetlabs/puppet-vscode/issues/682)) Set Puppet Forge api header version programatically
-- ([GH-66](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/66)) [puppet-editor-syntax-1.3.7](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.7) undef is not treated as a special value
-- ([GH-65](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/65)) [puppet-editor-syntax-1.3.7](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.7) Tokenise Node names correctly
+- (GH-499) Setting to Disable Editor Services [#512](https://github.com/puppetlabs/puppet-vscode/pull/512) ([jpogran](https://github.com/jpogran))
+- (GH-496) Prepare for 0.18.0 release [#497](https://github.com/puppetlabs/puppet-vscode/pull/497) ([glennsarti](https://github.com/glennsarti))
 
-## [0.27.3] - 2020-06-18
+## [0.17.0](https://github.com/puppetlabs/puppet-vscode/tree/0.17.0) - 2019-02-13
 
-### Fixed
-
-- (maint) Fix release packaging process
-
-## [0.27.2] - 2020-06-18
-
-### Fixed
-
-- ([GH-684](https://github.com/puppetlabs/puppet-vscode/issues/684)) Fix activation error when using PDK New Command in an empty workspace
-
-## [0.27.1] - 2020-06-11
-
-### Fixed
-
-- ([GH-678](https://github.com/puppetlabs/puppet-vscode/issues/678)) Remove invalid Configuration Defaults
-
-## [0.27.0] - 2020-06-08
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.16.0...0.17.0)
 
 ### Added
 
-- ([GH-666](https://github.com/puppetlabs/puppet-vscode/issues/666)) Add Puppetfile view to Puppet ToolBar
-- ([GH-674](https://github.com/puppetlabs/puppet-vscode/issues/674)) Add Puppetfile forge module hover provider
+- (GH-476)(GH-477) Add Bolt Feature Support [#481](https://github.com/puppetlabs/puppet-vscode/pull/481) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-480) Automatically find PDK Ruby Version [#482](https://github.com/puppetlabs/puppet-vscode/pull/482) ([jpogran](https://github.com/jpogran))
+
+## [0.16.0](https://github.com/puppetlabs/puppet-vscode/tree/0.16.0) - 2019-01-25
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.15.1...0.16.0)
+
+### Added
+
+- (maint) Update telemetry [#468](https://github.com/puppetlabs/puppet-vscode/pull/468) ([jpogran](https://github.com/jpogran))
+- (GH-288) Change puppetfile snippets to single line [#463](https://github.com/puppetlabs/puppet-vscode/pull/463) ([glennsarti](https://github.com/glennsarti))
+- (GH-453) Expose advanced additional Editor Service Settings [#462](https://github.com/puppetlabs/puppet-vscode/pull/462) ([glennsarti](https://github.com/glennsarti))
+- (GH-295)(GH-288) Add puppetfile support [#458](https://github.com/puppetlabs/puppet-vscode/pull/458) ([glennsarti](https://github.com/glennsarti))
+- (Maint) Update vendoring for Editor Syntax [#457](https://github.com/puppetlabs/puppet-vscode/pull/457) ([glennsarti](https://github.com/glennsarti))
+- (GH-375) Implement Docker connection handler [#450](https://github.com/puppetlabs/puppet-vscode/pull/450) ([jpogran](https://github.com/jpogran))
+- (GH-459) Use New debug adapter API [#448](https://github.com/puppetlabs/puppet-vscode/pull/448) ([glennsarti](https://github.com/glennsarti))
+
+### Fixed
+
+- (GH-469) Restore puppet palatte commands [#470](https://github.com/puppetlabs/puppet-vscode/pull/470) ([jpogran](https://github.com/jpogran))
+
+## [0.15.1](https://github.com/puppetlabs/puppet-vscode/tree/0.15.1) - 2019-01-09
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.15.0...0.15.1)
+
+### Fixed
+
+- (GH-454) Fix PDK Ruby file path [#460](https://github.com/puppetlabs/puppet-vscode/pull/460) ([jpogran](https://github.com/jpogran))
+- (GH-451) Prepare for 0.15.0 release [#452](https://github.com/puppetlabs/puppet-vscode/pull/452) ([glennsarti](https://github.com/glennsarti))
+
+## [0.15.0](https://github.com/puppetlabs/puppet-vscode/tree/0.15.0) - 2018-12-20
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.14.0...0.15.0)
+
+## [0.14.0](https://github.com/puppetlabs/puppet-vscode/tree/0.14.0) - 2018-12-20
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.13.1...0.14.0)
+
+### Added
+
+- (GH-439) Remove RestartSession Command [#444](https://github.com/puppetlabs/puppet-vscode/pull/444) ([jpogran](https://github.com/jpogran))
+- (GH-335) Add option to disable language server [#442](https://github.com/puppetlabs/puppet-vscode/pull/442) ([jpogran](https://github.com/jpogran))
+- (GH-447)(GH-440)(GH-446) Add modulepath setting and deprecate enable-file-cache [#441](https://github.com/puppetlabs/puppet-vscode/pull/441) ([glennsarti](https://github.com/glennsarti))
+- (GH-431) Update syntax highlighting to 1.3.0 [#432](https://github.com/puppetlabs/puppet-vscode/pull/432) ([glennsarti](https://github.com/glennsarti))
+- (GH-412) Implement ConnectionHandler [#425](https://github.com/puppetlabs/puppet-vscode/pull/425) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (maint) Pin event-stream due to malicious code [#430](https://github.com/puppetlabs/puppet-vscode/pull/430) ([glennsarti](https://github.com/glennsarti))
+- (GH-422) Move from preivewHTML to Web ViewAPI [#426](https://github.com/puppetlabs/puppet-vscode/pull/426) ([glennsarti](https://github.com/glennsarti))
+- (GH-420) Release 0.13.2 [#421](https://github.com/puppetlabs/puppet-vscode/pull/421) ([jpogran](https://github.com/jpogran))
+
+## [0.13.1](https://github.com/puppetlabs/puppet-vscode/tree/0.13.1) - 2018-10-30
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.13.0...0.13.1)
+
+### Added
+
+- (GH-416) Update Syntax [#417](https://github.com/puppetlabs/puppet-vscode/pull/417) ([jpogran](https://github.com/jpogran))
+
+### Fixed
+
+- (GH-415) Release 0.13.1 [#418](https://github.com/puppetlabs/puppet-vscode/pull/418) ([jpogran](https://github.com/jpogran))
+
+## [0.13.0](https://github.com/puppetlabs/puppet-vscode/tree/0.13.0) - 2018-10-30
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.12.1...0.13.0)
+
+### Added
+
+- (GH-334) Update vscode-extension-telemetry [#396](https://github.com/puppetlabs/puppet-vscode/pull/396) ([jpogran](https://github.com/jpogran))
+- (GH-399) Update status bar loading UI [#393](https://github.com/puppetlabs/puppet-vscode/pull/393) ([glennsarti](https://github.com/glennsarti))
+- (GH-373) Convert Commands to Features [#389](https://github.com/puppetlabs/puppet-vscode/pull/389) ([jpogran](https://github.com/jpogran))
+- (GH-397) Use the Language Server with sidecar (0.15.0 [#372](https://github.com/puppetlabs/puppet-vscode/pull/372) ([glennsarti](https://github.com/glennsarti))
+
+### Fixed
+
+- (GH-405) Update README and links into the README [#407](https://github.com/puppetlabs/puppet-vscode/pull/407) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix ConnectionManager variable scope [#403](https://github.com/puppetlabs/puppet-vscode/pull/403) ([jpogran](https://github.com/jpogran))
+- (GH-400) Fix Path environment parsing for Ruby Helper [#401](https://github.com/puppetlabs/puppet-vscode/pull/401) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix node graph generation [#388](https://github.com/puppetlabs/puppet-vscode/pull/388) ([glennsarti](https://github.com/glennsarti))
+
+## [0.12.1](https://github.com/puppetlabs/puppet-vscode/tree/0.12.1) - 2018-10-02
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.11.1...0.12.1)
+
+### Fixed
+
+- (GH-314) Update VSCode Engine to 1.27 [#381](https://github.com/puppetlabs/puppet-vscode/pull/381) ([jpogran](https://github.com/jpogran))
+- (GH-373) Feature-ify Format Document provider [#374](https://github.com/puppetlabs/puppet-vscode/pull/374) ([glennsarti](https://github.com/glennsarti))
+- (GH-373) Refactor node graph into a feature [#370](https://github.com/puppetlabs/puppet-vscode/pull/370) ([glennsarti](https://github.com/glennsarti))
+- (GH-315) Deprecate the puppetAgentDir setting [#369](https://github.com/puppetlabs/puppet-vscode/pull/369) ([glennsarti](https://github.com/glennsarti))
+- (GH-366) Refactor Debug Adapter [#367](https://github.com/puppetlabs/puppet-vscode/pull/367) ([glennsarti](https://github.com/glennsarti))
+- (GH-278) Use a newer sane settings layout [#361](https://github.com/puppetlabs/puppet-vscode/pull/361) ([glennsarti](https://github.com/glennsarti))
+
+## [0.11.1](https://github.com/puppetlabs/puppet-vscode/tree/0.11.1) - 2018-08-22
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.11.0...0.11.1)
+
+### Added
+
+- (GH-315) PDKIFY ALL THE THINGS [#330](https://github.com/puppetlabs/puppet-vscode/pull/330) ([jpogran](https://github.com/jpogran))
+- (GH-327) Update Puppet Editor Services 0.13.0 [#326](https://github.com/puppetlabs/puppet-vscode/pull/326) ([glennsarti](https://github.com/glennsarti))
+
+### Fixed
+
+- (GH-356) Release 0.11.1 [#362](https://github.com/puppetlabs/puppet-vscode/pull/362) ([jpogran](https://github.com/jpogran))
+- (GH-355) Re-add Telemetry [#359](https://github.com/puppetlabs/puppet-vscode/pull/359) ([jpogran](https://github.com/jpogran))
+- (GH-353) Set default source to Puppet Agent [#358](https://github.com/puppetlabs/puppet-vscode/pull/358) ([jpogran](https://github.com/jpogran))
+- (GH-351) Update to editor-services 0.14 [#357](https://github.com/puppetlabs/puppet-vscode/pull/357) ([jpogran](https://github.com/jpogran))
+- Revert "(GH-314) Update VSCode engine to 1.25" [#352](https://github.com/puppetlabs/puppet-vscode/pull/352) ([glennsarti](https://github.com/glennsarti))
+- (GH-314) Update VSCode engine to 1.25 [#347](https://github.com/puppetlabs/puppet-vscode/pull/347) ([jpogran](https://github.com/jpogran))
+- (GH-354) Document PDK as source information [#346](https://github.com/puppetlabs/puppet-vscode/pull/346) ([jpogran](https://github.com/jpogran))
+- (GH-343) Shallow clone process environment [#344](https://github.com/puppetlabs/puppet-vscode/pull/344) ([glennsarti](https://github.com/glennsarti))
+- (GH-317) Fix extension test harness [#325](https://github.com/puppetlabs/puppet-vscode/pull/325) ([jpogran](https://github.com/jpogran))
+- (GH-316) Fix KAC violations in CHANGELOG [#321](https://github.com/puppetlabs/puppet-vscode/pull/321) ([michaeltlombardi](https://github.com/michaeltlombardi))
+- (GH-319) Fix if/else snippet [#320](https://github.com/puppetlabs/puppet-vscode/pull/320) ([jpogran](https://github.com/jpogran))
+
+## [0.11.0](https://github.com/puppetlabs/puppet-vscode/tree/0.11.0) - 2018-07-16
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.9.0...0.11.0)
 
 ### Changed
+- (GH-274) Remove random port detection [#294](https://github.com/puppetlabs/puppet-vscode/pull/294) ([jpogran](https://github.com/jpogran))
+- (GH-253) Remove server folder [#254](https://github.com/puppetlabs/puppet-vscode/pull/254) ([jpogran](https://github.com/jpogran))
 
-- ([GH-649](https://github.com/puppetlabs/puppet-vscode/issues/649)) Reduce activation events for extension
-- ([GH-639](https://github.com/puppetlabs/puppet-vscode/issues/639)) Deprecate Bolt Commands
-- ([GH-643](https://github.com/puppetlabs/puppet-vscode/issues/643)) Enable, configure and run prettier
-- ([GH-642](https://github.com/puppetlabs/puppet-vscode/issues/642)) Migrate to eslint
+### Added
+
+- (GH-284) Added support for #region folding [#285](https://github.com/puppetlabs/puppet-vscode/pull/285) ([neitik](https://github.com/neitik))
+- (GH-281) Update pin to editor services v0.12.0 [#282](https://github.com/puppetlabs/puppet-vscode/pull/282) ([michaeltlombardi](https://github.com/michaeltlombardi))
+- (GH-238) Add STDIO support [#280](https://github.com/puppetlabs/puppet-vscode/pull/280) ([jpogran](https://github.com/jpogran))
+- (GH-258) Add a new vendoring process for Editor Services [#259](https://github.com/puppetlabs/puppet-vscode/pull/259) ([glennsarti](https://github.com/glennsarti))
 
 ### Fixed
 
-- ([GH-663](https://github.com/puppetlabs/puppet-vscode/issues/663)) Fix error when using paths with spaces on OSX
-- ([GH-670](https://github.com/puppetlabs/puppet-vscode/issues/670)) Guard installType and installDirectory
+- (GH-310) Fix gulp bump [#311](https://github.com/puppetlabs/puppet-vscode/pull/311) ([jpogran](https://github.com/jpogran))
+- (GH-307) Fix path resolution on mac and *nix [#308](https://github.com/puppetlabs/puppet-vscode/pull/308) ([jpogran](https://github.com/jpogran))
+- (GH-301) Fail fast if no agent installed [#302](https://github.com/puppetlabs/puppet-vscode/pull/302) ([jpogran](https://github.com/jpogran))
+- (GH-289) Autoindent [#300](https://github.com/puppetlabs/puppet-vscode/pull/300) ([jpogran](https://github.com/jpogran))
+- (GH-240) TCP Retry defaults [#297](https://github.com/puppetlabs/puppet-vscode/pull/297) ([jpogran](https://github.com/jpogran))
+- (GH-241) Honor specified tcp port [#292](https://github.com/puppetlabs/puppet-vscode/pull/292) ([jpogran](https://github.com/jpogran))
+- (GH-250) Move client folder to root [#251](https://github.com/puppetlabs/puppet-vscode/pull/251) ([jpogran](https://github.com/jpogran))
 
-## [0.26.1] - 2020-05-12
+## [0.9.0](https://github.com/puppetlabs/puppet-vscode/tree/0.9.0) - 2018-04-04
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.10.0...0.9.0)
+
+## [0.10.0](https://github.com/puppetlabs/puppet-vscode/tree/0.10.0) - 2018-04-04
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.8.0...0.10.0)
+
+### Added
+
+- (GH-236) Use an in memory and persistent object cache for Puppet assets [#237](https://github.com/puppetlabs/puppet-vscode/pull/237) ([glennsarti](https://github.com/glennsarti))
+- (maint) Update syntax highlighting [#227](https://github.com/puppetlabs/puppet-vscode/pull/227) ([glennsarti](https://github.com/glennsarti))
+- (GH-225) Re-add Workspace Folder detection [#226](https://github.com/puppetlabs/puppet-vscode/pull/226) ([glennsarti](https://github.com/glennsarti))
+- (GH-216) Add plan, data types and numeric literals to syntax highlighter [#217](https://github.com/puppetlabs/puppet-vscode/pull/217) ([glennsarti](https://github.com/glennsarti))
+- (GH-50) Add document formatter for puppet-lint [#210](https://github.com/puppetlabs/puppet-vscode/pull/210) ([glennsarti](https://github.com/glennsarti))
+- (GH-166) Add find/peek definition capability to language server [#193](https://github.com/puppetlabs/puppet-vscode/pull/193) ([glennsarti](https://github.com/glennsarti))
+
+### Fixed
+
+- Update puppet lint - 2.3.5 [#246](https://github.com/puppetlabs/puppet-vscode/pull/246) ([glennsarti](https://github.com/glennsarti))
+- (GH-231) Make document validation asynchronous [#232](https://github.com/puppetlabs/puppet-vscode/pull/232) ([glennsarti](https://github.com/glennsarti))
+- (GH-218) Add support and validation of EPP files [#219](https://github.com/puppetlabs/puppet-vscode/pull/219) ([glennsarti](https://github.com/glennsarti))
+- (GH-204) Fix debug server for Puppet 4.x [#205](https://github.com/puppetlabs/puppet-vscode/pull/205) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix Changelog links [#200](https://github.com/puppetlabs/puppet-vscode/pull/200) ([jpogran](https://github.com/jpogran))
+
+## [0.8.0](https://github.com/puppetlabs/puppet-vscode/tree/0.8.0) - 2017-11-24
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.7.2...0.8.0)
+
+## [0.7.2](https://github.com/puppetlabs/puppet-vscode/tree/0.7.2) - 2017-11-22
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.7.0...0.7.2)
 
 ### Changed
-
-- ([GH-647](https://github.com/puppetlabs/puppet-vscode/issues/647)) Add Puppet Facts Welcome View
-- ([GH-583](https://github.com/puppetlabs/puppet-vscode/issues/583)) Optimize build script
-- ([GH-662](https://github.com/puppetlabs/puppet-vscode/issues/662)) Update extension install gif
-- (maint) Update facts view telemetry
-
-## [0.26.0] - 2020-05-01
+- (GH-177) Remove version file detection [#178](https://github.com/puppetlabs/puppet-vscode/pull/178) ([jpogran](https://github.com/jpogran))
 
 ### Added
 
-- ([GH-630](https://github.com/puppetlabs/puppet-vscode/issues/630)) Add Puppet ToolBar
-- ([GH-631](https://github.com/puppetlabs/puppet-vscode/issues/631)) Add Puppet Facts View
-
-### Changed
-
-- (maint) Alert if jpogran.puppet-vscode is installed
-- (maint) Update branding and links
-
-## [0.25.2] - 2020-03-27
+- (GH-#187) Add a stdio mode to the language server [#188](https://github.com/puppetlabs/puppet-vscode/pull/188) ([ananace](https://github.com/ananace))
+- Add executable file mode on the puppet-languageserver binary [#182](https://github.com/puppetlabs/puppet-vscode/pull/182) ([dalen](https://github.com/dalen))
+- (GH-167) Add PDK New Task [#172](https://github.com/puppetlabs/puppet-vscode/pull/172) ([jpogran](https://github.com/jpogran))
+- (GH-154) Use hosted JSON schema files [#155](https://github.com/puppetlabs/puppet-vscode/pull/155) ([glennsarti](https://github.com/glennsarti))
 
 ### Fixed
 
-- Updated telemetry class with new publisher
+- (maint) Do not error in validation exception handler [#195](https://github.com/puppetlabs/puppet-vscode/pull/195) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix logger in PDK New Task [#194](https://github.com/puppetlabs/puppet-vscode/pull/194) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix rubocop violations [#186](https://github.com/puppetlabs/puppet-vscode/pull/186) ([glennsarti](https://github.com/glennsarti))
+- (GH-180) Display backslashes in node graph [#185](https://github.com/puppetlabs/puppet-vscode/pull/185) ([glennsarti](https://github.com/glennsarti))
+- (GH-169) Fix colourisation of comments in class params [#170](https://github.com/puppetlabs/puppet-vscode/pull/170) ([glennsarti](https://github.com/glennsarti))
+- (GH-97) Create a crash file when the language server abends [#162](https://github.com/puppetlabs/puppet-vscode/pull/162) ([glennsarti](https://github.com/glennsarti))
+- (GH-88) Use local Graph Renderer for node graphs [#161](https://github.com/puppetlabs/puppet-vscode/pull/161) ([glennsarti](https://github.com/glennsarti))
 
-## [0.25.1] - 2020-03-27
+## [0.7.0](https://github.com/puppetlabs/puppet-vscode/tree/0.7.0) - 2017-10-05
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.7.1...0.7.0)
+
+## [0.7.1](https://github.com/puppetlabs/puppet-vscode/tree/0.7.1) - 2017-10-05
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.4.6...0.7.1)
+
+### Added
+
+- (GH-157) Activate Puppet Resource Command [#158](https://github.com/puppetlabs/puppet-vscode/pull/158) ([jpogran](https://github.com/jpogran))
+- (GH-144) Show All PDK Commands [#145](https://github.com/puppetlabs/puppet-vscode/pull/145) ([jpogran](https://github.com/jpogran))
+- (GH-140) Show a message in Node Graph preview for zero resources [#141](https://github.com/puppetlabs/puppet-vscode/pull/141) ([glennsarti](https://github.com/glennsarti))
+- (GH-130) Prepare to use PDK ruby if puppet agent not available [#134](https://github.com/puppetlabs/puppet-vscode/pull/134) ([glennsarti](https://github.com/glennsarti))
 
 ### Fixed
 
-- Updated publisher in all places
+- (GH-116) Fix packaging to conform with vsce workflow [#149](https://github.com/puppetlabs/puppet-vscode/pull/149) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix Connection Restart [#148](https://github.com/puppetlabs/puppet-vscode/pull/148) ([glennsarti](https://github.com/glennsarti))
+- (maint) Fix publishing of metadata.json schema [#147](https://github.com/puppetlabs/puppet-vscode/pull/147) ([glennsarti](https://github.com/glennsarti))
+- (GH-140) Fix unit tests for zero resource node graph [#146](https://github.com/puppetlabs/puppet-vscode/pull/146) ([glennsarti](https://github.com/glennsarti))
+- (GH-136)(GH-61) Make client langserver better [#137](https://github.com/puppetlabs/puppet-vscode/pull/137) ([glennsarti](https://github.com/glennsarti))
+- Fix incorrect logger when a client error occurs [#135](https://github.com/puppetlabs/puppet-vscode/pull/135) ([glennsarti](https://github.com/glennsarti))
+- (GH-120) Fix default PuppetAgentDir on Windows [#132](https://github.com/puppetlabs/puppet-vscode/pull/132) ([glennsarti](https://github.com/glennsarti))
 
-## [0.25.0] - 2020-03-27
+## [0.4.6](https://github.com/puppetlabs/puppet-vscode/tree/0.4.6) - 2017-09-14
 
-### Changed
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.5.0...0.4.6)
 
-- ([GH-614](https://github.com/lingua-pupuli/puppet-vscode/issues/614)) Puppet Node Graph Feature Rewrite
-- ([GH-221](https://github.com/lingua-pupuli/puppet-editor-services/issues/221)) [puppet-editor-services-0.25.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.25.0) Puppet Node Graph JSON Response
-- (maint) [puppetfile-resolver-0.2.0](https://github.com/glennsarti/puppetfile-resolver/releases/tag/0.2.0) Puppetfile Resolver v0.2.0
+## [0.5.0](https://github.com/puppetlabs/puppet-vscode/tree/0.5.0) - 2017-09-14
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.6.0...0.5.0)
+
+## [0.6.0](https://github.com/puppetlabs/puppet-vscode/tree/0.6.0) - 2017-09-14
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.4.5...0.6.0)
+
+### Added
+
+- (GH-120) Configurable Puppet Agent directory [#121](https://github.com/puppetlabs/puppet-vscode/pull/121) ([jpogran](https://github.com/jpogran))
+- adds basic PDK support [#114](https://github.com/puppetlabs/puppet-vscode/pull/114) ([jpogran](https://github.com/jpogran))
+- (GH-110) Add Telemetry [#113](https://github.com/puppetlabs/puppet-vscode/pull/113) ([jpogran](https://github.com/jpogran))
+- (GH-52) Add JSON schema for metadata.json [#105](https://github.com/puppetlabs/puppet-vscode/pull/105) ([glennsarti](https://github.com/glennsarti))
+- (GH-92) Context Menu actions for existing commands [#93](https://github.com/puppetlabs/puppet-vscode/pull/93) ([jpogran](https://github.com/jpogran))
+- Support the Puppet 5 AST on the Language Server [#90](https://github.com/puppetlabs/puppet-vscode/pull/90) ([austb](https://github.com/austb))
 
 ### Fixed
 
-- ([GH-207](https://github.com/lingua-pupuli/puppet-editor-services/issues/207)) [puppet-editor-services-0.25.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.25.0) Allow Qualified Resource Names in hover provider
+- Fix completion provider with Puppet 5.2.0 [#126](https://github.com/puppetlabs/puppet-vscode/pull/126) ([glennsarti](https://github.com/glennsarti))
+- Fix travis testing [#124](https://github.com/puppetlabs/puppet-vscode/pull/124) ([jpogran](https://github.com/jpogran))
+- (GH-122) Show Upgrade Message [#123](https://github.com/puppetlabs/puppet-vscode/pull/123) ([jpogran](https://github.com/jpogran))
+- (GH-109) Randomize language server port when local [#112](https://github.com/puppetlabs/puppet-vscode/pull/112) ([austb](https://github.com/austb))
+- (GH-103) Parse puppet-lint.rc in module directory [#111](https://github.com/puppetlabs/puppet-vscode/pull/111) ([austb](https://github.com/austb))
+- We no longer need to have params to vsce package since we've hardcode… [#108](https://github.com/puppetlabs/puppet-vscode/pull/108) ([jpogran](https://github.com/jpogran))
+- (GH-103) Parse /etc and ~/ config files [#104](https://github.com/puppetlabs/puppet-vscode/pull/104) ([austb](https://github.com/austb))
+- (GH-98) Fix function and type loading initial fix [#101](https://github.com/puppetlabs/puppet-vscode/pull/101) ([glennsarti](https://github.com/glennsarti))
 
-## [0.24.2] - 2020-03-30
+## [0.4.5](https://github.com/puppetlabs/puppet-vscode/tree/0.4.5) - 2017-06-28
 
-- Added button in warning dialog to auto-update `jpogran.puppet-vscode` to `puppet.puppet-vscode`
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.4.2...0.4.5)
 
-## [0.24.1] - 2020-03-27
+## [0.4.2](https://github.com/puppetlabs/puppet-vscode/tree/0.4.2) - 2017-06-28
 
-- Deprecated `jpogran.puppet-vscode` extension to transition to Puppet namespace `puppet.puppet-vscode`
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.4.0...0.4.2)
 
-## [0.24.0] - 2020-02-28
+## [0.4.0](https://github.com/puppetlabs/puppet-vscode/tree/0.4.0) - 2017-06-28
 
-### Fixed
-
-- ([GH-610](https://github.com/lingua-pupuli/puppet-vscode/issues/610)) Highlighted text is replaced instead of surrounded with characters
-
-## [0.23.0] - 2020-01-31
-
-### Added
-
-- ([GH-213](https://github.com/lingua-pupuli/puppet-editor-services/issues/213)) [puppet-editor-services-0.24.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.24.0) Gather and use facts using sidecar
-
-### Fixed
-
-- ([GH-289](https://github.com/lingua-pupuli/puppet-vscode/issues/289)) Fix paramter indentation after type declaration
-- ([GH-605](https://github.com/lingua-pupuli/puppet-vscode/issues/605)) Use correct setting name for module path
-- ([GH-199](https://github.com/lingua-pupuli/puppet-editor-services/issues/199)) [puppet-editor-services-0.24.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.24.0) Update stack trace tests for Puppet 5.5.18
-
-## [0.22.0] - 2019-12-20
-
-### Added
-
-- ([GH-592](https://github.com/lingua-pupuli/puppet-vscode/issues/592)) Add Puppetfile resolver in Puppet-Editor-Services
-- ([GH-588](https://github.com/lingua-pupuli/puppet-vscode/issues/588)) Add server telemetry pass through
-- ([GH-198](https://github.com/lingua-pupuli/puppet-editor-services/issues/198)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Added the Puppetfile Resolver for more in-depth Puppetfile validation
-- ([GH-94](https://github.com/lingua-pupuli/puppet-editor-services/issues/94)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Added better intellisense when inside Bolt plans
-
-### Changed
-
-- ([Commit](https://github.com/lingua-pupuli/puppet-vscode/commit/dd47821c56f9d984f428899c4dbfd982a2731206)) Sends PDK version telemetry on start
-- ([Commit](https://github.com/lingua-pupuli/puppet-vscode/commit/3464a3cc94ee8b972b7d7673fc3ee42fa874e39f)) Update telemetry to v0.1.2
-- ([GH-592](https://github.com/lingua-pupuli/puppet-vscode/issues/592)) Update Editor Services to version 0.23.0
-- ([GH-193](https://github.com/lingua-pupuli/puppet-editor-services/issues/193)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Refactor the TCP and STDIO servers, protocols and handlers
-- ([Commit](https://github.com/lingua-pupuli/puppet-editor-services/commit/c3bd86f5b9a237b92f4c0e2d6c2ddc7aa5b0d9e5)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Update puppet-lint to version 2.4.2
-
-### Fixed
-
-- ([GH-579](https://github.com/lingua-pupuli/puppet-vscode/issues/579)) Fix build script extract path
-- ([GH-199](https://github.com/lingua-pupuli/puppet-editor-services/issues/199)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Fixes for Puppet 6.11.0
-- ([GH-139](https://github.com/lingua-pupuli/puppet-editor-services/issues/139)) [puppet-editor-services-0.23.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.23.0) Provide completions for defined types
-
-### Removed
-
-- ([GH-585](https://github.com/lingua-pupuli/puppet-vscode/issues/585)) Remove deprecated settings
-
-## [0.21.0] - 2019-09-30
-
-### Added
-
-- ([GH-181](https://github.com/lingua-pupuli/puppet-editor-services/issues/181)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Added completion for resource-like class ([Julio Sueiras](https://github.com/juliosueiras))
-- ([GH-177](https://github.com/lingua-pupuli/puppet-editor-services/issues/177)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Add auto-align hash rocket formatter
-- ([GH-174](https://github.com/lingua-pupuli/puppet-editor-services/issues/174)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Understand Puppet Data Types and hover provider support
-
-### Changed
-
-- (maint) Convert gulp build script to psake
-
-### Fixed
-
-- ([GH-169](https://github.com/lingua-pupuli/puppet-editor-services/issues/169)) [puppet-editor-services-0.22.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.22.0) Respond to protocol dependant messages correctly
-- ([GH-48](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/48)) [puppet-editor-syntax-1.3.4](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.4) Correctly tokenise if-else
-
-### Removed
-
-- ([GH-557](https://github.com/lingua-pupuli/puppet-vscode/issues/557)) Remove Docker Connection Handler
-
-## [0.20.0] - 2019-08-30
-
-### Added
-
-- ([GH-2](https://github.com/lingua-pupuli/docs/issues/2)) [docs-0.1.0](https://github.com/lingua-pupuli/docs/releases/tag/0.1.0) Puppet VSCode Website v1
-- ([GH-534](https://github.com/lingua-pupuli/puppet-vscode/issues/534)) Puppet Module Metadata hover provider
-- ([GH-541](https://github.com/lingua-pupuli/puppet-vscode/issues/541)) Check for latest PDK version and notify
-
-### Changed
-
-- ([GH-546](https://github.com/lingua-pupuli/puppet-vscode/issues/546)) Update Puppet DAG svg icon
-- ([GH-55](https://github.com/lingua-pupuli/puppet-editor-services/issues/55)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Allow Debug Server to work with Puppet 6
-- ([GH-106](https://github.com/lingua-pupuli/puppet-editor-services/issues/106)) [puppet-editor-services-0.21.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.21.0) Update puppet-lint to 2.3.6
-
-### Fixed
-
-- ([GH-43](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/43)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.3) Fix syntax highlighting for resource references and chain arrows
-- ([GH-34](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/34)) [puppet-editor-syntax-1.3.3](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.3) Comments in hashes should tokenize
-
-### Deprecated
-
-- (maint) Puppet Docker Protocol deprecated in favor of Microsoft Remote Container Extension
-
-## [0.19.0] - 2019-07-19
-
-### Changed
-
-- ([GH-530](https://github.com/lingua-pupuli/puppet-vscode/issues/530)) Enable extension with Puppet workspace files
-- ([GH-141](https://github.com/lingua-pupuli/puppet-editor-services/issues/141)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Load all Puppet 4 API Features
-- ([GH-137](https://github.com/lingua-pupuli/puppet-editor-services/issues/137)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Load Puppet 4 Custom Types, Defined Types and Classes
-- ([GH-121](https://github.com/lingua-pupuli/puppet-editor-services/issues/121)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Load Puppet 4 Functions and Puppet 3 Functions
-
-### Fixed
-
-- ([GH-128](https://github.com/lingua-pupuli/puppet-editor-services/issues/128)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Detect Puppet Plan files correctly
-- ([GH-147](https://github.com/lingua-pupuli/puppet-editor-services/issues/147)) [puppet-editor-services-0.20.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.20.0) Gracefully fail on LoadError when compiling manifests
-
-## [0.18.1] - 2019-06-07
-
-### Added
-
-- ([GH-505](https://github.com/lingua-pupuli/puppet-vscode/issues/505)) Add hide `PDK New Module` titlebar button
-- ([GH-507](https://github.com/lingua-pupuli/puppet-vscode/issues/507))([GH-508](https://github.com/lingua-pupuli/puppet-vscode/issues/508)) Document Puppet Version Support
-
-### Changed
-
-- ([GH-502](https://github.com/lingua-pupuli/puppet-vscode/issues/502)) Switch default PuppetInstallType to PDK rather than the agent
-- ([GH-502](https://github.com/lingua-pupuli/puppet-vscode/issues/502)) Automatically determine PuppetInstallType
-- ([GH-499](https://github.com/lingua-pupuli/puppet-vscode/issues/499)) Add setting to allow disabling editor services
-
-### Fixed
-
-- ([GH-436](https://github.com/lingua-pupuli/puppet-vscode/issues/436)) Fix extension "crash" after editing line of code
-- ([GH-132](https://github.com/lingua-pupuli/puppet-editor-services/issues/132)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.19.1) Suppress \$stdout usage for STDIO transport
-- ([GH-118](https://github.com/lingua-pupuli/puppet-editor-services/issues/118)) [puppet-editor-services-0.19.1](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.19.1) Fail gracefully when critical gems cannot load
-- ([GH-39](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/39)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Node definitions can only be strings
-- ([GH-38](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/38)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Fix highlighting of classes and functions
-- ([GH-37](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/37)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Tokenise variables within arrays
-- ([GH-32](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/32)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Highlight resource names and titles correctly
-- ([GH-30](https://github.com/lingua-pupuli/puppet-editor-syntax/issues/30)) [puppet-editor-syntax-1.3.2](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.2) Highlight regex capture variables
-
-## [0.18.0] - 2019-03-29
-
-### Added
-
-- ([GH-494](https://github.com/lingua-pupuli/puppet-vscode/issues/494)) Add Progress Bar for long lived operations
-- ([GH-489](https://github.com/lingua-pupuli/puppet-vscode/issues/489)) Allow users to change puppet version used by editor services in PDK
-
-### Changed
-
-- ([Commit](https://github.com/lingua-pupuli/puppet-vscode/commit/8b2815ad06f7b3f82574c44684387007c5213f5d)) Update puppet-editor-syntax to [1.3.1](https://github.com/lingua-pupuli/puppet-editor-syntax/releases/tag/1.3.1)
-- ([GH-489](https://github.com/lingua-pupuli/puppet-vscode/issues/489)) Update puppet-editor-services to [0.19.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0190---2019-03-24)
-
-## [0.17.0] - 2019-02-14
-
-### Added
-
-- ([GH-476](https://github.com/lingua-pupuli/puppet-vscode/issues/476)) Add Bolt commands
-- ([GH-477](https://github.com/lingua-pupuli/puppet-vscode/issues/477)) Add Bolt yaml snippets
-
-### Fixed
-
-- ([GH-480](https://github.com/lingua-pupuli/puppet-vscode/issues/480)) Automatically find Ruby version from PDK
-
-### Changed
-
-- ([GH-478](https://github.com/lingua-pupuli/puppet-vscode/issues/478)) Update puppet-editor-services to [0.18.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0180---2019-02-05)
-
-## [0.16.0] - 2019-01-25
-
-### Added
-
-- ([GH-375](https://github.com/lingua-pupuli/puppet-vscode/issues/375)) Support starting Language Server in Docker container
-- ([GH-295](https://github.com/lingua-pupuli/puppet-vscode/issues/295)) Add Puppetfile as a contributing langauge
-
-### Changed
-
-- ([GH-459](https://github.com/lingua-pupuli/puppet-vscode/issues/459)) Update extension for new Debugging API
-
-### Fixed
-
-- ([GH-453](https://github.com/lingua-pupuli/puppet-vscode/issues/453)) Language Server will not start
-
-## [0.15.1] - 2019-01-09
-
-### Fixed
-
-- ([GH-454](https://github.com/lingua-pupuli/puppet-vscode/issues/454)) Fix Ruby path for PDK 1.8.0
-
-## [0.15.0] - 2018-12-21
-
-### Added
-
-- ([GH-440](https://github.com/lingua-pupuli/puppet-vscode/issues/440)) Add a setting for additional modulepath
-- ([GH-335](https://github.com/lingua-pupuli/puppet-vscode/issues/335)) Add a setting to disable the language server
-
-### Changed
-
-- ([GH-447](https://github.com/lingua-pupuli/puppet-vscode/issues/447)) Update puppet-editor-services to [0.17.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0170---2018-12-14)
-- ([GH-412](https://github.com/lingua-pupuli/puppet-vscode/issues/412)) Refactored the Language Server Connection Handler
-
-### Removed
-
-- ([GH-446](https://github.com/lingua-pupuli/puppet-vscode/issues/446)) Remove deprecated --enable-file-cache option for Editor Services
-- ([GH-439](https://github.com/lingua-pupuli/puppet-vscode/issues/439)) Remove RestartSession Command
-
-## [0.14.0] - 2018-12-03
-
-### Changed
-
-- ([GH-431](https://github.com/lingua-pupuli/puppet-vscode/issues/431)) Update Editor Syntax to [1.3.0](https://github.com/lingua-pupuli/puppet-editor-syntax/blob/master/CHANGELOG.md#130---2018-11-29)
-- ([GH-427](https://github.com/lingua-pupuli/puppet-vscode/issues/427)) Update Editor Syntax to [1.2.0](https://github.com/lingua-pupuli/puppet-editor-syntax/blob/master/CHANGELOG.md#120---2018-11-27)
-- ([GH-434](https://github.com/lingua-pupuli/puppet-vscode/issues/434)) Update puppet-editor-services to [0.16.0](https://github.com/lingua-pupuli/puppet-editor-services/blob/master/CHANGELOG.md#0160---2018-11-30)
-- ([GH-422](https://github.com/lingua-pupuli/puppet-vscode/issues/422)) Upgrade to VS Code's webview API
-
-## [0.13.2] - 2018-10-31
-
-### Added
-
-- ([GH-419](https://github.com/lingua-pupuli/puppet-vscode/issues/419)) Update puppet-editor-services to 0.15.1 release
-
-## [0.13.1] - 2018-10-30
-
-### Added
-
-- ([GH-416](https://github.com/lingua-pupuli/puppet-vscode/issues/416)) Update syntax file with 0.1.0 puppet-editor-syntax 0.1.0 release
-
-### Fixed
-
-- ([GH-331](https://github.com/lingua-pupuli/puppet-vscode/issues/331)) Go to definition not working
-
-## [0.13.0] - 2018-10-23
-
-### Added
-
-- ([GH-366](https://github.com/lingua-pupuli/puppet-vscode/issues/366)) New Debug Adapter
-- ([GH-354](https://github.com/lingua-pupuli/puppet-vscode/issues/354)) Document PDK as source information
-- ([GH-385](https://github.com/lingua-pupuli/puppet-vscode/issues/385)) New Outline View, Breadcrumb, and Go to Symbol Features
-
-### Changed
-
-- ([GH-397](https://github.com/lingua-pupuli/puppet-vscode/issues/397)) Updated Puppet Editor Services to version 0.15.0. Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
-- ([GH-373](https://github.com/lingua-pupuli/puppet-vscode/issues/373)) Refactor commands and providers to features
-- ([GH-351](https://github.com/lingua-pupuli/puppet-vscode/issues/351)) Updated Puppet Editor Services to version 0.14.0. Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.14.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.15.0)
-- ([GH-323](https://github.com/lingua-pupuli/puppet-vscode/issues/323)) Update readme with gif examples
-- ([GH-399](https://github.com/lingua-pupuli/puppet-vscode/issues/399)) Update Puppet loading UI to be more user friendly
-- ([GH-405](https://github.com/lingua-pupuli/puppet-vscode/issues/405)) Update readme with correct links into the readme
-
-### Deprecated
-
-- ([GH-315](https://github.com/lingua-pupuli/puppet-vscode/issues/315)) Deprecate puppetAgentDir setting
-
-## [0.12.0] - 2018-08-24
-
-### Added
-
-- ([GH-315](https://github.com/lingua-pupuli/puppet-vscode/issues/315)) Add PDK as source in addition to Puppet-Agent
-- ([GH-355](https://github.com/lingua-pupuli/puppet-vscode/issues/355)) Re-add base telemetry
-
-### Changed
-
-- ([GH-327](https://github.com/lingua-pupuli/puppet-vscode/issues/327)) Updated Puppet Editor Services to version 0.13.0. Change Log is at [https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0](https://github.com/lingua-pupuli/puppet-editor-services/releases/tag/0.13.0)
-- ([GH-316](https://github.com/lingua-pupuli/puppet-vscode/issues/316)) Conform to Keep-A-Changelog format in CHANGELOG
-
-### Fixed
-
-- ([GH-320](https://github.com/lingua-pupuli/puppet-vscode/issues/320)) Fix `if/else` snippet.
-- ([GH-343](https://github.com/lingua-pupuli/puppet-vscode/issues/343)) Fix process environment builder for LanguageServer
-- ([GH-317](https://github.com/lingua-pupuli/puppet-vscode/issues/317)) Fix extension test harness and add Windows, Linux, and Mac tests
-
-## [0.11.0] - 2018-07-16
-
-### Added
-
-- ([GH-284](https://github.com/lingua-pupuli/puppet-vscode/issues/284)) Add support for region folding.
-- ([GH-238](https://github.com/lingua-pupuli/puppet-vscode/issues/238)) Add stdio support to client extension.
-- ([GH-240](https://github.com/lingua-pupuli/puppet-vscode/issues/240)) Add TCP retry functionality.
-- (maint) Automatically download languageserver on build and watch.
-
-### Changed
-
-- Update Puppet Editor Services to `0.12.0`.
-- ([GH-258](https://github.com/lingua-pupuli/puppet-vscode/issues/258)) Changed the vendoring process for editor services due to org move.
-- ([GH-275](https://github.com/lingua-pupuli/puppet-vscode/issues/275)) Update the Marketplace categories.
-- (maint) Improve issue templates.
-
-### Fixed
-
-- ([GH-252](https://github.com/lingua-pupuli/puppet-vscode/issues/252)) Update the README for org move.
-- ([GH-289](https://github.com/lingua-pupuli/puppet-vscode/issues/289)) Fix Autoindenting for DSL.
-- ([GH-301](https://github.com/lingua-pupuli/puppet-vscode/issues/301)) Fail fast if Puppet Agent is not installed.
-- ([GH-310](https://github.com/lingua-pupuli/puppet-vscode/issues/310)) Fix gulp bump.
-- ([GH-307](https://github.com/lingua-pupuli/puppet-vscode/issues/307)) Fix Path resolution on mac and \*nix.
-- ([GH-241](https://github.com/lingua-pupuli/puppet-vscode/issues/241)) Ensure specified tcp port is honored.
-- ([GH-296](https://github.com/lingua-pupuli/puppet-vscode/issues/296)) Ensure document file scheme is set.
-- (maint) Fix tslint errors.
-- (maint) Update GitHub links for org change.
-- (maint) Update Puppet grammar file.
-
-### Removed
-
-- ([GH-274](https://github.com/lingua-pupuli/puppet-vscode/issues/274)) Remove random tcp port resolution from client.
-
-## [0.10.0] - 2018-03-29
-
-### Added
-
-- ([GH-236](https://github.com/lingua-pupuli/puppet-vscode/issues/236)) Add experimental file cache option.
-- ([GH-225](https://github.com/lingua-pupuli/puppet-vscode/issues/225)) Add ability to read local workspace comand line option.
-- ([GH-218](https://github.com/lingua-pupuli/puppet-vscode/issues/218)) Add support for validating EPP files.
-
-### Changed
-
-- ([GH-244](https://github.com/lingua-pupuli/puppet-vscode/issues/244)) Update puppet-lint to `2.3.5`.
-- ([GH-216](https://github.com/lingua-pupuli/puppet-vscode/issues/216)) Improved syntax highlighting.
-- ([GH-214](https://github.com/lingua-pupuli/puppet-vscode/issues/214)) Updated README for PDK `1.3.X`.
-- ([GH-231](https://github.com/lingua-pupuli/puppet-vscode/issues/231)) Make document validation asynchronous.
-
-#### Removed
-
-- ([GH-236](https://github.com/lingua-pupuli/puppet-vscode/issues/236)) Remove the preload option.
-
-## [0.9.0] - 2018-02-01
-
-### Added
-
-- ([GH-50](https://github.com/lingua-pupuli/puppet-vscode/issues/50)) Add document formatter for puppet-lint.
-
-### Fixed
-
-- ([GH-204](https://github.com/lingua-pupuli/puppet-vscode/issues/204)) Fix debug server for Puppet `4.x`.
-
-## [0.8.0] - 2017-11-24
-
-### Added
-
-- ([GH-100](https://github.com/lingua-pupuli/puppet-vscode/issues/100)) Added xperimental Puppet-Debugger.
-- ([GH-187](https://github.com/lingua-pupuli/puppet-vscode/issues/187)) Add stdio mode to language server.
-
-### Fixed
-
-- ([GH-180](https://github.com/lingua-pupuli/puppet-vscode/issues/180)) Ensure Backslashes in File Path display in Node Graph.
-- ([PR-194](https://github.com/lingua-pupuli/puppet-vscode/pull/194)) Fix logger in PDK New Task
-- ([PR-195](https://github.com/lingua-pupuli/puppet-vscode/pull/195)) Do not error in validation exception handler.
-- (maint) Fix rubocop violations.
-
-## [0.7.2] - 2017-11-01
-
-### Added
-
-- ([GH-167](https://github.com/lingua-pupuli/puppet-vscode/issues/167)) Add PDK New Task command.
-- ([GH-156](https://github.com/lingua-pupuli/puppet-vscode/issues/156)) Document restarting Puppet extension command.
-
-### Changed
-
-- ([GH-88](https://github.com/lingua-pupuli/puppet-vscode/issues/88)) Rework Node Graph Preview to use local svg instead of calling out to the internet.
-- ([GH-154](https://github.com/lingua-pupuli/puppet-vscode/issues/154)) Use hosted JSON schema files instead of vendoring them.
-
-### Fixed
-
-- ([GH-165](https://github.com/lingua-pupuli/puppet-vscode/issues/165)) Fixed Broken README link.
-- ([GH-169](https://github.com/lingua-pupuli/puppet-vscode/issues/169)) Fix bug in sytanx highlighting.
-- ([GH-177](https://github.com/lingua-pupuli/puppet-vscode/issues/177)) Remove detection of Puppet VERSION file which was causing erroneous failures.
-- ([GH-175](https://github.com/lingua-pupuli/puppet-vscode/issues/175)) Fix 'could not find valid version of Puppet'.
-
-## [0.7.1] - 2017-09-29
-
-### Fixed
-
-- ([GH-157](https://github.com/lingua-pupuli/puppet-vscode/issues/157)) Unhide `Puppet Resource` command in the Command Palette.
-
-## [0.7.0] - 2017-09-22
-
-### Added
-
-- ([GH-115](https://github.com/lingua-pupuli/puppet-vscode/issues/115)) Add Puppet Development Kit (PDK) integration.
-- ([GH-136](https://github.com/lingua-pupuli/puppet-vscode/issues/136)) Create a better UI experience while Puppet loads.
-- ([GH-61](https://github.com/lingua-pupuli/puppet-vscode/issues/61)) Create a better experience when language client fails.
-- ([GH-122](https://github.com/lingua-pupuli/puppet-vscode/issues/122)) Show upgrade message with changelog.
-- ([GH-120](https://github.com/lingua-pupuli/puppet-vscode/issues/120)) Allow custom Puppet agent installation directory.
-- ([GH-111](https://github.com/lingua-pupuli/puppet-vscode/issues/111)) Parse `puppet-lint.rc` in module directory.
-
-### Changed
-
-- ([GH-109](https://github.com/lingua-pupuli/puppet-vscode/issues/109)) Randomize languageserver port.
-
-### Fixed
-
-- ([GH-135](https://github.com/lingua-pupuli/puppet-vscode/issues/135)) Fix incorrect logger when a client error occurs.
-- ([GH-129](https://github.com/lingua-pupuli/puppet-vscode/issues/129)) Honor inline puppet lint directives.
-- ([GH-133](https://github.com/lingua-pupuli/puppet-vscode/issues/133)) Fix issue with puppet 5.1.0.
-- ([GH-126](https://github.com/lingua-pupuli/puppet-vscode/issues/126)) Fix completion provider with Puppet 5.2.0.
-
-## [0.6.0] - 2017-08-08
-
-### Fixed
-
-- Fix packaging error where language server was not included.
-
-## [0.5.3] - 2017-08-08
-
-### Added
-
-- ([GH-92](https://github.com/lingua-pupuli/puppet-vscode/issues/92)) Added context menus for Puppet Resource and Nodegraph preview.
-- ([GH-52](https://github.com/lingua-pupuli/puppet-vscode/issues/52)) Added JSON validation and schema for `metadata.json`.
-- ([GH-103](https://github.com/lingua-pupuli/puppet-vscode/issues/103)) Added support puppet-lint rc files.
-- ([GH-89](https://github.com/lingua-pupuli/puppet-vscode/issues/89)) Documented support for Linux in README.
-
-### Changed
-
-- ([GH-99](https://github.com/lingua-pupuli/puppet-vscode/issues/99)) Improved client README and Gallery page.
-
-### Fixed
-
-- ([GH-98](https://github.com/lingua-pupuli/puppet-vscode/issues/98)) Fix language server function and type loading.
-
-## [0.4.6] - 2017-06-29
-
-### Changed
-
-- Updated links in README.
-- Added more information to package manifest.
-- Minor updates to README.
-
-## [0.4.5] - 2017-06-27
-
-### Changed
-
-- Updated badge link location in README.
-
-## [0.4.2] - 2017-06-27
-
-### Changed
-
-- Updated badge links to use proper extension id.
-
-## [0.4.0] - 2017-06-27
-
-### Added
-
-- Added a functional Language Server for the Puppet language with:
-  - Real time `puppet lint`
-  - Auto-complete and Hover support for many puppet language facets
-  - Auto-complete and Hover support for facts
-  - `puppet resource` support
-  - Preview node graph support
-- Extension can load a local Language Server if Puppet Agent is present on Windows, Mac and Linux.
-- Implemented textDocument/didClose notification.
-
-### Fixed
-
-- Ensure Completion and Hover provider loads puppet modules.
-- Fixed completion at file beginning on new lines and on keywords.
-
-## [0.0.3] - 2017-05-08
-
-### Added
-
-- Added the Puppet Parser validate linter.
-
-## [0.0.2] - 2017-05-04
-
-### Added
-
-- Added the Puppet Resource and Puppet Module commands.
-
-## [0.0.1] - 2017-04-10
-
-### Added
-
-- Initial release of the puppet extension.
-
-[unreleased]: https://github.com/puppetlabs/puppet-vscode/compare/1.3.1...main
-[1.3.1]: https://github.com/puppetlabs/puppet-vscode/compare/1.3.1...1.3.0
-[1.3.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.2.0...1.3.0
-[1.2.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.1.0...1.2.0
-[1.1.0]: https://github.com/puppetlabs/puppet-vscode/compare/1.0.0...1.1.0
-[1.0.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.28.0...1.0.0
-[0.28.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.3...0.28.0
-[0.27.3]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.2...0.27.3
-[0.27.2]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.1...0.27.2
-[0.27.1]: https://github.com/puppetlabs/puppet-vscode/compare/0.27.0...0.27.1
-[0.27.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.26.1...0.27.0
-[0.26.1]: https://github.com/puppetlabs/puppet-vscode/compare/0.26.0...0.26.1
-[0.26.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.25.2...0.26.0
-[0.25.2]: https://github.com/puppetlabs/puppet-vscode/compare/0.25.1...0.25.2
-[0.25.1]: https://github.com/puppetlabs/puppet-vscode/compare/0.25.0...0.25.1
-[0.25.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.23.0...0.25.0
-[0.23.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.22.0...0.23.0
-[0.22.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.21.0...0.22.0
-[0.21.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.20.0...0.21.0
-[0.20.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.19.0...0.20.0
-[0.19.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.18.0...0.19.0
-[0.18.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.17.0...0.18.0
-[0.17.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.16.0...0.17.0
-[0.16.0]: https://github.com/puppetlabs/puppet-vscode/compare/0.15.1...0.16.0
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0c6523281238b5e1bb4b5b6abf1ed38d29b5432d...0.4.0)
