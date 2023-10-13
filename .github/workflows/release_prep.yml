@@ -41,8 +41,10 @@ jobs:
 
       - name: "Generate package-lock.json"
         run: |
-          npm install
-          npm update --package-lock-only
+          npm install -g vsce --silent;
+          npm install -g typescript --silent;
+          npm install --silent;
+          vsce package
 
       - name: "Generate changelog"
         run: |
