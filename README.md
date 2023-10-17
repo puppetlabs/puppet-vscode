@@ -1,7 +1,7 @@
 # [Puppet](https://www.puppet.com) Visual Studio Code Extension
 
-[![Version](https://vsmarketplacebadge.apphb.com/version-short/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs/puppet.puppet-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
+[![Version](https://vsmarketplacebadges.dev/version-short/puppet.puppet-vscode.jpg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
+[![Installs](https://vsmarketplacebadges.dev/installs/puppet.puppet-vscode.jpg)](https://marketplace.visualstudio.com/items?itemName=puppet.puppet-vscode)
 
 The Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vscode.github.io) contains all of the documentation previously held in this README, simplified and organized. There is also new content that shows off all the current features in greater detail, as well as new ways to use the Puppet VSCode Extension with other technologies like the [Microsoft Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). This README retains some quick information on how to get started and where to get help if things go wrong.
 
