@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.0](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.0) - 2023-11-27
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.4.2...v1.5.0)
+
+### Added
+
+- Bump puppet-editor-services to v2.0.0. Check PR for more details. [#857](https://github.com/puppetlabs/puppet-vscode/pull/857) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v1.4.2](https://github.com/puppetlabs/puppet-vscode/tree/v1.4.2) - 2023-10-17
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.4.1...v1.4.2)
