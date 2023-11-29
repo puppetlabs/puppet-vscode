@@ -658,7 +658,7 @@
     "@vscode/test-electron": "^2.0.0"
   },
   "dependencies": {
-    "axios": "0.21.2",
+    "axios": "1.6.0",
     "jsonc-parser": "~2.1.0",
     "vscode-debugadapter": "^1.19.0",
     "vscode-debugprotocol": "^1.19.0",
