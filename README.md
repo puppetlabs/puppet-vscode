@@ -82,9 +82,9 @@ The Puppet Extension for VSCode works with Puppet 5 or higher. See [open source 
 
 You will need to have the [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) or [Puppet Agent](https://puppet.com/docs/puppet/latest/about_agent.html) installed in order to fully use this extension.
 
-> Note: When using PDK, version 1.5.0 or higher is required.
+> Note: When using PDK, version 2.7.0 or higher is required.
 
-> Note: When using Puppet Agent, version 5.0 or higher is required.
+> Note: When using Puppet Agent, version 7.0 or higher is required.
 
 You can find instructions and installation links here:
 
