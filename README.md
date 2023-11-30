@@ -76,15 +76,15 @@ This extension provides full Puppet Language support for [Visual Studio Code](ht
 
 ## Supported Puppet Versions
 
-The Puppet Extension for VSCode works with Puppet 5 or higher. See [open source Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet Enterprise](https://puppet.com/docs/pe/2017.3/getting_support_for_pe.html#supported-puppet-enterprise-versions) lifecycle pages for version support details.
+The Puppet Extension for VSCode works with Puppet 7 or higher. See [open source Puppet](https://puppet.com/docs/puppet/latest/platform_lifecycle.html) and [Puppet Enterprise](https://puppet.com/docs/pe/latest/getting_support_for_pe.html) lifecycle pages for version support details.
 
 ## Requirements
 
-You will need to have the [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/1.x/pdk.html) or [Puppet Agent](https://puppet.com/docs/puppet/latest/about_agent.html) installed in order to fully use this extension.
+You will need to have the [Puppet Development Kit (PDK)](https://puppet.com/docs/pdk/latest/pdk.html) or [Puppet Agent](https://puppet.com/docs/puppet/latest/about_agent.html) installed in order to fully use this extension.
 
-> Note: When using PDK, version 3.0.0 or higher is required.
+> Note: When using PDK, only versions 3.0.0 or higher are supported.
 
-> Note: When using Puppet Agent, version 7.0 or higher is required.
+> Note: When using Puppet Agent, only versions 7.0 or higher are supported.
 
 You can find instructions and installation links here:
 
