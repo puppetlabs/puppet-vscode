@@ -655,7 +655,7 @@
     "prettier": "^2.0.5",
     "typescript": "^3.5.2",
     "vsce": "^2.15.0",
-    "@vscode/test-electron": "^2.0.0"
+    "@vscode/test-electron": "2.x"
   },
   "dependencies": {
     "axios": "0.21.2",
