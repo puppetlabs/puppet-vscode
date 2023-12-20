@@ -65,7 +65,7 @@ jobs:
           DISPLAY: ':99.0'
         shell: pwsh
         run: |
-          npm test --silent
+          npm test
 
       - name: vsce package
         if: runner.os == 'Linux'
