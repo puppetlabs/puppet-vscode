@@ -89,7 +89,7 @@
       },
       {
         "fileMatch": "tasks/*.json",
-        "url": "https://forgeapi.puppet.com/schemas/task.json"
+        "url": "https://raw.githubusercontent.com/puppetlabs/puppet-specifications/master/tasks/task.json"
       }
     ],
     "grammars": [
