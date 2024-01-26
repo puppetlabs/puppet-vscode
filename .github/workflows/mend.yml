@@ -1,0 +1,42 @@
+name: mend
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  pull_request_target:
+    types:
+      - opened
+  workflow_dispatch:
+
+jobs:
+  mend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'setup node: 18 platform: ${{ runner.os }}'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: npm install
+        run: |
+          npm install -g vsce --silent;
+          npm install --silent;
+
+      - uses: "actions/setup-java@v4"
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "download"
+        run: curl -o wss-unified-agent.jar https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
+
+      - name: "scan"
+        run: java -jar wss-unified-agent.jar
+        env:
+          WS_APIKEY: ${{ secrets.MEND_API_KEY }}
+          WS_WSS_URL: https://saas-eu.whitesourcesoftware.com/agent
+          WS_USERKEY: ${{ secrets.MEND_TOKEN }}
+          WS_PRODUCTNAME: "DevX"
+          WS_PROJECTNAME: ${{  github.event.repository.name }}
