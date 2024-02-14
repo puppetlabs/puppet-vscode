@@ -12,7 +12,7 @@
     }
   },
   "publisher": "puppet",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "SEE LICENSE IN LICENSE",
   "icon": "images/puppet-vscode-sm.png",
   "aiKey": "147f322c-ecdc-4db2-a818-da8be01f07f5",
   "galleryBanner": {
