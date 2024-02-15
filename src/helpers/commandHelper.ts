@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { Executable } from 'vscode-languageclient';
+import { Executable } from 'vscode-languageclient/node';
 import { IAggregateConfiguration } from '../configuration';
 import { PathResolver } from '../configuration/pathResolver';
 import { ProtocolType, PuppetInstallType } from '../settings';
@@ -35,7 +35,6 @@ export class CommandEnvironmentHelper {
   private static applyRubyEnvFromConfiguration(exe: Executable, config: IAggregateConfiguration): Executable {
     // setup defaults
     exe.options.env = this.shallowCloneObject(process.env);
-    exe.options.stdio = 'pipe';
 
     switch (process.platform) {
       case 'win32':

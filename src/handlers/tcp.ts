@@ -1,7 +1,7 @@
 import * as cp from 'child_process';
 import * as net from 'net';
 import * as vscode from 'vscode';
-import { Executable, ServerOptions, StreamInfo } from 'vscode-languageclient';
+import { Executable, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
 import { IAggregateConfiguration } from '../configuration';
 import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
 import { ConnectionHandler } from '../handler';
