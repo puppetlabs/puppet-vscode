@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.2](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.2) - 2024-02-15
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.1...v1.5.2)
+
+### Fixed
+
+- (CAT-1707) - Bump vscode-languageclient ^9.0.0, axios ^1.0.0 & typescript ^5.0.0 [#875](https://github.com/puppetlabs/puppet-vscode/pull/875) ([jordanbreen28](https://github.com/jordanbreen28))
+-  Bump puppet-editor-services to v2.0.1 [#874](https://github.com/puppetlabs/puppet-vscode/pull/874) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v1.5.1](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.1) - 2024-01-26
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.0...v1.5.1)
