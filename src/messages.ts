@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { RequestType, RequestType0 } from 'vscode-languageclient';
+import { RequestType, RequestType0 } from 'vscode-languageclient/node';
 
 export namespace PuppetVersionRequest {
-  export const type = new RequestType0<PuppetVersionDetails, void, void>('puppet/getVersion');
+  export const type = new RequestType0<PuppetVersionDetails, void>('puppet/getVersion');
 }
 
 export interface PuppetVersionDetails {
@@ -21,7 +21,7 @@ export interface PuppetResourceRequestParams {
 }
 
 export namespace PuppetResourceRequest {
-  export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void, void>(
+  export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void>(
     'puppet/getResource',
   );
 }
@@ -37,7 +37,7 @@ export interface PuppetFixDiagnosticErrorsRequestParams {
 }
 
 export namespace PuppetFixDiagnosticErrorsRequest {
-  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void, void>(
+  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void>(
     'puppet/fixDiagnosticErrors',
   );
 }
@@ -49,7 +49,7 @@ export interface PuppetFixDiagnosticErrorsResponse {
 }
 
 export namespace PuppetNodeGraphRequest {
-  export const type = new RequestType<any, PuppetNodeGraphResponse, void, void>('puppet/compileNodeGraph');
+  export const type = new RequestType<any, PuppetNodeGraphResponse, void>('puppet/compileNodeGraph');
 }
 
 export interface PuppetNodeGraphResponse {
@@ -59,7 +59,7 @@ export interface PuppetNodeGraphResponse {
 }
 
 export namespace CompileNodeGraphRequest {
-  export const type = new RequestType<any, any, void, void>('puppet/compileNodeGraph');
+  export const type = new RequestType<any, any, void>('puppet/compileNodeGraph');
 }
 
 export interface CompileNodeGraphResponse {

@@ -27,19 +27,13 @@ class PuppetfileDependencyItem extends TreeItem {
     public readonly children?: Array<[string, PuppetfileDependencyItem]>,
   ) {
     super(name, collapsibleState);
+    this.tooltip = `${name}-${version}`;
+    this.description = version;
     if (children) {
       this.iconPath = ThemeIcon.Folder;
     } else {
       this.iconPath = new ThemeIcon('package');
     }
-  }
-
-  get tooltip(): string {
-    return `${this.name}-${this.version}`;
-  }
-
-  get description(): string {
-    return this.version;
   }
 }
 
@@ -105,7 +99,7 @@ export class PuppetfileProvider implements TreeDataProvider<PuppetfileDependency
   }
 
   private async getPuppetfileDependenciesFromLanguageServer(): Promise<PuppetfileDependencyItem[]> {
-    await this.handler.languageClient.onReady();
+    await this.handler.languageClient.start();
 
     const fileUri = Uri.file(path.join(workspace.workspaceFolders[0].uri.fsPath, 'Puppetfile'));
     /*
@@ -115,7 +109,7 @@ export class PuppetfileProvider implements TreeDataProvider<PuppetfileDependency
     */
     return workspace.openTextDocument(fileUri).then(async () => {
       const results = await this.handler.languageClient.sendRequest(
-        new RequestType<never, PuppetfileDependencyResponse, void, void>('puppetfile/getDependencies'),
+        new RequestType<never, PuppetfileDependencyResponse, void>('puppetfile/getDependencies'),
         {
           uri: fileUri.toString(),
         },

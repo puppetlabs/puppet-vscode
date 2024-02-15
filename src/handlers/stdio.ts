@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Executable, ServerOptions } from 'vscode-languageclient';
+import { Executable, ServerOptions } from 'vscode-languageclient/node';
 import { IAggregateConfiguration } from '../configuration';
 import { IPuppetStatusBar } from '../feature/PuppetStatusBarFeature';
 import { ConnectionHandler } from '../handler';

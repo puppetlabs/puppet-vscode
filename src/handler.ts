@@ -1,14 +1,19 @@
 import * as vscode from 'vscode';
-import { LanguageClient, ServerOptions, LanguageClientOptions, RevealOutputChannelOn } from 'vscode-languageclient';
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  RevealOutputChannelOn,
+  ServerOptions,
+} from 'vscode-languageclient/node';
 
-import { ConnectionStatus } from './interfaces';
-import { ConnectionType, ProtocolType } from './settings';
-import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
-import { OutputChannelLogger } from './logging/outputchannel';
-import { PuppetVersionDetails, PuppetVersionRequest, PuppetCommandStrings } from './messages';
-import { reporter } from './telemetry';
-import { puppetFileLangID, puppetLangID } from './extension';
 import { IAggregateConfiguration } from './configuration';
+import { puppetFileLangID, puppetLangID } from './extension';
+import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
+import { ConnectionStatus } from './interfaces';
+import { OutputChannelLogger } from './logging/outputchannel';
+import { PuppetCommandStrings, PuppetVersionDetails, PuppetVersionRequest } from './messages';
+import { ConnectionType, ProtocolType } from './settings';
+import { reporter } from './telemetry';
 
 export abstract class ConnectionHandler {
   private timeSpent: number;
@@ -56,7 +61,7 @@ export abstract class ConnectionHandler {
     this.logger.debug('Creating language client');
     this._languageClient = new LanguageClient('PuppetVSCode', serverOptions, clientOptions);
     this._languageClient
-      .onReady()
+      .start()
       .then(
         () => {
           this.languageClient.onTelemetry((event) => {
@@ -90,7 +95,11 @@ export abstract class ConnectionHandler {
 
   start(): void {
     this.setConnectionStatus('Starting languageserver', ConnectionStatus.Starting, '');
-    this.context.subscriptions.push(this.languageClient.start());
+    this.languageClient.start().then(() => {
+      this.context.subscriptions.push({
+        dispose: () => this.languageClient.stop(),
+      });
+    });
   }
 
   stop(): void {
@@ -129,7 +138,7 @@ export abstract class ConnectionHandler {
         if (count >= 30 || this._languageClient === undefined) {
           clearInterval(handle);
           this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.RunningLoaded, '');
-          resolve();
+          resolve(undefined);
           return;
         }
 
@@ -143,7 +152,7 @@ export abstract class ConnectionHandler {
           ) {
             clearInterval(handle);
             this.setConnectionStatus(lastVersionResponse.puppetVersion, ConnectionStatus.RunningLoaded, '');
-            resolve();
+            resolve(undefined);
           } else {
             let toolTip = '';
 
