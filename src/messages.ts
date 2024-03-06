@@ -21,9 +21,7 @@ export interface PuppetResourceRequestParams {
 }
 
 export namespace PuppetResourceRequest {
-  export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void>(
-    'puppet/getResource',
-  );
+  export const type = new RequestType<PuppetResourceRequestParams, PuppetResourceResponse, void>('puppet/getResource');
 }
 
 export interface PuppetResourceResponse {
@@ -37,9 +35,7 @@ export interface PuppetFixDiagnosticErrorsRequestParams {
 }
 
 export namespace PuppetFixDiagnosticErrorsRequest {
-  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void>(
-    'puppet/fixDiagnosticErrors',
-  );
+  export const type = new RequestType<PuppetFixDiagnosticErrorsRequestParams, any, void>('puppet/fixDiagnosticErrors');
 }
 
 export interface PuppetFixDiagnosticErrorsResponse {
@@ -69,19 +65,19 @@ export interface CompileNodeGraphResponse {
 }
 
 export class PuppetCommandStrings {
-  static PuppetResourceCommandId = 'extension.puppetResource';
-  static PuppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
-  static PuppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
-  static PuppetUpdateConfigurationCommandId = 'extension.puppetUpdateConfiguration';
+  static puppetResourceCommandId = 'extension.puppetResource';
+  static puppetShowConnectionMenuCommandId = 'extension.puppetShowConnectionMenu';
+  static puppetShowConnectionLogsCommandId = 'extension.puppetShowConnectionLogs';
+  static puppetUpdateConfigurationCommandId = 'extension.puppetUpdateConfiguration';
 }
 
 export class PDKCommandStrings {
-  static PdkNewModuleCommandId = 'extension.pdkNewModule';
-  static PdkNewClassCommandId = 'extension.pdkNewClass';
-  static PdkNewTaskCommandId = 'extension.pdkNewTask';
-  static PdkNewFactCommandId = 'extension.pdkNewFact';
-  static PdkNewFunctionCommandId = 'extension.pdkNewFunction';
-  static PdkNewDefinedTypeCommandId = 'extension.pdkNewDefinedType';
-  static PdkValidateCommandId = 'extension.pdkValidate';
-  static PdkTestUnitCommandId = 'extension.pdkTestUnit';
+  static pdkNewModuleCommandId = 'extension.pdkNewModule';
+  static pdkNewClassCommandId = 'extension.pdkNewClass';
+  static pdkNewTaskCommandId = 'extension.pdkNewTask';
+  static pdkNewFactCommandId = 'extension.pdkNewFact';
+  static pdkNewFunctionCommandId = 'extension.pdkNewFunction';
+  static pdkNewDefinedTypeCommandId = 'extension.pdkNewDefinedType';
+  static pdkValidateCommandId = 'extension.pdkValidate';
+  static pdkTestUnitCommandId = 'extension.pdkTestUnit';
 }

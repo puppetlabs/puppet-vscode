@@ -5,10 +5,10 @@ import { ConnectionHandler } from '../handler';
 import { ConnectionStatus } from '../interfaces';
 import { ILogger } from '../logging';
 import { PuppetNodeGraphRequest, PuppetNodeGraphResponse } from '../messages';
-import { ISettings, SettingsFromWorkspace } from '../settings';
+import { ISettings, settingsFromWorkspace } from '../settings';
 import { reporter } from '../telemetry';
 
-const PuppetNodeGraphToTheSideCommandId = 'puppet.puppetShowNodeGraphToSide';
+const puppetNodeGraphToTheSideCommandId = 'puppet.puppetShowNodeGraphToSide';
 
 export class PuppetNodeGraphFeature implements IFeature {
   private providers: NodeGraphWebViewProvider[] = undefined;
@@ -22,7 +22,7 @@ export class PuppetNodeGraphFeature implements IFeature {
     this.providers = [];
 
     context.subscriptions.push(
-      vscode.commands.registerCommand(PuppetNodeGraphToTheSideCommandId, () => {
+      vscode.commands.registerCommand(puppetNodeGraphToTheSideCommandId, () => {
         if (!vscode.window.activeTextEditor) {
           return;
         }
@@ -153,7 +153,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
     }
 
     if (reporter) {
-      reporter.sendTelemetryEvent(PuppetNodeGraphToTheSideCommandId);
+      reporter.sendTelemetryEvent(puppetNodeGraphToTheSideCommandId);
     }
 
     this.panel.webview.postMessage({
@@ -164,7 +164,7 @@ class NodeGraphWebViewProvider implements vscode.Disposable {
 
   private getNotificationType(): vscode.ProgressLocation {
     // Calculate where the progress message should go, if at all.
-    const currentSettings: ISettings = SettingsFromWorkspace();
+    const currentSettings: ISettings = settingsFromWorkspace();
 
     let notificationType = vscode.ProgressLocation.Notification;
 

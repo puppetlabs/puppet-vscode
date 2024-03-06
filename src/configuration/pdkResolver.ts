@@ -12,7 +12,7 @@ export interface IPDKRubyInstances {
    * @param puppetVersion The puppet version string to search for
    * @returns IPDKRubyInstance or undefined
    */
-  InstanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance;
+  instanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance;
 }
 
 export interface IPDKRubyInstance {
@@ -115,7 +115,7 @@ class PDKRubyInstances implements IPDKRubyInstances {
     return this.puppetVersions;
   }
 
-  public InstanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance {
+  public instanceForPuppetVersion(puppetVersion: string): IPDKRubyInstance {
     return this.instances.find((instance) => {
       return instance.puppetVersions.includes(puppetVersion);
     });

@@ -40,6 +40,8 @@ Happy linting! 💖
     "no-template-curly-in-string": "error",
     "require-atomic-updates": "error",
     "no-useless-backreference": "error",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/naming-convention": "warn",
     "@typescript-eslint/member-delimiter-style": [
       "warn",
@@ -54,6 +56,7 @@ Happy linting! 💖
     "curly": "warn",
     "eqeqeq": ["warn", "always"],
     "no-redeclare": "warn",
-    "no-throw-literal": "warn"
+    "no-throw-literal": "warn",
+    "prettier/prettier": 0
   }
 }

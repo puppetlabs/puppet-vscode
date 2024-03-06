@@ -11,7 +11,7 @@ import {
   PuppetResourceRequestParams,
   PuppetResourceResponse,
 } from '../messages';
-import { ISettings, SettingsFromWorkspace } from '../settings';
+import { ISettings, settingsFromWorkspace } from '../settings';
 import { reporter } from '../telemetry';
 
 export class PuppetResourceFeature implements IFeature {
@@ -25,7 +25,7 @@ export class PuppetResourceFeature implements IFeature {
     this.logger = logger;
     this._connectionHandler = connMgr;
     context.subscriptions.push(
-      vscode.commands.registerCommand(PuppetCommandStrings.PuppetResourceCommandId, () => {
+      vscode.commands.registerCommand(PuppetCommandStrings.puppetResourceCommandId, () => {
         this.run();
       }),
     );
@@ -49,7 +49,7 @@ export class PuppetResourceFeature implements IFeature {
         requestParams.typename = moduleName;
 
         // Calculate where the progress message should go, if at all.
-        const currentSettings: ISettings = SettingsFromWorkspace();
+        const currentSettings: ISettings = settingsFromWorkspace();
         let notificationType = vscode.ProgressLocation.Notification;
         if (currentSettings.notification !== undefined && currentSettings.notification.puppetResource !== undefined) {
           switch (currentSettings.notification.puppetResource.toLowerCase()) {
@@ -119,7 +119,7 @@ export class PuppetResourceFeature implements IFeature {
 
     this.editCurrentDocument(doc.uri, resourceResult.data, newPosition);
     if (reporter) {
-      reporter.sendTelemetryEvent(PuppetCommandStrings.PuppetResourceCommandId);
+      reporter.sendTelemetryEvent(PuppetCommandStrings.puppetResourceCommandId);
     }
   }
 

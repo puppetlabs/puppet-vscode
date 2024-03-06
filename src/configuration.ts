@@ -7,7 +7,7 @@ import * as pdk from './configuration/pdkResolver';
 import { ConnectionType, ISettings, ProtocolType, PuppetInstallType } from './settings';
 
 /** Creates an Aggregate Configuration based on the VSCode Workspace settings (ISettings) */
-export function CreateAggregrateConfiguration(settings: ISettings): IAggregateConfiguration {
+export function createAggregrateConfiguration(settings: ISettings): IAggregateConfiguration {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const value = new AggregateConfiguration(settings);
 
@@ -93,7 +93,7 @@ export class AggregateConfiguration implements IAggregateConfiguration {
         settings.editorService.puppet !== undefined &&
         settings.editorService.puppet.version !== undefined
       ) {
-        result = pdkInfo.InstanceForPuppetVersion(settings.editorService.puppet.version);
+        result = pdkInfo.instanceForPuppetVersion(settings.editorService.puppet.version);
       }
       // If we can't find the PDK instance from the puppet version or it wasn't defined, assume the latest.
       if (result === undefined) {

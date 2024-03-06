@@ -21,8 +21,8 @@ class PuppetfileDependencyItem extends TreeItem {
   constructor(
     public readonly name: string,
     public readonly version: string,
-    public readonly start_line: number,
-    public readonly end_line: number,
+    public readonly startLine: number,
+    public readonly endLine: number,
     public readonly collapsibleState: TreeItemCollapsibleState,
     public readonly children?: Array<[string, PuppetfileDependencyItem]>,
   ) {
@@ -41,8 +41,8 @@ class PuppetfileDependency {
   constructor(
     public readonly name: string,
     public readonly version: string,
-    public readonly start_line: number,
-    public readonly end_line: number,
+    public readonly startLine: number,
+    public readonly endLine: number,
   ) {
     //
   }
@@ -71,7 +71,7 @@ export class PuppetfileProvider implements TreeDataProvider<PuppetfileDependency
       const workspaceFolder = workspace.workspaceFolders[0].uri;
       const puppetfile = path.join(workspaceFolder.fsPath, 'Puppetfile');
       workspace.openTextDocument(puppetfile).then((doc) => {
-        const line = doc.lineAt(+puppetModule.start_line);
+        const line = doc.lineAt(+puppetModule.startLine);
         window.showTextDocument(doc, {
           preserveFocus: true,
           preview: false,
@@ -122,7 +122,7 @@ export class PuppetfileProvider implements TreeDataProvider<PuppetfileDependency
       }
 
       const list = results.dependencies.map((d) => {
-        return new PuppetfileDependencyItem(d.name, d.version, d.start_line, d.end_line, TreeItemCollapsibleState.None);
+        return new PuppetfileDependencyItem(d.name, d.version, d.startLine, d.endLine, TreeItemCollapsibleState.None);
       });
 
       return list;

@@ -9,14 +9,13 @@ import { PDKCommandStrings } from '../messages';
 import { reporter } from '../telemetry';
 
 export class PDKFeature implements IFeature {
-
   constructor(context: vscode.ExtensionContext, logger: ILogger) {
     context.subscriptions.push(
-      vscode.commands.registerCommand(PDKCommandStrings.PdkNewModuleCommandId, () => {
+      vscode.commands.registerCommand(PDKCommandStrings.pdkNewModuleCommandId, () => {
         this.pdkNewModuleCommand();
       }),
     );
-    logger.debug('Registered ' + PDKCommandStrings.PdkNewModuleCommandId + ' command');
+    logger.debug('Registered ' + PDKCommandStrings.pdkNewModuleCommandId + ' command');
 
     // commands that require no user input
     [
@@ -119,7 +118,7 @@ export class PDKFeature implements IFeature {
     await vscode.commands.executeCommand('vscode.openFolder', uri);
 
     if (reporter) {
-      reporter.sendTelemetryEvent(PDKCommandStrings.PdkNewModuleCommandId);
+      reporter.sendTelemetryEvent(PDKCommandStrings.pdkNewModuleCommandId);
     }
   }
 }
