@@ -44,7 +44,7 @@ export class UpdateConfigurationFeature implements IFeature {
   constructor(logger: ILogger, context: vscode.ExtensionContext) {
     this.logger = logger;
     context.subscriptions.push(
-      vscode.commands.registerCommand(PuppetCommandStrings.PuppetUpdateConfigurationCommandId, (updateSettingsHash) => {
+      vscode.commands.registerCommand(PuppetCommandStrings.puppetUpdateConfigurationCommandId, (updateSettingsHash) => {
         this.updateSettingsAsync(updateSettingsHash);
       }),
     );

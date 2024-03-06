@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { CreateAggregrateConfiguration, IAggregateConfiguration } from './configuration';
+import { createAggregrateConfiguration, IAggregateConfiguration } from './configuration';
 import { IFeature } from './feature';
 import { DebuggingFeature } from './feature/DebuggingFeature';
 import { FormatDocumentFeature } from './feature/FormatDocumentFeature';
@@ -22,7 +22,7 @@ import { StdioConnectionHandler } from './handlers/stdio';
 import { TcpConnectionHandler } from './handlers/tcp';
 import { ILogger } from './logging';
 import { OutputChannelLogger } from './logging/outputchannel';
-import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, SettingsFromWorkspace } from './settings';
+import { ConnectionType, legacySettings, ProtocolType, PuppetInstallType, settingsFromWorkspace } from './settings';
 import { reporter } from './telemetry';
 import { PuppetFactsProvider } from './views/facts';
 import { PuppetfileProvider } from './views/puppetfile';
@@ -53,9 +53,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   checkForLegacySettings();
 
-  const settings = SettingsFromWorkspace();
+  const settings = settingsFromWorkspace();
   const previousInstallType = settings.installType;
-  configSettings = CreateAggregrateConfiguration(settings);
+  configSettings = createAggregrateConfiguration(settings);
   logger = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
   if (configSettings.workspace.installType !== previousInstallType) {
     logger.debug(
@@ -177,9 +177,9 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
   // we want to check directory if STDIO or Local TCP
   if (!fs.existsSync(config.ruby.puppetBaseDir)) {
     let message = '';
-    // Need to use SettingsFromWorkspace() here because the AggregateConfiguration
+    // Need to use settingsFromWorkspace() here because the AggregateConfiguration
     // changes the installType from Auto, to its calculated value
-    if (SettingsFromWorkspace().installType === PuppetInstallType.AUTO) {
+    if (settingsFromWorkspace().installType === PuppetInstallType.AUTO) {
       const m = [
         'The extension failed to find a Puppet installation automatically in the default locations for PDK and for Puppet Agent.',
         'While syntax highlighting and grammar detection will still work, intellisense and other advanced features will not.',

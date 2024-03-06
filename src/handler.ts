@@ -84,7 +84,7 @@ export abstract class ConnectionHandler {
     this.setConnectionStatus('Initialization Complete', ConnectionStatus.InitializationComplete);
 
     this.context.subscriptions.push(
-      vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId, () => {
+      vscode.commands.registerCommand(PuppetCommandStrings.puppetShowConnectionLogsCommandId, () => {
         this.logger.show();
       }),
     );

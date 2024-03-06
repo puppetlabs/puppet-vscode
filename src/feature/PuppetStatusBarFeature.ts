@@ -18,7 +18,7 @@ class PuppetStatusBarProvider {
     this.logger = logger;
     this.config = config;
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 1);
-    this.statusBarItem.command = PuppetCommandStrings.PuppetShowConnectionMenuCommandId;
+    this.statusBarItem.command = PuppetCommandStrings.puppetShowConnectionMenuCommandId;
     this.statusBarItem.show();
 
     vscode.window.onDidChangeActiveTextEditor((textEditor) => {
@@ -75,19 +75,20 @@ class PuppetStatusBarProvider {
 
     menuItems.push(
       new PuppetConnectionMenuItem('Show Puppet Session Logs', () => {
-        vscode.commands.executeCommand(PuppetCommandStrings.PuppetShowConnectionLogsCommandId);
+        vscode.commands.executeCommand(PuppetCommandStrings.puppetShowConnectionLogsCommandId);
       }),
     );
 
     if (
       this.config.ruby.pdkPuppetVersions !== undefined &&
       this.config.ruby.pdkPuppetVersions.length > 0 &&
-      this.config.connection.protocol != ProtocolType.TCP
+      this.config.connection.protocol !== ProtocolType.TCP
     ) {
       // Add a static menu item to use the latest version
       menuItems.push(
         new PuppetConnectionMenuItem('Switch to latest Puppet version', () => {
-          vscode.commands.executeCommand(PuppetCommandStrings.PuppetUpdateConfigurationCommandId, {
+          vscode.commands.executeCommand(PuppetCommandStrings.puppetUpdateConfigurationCommandId, {
+            /* eslint-disable-next-line @typescript-eslint/naming-convention */
             'puppet.editorService.puppet.version': undefined,
           });
         }),
@@ -97,7 +98,8 @@ class PuppetStatusBarProvider {
         .forEach((puppetVersion) => {
           menuItems.push(
             new PuppetConnectionMenuItem('Switch to Puppet ' + puppetVersion.toString(), () => {
-              vscode.commands.executeCommand(PuppetCommandStrings.PuppetUpdateConfigurationCommandId, {
+              vscode.commands.executeCommand(PuppetCommandStrings.puppetUpdateConfigurationCommandId, {
+                /* eslint-disable-next-line @typescript-eslint/naming-convention */
                 'puppet.editorService.puppet.version': puppetVersion,
               });
             }),
@@ -129,7 +131,7 @@ export class PuppetStatusBarFeature implements IFeature, IPuppetStatusBar {
 
   constructor(langIDs: string[], config: IAggregateConfiguration, logger: ILogger, context: vscode.ExtensionContext) {
     context.subscriptions.push(
-      vscode.commands.registerCommand(PuppetCommandStrings.PuppetShowConnectionMenuCommandId, () => {
+      vscode.commands.registerCommand(PuppetCommandStrings.puppetShowConnectionMenuCommandId, () => {
         this.provider.showConnectionMenu();
       }),
     );

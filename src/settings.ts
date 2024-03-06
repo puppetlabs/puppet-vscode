@@ -1,7 +1,7 @@
 'use strict';
 
 import vscode = require('vscode');
-
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum PuppetInstallType {
   PDK = 'pdk',
   PUPPET = 'agent',
@@ -19,7 +19,7 @@ export enum ConnectionType {
   Local,
   Remote,
 }
-
+/* eslint-enable @typescript-eslint/naming-convention */
 export interface IEditorServiceTCPSettings {
   address?: string;
   port?: number;
@@ -124,7 +124,7 @@ export function legacySettings(): Map<string, Record<string, any>> {
 }
 
 // Default settings
-export function DefaultWorkspaceSettings(): ISettings {
+export function defaultWorkspaceSettings(): ISettings {
   return {
     editorService: {
       enable: true,
@@ -154,9 +154,9 @@ export function DefaultWorkspaceSettings(): ISettings {
   };
 }
 
-export function SettingsFromWorkspace(): ISettings {
+export function settingsFromWorkspace(): ISettings {
   const workspaceConfig: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration(workspaceSectionName);
-  const defaults: ISettings = DefaultWorkspaceSettings();
+  const defaults: ISettings = defaultWorkspaceSettings();
 
   // TODO: What if the wrong type is passed through? will it blow up?
   const settings = {

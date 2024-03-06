@@ -1,5 +1,5 @@
 'use strict';
-
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum LogLevel {
   Debug,
   Verbose,
