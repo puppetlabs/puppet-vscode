@@ -53,6 +53,9 @@ jobs:
           npm install -g vsce --silent;
           npm install --silent;
 
+      - name: Run ESLint
+        run: npm run lint
+
       - name: npm build
         shell: pwsh
         run: |
