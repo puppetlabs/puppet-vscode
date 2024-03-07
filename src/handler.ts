@@ -74,12 +74,12 @@ export abstract class ConnectionHandler {
         (reason) => {
           this.setConnectionStatus('Starting error', ConnectionStatus.Starting);
           this.languageClient.error(reason);
-          reporter.sendTelemetryException(reason);
+          reporter.sendTelemetryErrorEvent(reason);
         },
       )
       .catch((reason) => {
         this.setConnectionStatus('Failure', ConnectionStatus.Failed);
-        reporter.sendTelemetryException(reason);
+        reporter.sendTelemetryErrorEvent(reason);
       });
     this.setConnectionStatus('Initialization Complete', ConnectionStatus.InitializationComplete);
 
