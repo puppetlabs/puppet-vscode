@@ -1,6 +1,5 @@
 import * as assert from 'assert';
 
-import * as vscode from 'vscode';
 import { PathResolver } from '../../configuration/pathResolver';
 
 suite('Path Resolution Tests', () => {
