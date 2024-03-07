@@ -649,6 +649,7 @@
     "@typescript-eslint/parser": "^7.0.0",
     "@vscode/test-electron": "^2.0",
     "@vscode/vsce": "^2.15.0",
+    "sinon": "^17.0.1",
     "chai": "^4.0.0",
     "cytoscape": "^3.14.0",
     "eslint": "^8.0.0",
