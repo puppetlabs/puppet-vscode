@@ -25,7 +25,7 @@ suite('Settings Tests', () => {
   workspaceConfigurationStub.get.withArgs('pdk').returns(pdkSettings);
 
   test('Default settings are populated', () => {
-    const defaultWorkspaceSettings = index.settings;
+    const defaultWorkspaceSettings = index.defaultSettings;
     assert.notStrictEqual(defaultWorkspaceSettings, undefined);
   });
 
