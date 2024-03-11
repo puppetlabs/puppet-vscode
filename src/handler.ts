@@ -7,7 +7,6 @@ import {
 } from 'vscode-languageclient/node';
 
 import { IAggregateConfiguration } from './configuration';
-import { puppetFileLangID, puppetLangID } from './extension';
 import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
 import { ConnectionStatus } from './interfaces';
 import { OutputChannelLogger } from './logging/outputchannel';
@@ -39,6 +38,8 @@ export abstract class ConnectionHandler {
     protected statusBar: IPuppetStatusBar,
     protected logger: OutputChannelLogger,
     protected config: IAggregateConfiguration,
+    protected readonly puppetLangID: string,
+    protected readonly puppetFileLangID: string,
   ) {
     this.timeSpent = Date.now();
     this.setConnectionStatus('Initializing', ConnectionStatus.Initializing);
