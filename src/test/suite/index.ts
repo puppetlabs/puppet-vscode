@@ -6,17 +6,20 @@ import * as vscode from 'vscode';
 import { IAggregateConfiguration } from '../../configuration';
 import { ConnectionHandler } from '../../handler';
 import { OutputChannelLogger } from '../../logging/outputchannel';
-import { ISettings, defaultWorkspaceSettings } from '../../settings';
+import { ISettings, defaultWorkspaceSettings, settingsFromWorkspace } from '../../settings';
 
 export const puppetLangID = 'puppet';
 export const puppetFileLangID = 'puppetfile';
-export let extContext: vscode.ExtensionContext;
 export let logger: OutputChannelLogger;
 export let configSettings: IAggregateConfiguration;
 export let connectionHandler: ConnectionHandler;
-export const settings: ISettings = defaultWorkspaceSettings();
+export const defaultSettings: ISettings = defaultWorkspaceSettings();
+export const workspaceSettings: ISettings = settingsFromWorkspace();
 // create sinon sandbox to enable stubbing and mocking
 export const sandbox = sinon.createSandbox();
+
+export const extContext = vscode.extensions.getExtension("puppet.puppet-vscode");
+
 
 export function run(): Promise<void> {
   // Create the mocha test
