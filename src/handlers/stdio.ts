@@ -17,8 +17,10 @@ export class StdioConnectionHandler extends ConnectionHandler {
     statusBar: IPuppetStatusBar,
     logger: OutputChannelLogger,
     config: IAggregateConfiguration,
+    puppetLangID: string,
+    puppetFileLangID: string,
   ) {
-    super(context, statusBar, logger, config);
+    super(context, statusBar, logger, config, puppetLangID, puppetFileLangID);
     this.logger.debug(`Configuring ${ConnectionType[this.connectionType]}::${this.protocolType} connection handler`);
     this.start();
   }
