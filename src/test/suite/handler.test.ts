@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { after, before } from 'mocha';
+import { before, teardown } from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { PuppetStatusBarFeature } from '../../feature/PuppetStatusBarFeature';
@@ -16,19 +16,20 @@ let tcpConnectionHandler: TcpConnectionHandler;
 let setConnectionStatusSpy: sinon.SinonSpy;
 let registerCommandStub: sinon.SinonStub;
 let disposableStub: sinon.SinonStubbedInstance<vscode.Disposable>;
+let sandbox: sinon.SinonSandbox;
 
 suite('Stdio Handler Tests', () => {
 
   before(() => {
-    statusBar = index.sandbox.createStubInstance(PuppetStatusBarFeature)
-    setConnectionStatusSpy = index.sandbox.spy(ConnectionHandler.prototype, 'setConnectionStatus');
-    disposableStub = sinon.createStubInstance(vscode.Disposable);
-    registerCommandStub = sinon.stub(vscode.commands, 'registerCommand').returns(disposableStub);
+    sandbox = sinon.createSandbox();
+    statusBar = sandbox.createStubInstance(PuppetStatusBarFeature)
+    setConnectionStatusSpy = sandbox.spy(ConnectionHandler.prototype, 'setConnectionStatus');
+    disposableStub = sandbox.createStubInstance(vscode.Disposable);
+    registerCommandStub = sandbox.stub(vscode.commands, 'registerCommand').returns(disposableStub);
   });
 
-  after(() => {
-    disposableStub.dispose();
-    registerCommandStub.restore();
+  teardown(() => {
+    sandbox.restore();
   });
 
   test('StdioConnectionHandler is created', () => {
@@ -54,15 +55,15 @@ suite('Stdio Handler Tests', () => {
 suite('TCP Handler Tests', () => {
 
   before(() => {
+    sandbox = sinon.createSandbox();
     index.configSettings.workspace.editorService.protocol = ProtocolType.TCP;
-    statusBar = index.sandbox.createStubInstance(PuppetStatusBarFeature);
-    disposableStub = sinon.createStubInstance(vscode.Disposable);
-    registerCommandStub = sinon.stub(vscode.commands, 'registerCommand').returns(disposableStub);
+    statusBar = sandbox.createStubInstance(PuppetStatusBarFeature);
+    disposableStub = sandbox.createStubInstance(vscode.Disposable);
+    registerCommandStub = sandbox.stub(vscode.commands, 'registerCommand').returns(disposableStub);
   });
 
-  after(() => {
-    disposableStub.dispose();
-    registerCommandStub.restore();
+  teardown(() => {
+    sandbox.restore();
   });
 
   test('TcpConnectionHandler is created', () => {
