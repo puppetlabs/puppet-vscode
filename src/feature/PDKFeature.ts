@@ -77,7 +77,7 @@ export class PDKFeature implements IFeature {
     const name = await vscode.window.showInputBox({
       prompt: 'Enter a name for the new Puppet module',
     });
-    if (name === undefined) {
+    if (!name) {
       vscode.window.showWarningMessage('No module name specifed. Exiting.');
       return;
     }
@@ -87,7 +87,7 @@ export class PDKFeature implements IFeature {
       canSelectFolders: true,
       openLabel: 'Choose the path for the new Puppet module',
     });
-    if (directory === undefined) {
+    if (!directory) {
       vscode.window.showWarningMessage('No directory specifed. Exiting.');
       return;
     }
