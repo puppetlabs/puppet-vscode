@@ -7,7 +7,6 @@ import {
 } from 'vscode-languageclient/node';
 
 import { IAggregateConfiguration } from './configuration';
-import { puppetFileLangID, puppetLangID } from './extension';
 import { IPuppetStatusBar } from './feature/PuppetStatusBarFeature';
 import { ConnectionStatus } from './interfaces';
 import { OutputChannelLogger } from './logging/outputchannel';
@@ -39,6 +38,8 @@ export abstract class ConnectionHandler {
     protected statusBar: IPuppetStatusBar,
     protected logger: OutputChannelLogger,
     protected config: IAggregateConfiguration,
+    protected readonly puppetLangID: string,
+    protected readonly puppetFileLangID: string,
   ) {
     this.timeSpent = Date.now();
     this.setConnectionStatus('Initializing', ConnectionStatus.Initializing);
@@ -74,12 +75,12 @@ export abstract class ConnectionHandler {
         (reason) => {
           this.setConnectionStatus('Starting error', ConnectionStatus.Starting);
           this.languageClient.error(reason);
-          reporter.sendTelemetryException(reason);
+          reporter.sendTelemetryErrorEvent(reason);
         },
       )
       .catch((reason) => {
         this.setConnectionStatus('Failure', ConnectionStatus.Failed);
-        reporter.sendTelemetryException(reason);
+        reporter.sendTelemetryErrorEvent(reason);
       });
     this.setConnectionStatus('Initialization Complete', ConnectionStatus.InitializationComplete);
 

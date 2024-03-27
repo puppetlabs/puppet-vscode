@@ -112,10 +112,10 @@ export function activate(context: vscode.ExtensionContext) {
   // eslint-disable-next-line default-case
   switch (configSettings.workspace.editorService.protocol) {
     case ProtocolType.STDIO:
-      connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings);
+      connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings, puppetLangID, puppetFileLangID);
       break;
     case ProtocolType.TCP:
-      connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings);
+      connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings, puppetLangID, puppetFileLangID);
       break;
   }
 

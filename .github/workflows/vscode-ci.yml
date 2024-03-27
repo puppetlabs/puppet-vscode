@@ -1,9 +1,12 @@
 name: vscode-ci
 
 on:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
-      - main
+      - "main"
   workflow_dispatch:
 
 jobs:
@@ -17,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: 'setup node: ${{ matrix.node-version }} platform: ${{ matrix.os }}'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -66,9 +69,15 @@ jobs:
           BUILD_VERSION: '0.99.${{ github.event.number }}'
           VSCODE_BUILD_VERBOSE: true
           DISPLAY: ':99.0'
-        shell: pwsh
         run: |
-          npm test
+          npm run test:coverage
+
+      - name: Upload Coverage
+        if: runner.os == 'Linux'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          npm run coverage:upload
 
       - name: vsce package
         if: runner.os == 'Linux'

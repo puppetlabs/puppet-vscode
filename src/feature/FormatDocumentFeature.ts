@@ -78,6 +78,10 @@ export class FormatDocumentFeature implements IFeature {
     }
   }
 
+  public getProvider(): FormatDocumentProvider {
+    return this.provider;
+  }
+
   public dispose(): any {
     return undefined;
   }
