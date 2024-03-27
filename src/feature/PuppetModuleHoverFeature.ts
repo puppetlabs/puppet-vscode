@@ -42,8 +42,19 @@ export class PuppetModuleHoverProvider implements vscode.HoverProvider {
     if (reporter) {
       reporter.sendTelemetryEvent('metadataJSON/Hover');
     }
+    const wordPattern = new RegExp(/[\w/-]+/);
+    let range = document.getWordRangeAtPosition(position, wordPattern);
 
-    const range = document.getWordRangeAtPosition(position);
+    // If the range does not include the full module name, adjust the range
+    if (!range.contains(position)) {
+      const lineText = document.lineAt(position.line).text;
+      const quoteIndex = lineText.indexOf('"', position.character);
+      if (quoteIndex !== -1) {
+        const start = lineText.lastIndexOf('"', position.character) + 1;
+        const end = quoteIndex;
+        range = new vscode.Range(position.line, start, position.line, end);
+      }
+    }
     const word = document.getText(range);
 
     this.logger.debug('Metadata hover info found ' + word + ' module');
