@@ -1,9 +1,10 @@
 import * as assert from 'assert';
+import { describe, it } from 'mocha';
 import * as telemetry from '../../telemetry';
 
-suite('Telemetry Tests', () => {
+describe('Telemetry Tests', () => {
   const reporter = telemetry.reporter;
-  test('Telemetry is enabled', () => {
+  it('Telemetry is enabled', () => {
     assert.notStrictEqual(reporter, undefined);
   });
 });

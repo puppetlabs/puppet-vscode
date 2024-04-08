@@ -7,6 +7,7 @@ import { IAggregateConfiguration, createAggregrateConfiguration } from '../../co
 import { OutputChannelLogger } from '../../logging/outputchannel';
 import { ISettings, defaultWorkspaceSettings, settingsFromWorkspace } from '../../settings';
 
+
 export const puppetLangID = 'puppet';
 export const puppetFileLangID = 'puppetfile';
 export const defaultSettings: ISettings = defaultWorkspaceSettings();
@@ -14,7 +15,7 @@ export const workspaceSettings: ISettings = settingsFromWorkspace();
 
 export let configSettings: IAggregateConfiguration = createAggregrateConfiguration(workspaceSettings);
 export let logger: OutputChannelLogger = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
-// create sinon sandbox to enable stubbing and mocking
+// create sinon sandbox to enable stubbing and mocking of extension context
 export const sandbox = sinon.createSandbox();
 
 export const extContext: vscode.ExtensionContext = {

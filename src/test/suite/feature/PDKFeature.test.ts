@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import * as fs from 'fs';
-import { afterEach, before, describe, it } from 'mocha';
+import { afterEach, beforeEach, describe, it } from 'mocha';
 import * as path from 'path';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
@@ -17,7 +17,7 @@ describe('PDKFeature', () => {
   const moduleName = 'testmodule';
   const dir = '/path/to/directory';
 
-  before(() => {
+  beforeEach(() => {
     sandbox = sinon.createSandbox();
     mockContext = index.extContext;
     mockLogger = index.logger;
@@ -31,7 +31,6 @@ describe('PDKFeature', () => {
 
   describe('constructor', () => {
     it('should register commands', () => {
-      new PDKFeature(mockContext, mockLogger);
       assert(registerCommandStub.called);
     });
   });

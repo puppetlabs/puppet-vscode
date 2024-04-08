@@ -1,17 +1,18 @@
 import * as assert from 'assert';
 import { expect } from 'chai';
+import { describe, it } from 'mocha';
 import { createAggregrateConfiguration } from '../../configuration';
 import * as forge from '../../forge';
 import { OutputChannelLogger } from '../../logging/outputchannel';
 import { settingsFromWorkspace } from '../../settings';
 
-suite('Forge Tests', () => {
+describe('Forge Tests', () => {
 
   const settings = settingsFromWorkspace();
   const configSettings = createAggregrateConfiguration(settings);
   const logger = new OutputChannelLogger(configSettings.workspace.editorService.loglevel);
 
-  test('Retrieves latest PDK version', () => {
+  it('Retrieves latest PDK version', () => {
     return forge.getPDKVersion(logger).then((version) => {
       let versionRegex = new RegExp('^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$');
       assert.notStrictEqual(version, undefined);
@@ -19,13 +20,13 @@ suite('Forge Tests', () => {
     });
   });
 
-  test('Fails to retrieve invalid module', () => {
+  it('Fails to retrieve invalid module', () => {
     return forge.getModuleInfo('puppetlabs-somefakemodule-1', logger).then((info) => {
       assert.strictEqual(info, undefined);
     });
   });
 
-  test('Retrieves module info', () => {
+  it('Retrieves module info', () => {
     return forge.getModuleInfo('puppetlabs-stdlib', logger).then((info) => {
       assert.notStrictEqual(info, undefined);
       assert.strictEqual(info.uri, '/v3/modules/puppetlabs-stdlib');
@@ -35,7 +36,7 @@ suite('Forge Tests', () => {
     })
   });
 
-  test('Builds valid markdown', () => {
+  it('Builds valid markdown', () => {
     const info: forge.PuppetForgeModuleInfo = {
       uri: '/v3/modules/puppetlabs-stdlib',
       slug: 'puppetlabs-stdlib',
@@ -64,7 +65,7 @@ summary\n
 `, markdown.value);
   });
 
-  test('Returns an empty module completion list when passed invalid characters', () => {
+  it('Returns an empty module completion list when passed invalid characters', () => {
     // module names cannot start with integers
     return forge.getPuppetModuleCompletion('12345612-', logger).then((info) => {
       expect(info.modules).to.eql([]);
@@ -72,7 +73,7 @@ summary\n
     });
   });
 
-  test('Retrieves module completion list', () => {
+  it('Retrieves module completion list', () => {
     return forge.getPuppetModuleCompletion('puppetlabs-', logger).then((info) => {
       assert.notStrictEqual(info, undefined);
       expect(info.total).to.be.greaterThan(0);

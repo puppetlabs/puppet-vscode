@@ -10,15 +10,13 @@ import * as index from '../index';
 
 describe('PuppetStatusBarProvider', () => {
   let sandbox: sinon.SinonSandbox;
-  let mockConfig: sinon.SinonStubbedInstance<IAggregateConfiguration>;
-  let mockLogger: sinon.SinonStubbedInstance<ILogger>;
+  let mockConfig: sinon.SinonStubbedInstance<IAggregateConfiguration> = index.configSettings;
+  let mockLogger: sinon.SinonStubbedInstance<ILogger> = index.logger;
   let mockStatusBarItem: sinon.SinonStubbedInstance<vscode.StatusBarItem>;
   let statusBarFeature: PuppetStatusBarFeature;
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
-    mockConfig = index.configSettings;
-    mockLogger = index.logger;
     mockStatusBarItem = {
       alignment: vscode.StatusBarAlignment.Left,
       priority: undefined,

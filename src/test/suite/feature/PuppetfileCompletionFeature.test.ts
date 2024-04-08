@@ -1,31 +1,42 @@
 import { assert } from 'chai';
 import * as fs from 'fs';
-import { after } from 'mocha';
+import { after, before, describe, it } from 'mocha';
 import * as os from 'os';
 import * as path from 'path';
+import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { PuppetfileCompletionProvider } from '../../../feature/PuppetfileCompletionFeature';
 import * as forge from '../../../forge';
+import { StdioConnectionHandler } from '../../../handlers/stdio';
 import * as index from '../index';
 
-suite('PuppetfileCompletionFeature Test Suite', () => {
+describe('PuppetfileCompletionFeature', () => {
+
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vscode-test-'));
+  const tempFilePath = path.join(tempDir, 'manifest.pp');
+  let sandbox: sinon.Sandbox;
+  let connectionHandler: StdioConnectionHandler;
+  let puppetfileCompletionProvider: PuppetfileCompletionProvider;
+  let getPuppetModuleCompletionStub: sinon.SinonStub;
+
+  before(() => {
+    sandbox = sinon.createSandbox();
+    connectionHandler = sandbox.createStubInstance(StdioConnectionHandler);
+    puppetfileCompletionProvider = new PuppetfileCompletionProvider(index.logger);
+    // Create a stub for getPuppetModuleCompletion, so we dont make an actual api call
+    getPuppetModuleCompletionStub = sandbox.stub(forge, 'getPuppetModuleCompletion');
+    getPuppetModuleCompletionStub.returns(Promise.resolve({
+      total: 3,
+      modules: ['puppetlabs-stdlib', 'puppetlabs-concat', 'puppetlabs-apache']
+      })
+    );
+  });
 
   after (() => {
-    getPuppetModuleCompletionStub.restore();
+    sandbox.restore();
   });
-  // Create a temporary file
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vscode-test-'));
-  const tempFilePath = path.join(tempDir, 'Puppetfile');
-  let puppetfileCompletionProvider: PuppetfileCompletionProvider;
-  puppetfileCompletionProvider = new PuppetfileCompletionProvider(index.logger);
 
-  // Create a stub for getPuppetModuleCompletion, so we dont make an actual api call
-  const getPuppetModuleCompletionStub = index.sandbox.stub(forge, 'getPuppetModuleCompletion');
-  getPuppetModuleCompletionStub.returns(Promise.resolve({
-    total: 3,
-    modules: ['puppetlabs-stdlib', 'puppetlabs-concat', 'puppetlabs-apache']}));
-
-  test('provideCompletionItems returns expected results', async () => {
+  it('provideCompletionItems returns expected results', async () => {
     // a simple Puppetfile with one module
     const puppetfileContent = `
     forge 'https://forge.puppet.com'
@@ -49,7 +60,7 @@ suite('PuppetfileCompletionFeature Test Suite', () => {
     }
   });
 
-  test('provideCompletionItems returns undefined when line does not start with mod', async () => {
+  it('provideCompletionItems returns undefined when line does not start with mod', async () => {
     // an invalid puppetfile
     const puppetfileContent = `
     forge 'https://forge.puppet.com'

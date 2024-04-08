@@ -1,19 +1,30 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
+import { after, before, describe, it } from 'mocha';
 import * as os from 'os';
 import * as path from 'path';
+import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { FormatDocumentFeature } from '../../../feature/FormatDocumentFeature';
 import { StdioConnectionHandler } from '../../../handlers/stdio';
 import * as index from '../index';
 
-suite('FormatDocumentFeature Test Suite', () => {
-
-  let connectionManager = index.sandbox.createStubInstance(StdioConnectionHandler);
+describe('FormatDocumentFeature Test Suite', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vscode-test-'));
   const tempFilePath = path.join(tempDir, 'manifest.pp');
+  let sandbox: sinon.Sandbox;
+  let connectionHandler: StdioConnectionHandler;
 
-  test('Formats a document with linting errors', async () => {
+  before(() => {
+    sandbox = sinon.createSandbox();
+    connectionHandler = sandbox.createStubInstance(StdioConnectionHandler);
+  });
+
+  after(() => {
+    sandbox.restore();
+  });
+
+  it('Formats a document with linting errors', async () => {
     // Create a manifest with linting error (missing whitespace before the opening brace)
     const manifestContent = `
       file{'/tmp/test':
@@ -24,13 +35,13 @@ suite('FormatDocumentFeature Test Suite', () => {
     fs.writeFileSync(tempFilePath, manifestContent);
 
     // Create a new FormatDocumentFeature instance
-    const feature = new FormatDocumentFeature(index.puppetLangID, connectionManager, index.configSettings, index.logger, index.extContext);
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, index.configSettings, index.logger, index.extContext);
     const document: vscode.TextDocument = await vscode.workspace.openTextDocument(tempFilePath);
     const range = new vscode.Range(new vscode.Position(0, 4), new vscode.Position(0, 5));
     const mockTextEdits = [vscode.TextEdit.replace(range, ' {')]; // Add the missing whitespace, we arent testing puppet-lint here
     // Stub the formatTextEdits method to return the mockTextEdits
     const provider = feature.getProvider();
-    const formatTextEditsStub = index.sandbox.stub(provider, 'formatTextEdits');
+    const formatTextEditsStub = sandbox.stub(provider, 'formatTextEdits');
     formatTextEditsStub.returns(Promise.resolve(mockTextEdits));
 
     // Format the document

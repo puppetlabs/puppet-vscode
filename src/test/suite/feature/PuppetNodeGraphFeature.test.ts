@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { afterEach, beforeEach, describe, it } from 'mocha';
+import { afterEach, before, beforeEach, describe, it } from 'mocha';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { PuppetNodeGraphFeature } from '../../../feature/PuppetNodeGraphFeature';
@@ -10,10 +10,13 @@ import * as index from '../index';
 const mockContext: vscode.ExtensionContext = index.extContext;
 let sendRequestStub: sinon.SinonStub;
 let mockConnectionHandler: sinon.SinonStubbedInstance<StdioConnectionHandler>;
-const sandbox: sinon.SinonSandbox = sinon.createSandbox();
+let sandbox: sinon.SinonSandbox;
+let puppetNodeGraphFeature: PuppetNodeGraphFeature;
 
 describe('PuppetNodeGraphFeature', () => {
-  let puppetNodeGraphFeature: PuppetNodeGraphFeature;
+  before(() => {
+    sandbox = sinon.createSandbox();
+  });
 
   beforeEach(() => {
     sandbox.stub(vscode.commands, 'registerCommand');

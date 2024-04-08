@@ -1,34 +1,45 @@
 import { assert } from 'chai';
 import * as fs from 'fs';
+import { after, before, describe, it } from 'mocha';
 import * as os from 'os';
 import * as path from 'path';
+import * as sinon from 'sinon';
 import * as vscode from 'vscode';
 import { PuppetfileHoverFeature } from '../../../feature/PuppetfileHoverFeature';
 import * as forge from '../../../forge';
 import { ILogger } from '../../../logging';
 import * as index from '../index';
 
-suite('PuppetfileHoverFeature', () => {
+describe('PuppetfileHoverFeature', () => {
   let context: vscode.ExtensionContext = index.extContext;
   let logger: ILogger = index.logger;
+  let sandbox: sinon.SinonSandbox;
+  let getModuleInfoStub: sinon.SinonStub;
 
-  // Stub the getModuleInfo function to return a known value, rather than make an actual api call
-  const getModuleInfoStub = index.sandbox.stub(forge, 'getModuleInfo');
-  getModuleInfoStub.returns(Promise.resolve({
-    uri: '/v3/modules/puppetlabs-stdlib',
-    slug: 'puppetlabs-stdlib',
-    name: 'puppetlabs/stdlib',
-    downloads: 0,
-    score: 0,
-    created: new Date(),
-    updated: new Date(),
-    endorsement: 'supported',
-    owner: { slug: 'puppetlabs', username: 'puppetlabs' },
-    forgeUrl: 'https://forge.puppet.com/modules/puppetlabs/stdlib',
-    homepageUrl: 'https://github.com/puppetlabs/puppetlabs-stdlib',
-  }));
+  before(() => {
+    sandbox = sinon.createSandbox();
+    // Stub the getModuleInfo function to return a known value, rather than make an actual api call
+    getModuleInfoStub = sandbox.stub(forge, 'getModuleInfo');
+    getModuleInfoStub.returns(Promise.resolve({
+      uri: '/v3/modules/puppetlabs-stdlib',
+      slug: 'puppetlabs-stdlib',
+      name: 'puppetlabs/stdlib',
+      downloads: 0,
+      score: 0,
+      created: new Date(),
+      updated: new Date(),
+      endorsement: 'supported',
+      owner: { slug: 'puppetlabs', username: 'puppetlabs' },
+      forgeUrl: 'https://forge.puppet.com/modules/puppetlabs/stdlib',
+      homepageUrl: 'https://github.com/puppetlabs/puppetlabs-stdlib',
+    }));
+  });
 
-  test('should register hover provider on construction', async () => {
+  after(() => {
+    sandbox.restore();
+  });
+
+  it('should register hover provider on construction', async () => {
     const feature = new PuppetfileHoverFeature(context, logger);
     // a simple Puppetfile with two modules
     const puppetfileContent = `
@@ -54,7 +65,7 @@ suite('PuppetfileHoverFeature', () => {
     assert.include(hover[0].contents[0].value, '**Project**: [https://github.com/puppetlabs/puppetlabs-stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)');
   });
 
-  test('should not throw on dispose', () => {
+  it('should not throw on dispose', () => {
     const feature = new PuppetfileHoverFeature(context, logger);
 
     assert.doesNotThrow(() => feature.dispose());
