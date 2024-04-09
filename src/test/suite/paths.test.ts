@@ -1,10 +1,10 @@
 import * as assert from 'assert';
 
-import * as vscode from 'vscode';
+import { describe, it } from 'mocha';
 import { PathResolver } from '../../configuration/pathResolver';
 
-suite('Path Resolution Tests', () => {
-  test('resolves programfiles', () => {
+describe('Path Resolution Tests', () => {
+  it('resolves programfiles', () => {
     switch (process.platform) {
       case 'win32':
         assert.equal('C:\\Program Files', PathResolver.getprogramFiles());
@@ -15,7 +15,7 @@ suite('Path Resolution Tests', () => {
     }
   });
 
-  test('resolves environment PATH seperator', () => {
+  it('resolves environment PATH seperator', () => {
     switch (process.platform) {
       case 'win32':
         assert.equal(';', PathResolver.pathEnvSeparator());

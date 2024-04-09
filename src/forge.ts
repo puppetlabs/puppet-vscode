@@ -59,7 +59,7 @@ export function getPDKVersion(logger: ILogger): Promise<string> {
           logger.error(`Error getting Puppet forge data. Status: ${response.status}:${response.statusText}`);
           resolve(undefined);
         }
-        return response.data;
+        resolve(response.data);
       });
   });
 }

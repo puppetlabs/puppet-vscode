@@ -30,6 +30,9 @@ import { PuppetfileProvider } from './views/puppetfile';
 export const puppetLangID = 'puppet'; // don't change this
 export const puppetFileLangID = 'puppetfile'; // don't change this
 const debugType = 'Puppet'; // don't change this
+export const releaseNotesLink = 'https://marketplace.visualstudio.com/items/puppet.puppet-vscode/changelog';
+export const troubleShootingLink = 'https://puppet-vscode.github.io/docs/experience-a-problem';
+export const pdkDownloadLink = 'https://www.puppet.com/docs/pdk/latest/pdk_install';
 
 let extContext: vscode.ExtensionContext;
 let connectionHandler: ConnectionHandler;
@@ -112,10 +115,10 @@ export function activate(context: vscode.ExtensionContext) {
   // eslint-disable-next-line default-case
   switch (configSettings.workspace.editorService.protocol) {
     case ProtocolType.STDIO:
-      connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings);
+      connectionHandler = new StdioConnectionHandler(extContext, statusBar, logger, configSettings, puppetLangID, puppetFileLangID);
       break;
     case ProtocolType.TCP:
-      connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings);
+      connectionHandler = new TcpConnectionHandler(extContext, statusBar, logger, configSettings, puppetLangID, puppetFileLangID);
       break;
   }
 
@@ -192,7 +195,7 @@ function checkInstallDirectory(config: IAggregateConfiguration, logger: ILogger)
     showErrorMessage(
       message,
       'Troubleshooting Information',
-      'https://puppet-vscode.github.io/docs/experience-a-problem',
+      troubleShootingLink,
       logger,
     );
     return false;
@@ -240,7 +243,7 @@ async function notifyOnNewExtensionVersion(context: vscode.ExtensionContext) {
   if (result.title === viewReleaseNotes) {
     vscode.commands.executeCommand(
       'vscode.open',
-      vscode.Uri.parse('https://marketplace.visualstudio.com/items/puppet.puppet-vscode/changelog'),
+      vscode.Uri.parse(releaseNotesLink),
     );
   } else {
     context.globalState.update(suppressUpdateNotice, true);
@@ -312,7 +315,7 @@ async function notifyIfNewPDKVersion(context: vscode.ExtensionContext, settings:
       if (result.title === viewPDKDownloadPage) {
         vscode.commands.executeCommand(
           'vscode.open',
-          vscode.Uri.parse('https://puppet.com/download-puppet-development-kit'),
+          vscode.Uri.parse(pdkDownloadLink),
         );
       }
     })
