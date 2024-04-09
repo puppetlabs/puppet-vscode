@@ -31,6 +31,7 @@ class PuppetfileHoverProvider implements vscode.HoverProvider {
       .replace(new RegExp('mod\\s+'), '')
       .replace(new RegExp(",\\s+'\\d.\\d.\\d\\'"), '')
       .replace(new RegExp(',\\s+:latest'), '')
+      .replace("/", '-')
       .replace("'", '')
       .replace("'", '');
 
