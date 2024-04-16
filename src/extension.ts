@@ -133,6 +133,17 @@ export function activate(context: vscode.ExtensionContext) {
     extensionFeatures.push(new PuppetModuleHoverFeature(extContext, logger));
   }
 
+  // if formatting is enabled, add a middleware to the language client to format the document on insert
+  if (settings.format.enable) {
+    vscode.commands.registerCommand('editor.action.formatDocumentAndMoveCursor', async () => {
+      vscode.commands.executeCommand('editor.action.formatDocument').then(() => {
+        vscode.commands.executeCommand('cursorMove', { to: 'left' });
+      });
+    });
+    // add middleware to Intercept the provideCompletionItem method
+    connectionHandler.languageClient.clientOptions.middleware = provideCompletionItemMiddleware;
+  }
+
   const facts = new PuppetFactsProvider(connectionHandler);
   vscode.window.registerTreeDataProvider('puppetFacts', facts);
 
@@ -359,3 +370,28 @@ function setLanguageConfiguration() {
     },
   });
 }
+
+export const provideCompletionItemMiddleware = {
+  provideCompletionItem: async (document, position, context, token, next) => {
+    // Get the completion list from the language server
+    const result = await next(document, position, context, token);
+    let items: vscode.CompletionItem[];
+    if (Array.isArray(result)) {
+      items = result;
+    } else {
+      items = result.items;
+    }
+    // Add command to be executed after completion item is selected
+    items.forEach(item => {
+      // check completion item is a prop or param, as this dictates which command to use
+      const isPropOrParam = item.detail === 'Property' || item.detail === 'Parameter';
+      // additional cursor cmd on the insertion of a property/param (UX)
+      const command = isPropOrParam ? 'editor.action.formatDocumentAndMoveCursor' : 'editor.action.formatDocument';
+      item.command = {
+        title: 'format document',
+        command: command
+      };
+    });
+    return items;
+  }
+};
