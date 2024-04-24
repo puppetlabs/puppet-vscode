@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.3](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.3) - 2024-04-24
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.2...v1.5.3)
+
+### Fixed
+
+- (LanguageServer) - Bump puppet-editor-services to v2.0.4 [#886](https://github.com/puppetlabs/puppet-vscode/pull/886) ([jordanbreen28](https://github.com/jordanbreen28))
+- (CAT-1669) - Fix hashrocket allignment on completion item select [#882](https://github.com/puppetlabs/puppet-vscode/pull/882) ([jordanbreen28](https://github.com/jordanbreen28))
+- (GH-878) - Fix Puppetfile Hover for format owner/module [#881](https://github.com/puppetlabs/puppet-vscode/pull/881) ([jordanbreen28](https://github.com/jordanbreen28))
+- (bug) - Fix module hover in metadata.json [#880](https://github.com/puppetlabs/puppet-vscode/pull/880) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v1.5.2](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.2) - 2024-02-15
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.1...v1.5.2)
@@ -12,7 +23,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 
 - (CAT-1707) - Bump vscode-languageclient ^9.0.0, axios ^1.0.0 & typescript ^5.0.0 [#875](https://github.com/puppetlabs/puppet-vscode/pull/875) ([jordanbreen28](https://github.com/jordanbreen28))
--  Bump puppet-editor-services to v2.0.1 [#874](https://github.com/puppetlabs/puppet-vscode/pull/874) ([jordanbreen28](https://github.com/jordanbreen28))
 
 ## [v1.5.1](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.1) - 2024-01-26
 
