@@ -150,9 +150,7 @@ Restart Visual Studio Code and try to reproduce the problem, then examine the lo
 
 ## Maintainers
 
-- [James Pogran](https://github.com/jpogran) - [@ender2025](http://twitter.com/ender2025)
-- [Glenn Sarti](https://github.com/glennsarti) - [@glennsarti](http://twitter.com/glennsarti)
-- [Michael T Lombardi](https://github.com/michaeltlombardi) - [@barbariankb](http://twitter.com/barbariankb)
+- [@puppetlabs/devx](https://github.com/puppetlabs/puppet-vscode/blob/main/CODEOWNERS)
 
 ## Telemetry
 
