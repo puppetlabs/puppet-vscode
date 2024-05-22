@@ -3,10 +3,9 @@ name: mend
 on:
   schedule:
     - cron: '0 0 * * *'
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
+  pull_request:
+    branches:
+      - "main"
   workflow_dispatch:
 
 jobs:
