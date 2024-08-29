@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.4](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.4) - 2024-08-29
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.3...v1.5.4)
+
+### Fixed
+
+- (CAT-2021) - Bump axios >= 1.7.4 [#898](https://github.com/puppetlabs/puppet-vscode/pull/898) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v1.5.3](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.3) - 2024-04-24
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.2...v1.5.3)
@@ -264,6 +272,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.17.0...0.18.0)
 
 ### Changed
+
 - (GH-502) change the default install type to PDK [#503](https://github.com/puppetlabs/puppet-vscode/pull/503) ([albatrossflavour](https://github.com/albatrossflavour))
 
 ### Added
@@ -411,6 +420,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.9.0...0.11.0)
 
 ### Changed
+
 - (GH-274) Remove random port detection [#294](https://github.com/puppetlabs/puppet-vscode/pull/294) ([jpogran](https://github.com/jpogran))
 - (GH-253) Remove server folder [#254](https://github.com/puppetlabs/puppet-vscode/pull/254) ([jpogran](https://github.com/jpogran))
 
@@ -465,6 +475,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/0.7.0...0.7.2)
 
 ### Changed
+
 - (GH-177) Remove version file detection [#178](https://github.com/puppetlabs/puppet-vscode/pull/178) ([jpogran](https://github.com/jpogran))
 
 ### Added
