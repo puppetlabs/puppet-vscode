@@ -48,7 +48,7 @@ jobs:
 
       - name: Install psake
         shell: pwsh
-        run: Install-Module psake -Force
+        run: Install-Module -Name psake -RequiredVersion 4.9.0
 
       - name: npm install
         shell: pwsh
