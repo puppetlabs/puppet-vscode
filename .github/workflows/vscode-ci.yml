@@ -9,6 +9,9 @@ on:
       - "main"
   workflow_dispatch:
 
+env: 
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -48,7 +51,7 @@ jobs:
 
       - name: Install psake
         shell: pwsh
-        run: Install-Module psake -Force
+        run: Install-Module -Name psake -RequiredVersion 4.9.0 -Force
 
       - name: npm install
         shell: pwsh
@@ -73,12 +76,16 @@ jobs:
           npm run test:coverage
 
       - name: Upload Coverage
-        if: runner.os == 'Linux'
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: |
-          npm run coverage:upload
-
+        if: | 
+          runner.os == 'Linux' && 
+          env.CODECOV_TOKEN != ''
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+        
       - name: vsce package
         if: runner.os == 'Linux'
         env:
