@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.5](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.5) - 2025-03-19
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.4...v1.5.5)
+
+### Fixed
+
+- (CAT-2273) - Bump axios to >= 1.8.2 [#909](https://github.com/puppetlabs/puppet-vscode/pull/909) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v1.5.4](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.4) - 2024-08-29
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.3...v1.5.4)
