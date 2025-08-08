@@ -62,7 +62,7 @@ jobs:
 
       - name: npm test
         env:
-          BUILD_VERSION: '0.99.${{ github.event.number }}'
+          BUILD_VERSION: 0.99.${{ github.run_number }}
           VSCODE_BUILD_VERBOSE: true
           DISPLAY: ':99.0'
         shell: pwsh
@@ -72,7 +72,7 @@ jobs:
       - name: vsce package
         if: runner.os == 'Linux'
         env:
-          BUILD_VERSION: '0.99.${{ github.event.number }}'
+          BUILD_VERSION: 0.99.${{ github.run_number }}
         shell: pwsh
         run: |
           invoke-psake -properties @{ packageVersion = $env:BUILD_VERSION } -tasklist bump
