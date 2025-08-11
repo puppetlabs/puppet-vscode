@@ -16,7 +16,7 @@ jobs:
     name: "Release Prep"
     runs-on: "ubuntu-latest"
     env:
-      NODE_VERSION: "18"
+      NODE_VERSION: "20"
 
     steps:
       - name: "Checkout"
