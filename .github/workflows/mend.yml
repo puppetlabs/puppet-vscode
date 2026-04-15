@@ -14,10 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 'setup node: 18 platform: ${{ runner.os }}'
+      - name: 'setup node: 20 platform: ${{ runner.os }}'
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: npm install
         run: |
