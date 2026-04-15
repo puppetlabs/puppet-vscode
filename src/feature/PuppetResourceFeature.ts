@@ -79,7 +79,7 @@ export class PuppetResourceFeature implements IFeature {
               return this._connectionHandler.languageClient
                 .sendRequest(PuppetResourceRequest.type, requestParams)
                 .then((resourceResult) => {
-                  this.respsonseToVSCodeEdit(resourceResult, editor, doc);
+                  this.responseToVSCodeEdit(resourceResult, editor, doc);
                 });
             },
           );
@@ -87,14 +87,14 @@ export class PuppetResourceFeature implements IFeature {
           this._connectionHandler.languageClient
             .sendRequest(PuppetResourceRequest.type, requestParams)
             .then((resourceResult) => {
-              this.respsonseToVSCodeEdit(resourceResult, editor, doc);
+              this.responseToVSCodeEdit(resourceResult, editor, doc);
             });
         }
       }
     });
   }
 
-  private respsonseToVSCodeEdit(
+  private responseToVSCodeEdit(
     resourceResult: PuppetResourceResponse,
     editor: vscode.TextEditor,
     doc: vscode.TextDocument,

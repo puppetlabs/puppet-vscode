@@ -26,7 +26,7 @@ The Puppet VSCode website [https://puppet-vscode.github.io/](https://puppet-vsco
   - [Outline View](https://puppet-vscode.github.io/docs/features/code-navigation/)
   - [Breadcrumbs](https://puppet-vscode.github.io/docs/features/code-navigation/)
   - [Go to Symbol](https://puppet-vscode.github.io/docs/features/code-navigation/)
-    [Open Symbol by Name](https://puppet-vscode.github.io/docs/features/code-navigation/)
+  - [Open Symbol by Name](https://puppet-vscode.github.io/docs/features/code-navigation/)
   - [Code Snippets](#code-snippets)
   - [Linting](https://puppet-vscode.github.io/docs/features/linting/)
   - [Live Workspace Intellisense](https://puppet-vscode.github.io/docs/features/intellisense)
