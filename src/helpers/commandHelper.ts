@@ -196,7 +196,7 @@ export class CommandEnvironmentHelper {
   }
 
   private static buildPuppetEnvironment(exe: Executable, config: IAggregateConfiguration) {
-    exe.options.env.RUBYOPT = 'rubygems';
+    exe.options.env.RUBYOPT = '-rrubygems';
     exe.options.env.SSL_CERT_FILE = config.ruby.sslCertFile;
     exe.options.env.SSL_CERT_DIR = config.ruby.sslCertDir;
     exe.options.env.RUBY_DIR = config.ruby.rubydir;
@@ -205,7 +205,7 @@ export class CommandEnvironmentHelper {
   }
 
   private static buildPDKEnvironment(exe: Executable, config: IAggregateConfiguration) {
-    exe.options.env.RUBYOPT = 'rubygems';
+    exe.options.env.RUBYOPT = '-rrubygems';
     exe.options.env.DEVKIT_BASEDIR = config.ruby.puppetBaseDir;
     exe.options.env.RUBY_DIR = config.ruby.pdkRubyDir;
     exe.options.env.GEM_HOME = config.ruby.pdkGemDir;
