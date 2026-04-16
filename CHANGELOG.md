@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.6](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.6) - 2026-04-16
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.5...v1.5.6)
+
+### Fixed
+
+- (maint) Fix typo in responseToVSCodeEdit method name [#925](https://github.com/puppetlabs/puppet-vscode/pull/925) ([bronachfalls](https://github.com/bronachfalls))
+- Fix puppet agent 8 compatibility [#919](https://github.com/puppetlabs/puppet-vscode/pull/919) ([filippog](https://github.com/filippog))
+
 ## [v1.5.5](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.5) - 2025-03-19
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.4...v1.5.5)
