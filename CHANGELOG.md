@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.7](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.7) - 2026-06-03
+
+[Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.6...v1.5.7)
+
 ## [v1.5.6](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.6) - 2026-04-16
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.5...v1.5.6)
