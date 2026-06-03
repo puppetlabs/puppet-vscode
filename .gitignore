@@ -2,6 +2,7 @@ out/
 node_modules/
 vendor/
 tmp/
+.nyc_output/
 
 // Ignore generated module output
 *.vsix
