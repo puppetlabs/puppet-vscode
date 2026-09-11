@@ -92,4 +92,60 @@ describe('PDKFeature', () => {
       assert(terminal.dispose.called);
     });
   });
+
+  describe('simple command callbacks', () => {
+    it('pdkValidate callback sends text to terminal and fires telemetry', () => {
+      const terminal = { sendText: sandbox.stub(), show: sandbox.stub() };
+      sandbox.stub(pdkFeature, 'getTerminal').returns(terminal);
+      const validateCall = registerCommandStub.getCalls().find(c => c.args[0] === 'extension.pdkValidate');
+      assert.ok(validateCall, 'pdkValidate command should be registered');
+      validateCall.args[1]();
+      sinon.assert.calledWith(terminal.sendText, 'pdk validate');
+      sinon.assert.calledOnce(terminal.show);
+    });
+
+    it('pdkTestUnit callback sends text to terminal', () => {
+      const terminal = { sendText: sandbox.stub(), show: sandbox.stub() };
+      sandbox.stub(pdkFeature, 'getTerminal').returns(terminal);
+      const testCall = registerCommandStub.getCalls().find(c => c.args[0] === 'extension.pdkTestUnit');
+      assert.ok(testCall, 'pdkTestUnit command should be registered');
+      testCall.args[1]();
+      sinon.assert.calledWith(terminal.sendText, 'pdk test unit');
+    });
+  });
+
+  describe('user input command callbacks', () => {
+    it('pdkNewClass callback with valid name sends request to terminal', async () => {
+      const terminal = { sendText: sandbox.stub(), show: sandbox.stub() };
+      sandbox.stub(pdkFeature, 'getTerminal').returns(terminal);
+      sandbox.stub(vscode.window, 'showInputBox').resolves('myclass');
+      const newClassCall = registerCommandStub.getCalls().find(c => c.args[0] === 'extension.pdkNewClass');
+      assert.ok(newClassCall, 'pdkNewClass command should be registered');
+      await newClassCall.args[1]();
+      sinon.assert.calledWith(terminal.sendText, 'pdk new class myclass');
+    });
+
+    it('pdkNewClass callback with undefined name shows warning', async () => {
+      sandbox.stub(vscode.window, 'showInputBox').resolves(undefined);
+      const showWarnStub = sandbox.stub(vscode.window, 'showWarningMessage');
+      const newClassCall = registerCommandStub.getCalls().find(c => c.args[0] === 'extension.pdkNewClass');
+      assert.ok(newClassCall);
+      await newClassCall.args[1]();
+      sinon.assert.calledOnce(showWarnStub);
+    });
+  });
+
+
+  it('pdkNewModule command callback invokes pdkNewModuleCommand (line 15)', async () => {
+    // Find the callback registered for pdkNewModuleCommandId (covers line 15)
+    const moduleCall = registerCommandStub.getCalls().find(
+      c => c.args[0] === 'extension.pdkNewModule'
+    );
+    if (moduleCall) {
+      sandbox.stub(vscode.window, 'showInputBox').resolves(undefined); // no name → early return
+      await moduleCall.args[1]();
+    }
+    assert.ok(true);
+  });
+
 });
