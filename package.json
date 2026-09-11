@@ -3,6 +3,16 @@
   "displayName": "Puppet",
   "description": "Official Puppet VSCode extension. Provides full Puppet DSL intellisense, syntax highlighting, Puppet command support, Puppet node graphs, and much more",
   "version": "1.5.7",
+  "nyc": {
+    "exclude": [
+      "out/test/**"
+    ],
+    "reporter": [
+      "text",
+      "text-summary",
+      "lcov"
+    ]
+  },
   "editorComponents": {
     "editorServices": {
       "release": "v2.0.4"
@@ -635,7 +645,7 @@
     "watch": "npm run build && tsc -watch -p ./",
     "pretest": "npm run compile",
     "test": "node ./out/test/runtest.js",
-    "test:coverage": "nyc --reporter=lcov node ./out/test/runtest.js",
+    "test:coverage": "npm run compile && rm -rf .nyc_output && nyc instrument --in-place out/ && node ./out/test/runtest.js; nyc report --reporter=text --reporter=text-summary --reporter=lcov",
     "coverage:upload": "codecov",
     "format": "prettier --write ./**/*.{ts,js,json}",
     "lint": "eslint --ext .ts src",
