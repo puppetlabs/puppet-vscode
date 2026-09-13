@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [Unreleased]
+
+### Fixed
+
+- (CAT-2744) - Bump axios to 1.18.0
+
 ## [v1.5.7](https://github.com/puppetlabs/puppet-vscode/tree/v1.5.7) - 2026-06-03
 
 [Full Changelog](https://github.com/puppetlabs/puppet-vscode/compare/v1.5.6...v1.5.7)
