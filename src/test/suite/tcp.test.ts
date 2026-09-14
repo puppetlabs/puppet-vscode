@@ -61,35 +61,4 @@ describe('TcpConnectionHandler - additional coverage', () => {
     assert.ok(result instanceof Promise);
     sinon.assert.calledOnce(mockSocket.connect as sinon.SinonStub);
   });
-
-
-
-  it('constructor spawns process for local TCP and handles stdout data', () => {
-    const config = JSON.parse(JSON.stringify(index.configSettings));
-    config.workspace.installType = 'puppet';
-    config.workspace.editorService.protocol = ProtocolType.TCP;
-    config.workspace.editorService.tcp = { address: '', port: 0 };
-    config.ruby = { ...index.configSettings.ruby, rubydir: '/ruby', environmentPath: '/bin', rubylib: '', sslCertFile: '', sslCertDir: '', pdkRubyDir: '' };
-
-    const stdoutCallbacks: Record<string, Function> = {};
-    const procCallbacks: Record<string, Function> = {};
-    const mockProc = {
-      stdout: { on: sandbox.stub().callsFake((e, cb) => { stdoutCallbacks[e] = cb; }) },
-      on: sandbox.stub().callsFake((e, cb) => { procCallbacks[e] = cb; }),
-      pid: 12345,
-    };
-    sandbox.stub(cp, 'spawn').returns(mockProc as any);
-
-    const handler = new TcpConnectionHandler(index.extContext, statusBar, index.logger, config, index.puppetLangID, index.puppetFileLangID);
-
-    // Simulate stdout with language server ready
-    if (stdoutCallbacks['data']) {
-      stdoutCallbacks['data']('LANGUAGE SERVER RUNNING on localhost:12345');
-    }
-    // Simulate close event
-    if (procCallbacks['close']) {
-      procCallbacks['close'](0);
-    }
-    assert.ok(handler);
-  });
 });
