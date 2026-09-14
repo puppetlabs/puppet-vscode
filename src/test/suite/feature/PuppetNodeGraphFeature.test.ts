@@ -343,7 +343,7 @@ describe('PuppetNodeGraphFeature', () => {
     );
 
     // Add a mock provider so the forEach has something to iterate
-    const mockProvider = { show: sandbox.stub().resolves() };
+    const mockProvider = { show: sandbox.stub().resolves(), dispose: sandbox.stub() };
     (newFeature as any).providers = [mockProvider];
 
     // Fire the save callback with the matching URI (covers lines 58-60)
