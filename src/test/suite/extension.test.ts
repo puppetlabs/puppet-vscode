@@ -63,4 +63,16 @@ describe('Extension Tests', () => {
     assert.strictEqual(result[0].command?.command, 'editor.action.formatDocumentAndMoveCursor');
     assert.strictEqual(result[1].command?.command, 'editor.action.formatDocument');
   });
+
+  it('should handle CompletionList result (line 382)', async () => {
+    const completionItem = new vscode.CompletionItem('item1', vscode.CompletionItemKind.Property);
+    completionItem.detail = 'Property';
+    const completionList = new vscode.CompletionList([completionItem], false);
+    next.returns(completionList); // returns CompletionList, not array → covers else branch
+
+    const result = await provideCompletionItemMiddleware.provideCompletionItem(document, position, context, token, next);
+    assert.ok(Array.isArray(result));
+    assert.strictEqual(result.length, 1);
+  });
+
 });
