@@ -1,0 +1,17 @@
+name: Ghost Fix
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  ghost-fix:
+    uses: danielmackle/ghost-guard/.github/workflows/ghost-fix.yml@main
+    with:
+      test_command: 'npm test'
+      jira_project_key: 'CAT'
+      default_branch: 'main'
+    secrets:
+      anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+      jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
+      jira_email: ${{ secrets.JIRA_EMAIL }}
