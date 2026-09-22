@@ -3,6 +3,7 @@ node_modules/
 vendor/
 tmp/
 .nyc_output/
+coverage/
 
 // Ignore generated module output
 *.vsix
