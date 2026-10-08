@@ -58,6 +58,20 @@ export function run(): Promise<void> {
       try {
         // Run the mocha test
         mocha.run((failures) => {
+          // Write Istanbul coverage data collected in this Extension Host process
+          // so that `nyc report` (run in the outer process) can aggregate it.
+          // __coverage__ is populated when files are pre-instrumented with `nyc instrument`.
+          const coverage = (global as any).__coverage__;
+          if (coverage) {
+            const fs = require('fs');
+            const nycDir = path.resolve(__dirname, '../../../.nyc_output');
+            fs.mkdirSync(nycDir, { recursive: true });
+            fs.writeFileSync(
+              path.join(nycDir, `${Date.now()}.json`),
+              JSON.stringify(coverage)
+            );
+          }
+
           if (failures > 0) {
             e(new Error(`${failures} tests failed.`));
           } else {

@@ -1,3 +1,7 @@
+import * as sinon from 'sinon';
+import * as vscode from 'vscode';
+import axios from 'axios';
+import { afterEach, beforeEach } from 'mocha';
 import * as assert from 'assert';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
@@ -79,5 +83,56 @@ summary\n
       expect(info.total).to.be.greaterThan(0);
       expect(info.modules).to.include('puppetlabs-stdlib');
     });
+  });
+});
+
+
+describe('Forge Tests - error paths (mocked)', () => {
+  let sandbox: sinon.SinonSandbox;
+  const logger = new OutputChannelLogger('error');
+
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+    // Stub extensions.getExtension so getVersion() doesn't fail
+    sandbox.stub(vscode.extensions, 'getExtension').returns({ packageJSON: { version: '1.0.0' } } as any);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('getPDKVersion handles non-200 response', async () => {
+    sandbox.stub(axios, 'get').resolves({ status: 500, statusText: 'Server Error', data: '' });
+    const logErrorStub = sandbox.stub(logger, 'error');
+    await forge.getPDKVersion(logger);
+    sinon.assert.calledOnce(logErrorStub);
+  });
+
+  it('getModuleInfo handles non-200 response', async () => {
+    sandbox.stub(axios, 'get').resolves({ status: 404, statusText: 'Not Found', data: {} });
+    const logErrorStub = sandbox.stub(logger, 'error');
+    const result = await forge.getModuleInfo('puppetlabs-fake', logger);
+    assert.strictEqual(result, undefined);
+  });
+
+  it('getModuleInfo handles network error', async () => {
+    sandbox.stub(axios, 'get').rejects(new Error('Network error'));
+    const result = await forge.getModuleInfo('puppetlabs-fake', logger);
+    assert.strictEqual(result, undefined);
+  });
+
+  it('getModuleCompletions handles non-200 response', async () => {
+    sandbox.stub(axios, 'get').resolves({ status: 503, statusText: 'Service Unavailable', data: {} });
+    const logErrorStub = sandbox.stub(logger, 'error');
+    await forge.getPuppetModuleCompletion('puppet', logger);
+    sinon.assert.calledOnce(logErrorStub);
+  });
+
+  it('getModuleCompletions handles network error', async () => {
+    sandbox.stub(axios, 'get').rejects(new Error('Connection refused'));
+    const logErrorStub = sandbox.stub(logger, 'error');
+    const result = await forge.getPuppetModuleCompletion('puppet', logger);
+    assert.strictEqual(result, undefined);
+    sinon.assert.calledOnce(logErrorStub);
   });
 });
