@@ -47,4 +47,49 @@ describe('Settings Tests', () => {
     assert.strictEqual(workspaceSettings.editorService.timeout, 50);
     assert.strictEqual(workspaceSettings.pdk.checkVersion, false);
   });
+
+  it('warns when installDirectory is set with installType AUTO', () => {
+    const showErrorStub = sandbox.stub(vscode.window, 'showErrorMessage').resolves(undefined);
+    // Reset stub to return specific values
+    workspaceConfigurationStub.get.reset();
+    workspaceConfigurationStub.get.callsFake((key: string, defaultVal: any) => {
+      if (key === 'installDirectory') { return '/custom/puppet'; }
+      if (key === 'installType') { return 'auto'; }
+      return defaultVal;
+    });
+    settings.settingsFromWorkspace();
+    sinon.assert.calledOnce(showErrorStub);
+  });
+
+  it('getSafeWorkspaceConfig handles missing indexes gracefully', () => {
+    // settingsFromWorkspace initialises editorService/featureFlags/puppet/tcp guards
+    workspaceConfigurationStub.get.withArgs('editorService', sinon.match.any).returns(undefined);
+    const result = settings.settingsFromWorkspace();
+    assert.ok(result.editorService);
+    assert.ok(Array.isArray(result.editorService.featureFlags));
+  });
+
+});
+
+
+describe('Settings - installDirectory warning (fresh sandbox)', () => {
+  it('warns when installDirectory set with AUTO installType', () => {
+    const sb = sinon.createSandbox();
+    try {
+      const showErrorStub = sb.stub(vscode.window, 'showErrorMessage').resolves(undefined);
+      const mockConfig = {
+        get: sb.stub().callsFake((key: string, defaultVal: any) => {
+          if (key === 'installDirectory') { return '/custom/puppet'; }
+          if (key === 'installType') { return 'auto'; }
+          return defaultVal;
+        }),
+        has: sb.stub(), inspect: sb.stub(), update: sb.stub(),
+      };
+      sb.stub(vscode.workspace, 'getConfiguration').returns(mockConfig as any);
+      settings.settingsFromWorkspace();
+      sinon.assert.calledOnce(showErrorStub);
+    } finally {
+      sb.restore();
+    }
+  });
 });

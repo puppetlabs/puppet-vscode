@@ -93,4 +93,5 @@ describe('PuppetModuleHoverProvider', () => {
     assert.include(contents.value, mockModuleInfo.summary);
     assert.include(contents.value, mockModuleInfo.version.toString());
   });
+
 });

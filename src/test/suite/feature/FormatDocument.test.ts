@@ -63,4 +63,103 @@ describe('FormatDocumentFeature Test Suite', () => {
 
     formatTextEditsStub.restore();
   });
+
+  it('formatTextEdits returns empty array when language client is not running', async () => {
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, index.configSettings, index.logger, index.extContext);
+    const provider = feature.getProvider();
+    // connectionHandler is a stub with status undefined (not RunningLoaded/RunningLoading)
+    const document = { uri: { toString: () => 'file:///test.pp' }, lineCount: 10 } as any;
+    sandbox.stub(vscode.window, 'showInformationMessage').resolves(undefined);
+    const result = await provider.formatTextEdits(document, {} as any);
+    assert.deepEqual(result, []);
+  });
+
+  it('does not register formatter when format.enable is false', () => {
+    const registerFormatterStub = sandbox.stub(vscode.languages, 'registerDocumentFormattingEditProvider');
+    const configWithFormatDisabled = {
+      ...index.configSettings,
+      workspace: {
+        ...index.configSettings.workspace,
+        format: { enable: false },
+      },
+    } as any;
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, configWithFormatDisabled, index.logger, index.extContext);
+    sinon.assert.notCalled(registerFormatterStub);
+    assert.ok(feature);
+  });
+
+
+  it('formatTextEdits returns edits when connection is running and fixes applied', async () => {
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, index.configSettings, index.logger, index.extContext);
+    const provider = feature.getProvider();
+
+    // Make status return RunningLoaded
+    sandbox.stub(Object.getPrototypeOf(connectionHandler), 'status').get(() => {
+      const { ConnectionStatus } = require('../../../interfaces');
+      return ConnectionStatus.RunningLoaded;
+    });
+    const mockClient = {
+      sendRequest: sandbox.stub().resolves({ fixesApplied: 1, newContent: 'fixed content' }),
+    };
+    sandbox.stub(connectionHandler, 'languageClient').get(() => mockClient);
+
+    const document = {
+      uri: { toString: () => 'file:///test.pp' },
+      lineCount: 5,
+    } as any;
+    const result = await provider.formatTextEdits(document, {} as any);
+    assert.equal(result.length, 1);
+  });
+
+  it('formatTextEdits returns empty array when no fixes applied', async () => {
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, index.configSettings, index.logger, index.extContext);
+    const provider = feature.getProvider();
+
+    sandbox.stub(Object.getPrototypeOf(connectionHandler), 'status').get(() => {
+      const { ConnectionStatus } = require('../../../interfaces');
+      return ConnectionStatus.RunningLoaded;
+    });
+    const mockClient = {
+      sendRequest: sandbox.stub().resolves({ fixesApplied: 0, newContent: undefined }),
+    };
+    sandbox.stub(connectionHandler, 'languageClient').get(() => mockClient);
+
+    const document = {
+      uri: { toString: () => 'file:///test.pp' },
+      lineCount: 5,
+    } as any;
+    const result = await provider.formatTextEdits(document, {} as any);
+    assert.deepEqual(result, []);
+  });
+
+  it('formatTextEdits sends telemetry when reporter exists', async () => {
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, index.configSettings, index.logger, index.extContext);
+    const provider = feature.getProvider();
+    const { reporter } = require('../../../telemetry');
+
+    sandbox.stub(Object.getPrototypeOf(connectionHandler), 'status').get(() => {
+      const { ConnectionStatus } = require('../../../interfaces');
+      return ConnectionStatus.RunningLoading;
+    });
+    const mockClient = {
+      sendRequest: sandbox.stub().resolves({ fixesApplied: 0, newContent: undefined }),
+    };
+    sandbox.stub(connectionHandler, 'languageClient').get(() => mockClient);
+    const telemetrySpy = sandbox.stub(reporter, 'sendTelemetryEvent');
+
+    const document = {
+      uri: { toString: () => 'file:///test.pp' },
+      lineCount: 5,
+    } as any;
+    await provider.formatTextEdits(document, {} as any);
+    sinon.assert.calledWith(telemetrySpy, 'puppet/FormatDocument');
+  });
+
+
+  it('dispose returns undefined (line 86)', () => {
+    const feature = new FormatDocumentFeature(index.puppetLangID, connectionHandler, index.configSettings, index.logger, index.extContext);
+    const result = feature.dispose();
+    assert.strictEqual(result, undefined);
+  });
+
 });
